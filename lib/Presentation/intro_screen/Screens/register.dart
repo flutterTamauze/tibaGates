@@ -174,17 +174,19 @@ class _RegisterState extends State<Register> {
                                             text: ' لديك حساب بالفعل ؟',
                                             style: TextStyle(
                                                 fontSize:
-                                                    setResponsiveFontSize(17),
+                                                    setResponsiveFontSize(14),
+                                                fontFamily: "Almarai",
                                                 color: Colors.black),
                                             children: <TextSpan>[
                                               TextSpan(
-                                                  text: 'تسجيل الدخول ',
+                                                  text: ' تسجيل الدخول ',
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.green,
                                                     fontSize:
                                                         setResponsiveFontSize(
-                                                            15),
+                                                            14),
+                                                    fontFamily: "Almarai",
                                                     decoration: TextDecoration
                                                         .underline,
                                                   )),

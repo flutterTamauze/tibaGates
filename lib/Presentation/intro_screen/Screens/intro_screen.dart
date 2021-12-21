@@ -39,6 +39,7 @@ class _IntroScreenState extends State<IntroScreen> {
     super.initState();
   }
 
+  bool isArabic = true;
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -226,7 +227,8 @@ class _IntroScreenState extends State<IntroScreen> {
                                               text: 'ليس لديك حساب ؟',
                                               style: TextStyle(
                                                 fontSize:
-                                                    setResponsiveFontSize(15),
+                                                    setResponsiveFontSize(13),
+                                                fontFamily: "Almarai",
                                                 color: Colors.black,
                                               ),
                                               children: <TextSpan>[
@@ -235,10 +237,12 @@ class _IntroScreenState extends State<IntroScreen> {
                                                     style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      color: Colors.green,
+                                                      color:
+                                                          ColorManager.primary,
+                                                      fontFamily: "Almarai",
                                                       fontSize:
                                                           setResponsiveFontSize(
-                                                              15),
+                                                              13),
                                                       decoration: TextDecoration
                                                           .underline,
                                                     )),
@@ -306,28 +310,48 @@ class _IntroScreenState extends State<IntroScreen> {
                                                   shape: BoxShape.circle,
                                                   color: googleColor),
                                             ),
-                                            Container(
-                                              width: 50,
-                                              height: 50,
-                                              child: Center(
-                                                child: Icon(
-                                                  FontAwesomeIcons.globe,
-                                                  color: Colors.white,
+                                            Row(
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      isArabic = !isArabic;
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                    width: 50.w,
+                                                    height: 50.h,
+                                                    child: Center(
+                                                      child: Icon(
+                                                        FontAwesomeIcons.globe,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.grey
+                                                                .withOpacity(
+                                                                    0.5),
+                                                            spreadRadius: 1,
+                                                            blurRadius: 6,
+                                                            offset:
+                                                                Offset(0, 4),
+                                                          )
+                                                        ],
+                                                        shape: BoxShape.circle,
+                                                        color: ColorManager
+                                                            .lightGrey),
+                                                  ),
                                                 ),
-                                              ),
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.5),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 6,
-                                                      offset: Offset(0, 4),
-                                                    )
-                                                  ],
-                                                  shape: BoxShape.circle,
-                                                  color:
-                                                      ColorManager.lightGrey),
+                                                SizedBox(
+                                                  width: 3,
+                                                ),
+                                                AutoSizeText(
+                                                  isArabic ? "AR" : "EN",
+                                                  style: boldStyle,
+                                                )
+                                              ],
                                             )
                                             // CustomWidgets.socialButtonRect(
                                             //     'Login with Facebook',

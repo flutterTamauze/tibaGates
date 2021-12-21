@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:bordered_text/bordered_text.dart';
 import 'package:clean_app/Core/Colors/colorManager.dart';
 import 'package:clean_app/Core/Constants/constants.dart';
+import 'package:clean_app/Core/Routes/routesStrings.dart';
 import 'package:clean_app/Core/Shared/header.dart';
 import 'package:clean_app/Core/Shared/sharedWidgets.dart';
 import 'package:clean_app/Presentation/user_profile/screens/userProfile.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_beautiful_popup/main.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 
@@ -29,9 +32,9 @@ final TextEditingController _nameController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
 final TextEditingController _confirmPasswordController =
     TextEditingController();
-final _signUpKey = GlobalKey<FormState>();
 
 class _ProfileSignUpState extends State<ProfileSignUp> {
+  final _signUpKey = GlobalKey<FormState>();
   uploadImage() async {
     try {
       final String path = join(
@@ -163,12 +166,14 @@ class _ProfileSignUpState extends State<ProfileSignUp> {
                         }
                       },
                       hint: "اسم المستخدم",
+                      iconData: Icons.person,
                       textEditingController: _nameController,
                     ),
                     const SizedBox(
                       height: 10,
                     ),
                     SignTextField(
+                      iconData: Icons.lock,
                       validation: (String v) {
                         if (v.isEmpty) {
                           return "مطلوب";
@@ -181,6 +186,7 @@ class _ProfileSignUpState extends State<ProfileSignUp> {
                       height: 10,
                     ),
                     SignTextField(
+                      iconData: Icons.lock,
                       validation: (String v) {
                         if (v.isEmpty) {
                           return "مطلوب";
@@ -199,40 +205,83 @@ class _ProfileSignUpState extends State<ProfileSignUp> {
                         if (!_signUpKey.currentState!.validate()) {
                           return;
                         } else {
-                          // showDialog(
-                          //   context: context,
-                          //   builder: (context) {
-                          //     return Dialog(
-                          //       shape: RoundedRectangleBorder(
-                          //         borderRadius: BorderRadius.circular(20.0),
-                          //       ),
-                          //       child: Container(
-                          //         height: 400.h,
-                          //         child: Column(
-                          //           children: [
-                          //             Container(
-                          //               height: 340.h,
-                          //               child: HeaderWidget(
-                          //                   1, false, Icons.house_rounded),
-                          //             ),
-                          //           ],
-                          //         ),
-                          //       ),
-                          //     );
-                          //   },
-                          // );
-                          popup.show(
-                            title: 'تم انشاء الحساب بنجاح',
-                            content: '',
-                            actions: [
-                              popup.button(
-                                label: 'تسجيل الدخول',
-                                onPressed: Navigator.of(context).pop,
-                              ),
-                            ],
-                            // bool barrierDismissible = false,
-                            // Widget close,
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Container(
+                                  height: 450.h,
+                                  width: double.infinity,
+                                  child: Column(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Container(
+                                            alignment: Alignment.topCenter,
+                                            height: 250.h,
+                                            width: double.infinity,
+                                            child: Image.asset(
+                                              "assets/images/curved.png",
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                          Positioned(
+                                              top: 0,
+                                              child: Container(
+                                                width: 300,
+                                                height: 220.h,
+                                                child: Lottie.asset(
+                                                    "assets/lotties/success.json",
+                                                    repeat: false),
+                                              )),
+                                        ],
+                                      ),
+                                      Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20),
+                                          child: AutoSizeText(
+                                            "تم إنشاء الحساب بنجاح برجاء تسجيل الدخول للمتابعة",
+                                            textAlign: TextAlign.center,
+                                            style:
+                                                boldStyle.copyWith(height: 1.5),
+                                          )),
+                                      Spacer(),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 20),
+                                        child: RoundedButton(
+                                          buttonColor: ColorManager.primary
+                                              .withOpacity(0.8),
+                                          ontap: () {
+                                            Navigator.pushReplacementNamed(
+                                                context, RoutesPath.intro);
+                                          },
+                                          title: "تسجيل الدخول",
+                                          titleColor:
+                                              ColorManager.backGroundColor,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
                           );
+                          // popup.show(
+                          //   title: 'تم انشاء الحساب بنجاح',
+                          //   content: '',
+                          //   actions: [
+                          //     popup.button(
+                          //       label: 'تسجيل الدخول',
+                          //       onPressed: Navigator.of(context).pop,
+                          //     ),
+                          //   ],
+                          //   // bool barrierDismissible = false,
+                          //   // Widget close,
+                          // );
                         }
                       },
                       title: "إنشاء الحساب",
@@ -255,11 +304,13 @@ class SignTextField extends StatelessWidget {
     required this.hint,
     required this.textEditingController,
     required this.validation,
+    required this.iconData,
     Key? key,
   }) : super(key: key);
   final TextEditingController textEditingController;
   final String hint;
   final Function validation;
+  final IconData iconData;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -272,9 +323,12 @@ class SignTextField extends StatelessWidget {
         controller: textEditingController,
         onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
         decoration: InputDecoration(
-            icon: Icon(
-              Icons.person,
-              color: ColorManager.primary,
+            icon: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Icon(
+                iconData,
+                color: ColorManager.primary,
+              ),
             ),
             border: InputBorder.none,
             hintText: hint,
