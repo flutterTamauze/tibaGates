@@ -1,4 +1,7 @@
+import 'package:clean_app/Presentation/home_screen/Screens/home.dart';
+import 'package:clean_app/Presentation/services_screen/Screens/Restaurants/qrScanPopUp.dart';
 import 'package:clean_app/Presentation/services_screen/widgets/gridView/gridViewItem.dart';
+import 'package:flutter/material.dart';
 
 List<GridViewItemsWidg> gridList = [
   GridViewItemsWidg(
@@ -14,7 +17,9 @@ List<GridViewItemsWidg> gridList = [
   GridViewItemsWidg(
     iconData: "assets/lotties/burger.json",
     title: "المطاعم",
-    function: null,
+    function: () {
+      return RestaurantQR();
+    },
   ),
   GridViewItemsWidg(
     iconData: "assets/lotties/sport.json",

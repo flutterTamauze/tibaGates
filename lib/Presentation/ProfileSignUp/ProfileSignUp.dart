@@ -115,16 +115,9 @@ class _ProfileSignUpState extends State<ProfileSignUp> {
                                   width: 2, color: ColorManager.primary),
                               borderRadius: BorderRadius.circular(60)),
                           child: imageFile == null
-                              ? CircleAvatar(
-                                  radius:
-                                      MediaQuery.of(context).size.height / 14,
-                                  backgroundColor: const Color(0xFF778899),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(60),
-                                    child: new Image.asset(
+                              ? CircularImage(
+                                  assetImage:
                                       'assets/images/defaultUserImage.jpg',
-                                    ),
-                                  ), //For Image Asset
                                 )
                               : CircleAvatar(
                                   radius:
@@ -295,6 +288,31 @@ class _ProfileSignUpState extends State<ProfileSignUp> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CircularImage extends StatelessWidget {
+  final String assetImage;
+  const CircularImage({
+    required this.assetImage,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      radius: MediaQuery.of(context).size.height / 12,
+      backgroundColor: Colors.white,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(60),
+        child: new Image.asset(
+          assetImage,
+          fit: BoxFit.fill,
+          width: 155.w,
+          height: 155.h,
+        ),
+      ), //For Image Asset
     );
   }
 }

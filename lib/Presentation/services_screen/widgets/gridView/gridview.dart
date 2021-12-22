@@ -19,72 +19,57 @@ class GridViewDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: FadeIn(
-      child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20),
-          child: StaggeredGridView.countBuilder(
-            crossAxisCount: 4,
-            itemCount: gridList.length,
-            itemBuilder: (BuildContext context, int index) => new Container(
-                child: Column(
-              children: [
-                Container(
-                  child: Card(
-                    shadowColor: ColorManager.primary.withOpacity(0.6),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    elevation: 5,
-                    child: Container(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Lottie.asset(gridList[index].iconData.toString(),
-                            fit: BoxFit.fill),
+        child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20),
+            child: StaggeredGridView.countBuilder(
+              crossAxisCount: 4,
+              itemCount: gridList.length,
+              itemBuilder: (BuildContext context, int index) => new Container(
+                  child: Column(
+                children: [
+                  Container(
+                    child: Card(
+                      shadowColor: ColorManager.primary.withOpacity(0.6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      elevation: 5,
+                      child: Container(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        gridList[index].function!(),
+                                  ));
+                            },
+                            child: Lottie.asset(
+                                gridList[index].iconData.toString(),
+                                fit: BoxFit.fill),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                BorderedText(
-                    strokeWidth: 1.0,
-                    child: Text(gridList[index].title.toString(),
-                        style: TextStyle(
-                            decoration: TextDecoration.none,
-                            decorationColor: Colors.red,
-                            fontSize: setResponsiveFontSize(17))))
-              ],
-            )),
-            staggeredTileBuilder: (int index) =>
-                new StaggeredTile.count(2, index.isEven ? 3 : 4),
-            padding: EdgeInsets.all(5),
-            crossAxisSpacing: 20.0,
-          )
-          //  ZoomIn(
-          //   child: Container(
-          //     child: Directionality(
-          //       textDirection: TextDirection.rtl,
-          //       child: GridView.builder(
-          //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          //             childAspectRatio: 0.95,
-          //             crossAxisSpacing: 15.w,
-          //             mainAxisSpacing: 10.w,
-          //             crossAxisCount: 2),
-          //         itemBuilder: (context, index) {
-          //           return GridViewItemsWidg(
-          //             iconData: gridList[index].iconData,
-          //             title: gridList[index].title,
-          //             function: gridList[index].function,
-          //           );
-          //         },
-          //         itemCount: gridList.length,
-          //       ),
-          //     ),
-          //   ),
-          // ),
-
-          ),
-    ));
+                  SizedBox(
+                    height: 5,
+                  ),
+                  BorderedText(
+                      strokeWidth: 1.0,
+                      child: Text(gridList[index].title.toString(),
+                          style: TextStyle(
+                              decoration: TextDecoration.none,
+                              decorationColor: Colors.red,
+                              fontSize: setResponsiveFontSize(17))))
+                ],
+              )),
+              staggeredTileBuilder: (int index) =>
+                  new StaggeredTile.count(2, index.isEven ? 3 : 4),
+              padding: EdgeInsets.all(5),
+              crossAxisSpacing: 20.0,
+            )));
   }
 }

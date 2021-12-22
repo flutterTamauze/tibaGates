@@ -1,3 +1,4 @@
+import 'package:clean_app/Core/Colors/colorManager.dart';
 import 'package:clean_app/Core/Fonts/fontsManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,38 @@ setResponsiveFontSize(size) {
   return ScreenUtil().setSp(size);
 }
 
+final ktextFieldDecoration = InputDecoration(
+  errorStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+  focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(10),
+    borderSide: BorderSide(width: 2, color: Colors.orange),
+  ),
+  disabledBorder:
+      OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 4)),
+  enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(color: Colors.grey, width: 0)),
+  border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(color: Colors.grey, width: 0)),
+  hintStyle: TextStyle(
+      fontWeight: FontWeight.w600, fontSize: setResponsiveFontSize(13)),
+  hintText: "قم بأدخال ملاحظتك هنا",
+);
+final menuBoxDecoartionCard = BoxDecoration(
+  borderRadius: BorderRadius.horizontal(
+    left: Radius.circular(40.0),
+    right: Radius.circular(10.0),
+  ),
+  color: ColorManager.lightBackGround,
+  boxShadow: [
+    BoxShadow(
+        color: Colors.black.withOpacity(0.16),
+        offset: Offset(0, 3.0),
+        blurRadius: 12.0,
+        spreadRadius: 5),
+  ],
+);
 const Color facebookColor = const Color(0xff39579A);
 const Color twitterColor = const Color(0xff00ABEA);
 const Color instaColor = const Color(0xffBE2289);
