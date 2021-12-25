@@ -10,7 +10,6 @@ import 'package:clean_app/Presentation/home_screen/Screens/home.dart';
 import 'package:clean_app/Presentation/intro_screen/Screens/register.dart';
 import 'package:clean_app/Presentation/intro_screen/Widgets/memberDisplay.dart';
 
-import 'package:clean_app/Presentation/intro_screen/Widgets/userType_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';

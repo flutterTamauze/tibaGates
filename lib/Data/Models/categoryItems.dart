@@ -1,5 +1,4 @@
 import 'package:clean_app/Core/imageAssets/assetsManager.dart';
-import 'package:flutter/cupertino.dart';
 
 class CategoryItem {
   String itemName, imagePath, desc;

@@ -5,9 +5,7 @@ import 'package:clean_app/Data/Models/newsModel.dart';
 import 'package:clean_app/Presentation/home_screen/Widgets/newsHeaderImage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'newsFooter.dart';
 import 'newsFooterDisplay.dart';
 
 class NewsCardDisplay extends StatelessWidget {
