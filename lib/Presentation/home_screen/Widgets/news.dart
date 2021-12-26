@@ -2,7 +2,6 @@ import 'package:clean_app/Data/Models/newsModel.dart';
 import 'package:clean_app/Presentation/home_screen/Screens/newsDetails.dart';
 import 'package:clean_app/Presentation/home_screen/Widgets/newsCardDisplay.dart';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class CategoryItemInfo {
   String name, desc;
   int quantity, id;

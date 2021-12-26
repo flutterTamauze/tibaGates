@@ -1,6 +1,5 @@
 import 'package:clean_app/Core/Colors/colorManager.dart';
 import 'package:clean_app/Core/Fonts/fontsManager.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
