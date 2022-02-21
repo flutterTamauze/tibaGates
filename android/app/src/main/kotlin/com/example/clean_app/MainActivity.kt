@@ -1,4 +1,4 @@
-package com.example.clean_app
+package com.tds.tiba
 
 import io.flutter.embedding.android.FlutterActivity
 

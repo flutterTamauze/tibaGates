@@ -2,10 +2,10 @@ import 'package:clean_app/Core/Constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class CustomWidgets {
-  static Widget socialButtonRect(title, color, icon, {Function? onTap}) {
+  static Widget socialButtonRect(title, color, icon, {Function onTap}) {
     return InkWell(
       onTap: () {
-        onTap!();
+        onTap();
       },
       child: Container(
         height: 50,
@@ -33,10 +33,10 @@ class CustomWidgets {
     );
   }
 
-  static Widget socialButtonCircle(color, icon, {iconColor, Function? onTap}) {
+  static Widget socialButtonCircle(color, icon, {iconColor, Function onTap}) {
     return InkWell(
       onTap: () {
-        onTap!();
+        onTap();
       },
       child: Container(
           padding: const EdgeInsets.all(20.0),

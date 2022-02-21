@@ -5,10 +5,10 @@ import 'package:clean_app/Core/Colors/colorManager.dart';
 import 'package:clean_app/Core/Constants/constants.dart';
 import 'package:clean_app/Core/Shared/sharedWidgets.dart';
 import 'package:clean_app/Core/imageAssets/assetsManager.dart';
-import 'package:clean_app/Data/Models/user.dart';
-import 'package:clean_app/Presentation/home_screen/Screens/home.dart';
 import 'package:clean_app/Presentation/intro_screen/Screens/register.dart';
 import 'package:clean_app/Presentation/intro_screen/Widgets/memberDisplay.dart';
+import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
+import 'package:clean_app/ViewModel/authProv.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,9 +17,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IntroScreen extends StatefulWidget {
   static const String routeName = "/intro";
+
   @override
   _IntroScreenState createState() => _IntroScreenState();
 }
@@ -30,8 +33,11 @@ class _IntroScreenState extends State<IntroScreen> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _roomNumberController = TextEditingController();
   TextEditingController _memberShipController = TextEditingController();
-  var isLoading = false;
+
   var _passwordVisible = true;
+  SharedPreferences prefs;
+  bool isLoggedIn;
+
 
   @override
   void initState() {
@@ -39,10 +45,12 @@ class _IntroScreenState extends State<IntroScreen> {
   }
 
   bool isArabic = true;
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+    var authProv = Provider.of<AuthProv>(context, listen: true);
     return SafeArea(
       child: GestureDetector(
         onTap: () {
@@ -53,8 +61,8 @@ class _IntroScreenState extends State<IntroScreen> {
             child: Container(
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage(AssetsManager.plazaBackground),
-                      fit: BoxFit.fill)),
+                      image: AssetImage('assets/images/tiba.jpg'),
+                      fit: BoxFit.fitHeight)),
               height: MediaQuery.of(context).size.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -62,12 +70,14 @@ class _IntroScreenState extends State<IntroScreen> {
                   Hero(
                     tag: "logo",
                     child: Container(
-                      height: (height * 0.18),
-                      width: (width * 0.36),
+                      height: (height * 0.15),
+                      width: (width * 0.32),
                       child: Container(
                         decoration: BoxDecoration(
+                          color: Colors.white,
                           image: DecorationImage(
-                              image: AssetImage("assets/images/logo1.jpg")),
+                              image:
+                                  AssetImage("assets/images/tipasplash.png")),
                           shape: BoxShape.circle,
                           border: Border.all(
                               color: ColorManager.primary, width: 2.w),
@@ -76,7 +86,7 @@ class _IntroScreenState extends State<IntroScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 20.h,
                   ),
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -84,11 +94,11 @@ class _IntroScreenState extends State<IntroScreen> {
                         strokeWidth: 4.0.w,
                         strokeColor: Colors.black,
                         child: Text(
-                          "Tipa Rose\n دار الدفاع الجوى ",
+                          "Tiba Rose دار الدفاع الجوى ",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               letterSpacing: 2,
-                              fontSize: setResponsiveFontSize(20),
+                              fontSize: setResponsiveFontSize(26),
                               decoration: TextDecoration.none,
                               decorationColor: Colors.black,
                               height: 1.5.h,
@@ -97,11 +107,12 @@ class _IntroScreenState extends State<IntroScreen> {
                         ),
                       )),
                   SizedBox(
-                    height: 24.h,
+                    height: 36.h,
                   ),
                   Center(
                     child: Container(
-                      width: 330.w,
+                      width: 500.w,
+                      height: 400.h,
                       child: Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
@@ -122,19 +133,18 @@ class _IntroScreenState extends State<IntroScreen> {
                                             color: ColorManager.primary,
                                             fontWeight: FontWeight.bold,
                                             fontSize:
-                                                setResponsiveFontSize(16)),
+                                                setResponsiveFontSize(24)),
                                       ),
                                       SizedBox(
-                                        height: 30.h,
+                                        height: 25.h,
                                       ),
-                                      SizedBox(height: 10.0.h),
                                       MemberDisplay(
                                         isLogin: true,
                                         memberShipController:
                                             _memberShipController,
                                         passwordController: _passwordController,
                                       ),
-                                      SizedBox(
+                                      /*        SizedBox(
                                         height: 10.0.h,
                                       ),
                                       InkWell(
@@ -148,11 +158,13 @@ class _IntroScreenState extends State<IntroScreen> {
                                               fontSize:
                                                   setResponsiveFontSize(15)),
                                         ),
-                                      ),
+                                      ),*/
                                       SizedBox(
-                                        height: 20.0.h,
+                                        height: 25.0.h,
                                       ),
-                                      isLoading
+                                      Provider.of<AuthProv>(context,
+                                                  listen: true)
+                                              .loadingState
                                           ? Center(
                                               child: Platform.isIOS
                                                   ? CupertinoActivityIndicator()
@@ -160,47 +172,103 @@ class _IntroScreenState extends State<IntroScreen> {
                                                       backgroundColor:
                                                           ColorManager.primary,
                                                       valueColor:
-                                                          new AlwaysStoppedAnimation<
+                                                          AlwaysStoppedAnimation<
                                                                   Color>(
                                                               ColorManager
                                                                   .primary),
                                                     ),
                                             )
                                           : RoundedButton(
+                                              height: 55,
+                                              width: 220,
                                               ontap: () {
-                                                User user = User(
-                                                    memberId: "",
-                                                    email: "",
-                                                    job: "",
-                                                    password: "",
-                                                    phoneNumber: "",
-                                                    roomNumber: "",
-                                                    userName: "",
-                                                    userType: 0);
-                                                if (!_forgetFormKey
-                                                    .currentState!
+                                                if (!_forgetFormKey.currentState
                                                     .validate()) {
                                                   return;
                                                 } else {
-                                                  user = user1;
-                                                  if (user.memberId ==
+                                                  authProv
+                                                      .changeLoadingState(true);
+                                                  print('aaaaaa');
+                                                  Provider.of<AuthProv>(context,
+                                                          listen: false)
+                                                      .login(
                                                           _memberShipController
-                                                              .text &&
-                                                      user.password ==
+                                                              .text,
                                                           _passwordController
-                                                              .text) {
-                                                    Navigator.pushNamed(context,
-                                                        HomePage.routeName,
-                                                        arguments: user);
-                                                  } else {
-                                                    Fluttertoast.showToast(
-                                                        msg:
-                                                            "Invalid Account ! ",
-                                                        backgroundColor:
-                                                            Colors.red,
-                                                        gravity: ToastGravity
-                                                            .CENTER);
-                                                  }
+                                                              .text)
+                                                      .then((value) async {
+                                                    authProv.changeLoadingState(
+                                                        false);
+                                                    print('value => $value');
+                                                    if (value == 'Success') {
+                                                      prefs =
+                                                          await SharedPreferences
+                                                              .getInstance();
+                                                      print('caching data');
+                                                      prefs.setInt(
+                                                          'guardId',
+                                                          Provider.of<AuthProv>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .guardId);
+                                                      prefs.setInt(
+                                                          'gateId',
+                                                          Provider.of<AuthProv>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .gateId);
+                                                      prefs.setString(
+                                                          'guardName',
+                                                          Provider.of<AuthProv>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .guardName);
+                                                      prefs.setDouble(
+                                                          'balance',
+                                                          Provider.of<AuthProv>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .balance);
+                                                      prefs.setString(
+                                                          'printerAddress',
+                                                          Provider.of<AuthProv>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .printerAddress??'');
+                                                      prefs.setString(
+                                                          'gateName',
+                                                          Provider.of<AuthProv>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .gateName);
+                                                      prefs.setBool(
+                                                          'isLoggedIn',
+                                                          Provider.of<AuthProv>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .isLogged);
+                                                      prefs.setString(
+                                                          'guardRank',
+                                                          Provider.of<AuthProv>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .rank);
+                                                      Navigator.pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  EntryScreen()));
+                                                    } else if (value ==
+                                                        'Incorrect User') {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              'بيانات غير صحيحة',
+                                                          backgroundColor:
+                                                              Colors.green,
+                                                          toastLength: Toast
+                                                              .LENGTH_LONG);
+                                                    }
+                                                  });
                                                 }
                                               },
                                               title: 'تسجيل',
@@ -208,7 +276,7 @@ class _IntroScreenState extends State<IntroScreen> {
                                               titleColor:
                                                   ColorManager.backGroundColor,
                                             ),
-                                      SizedBox(
+                                      /*          SizedBox(
                                         height: 10.h,
                                       ),
                                       InkWell(
@@ -249,121 +317,9 @@ class _IntroScreenState extends State<IntroScreen> {
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      AutoSizeText(
-                                        "او الدخول كزائر",
-                                        style: boldStyle,
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      FadeInDown(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Container(
-                                              width: 50,
-                                              height: 50,
-                                              child: Center(
-                                                child: Icon(
-                                                  FontAwesomeIcons.facebookF,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.5),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 6,
-                                                      offset: Offset(0, 4),
-                                                    )
-                                                  ],
-                                                  shape: BoxShape.circle,
-                                                  color: facebookColor),
-                                            ),
-                                            Container(
-                                              width: 50,
-                                              height: 50,
-                                              child: Center(
-                                                child: Icon(
-                                                  FontAwesomeIcons.googlePlusG,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.5),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 6,
-                                                      offset: Offset(0, 4),
-                                                    )
-                                                  ],
-                                                  shape: BoxShape.circle,
-                                                  color: googleColor),
-                                            ),
-                                            Row(
-                                              children: [
-                                                InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      isArabic = !isArabic;
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    width: 50.w,
-                                                    height: 50.h,
-                                                    child: Center(
-                                                      child: Icon(
-                                                        FontAwesomeIcons.globe,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: Colors.grey
-                                                                .withOpacity(
-                                                                    0.5),
-                                                            spreadRadius: 1,
-                                                            blurRadius: 6,
-                                                            offset:
-                                                                Offset(0, 4),
-                                                          )
-                                                        ],
-                                                        shape: BoxShape.circle,
-                                                        color: ColorManager
-                                                            .lightGrey),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 3,
-                                                ),
-                                                AutoSizeText(
-                                                  isArabic ? "AR" : "EN",
-                                                  style: boldStyle,
-                                                )
-                                              ],
-                                            )
-                                            // CustomWidgets.socialButtonRect(
-                                            //     'Login with Facebook',
-                                            //     facebookColor,
-                                            //     FontAwesomeIcons.facebookF,
-                                            //     onTap: () {}),
-                                            // CustomWidgets.socialButtonRect(
-                                            //     'Login with Google',
-                                            //     googleColor,
-                                            //     FontAwesomeIcons.googlePlusG,
-                                            //     onTap: () {}),
-                                          ],
-                                        ),
+                                      ),*/
+                                      SizedBox(
+                                        height: 10.h,
                                       ),
                                     ],
                                   ),

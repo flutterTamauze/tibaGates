@@ -4,26 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RoundedButton extends StatelessWidget {
-  final Color? buttonColor, titleColor;
-  final String? title;
-  final Function? ontap;
-  RoundedButton({this.buttonColor, this.title, this.titleColor, this.ontap});
+  final Color buttonColor, titleColor;
+  final String title;
+  final Function ontap;
+  final double width;
+  final double height;
+  RoundedButton({this.buttonColor, this.title, this.titleColor, this.ontap, this.width, this.height});
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        ontap!();
+        ontap();
       },
       child: Container(
         padding: EdgeInsets.all(10),
-        width: 220.w,
-        height: 45.h,
+        width: width.w,
+        height: height.h,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18), color: buttonColor),
+            borderRadius: BorderRadius.circular(20), color: buttonColor),
         child: Center(
           child: AutoSizeText(
-            title!,
-            style: boldStyle.copyWith(color: titleColor),
+            title,
+            style: boldStyle.copyWith(color: titleColor,fontSize: setResponsiveFontSize(24)),
           ),
         ),
       ),

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class UserTypeDropdown extends StatefulWidget {
   final Function function;
-  const UserTypeDropdown({Key? key, required this.function}) : super(key: key);
+  const UserTypeDropdown({Key key,  this.function}) : super(key: key);
 
   @override
   _UserTypeDropdownState createState() => _UserTypeDropdownState();

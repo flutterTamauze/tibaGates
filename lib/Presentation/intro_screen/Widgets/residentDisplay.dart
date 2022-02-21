@@ -9,7 +9,7 @@ class ResidentDisplay extends StatelessWidget {
   final TextEditingController roomController;
 
   ResidentDisplay(
-      {required this.phoneController, required this.roomController});
+      { this.phoneController,  this.roomController});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class ResidentDisplay extends StatelessWidget {
           maxLength: 11,
           validator: (text) {
             RegExp regex = new RegExp("^01[0-2|5]{1}[0-9]{8}\$");
-            if (text!.isEmpty || text == null) {
+            if (text.isEmpty || text == null) {
               return 'برجاء إدخال رقم هاتفك';
             }
             if (!regex.hasMatch(text)) {

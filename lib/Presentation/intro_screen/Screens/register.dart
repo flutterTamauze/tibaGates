@@ -214,7 +214,7 @@ class _RegisterState extends State<Register> {
                                           : RoundedButton(
                                               ontap: () {
                                                 if (!_forgetFormKey
-                                                    .currentState!
+                                                    .currentState
                                                     .validate()) {
                                                   return;
                                                 } else {

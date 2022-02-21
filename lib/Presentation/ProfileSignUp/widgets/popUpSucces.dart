@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_beautiful_popup/main.dart';
 
-class MyTemplate extends BeautifulPopupTemplate {
+/*class MyTemplate extends BeautifulPopupTemplate {
   final BeautifulPopup options;
   MyTemplate(this.options) : super(options);
 
@@ -46,4 +45,4 @@ class MyTemplate extends BeautifulPopupTemplate {
       ),
     ];
   }
-}
+}*/

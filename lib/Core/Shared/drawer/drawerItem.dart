@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DrawerItem extends StatelessWidget {
-  final String? headerTitle;
-  final IconData? headerIcon;
-  final Color? titleColor, iconColor;
+  final String headerTitle;
+  final IconData headerIcon;
+  final Color titleColor, iconColor;
   DrawerItem(
       {this.headerIcon, this.headerTitle, this.iconColor, this.titleColor});
   @override
@@ -18,7 +18,7 @@ class DrawerItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           AutoSizeText(
-            headerTitle!,
+            headerTitle,
             style: boldStyle.copyWith(color: titleColor),
           ),
           SizedBox(

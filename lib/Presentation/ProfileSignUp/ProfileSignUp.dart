@@ -1,33 +1,29 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:bordered_text/bordered_text.dart';
 import 'package:clean_app/Core/Colors/colorManager.dart';
 import 'package:clean_app/Core/Constants/constants.dart';
 import 'package:clean_app/Core/Routes/routesStrings.dart';
 import 'package:clean_app/Core/Shared/header.dart';
 import 'package:clean_app/Core/Shared/sharedWidgets.dart';
-import 'package:clean_app/Presentation/user_profile/screens/userProfile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_beautiful_popup/main.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 
 class ProfileSignUp extends StatefulWidget {
-  const ProfileSignUp({Key? key}) : super(key: key);
+  const ProfileSignUp({Key key}) : super(key: key);
 
   @override
   _ProfileSignUpState createState() => _ProfileSignUpState();
 }
 
-XFile? image;
-File? imageFile;
-final ImagePicker _picker = ImagePicker();
+//XFile image;
+File imageFile;
+//final ImagePicker _picker = ImagePicker();
 final TextEditingController _nameController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
 final TextEditingController _confirmPasswordController =
@@ -44,10 +40,10 @@ class _ProfileSignUpState extends State<ProfileSignUp> {
             .path,
         '${DateTime.now()}.jpg',
       );
-      image = await _picker.pickImage(source: ImageSource.gallery);
-      await image!.saveTo(path);
+     // image = await _picker.pickImage(source: ImageSource.gallery);
+    //  await image.saveTo(path);
       setState(() {
-        print(image!.path);
+    //    print(image.path);
         imageFile = File(path);
       });
     } catch (e) {
@@ -65,10 +61,10 @@ class _ProfileSignUpState extends State<ProfileSignUp> {
 
   @override
   Widget build(BuildContext context) {
-    final popup = BeautifulPopup(
+/*    final popup = BeautifulPopup(
       context: context,
       template: TemplateSuccess,
-    );
+    );*/
     return Directionality(
       textDirection: TextDirection.rtl,
       child: GestureDetector(
@@ -126,7 +122,7 @@ class _ProfileSignUpState extends State<ProfileSignUp> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(60),
                                     child: new Image.file(
-                                      imageFile!,
+                                      imageFile,
                                       fit: BoxFit.fill,
                                       width: 120.w,
                                       height: 120.h,
@@ -195,7 +191,7 @@ class _ProfileSignUpState extends State<ProfileSignUp> {
                     ),
                     RoundedButton(
                       ontap: () {
-                        if (!_signUpKey.currentState!.validate()) {
+                        if (!_signUpKey.currentState.validate()) {
                           return;
                         } else {
                           showDialog(
@@ -295,8 +291,8 @@ class _ProfileSignUpState extends State<ProfileSignUp> {
 class CircularImage extends StatelessWidget {
   final String assetImage;
   const CircularImage({
-    required this.assetImage,
-    Key? key,
+     this.assetImage,
+    Key key,
   }) : super(key: key);
 
   @override
@@ -319,11 +315,11 @@ class CircularImage extends StatelessWidget {
 
 class SignTextField extends StatelessWidget {
   const SignTextField({
-    required this.hint,
-    required this.textEditingController,
-    required this.validation,
-    required this.iconData,
-    Key? key,
+     this.hint,
+     this.textEditingController,
+     this.validation,
+     this.iconData,
+    Key key,
   }) : super(key: key);
   final TextEditingController textEditingController;
   final String hint;

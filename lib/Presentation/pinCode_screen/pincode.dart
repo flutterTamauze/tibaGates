@@ -13,7 +13,7 @@ class PinCodeScreen extends StatefulWidget {
 
 class _PinCodeScreenState extends State<PinCodeScreen> {
   static const String routeName = "/pinCode";
-  late final String firstNum, secondNum, thirdNum, fourthNum;
+    String firstNum, secondNum, thirdNum, fourthNum;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,7 +141,7 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
 
   Widget _textFieldPinCodeScreen(
     int index, {
-    required bool first,
+     bool first,
     last,
   }) {
     return Container(

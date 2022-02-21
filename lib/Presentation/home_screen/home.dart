@@ -1,0 +1,691 @@
+import 'dart:io';
+
+import 'package:animate_do/animate_do.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:bluetooth_print/bluetooth_print.dart';
+import 'package:camera/camera.dart';
+import 'package:clean_app/Core/Colors/colorManager.dart';
+import 'package:clean_app/Core/Constants/constants.dart';
+import 'package:clean_app/Core/Fonts/fontsManager.dart';
+import 'package:clean_app/Core/Shared/camera.dart';
+import 'package:clean_app/Core/Shared/dialogs/bill_dialog.dart';
+import 'package:clean_app/Core/Shared/dialogs/loading_dialog.dart';
+import 'package:clean_app/Core/Shared/sharedWidgets.dart';
+import 'package:clean_app/Core/Shared/dialogs/successDialog.dart';
+import 'package:clean_app/Presentation/intro_screen/Screens/intro_screen.dart';
+import 'package:clean_app/ViewModel/authProv.dart';
+import 'package:clean_app/ViewModel/visitorProv.dart';
+import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
+import 'package:clean_app/print_page.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:numberpicker/numberpicker.dart';
+import 'dart:ui' as ui;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../print_page2.dart';
+
+List<CameraDescription> cameras = [];
+
+class HomeScreen extends StatefulWidget {
+  static const String routeName = "/Home";
+
+  // String selectedAction = 'عضو دار';
+
+  HomeScreen({Key key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+//  List<String> visitorType = ["عضو دار", "ق . م", "مدنى", "أنشطة"];
+  int _citizensValue = 0;
+  int _militaryValue = 0;
+  int visitorTypeId;
+  var selectedVisitorType;
+  var typesListener;
+
+  @override
+  void initState() {
+    super.initState();
+    typesListener =
+        Provider.of<VisitorProv>(context, listen: false).getVisitorTypes();
+    Provider.of<VisitorProv>(context, listen: false).rokhsa = null;
+    Provider.of<VisitorProv>(context, listen: false).idCard = null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var visitorProv = Provider.of<VisitorProv>(context, listen: false);
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    return WillPopScope(
+      onWillPop: () {
+        // Provider.of<VisitorProv>(context,listen: false).cancel(widget.logId)
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => EntryScreen()));
+        throw '';
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Container(
+              height: height,
+              width: width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                image: DecorationImage(
+                    image: AssetImage(
+                      "assets/images/bg1.jpeg",
+                    ),
+                    fit: BoxFit.fill),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 40.h),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Hero(
+                        tag: "logo",
+                        child: ZoomIn(
+                          child: Container(
+                            height: (height * 0.15),
+                            width: (width * 0.32),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: ColorManager.primary, width: 2.w),
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                        "assets/images/tipasplash.png")),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      Container(
+                        width: width,
+                        child: Card(
+                          elevation: 6,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20.h),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 60.w, vertical: 20.h),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      FutureBuilder(
+                                          future: typesListener,
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<dynamic> snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return Center(
+                                                child: Platform.isIOS
+                                                    ? CupertinoActivityIndicator()
+                                                    : Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          backgroundColor:
+                                                              Colors.green,
+                                                        ),
+                                                      ),
+                                              );
+                                            } else if (snapshot
+                                                    .connectionState ==
+                                                ConnectionState.done) {
+                                              if (visitorTypeId == null)
+                                                visitorTypeId =
+                                                    Provider.of<VisitorProv>(
+                                                            context,
+                                                            listen: false)
+                                                        .visitorObjects[0]
+                                                        .id;
+
+                                              print('type id $visitorTypeId');
+                                              return Container(
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    border: Border.all(
+                                                        color: Colors.green,
+                                                        width: 1.w)),
+                                                width: 250.w,
+                                                height: 70.h,
+                                                child:
+                                                    DropdownButtonHideUnderline(
+                                                        child: ButtonTheme(
+                                                  alignedDropdown: true,
+                                                  child: Container(
+                                                      child: DropdownButton(
+                                                    elevation: 2,
+                                                    isExpanded: true,
+                                                    items: Provider.of<
+                                                                VisitorProv>(
+                                                            context,
+                                                            listen: false)
+                                                        .visitorTypes
+                                                        .map((String x) {
+                                                      return DropdownMenuItem<
+                                                              String>(
+                                                          value: x,
+                                                          child: Center(
+                                                            child: Text(
+                                                              x,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      setResponsiveFontSize(
+                                                                          25),
+                                                                  color: Colors
+                                                                      .green,
+                                                                  fontFamily:
+                                                                      'Almarai'),
+                                                            ),
+                                                          ));
+                                                    }).toList(),
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        visitorTypeId = Provider
+                                                                .of<VisitorProv>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                            .visitorObjects[
+                                                                Provider.of<VisitorProv>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .visitorTypes
+                                                                    .indexOf(
+                                                                        value)]
+                                                            .id;
+                                                        selectedVisitorType =
+                                                            value;
+
+                                                        print(
+                                                            'selected visitor type is $selectedVisitorType');
+                                                        print(
+                                                            'selected visitor type id is $visitorTypeId');
+                                                      });
+                                                    },
+                                                    value: selectedVisitorType ??
+                                                        Provider.of<VisitorProv>(
+                                                                context,
+                                                                listen: false)
+                                                            .visitorTypes[0],
+                                                  )),
+                                                )),
+                                              );
+                                            }
+                                            return Container();
+                                          })
+
+/*                                      Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                                color: Colors.green,
+                                                width: 1.w)),
+                                        width: 230.w,
+                                        height: 60.h,
+                                        child: DropdownButtonHideUnderline(
+                                            child: DropdownButton(
+                                          elevation: 2,
+                                          isExpanded: true,
+                                          items: visitorType.map((String x) {
+                                            return DropdownMenuItem<String>(
+                                                value: x,
+                                                child: Center(
+                                                  child: AutoSizeText(
+                                                    x,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        color: Colors.green,
+                                                        fontSize:
+                                                            setResponsiveFontSize(
+                                                                22),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily: 'Almarai'),
+                                                  ),
+                                                ));
+                                          }).toList(),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              widget.selectedAction =
+                                                  value.toString();
+
+                                              print(widget.selectedAction);
+                                            });
+                                          },
+                                          value: widget.selectedAction,
+                                        )),
+                                      )*/
+                                      ,
+                                      AutoSizeText(
+                                        ' : نوع الزائر',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            fontSize: setResponsiveFontSize(28),
+                                            fontWeight: FontManager.bold),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 60.w,
+                                  ),
+                                  child: Divider(
+                                    thickness: 1,
+                                    height: 2.h,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 60.w, vertical: 20.h),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          AutoSizeText(
+                                            'عسكرى',
+                                            style: TextStyle(
+                                                fontSize:
+                                                    setResponsiveFontSize(28),
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                          NumberPicker(
+                                            value: _militaryValue,
+                                            minValue: 0,
+                                            selectedTextStyle: TextStyle(
+                                                color: Colors.green,
+                                                fontSize:
+                                                    setResponsiveFontSize(30),
+                                                fontWeight: FontWeight.bold),
+                                            maxValue: 30,
+                                            onChanged: (value) => setState(
+                                                () => _militaryValue = value),
+                                          ),
+                                          AutoSizeText(
+                                            'مدنى',
+                                            style: TextStyle(
+                                                fontSize:
+                                                    setResponsiveFontSize(28),
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                          NumberPicker(
+                                            value: _citizensValue,
+                                            minValue: 0,
+                                            selectedTextStyle: TextStyle(
+                                                color: Colors.green,
+                                                fontSize:
+                                                    setResponsiveFontSize(30),
+                                                fontWeight: FontWeight.bold),
+                                            maxValue: 30,
+                                            onChanged: (value) => setState(
+                                                () => _citizensValue = value),
+                                          ),
+                                        ],
+                                      ),
+                                      AutoSizeText(
+                                        ' : المرافقين',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            fontSize: setResponsiveFontSize(26),
+                                            fontWeight: FontManager.bold),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 60.w),
+                                  child: Divider(
+                                    thickness: 1,
+                                    height: 2.h,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 60.w),
+                                  child: Directionality(
+                                    textDirection: ui.TextDirection.rtl,
+                                    child: Row(
+                                      children: [
+                                        AutoSizeText(
+                                          'رخصة السيارة      ',
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  setResponsiveFontSize(28),
+                                              fontWeight: FontManager.bold),
+                                        ),
+                                        SizedBox(
+                                          width: 8.w,
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            cameras = await availableCameras();
+
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        CameraPicker(
+                                                          camera: cameras[0],
+                                                          instruction: '1',
+                                                          dropdownValue:
+                                                              selectedVisitorType,
+                                                        )));
+                                          },
+                                          child: Icon(
+                                            Icons.camera_alt_outlined,
+                                            color: Colors.green,
+                                            size: 35,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 16.w,
+                                        ),
+                                        Provider.of<VisitorProv>(context,
+                                                        listen: true)
+                                                    .rokhsa !=
+                                                null
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 2),
+                                                child: InkWell(
+                                                    onTap: () {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return Dialog(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              40)),
+                                                              elevation: 16,
+                                                              child: Image.file(
+                                                                Provider.of<VisitorProv>(
+                                                                        context,
+                                                                        listen:
+                                                                            true)
+                                                                    .rokhsa,
+                                                                width: 600.w,
+                                                                height: 600.h,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              ),
+                                                            );
+                                                          });
+                                                    },
+                                                    child: Stack(
+                                                      children: [
+                                                        Image.file(
+                                                          Provider.of<VisitorProv>(
+                                                                  context,
+                                                                  listen: true)
+                                                              .rokhsa,
+                                                          width: 300.w,
+                                                          height: 150.h,
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                        Positioned(
+                                                          left: 4.w,
+                                                          top: 4.w,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              print('deleted');
+                                                              Provider.of<VisitorProv>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .deleteRokhsa();
+                                                            },
+                                                            child: Icon(
+                                                              FontAwesomeIcons
+                                                                  .solidWindowClose,
+                                                              color: Colors
+                                                                  .grey[500],
+                                                              size: 35,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                              )
+                                            : Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 60.w),
+                                  child: Divider(
+                                    thickness: 1,
+                                    height: 2.h,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 60.w),
+                                  child: Directionality(
+                                    textDirection: ui.TextDirection.rtl,
+                                    child: Row(
+                                      children: [
+                                        AutoSizeText(
+                                          'تحقيق الشخصية',
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  setResponsiveFontSize(28),
+                                              fontWeight: FontManager.bold),
+                                        ),
+                                        SizedBox(
+                                          width: 8.w,
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            cameras = await availableCameras();
+
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        CameraPicker(
+                                                          camera: cameras[0],
+                                                          instruction: '2',
+                                                          dropdownValue:
+                                                              selectedVisitorType,
+                                                        )));
+                                          },
+                                          child: Icon(
+                                            Icons.camera_alt_outlined,
+                                            color: Colors.green,
+                                            size: 35,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 16.w,
+                                        ),
+                                        Provider.of<VisitorProv>(context,
+                                                        listen: true)
+                                                    .idCard !=
+                                                null
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 2),
+                                                child: InkWell(
+                                                    onTap: () {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return Dialog(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              40)),
+                                                              elevation: 16,
+                                                              child: Image.file(
+                                                                Provider.of<VisitorProv>(
+                                                                        context,
+                                                                        listen:
+                                                                            true)
+                                                                    .idCard,
+                                                                width: 600.w,
+                                                                height: 600.h,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              ),
+                                                            );
+                                                          });
+                                                    },
+                                                    child: Stack(
+                                                      children: [
+                                                        Image.file(
+                                                          Provider.of<VisitorProv>(
+                                                                  context,
+                                                                  listen: true)
+                                                              .idCard,
+                                                          width: 300.w,
+                                                          height: 150.h,
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                        Positioned(
+                                                          left: 4.w,
+                                                          top: 4.w,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              print('deleted');
+                                                              Provider.of<VisitorProv>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .deleteId();
+                                                            },
+                                                            child: Icon(
+                                                              FontAwesomeIcons
+                                                                  .solidWindowClose,
+                                                              color: Colors
+                                                                  .grey[500],
+                                                              size: 35,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                              )
+                                            : Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                (Provider.of<VisitorProv>(context, listen: true)
+                                                .idCard !=
+                                            null &&
+                                        Provider.of<VisitorProv>(context,
+                                                    listen: true)
+                                                .rokhsa !=
+                                            null)
+                                    ? RoundedButton(
+                                        width: 220,
+                                        height: 60,
+                                        ontap: () async {
+                                          showLoaderDialog(
+                                              context, 'Loading...');
+                                          Provider.of<VisitorProv>(context,
+                                                  listen: false)
+                                              .getBill(
+                                                  visitorTypeId.toString(),
+                                                  _citizensValue.toString(),
+                                                  _militaryValue.toString())
+                                              .then((value) {
+                                            print('value is $value');
+                                            Navigator.pop(context);
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return BillDialog(
+                                                      typeValue: visitorTypeId,
+                                                      citizenValue:
+                                                          _citizensValue,
+                                                      militaryValue:
+                                                          _militaryValue);
+                                                });
+                                          });
+                                        },
+                                        title: 'إستمرار',
+                                        buttonColor: ColorManager.primary,
+                                        titleColor:
+                                            ColorManager.backGroundColor,
+                                      )
+                                    : Container(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

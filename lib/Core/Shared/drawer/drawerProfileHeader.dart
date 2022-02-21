@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DrawerProfileHeader extends StatelessWidget {
   const DrawerProfileHeader({
-    Key? key,
+    Key key,
   }) : super(key: key);
 
   @override
