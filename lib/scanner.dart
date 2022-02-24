@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:clean_app/Presentation/home_screen/home.dart';
 import 'package:clean_app/ViewModel/visitorProv.dart';
+import 'package:clean_app/print_page2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -82,7 +83,22 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
           Provider.of<VisitorProv>(context, listen: false)
               .checkOutInvitation(result)
               .then((value) {
-            if (value == 'Success') {
+            if (value == 'vip') {
+              Fluttertoast.showToast(
+                  msg: 'مرحباً بك',
+                  backgroundColor: Colors.green,
+                  toastLength: Toast.LENGTH_LONG);
+
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PrintScreen2(  from: 'vip',)));
+            }
+
+
+
+
+            else if (value == 'Success') {
               Fluttertoast.showToast(
                   msg: 'كود صحيح , مرحباً بك',
                   backgroundColor: Colors.green,

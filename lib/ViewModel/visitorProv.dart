@@ -17,6 +17,7 @@ class VisitorProv with ChangeNotifier {
   List<String> reasons = [];
   File rokhsa;
   File idCard;
+  bool isVIP;
   int invitationID;
   var totalPrice, militaryPrice, citizenPrice, parkPrice, qrCode, printTime;
   var logId;
@@ -189,21 +190,26 @@ class VisitorProv with ChangeNotifier {
 
 
 
-  Future<ResponseData> checkInInvitation(File carImg, File identityImg, int userID, int invitationID,
-     BuildContext context) async {
+
+  Future<ResponseData> checkInInvitation( int userID, int invitationID,
+     BuildContext context,[File carImg, File identityImg,]) async {
     ResponseData responseData=ResponseData();
     print('userID $userID');
     Map<String, String> headers = {'Content-Type': 'application/json'};
 
     var uri = Uri.parse('$BASE_URL/api/invitation/CheckInInvitation');
-
     var request = new http.MultipartRequest("POST", uri);
-    request.files.add(
-      await http.MultipartFile.fromPath("file", carImg.path),
-    );
-    request.files.add(
-      await http.MultipartFile.fromPath("file1", identityImg.path),
-    );
+
+
+    if(carImg!=null&&identityImg!=null){
+      request.files.add(
+        await http.MultipartFile.fromPath("file", carImg.path),
+      );
+      request.files.add(
+        await http.MultipartFile.fromPath("file1", identityImg.path),
+      );
+    }
+
 
     request.fields['UserID'] = userID.toString();
     request.fields['invitationID'] = invitationID.toString();
@@ -223,7 +229,6 @@ class VisitorProv with ChangeNotifier {
             qrCode = responseDecoded['response']['qrCode'];
             printTime = responseDecoded['response']['printTime'];
             logId = responseDecoded['response']['id'];
-            responseData.data = responseDecoded['response']['balance'];
           }
         });
       }).catchError((e) {
@@ -432,12 +437,20 @@ class VisitorProv with ChangeNotifier {
           response.stream.transform(utf8.decoder).listen((value) {
 
             Map<String, dynamic> responseDecoded = json.decode(value);
-            invitationID=responseDecoded['response'];
             print("response ${responseDecoded['response']}");
+            invitationID=responseDecoded['response']['id'];
+            isVIP=responseDecoded['response']['isVIP'];
+
 
             print('message is $responseDecoded');
 
-            if (responseDecoded['message'] == 'Success') {
+
+
+            if(isVIP){
+              data='vip';
+            }
+
+            else if (responseDecoded['message'] == 'Success') {
               data = 'Success';
             }
           });

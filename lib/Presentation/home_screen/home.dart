@@ -722,7 +722,6 @@ class _HomeScreenState extends State<HomeScreen>     with WidgetsBindingObserver
                                                             PrintScreen2(
                                                               civilCount: 0,
                                                               militaryCount: 0,
-
                                                             )))
                                                 : Provider.of<VisitorProv>(
                                                         context,

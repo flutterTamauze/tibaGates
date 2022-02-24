@@ -53,6 +53,8 @@ class _EntryScreenState extends State<EntryScreen> {
         prefs.getString('printerAddress');
     Provider.of<AuthProv>(context, listen: false).balance =
         prefs.getDouble('balance');
+    Provider.of<AuthProv>(context, listen: false).lostTicketPrice =
+        prefs.getDouble('ticketLostPrice');
     Provider.of<AuthProv>(context, listen: false).gateName =
         prefs.getString('gateName');
     Provider.of<AuthProv>(context, listen: false).gateId =

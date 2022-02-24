@@ -252,6 +252,8 @@ class _IntroScreenState extends State<IntroScreen> with WidgetsBindingObserver {
             Provider.of<AuthProv>(context, listen: false).guardName);
         prefs.setDouble(
             'balance', Provider.of<AuthProv>(context, listen: false).balance);
+        prefs.setDouble(
+            'ticketLostPrice', Provider.of<AuthProv>(context, listen: false).lostTicketPrice);
         prefs.setString('printerAddress',
             Provider.of<AuthProv>(context, listen: false).printerAddress ?? '');
         prefs.setString(

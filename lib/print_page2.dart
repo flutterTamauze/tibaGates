@@ -39,7 +39,8 @@ class PrintScreen2 extends StatefulWidget {
       this.civilCount,
       this.from,
       this.logId,
-      this.reasonId, this.reasonPrice})
+      this.reasonId,
+      this.reasonPrice})
       : super(key: key);
 
   @override
@@ -80,7 +81,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
         print('value is $value');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => EntryScreen()));
-
       });
     } on PlatformException catch (err) {
       print('=3=> $err');
@@ -140,11 +140,11 @@ class _PrintScreen2State extends State<PrintScreen2> {
     var visitorProv = Provider.of<VisitorProv>(context, listen: false);
     return WillPopScope(
       onWillPop: () {
-        if(widget.from== 'resend'||widget.typeId==null){
+        if (widget.from == 'resend' || widget.typeId == null) {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => EntryScreen()));
-        }
-        else Navigator.pop(context);
+        } else
+          Navigator.pop(context);
         throw '';
       },
       child: Scaffold(
@@ -281,7 +281,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                     SizedBox(
                                       height: 8.h,
                                     ),
-
                                     Provider.of<VisitorProv>(context,
                                                     listen: true)
                                                 .logId !=
@@ -311,167 +310,191 @@ class _PrintScreen2State extends State<PrintScreen2> {
                               alignment: Alignment.bottomLeft,
                               child: Column(
                                 children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      text: 'Park Fee  :  ',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: setResponsiveFontSize(30),
-                                          fontWeight: FontManager.bold),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                            text: visitorProv.parkPrice
-                                                .toString(),
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
+                          widget.typeId!=null?        Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      RichText(
+                                        text: TextSpan(
+                                          text: 'Park Fee  :  ',
+                                          style: TextStyle(
                                               color: Colors.black,
                                               fontSize:
-                                                  setResponsiveFontSize(32),
-                                            )),
-                                        TextSpan(
-                                            text: ' LE',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 1.5,
-                                              color: Colors.black,
-                                              fontSize:
-                                                  setResponsiveFontSize(24),
-                                            )),
-                                      ],
-                                    ),
-                                  ),
+                                                  setResponsiveFontSize(30),
+                                              fontWeight: FontManager.bold),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text: visitorProv.parkPrice
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                  fontSize:
+                                                      setResponsiveFontSize(
+                                                          32),
+                                                )),
+                                            TextSpan(
+                                                text: ' LE',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  letterSpacing: 1.5,
+                                                  color: Colors.black,
+                                                  fontSize:
+                                                      setResponsiveFontSize(
+                                                          24),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
 
-                                  SizedBox(
-                                    height: 12.h,
-                                  ),
-                                  visitorProv.citizenPrice != 0
-                                      ? RichText(
-                                          text: TextSpan(
-                                            text: 'Civilian Entry Fee  :  ',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize:
-                                                    setResponsiveFontSize(30),
-                                                fontWeight: FontManager.bold),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                  text: visitorProv.citizenPrice
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      visitorProv.citizenPrice != 0
+                                          ? RichText(
+                                              text: TextSpan(
+                                                text:
+                                                    'Civilian Entry Fee  :  ',
+                                                style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize:
                                                         setResponsiveFontSize(
-                                                            32),
-                                                  )),
-                                              TextSpan(
-                                                  text: ' LE',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    letterSpacing: 1.5,
+                                                            30),
+                                                    fontWeight:
+                                                        FontManager.bold),
+                                                children: <TextSpan>[
+                                                  TextSpan(
+                                                      text: visitorProv
+                                                          .citizenPrice
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                        fontSize:
+                                                            setResponsiveFontSize(
+                                                                32),
+                                                      )),
+                                                  TextSpan(
+                                                      text: ' LE',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        letterSpacing: 1.5,
+                                                        color: Colors.black,
+                                                        fontSize:
+                                                            setResponsiveFontSize(
+                                                                24),
+                                                      )),
+                                                ],
+                                              ),
+                                            )
+                                          : Container(),
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      visitorProv.militaryPrice != 0
+                                          ? RichText(
+                                              text: TextSpan(
+                                                text:
+                                                    'Military Entry Fee :  ',
+                                                style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize:
                                                         setResponsiveFontSize(
-                                                            24),
-                                                  )),
-                                            ],
-                                          ),
-                                        )
-                                      : Container(),
-                                  SizedBox(
-                                    height: 12.h,
-                                  ),
-                                  visitorProv.militaryPrice != 0
-                                      ? RichText(
-                                          text: TextSpan(
-                                            text: 'Military Entry Fee :  ',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize:
-                                                    setResponsiveFontSize(30),
-                                                fontWeight: FontManager.bold),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                  text: visitorProv
-                                                      .militaryPrice
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                    fontSize:
-                                                        setResponsiveFontSize(
-                                                            32),
-                                                  )),
-                                              TextSpan(
-                                                  text: ' LE',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    letterSpacing: 1.5,
-                                                    color: Colors.black,
-                                                    fontSize:
-                                                        setResponsiveFontSize(
-                                                            24),
-                                                  )),
-                                            ],
-                                          ),
-                                        )
-                                      : Container(),
-                                  SizedBox(
-                                    height: 12.h,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 250.w),
-                                    child: Container(
-                                      decoration: DottedDecoration(
-                                          shape: Shape.line,
-                                          linePosition: LinePosition.bottom,
-                                          color: Colors.black),
-                                    ),
-                                  ),
-                                  //  Divider(thickness: 2,),
-                                  SizedBox(
-                                    height: 12.h,
-                                  ),
-                                  RichText(
-                                    text: TextSpan(
-                                      text: 'Total : ',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: setResponsiveFontSize(30),
-                                          fontWeight: FontManager.bold),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                            text: visitorProv.totalPrice
-                                                .toString(),
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
+                                                            30),
+                                                    fontWeight:
+                                                        FontManager.bold),
+                                                children: <TextSpan>[
+                                                  TextSpan(
+                                                      text: visitorProv
+                                                          .militaryPrice
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                        fontSize:
+                                                            setResponsiveFontSize(
+                                                                32),
+                                                      )),
+                                                  TextSpan(
+                                                      text: ' LE',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        letterSpacing: 1.5,
+                                                        color: Colors.black,
+                                                        fontSize:
+                                                            setResponsiveFontSize(
+                                                                24),
+                                                      )),
+                                                ],
+                                              ),
+                                            )
+                                          : Container(),
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(right: 250.w),
+                                        child: Container(
+                                          decoration: DottedDecoration(
+                                              shape: Shape.line,
+                                              linePosition:
+                                                  LinePosition.bottom,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                      //  Divider(thickness: 2,),
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      RichText(
+                                        text: TextSpan(
+                                          text: 'Total : ',
+                                          style: TextStyle(
                                               color: Colors.black,
                                               fontSize:
-                                                  setResponsiveFontSize(32),
-                                            )),
-                                        TextSpan(
-                                            text: ' LE',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                              letterSpacing: 1.5,
-                                              fontSize:
-                                                  setResponsiveFontSize(24),
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20.h,
-                                  ),
-                                  Divider(
-                                    height: 2,
-                                    thickness: 2,
-                                    color: Colors.black,
-                                  ),
-                                  SizedBox(
-                                    height: 30.h,
-                                  ),
+                                                  setResponsiveFontSize(30),
+                                              fontWeight: FontManager.bold),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text: visitorProv.totalPrice
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                  fontSize:
+                                                      setResponsiveFontSize(
+                                                          32),
+                                                )),
+                                            TextSpan(
+                                                text: ' LE',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                  letterSpacing: 1.5,
+                                                  fontSize:
+                                                      setResponsiveFontSize(
+                                                          24),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 20.h,
+                                      ),
+                                      Divider(
+                                        height: 2,
+                                        thickness: 2,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        height: 30.h,
+                                      ),
+                                    ],
+                                  ):Container(),
                                   Container(
                                     decoration: DottedDecoration(
                                       shape: Shape.box,
@@ -487,19 +510,33 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                           left: 4,
                                           right: 4),
                                       child: Center(
-                                        child: Text(
-                                          'برجاء الإحتفاظ بالفاتورة لتقديمها عند المغادرة',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize:
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'برجاء الإحتفاظ بالفاتورة لتقديمها عند المغادرة',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  height: 2.h,
+                                                  fontSize:
+                                                      setResponsiveFontSize(28),
+                                                  fontWeight: FontManager.bold),
+                                            ),
+                                           widget.from!='vip'? Text(
+                                              ' غرامة فقد التذكرة ${Provider.of<AuthProv>(context, listen: false).lostTicketPrice.toString() ?? 0} جنيه',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  height: 2.h,
+                                                  fontSize:
                                                   setResponsiveFontSize(28),
-                                              fontWeight: FontManager.bold),
+                                                  fontWeight: FontManager.bold),
+                                            ):Container(),
+                                          ],
                                         ),
                                       ),
                                     ),
                                   ),
-
                                   SizedBox(
                                     height: 20.h,
                                   ),
@@ -542,8 +579,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                   ontap: () async {
                                     showLoaderDialog(context, 'Loading...');
                                     SharedPreferences prefs =
-                                    await SharedPreferences
-                                        .getInstance();
+                                        await SharedPreferences.getInstance();
                                     widget.from == 'resend'
                                         ? Future.delayed(
                                                 Duration(milliseconds: 1500))
@@ -568,22 +604,20 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                               if (value == 'Success') {
                                                 // first we will connect the printer
 
-
-
                                                 prefs.setDouble(
                                                     'balance',
-                                                    Provider.of<AuthProv>(context,
-                                                        listen: false)
-                                                        .balance +
+                                                    Provider.of<AuthProv>(
+                                                                context,
+                                                                listen: false)
+                                                            .balance +
                                                         widget.reasonPrice);
 
                                                 Provider.of<AuthProv>(context,
-                                                    listen: false)
-                                                    .balance =
+                                                            listen: false)
+                                                        .balance =
                                                     prefs.getDouble('balance');
                                                 print(
                                                     'new balance in resend is ${prefs.getDouble('balance')}');
-
 
                                                 if (!_connected) {
                                                   print(
@@ -644,7 +678,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                       builder:
                                                                           (context) =>
                                                                               EntryScreen()));
-
                                                             }).onError((error,
                                                                     stackTrace) {
                                                               print(
@@ -709,7 +742,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                 builder:
                                                                     (context) =>
                                                                         EntryScreen()));
-
                                                       }).onError((error,
                                                               stackTrace) {
                                                         print(
@@ -730,268 +762,372 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                               }
                                             });
                                           })
-                                        :
-                                    widget.typeId==null?
-                                    Provider.of<VisitorProv>(context,
-                                        listen: false)
-                                        .checkInInvitation(
-                                        visitorProv.rokhsa,
-                                        visitorProv.idCard,
-                                        Provider.of<AuthProv>(context,
-                                            listen: false)
-                                            .guardId,
-                                        Provider.of<VisitorProv>(context,listen: false).invitationID,
-
-                                        context)
-                                        .then((value) async {
-                                      if (value.message == 'Success') {
-
-                                        Future.delayed(Duration(seconds: 1)).whenComplete(() async {
-                                          setState(() {
-                                            _device = d;
-                                          });
-
-                                          // first we will connect the printer
-                                          if (!_connected) {
-                                            print('printer is not connected');
-
-                                            if (_device != null && _device.address != null) {
-                                              await bluetoothPrint.connect(_device).then((value) {
-                                                print('printer is connected with value $value');
-                                                Future.delayed(Duration(seconds: 6)).whenComplete(() {
-                                                  screenshotController.capture().then((Uint8List image) async {
-                                                    //Capture Done
-                                                    setState(() {
-                                                      _imageFile = image;
-                                                      print('image is $_imageFile');
-                                                    });
-
-                                                    try {
-                                                      config['width'] = 40;
-                                                      config['height'] = 70;
-                                                      config['gap'] = 2;
-                                                      base64Image = base64Encode(_imageFile);
-                                                      list.add(LineText(type: LineText.TYPE_IMAGE, x: 10, y: 0, content: base64Image,));
-
-                                                      await bluetoothPrint.printReceipt(config, list).then((value) {
-                                                        print('value is $value');
-                                                        Navigator.pop(context);
-                                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => EntryScreen()));
-                                                      });
-                                                    } on PlatformException catch (err) {
-                                                      print('=1=> $err');
-                                                    } catch (error) {
-                                                      print('aaaaaaaaaaaaaaaaaaaaa $error');
-                                                    }
-                                                  }).catchError((onError) {
-                                                    print('onError $onError');
-                                                  });
-                                                });
-                                              });
-                                            } else {
-                                              print('device is null');
-                                            }
-                                          } else {
-                                            print(
-                                                'printer is connected 2');
-                                            // secondly we will print
-                                            await screenshotController
-                                                .capture()
-                                                .then((Uint8List
-                                            image) async {
-                                              //Capture Done
-                                              setState(() {
-                                                _imageFile = image;
-                                                print(
-                                                    'image is $_imageFile');
-                                              });
-
-                                              try {
-                                                config['width'] = 40;
-                                                config['height'] = 70;
-                                                config['gap'] = 2;
-
-                                                //    List<LineText> list = [];
-                                                base64Image =
-                                                    base64Encode(
-                                                        _imageFile);
-                                                list.add(LineText(
-                                                  type:
-                                                  LineText.TYPE_IMAGE,
-                                                  x: 10,
-                                                  y: 0,
-                                                  content: base64Image,
-                                                ));
-                                                await bluetoothPrint
-                                                    .printReceipt(
-                                                    config, list)
-                                                    .then((value) {
-                                                  print(
-                                                      'value is $value');
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder:
-                                                              (context) =>
-                                                              EntryScreen()));
-
-                                                }).onError((error,
-                                                    stackTrace) {
-                                                  print(
-                                                      'this is error $error');
-                                                });
-                                              } on PlatformException catch (err) {
-                                                print('=2=> $err');
-                                              } catch (error) {
-                                                print(
-                                                    'eeeeeeeeeeeeeeeeeee  $error');
-                                              }
-                                            }).catchError((onError) {
-                                              print('onError $onError');
-                                            }).whenComplete(() {
-                                              print('complete');
-                                            });
-                                          }
-                                        });
-                                      }
-                                    })
-
-
-                                   : Provider.of<VisitorProv>(context,
-                                                listen: false)
-                                            .checkIn(
-                                                visitorProv.rokhsa,
-                                                visitorProv.idCard,
+                                        : widget.typeId == null
+                                            ? Provider.of<VisitorProv>(context,
+                                                    listen: false)
+                                                .checkInInvitation(
                                                 Provider.of<AuthProv>(context,
                                                         listen: false)
                                                     .guardId,
-                                                widget.typeId,
-                                                widget.civilCount,
-                                                widget.militaryCount,
-                                                context)
-                                            .then((value) async {
-                                            if (value.message == 'Success') {
-
-                                              prefs.setDouble('balance', Provider.of<AuthProv>(context, listen: false).balance + visitorProv.totalPrice);
-                                              Provider.of<AuthProv>(context, listen: false).balance = prefs.getDouble('balance');
-                                              print('new balance is ${prefs.getDouble('balance')}');
-
-                                              Future.delayed(Duration(seconds: 1)).whenComplete(() async {
-                                                setState(() {
-                                                  _device = d;
-                                                });
-
-                                                // first we will connect the printer
-                                                if (!_connected) {
-                                                  print('printer is not connected');
-
-                                                  if (_device != null && _device.address != null) {
-                                                    await bluetoothPrint.connect(_device).then((value) {
-                                                      print('printer is connected with value $value');
-                                                      Future.delayed(Duration(seconds: 6)).whenComplete(() {
-                                                        screenshotController.capture().then((Uint8List image) async {
-                                                          //Capture Done
-                                                          setState(() {
-                                                            _imageFile = image;
-                                                            print('image is $_imageFile');
-                                                          });
-
-                                                          try {
-                                                            config['width'] = 40;
-                                                            config['height'] = 70;
-                                                            config['gap'] = 2;
-                                                            base64Image = base64Encode(_imageFile);
-                                                            list.add(LineText(type: LineText.TYPE_IMAGE, x: 10, y: 0, content: base64Image,));
-
-                                                            await bluetoothPrint.printReceipt(config, list).then((value) {
-                                                              print('value is $value');
-                                                              Navigator.pop(context);
-                                                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => EntryScreen()));
-                                                            });
-                                                          } on PlatformException catch (err) {
-                                                            print('=1=> $err');
-                                                          } catch (error) {
-                                                            print('aaaaaaaaaaaaaaaaaaaaa $error');
-                                                          }
-                                                        }).catchError((onError) {
-                                                          print('onError $onError');
-                                                        });
-                                                      });
-                                                    });
-                                                  } else {
-                                                    print('device is null');
-                                                  }
-                                                } else {
-                                                  print(
-                                                      'printer is connected 2');
-                                                  // secondly we will print
-                                                  await screenshotController
-                                                      .capture()
-                                                      .then((Uint8List
-                                                          image) async {
-                                                    //Capture Done
+                                                Provider.of<VisitorProv>(
+                                                        context,
+                                                        listen: false)
+                                                    .invitationID,
+                                                context,
+                                                visitorProv.rokhsa,
+                                                visitorProv.idCard,
+                                              )
+                                                .then((value) async {
+                                                if (value.message ==
+                                                    'Success') {
+                                                  Future.delayed(
+                                                          Duration(seconds: 1))
+                                                      .whenComplete(() async {
                                                     setState(() {
-                                                      _imageFile = image;
-                                                      print(
-                                                          'image is $_imageFile');
+                                                      _device = d;
                                                     });
 
-                                                    try {
-                                                      config['width'] = 40;
-                                                      config['height'] = 70;
-                                                      config['gap'] = 2;
-
-                                                      //    List<LineText> list = [];
-                                                      base64Image =
-                                                          base64Encode(
-                                                              _imageFile);
-                                                      list.add(LineText(
-                                                        type:
-                                                            LineText.TYPE_IMAGE,
-                                                        x: 10,
-                                                        y: 0,
-                                                        content: base64Image,
-                                                      ));
-                                                      await bluetoothPrint
-                                                          .printReceipt(
-                                                              config, list)
-                                                          .then((value) {
-                                                        print(
-                                                            'value is $value');
-                                                        Navigator.pushReplacement(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        EntryScreen()));
-
-                                                      }).onError((error,
-                                                              stackTrace) {
-                                                        print(
-                                                            'this is error $error');
-                                                      });
-                                                    } on PlatformException catch (err) {
-                                                      print('=2=> $err');
-                                                    } catch (error) {
+                                                    // first we will connect the printer
+                                                    if (!_connected) {
                                                       print(
-                                                          'eeeeeeeeeeeeeeeeeee  $error');
+                                                          'printer is not connected');
+
+                                                      if (_device != null &&
+                                                          _device.address !=
+                                                              null) {
+                                                        await bluetoothPrint
+                                                            .connect(_device)
+                                                            .then((value) {
+                                                          print(
+                                                              'printer is connected with value $value');
+                                                          Future.delayed(
+                                                                  Duration(
+                                                                      seconds:
+                                                                          6))
+                                                              .whenComplete(() {
+                                                            screenshotController
+                                                                .capture()
+                                                                .then((Uint8List
+                                                                    image) async {
+                                                              //Capture Done
+                                                              setState(() {
+                                                                _imageFile =
+                                                                    image;
+                                                                print(
+                                                                    'image is $_imageFile');
+                                                              });
+
+                                                              try {
+                                                                config['width'] =
+                                                                    40;
+                                                                config['height'] =
+                                                                    70;
+                                                                config['gap'] =
+                                                                    2;
+                                                                base64Image =
+                                                                    base64Encode(
+                                                                        _imageFile);
+                                                                list.add(
+                                                                    LineText(
+                                                                  type: LineText
+                                                                      .TYPE_IMAGE,
+                                                                  x: 10,
+                                                                  y: 0,
+                                                                  content:
+                                                                      base64Image,
+                                                                ));
+
+                                                                await bluetoothPrint
+                                                                    .printReceipt(
+                                                                        config,
+                                                                        list)
+                                                                    .then(
+                                                                        (value) {
+                                                                  print(
+                                                                      'value is $value');
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  Navigator.pushReplacement(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              EntryScreen()));
+                                                                });
+                                                              } on PlatformException catch (err) {
+                                                                print(
+                                                                    '=1=> $err');
+                                                              } catch (error) {
+                                                                print(
+                                                                    'aaaaaaaaaaaaaaaaaaaaa $error');
+                                                              }
+                                                            }).catchError(
+                                                                    (onError) {
+                                                              print(
+                                                                  'onError $onError');
+                                                            });
+                                                          });
+                                                        });
+                                                      } else {
+                                                        print('device is null');
+                                                      }
+                                                    } else {
+                                                      print(
+                                                          'printer is connected 2');
+                                                      // secondly we will print
+                                                      await screenshotController
+                                                          .capture()
+                                                          .then((Uint8List
+                                                              image) async {
+                                                        //Capture Done
+                                                        setState(() {
+                                                          _imageFile = image;
+                                                          print(
+                                                              'image is $_imageFile');
+                                                        });
+
+                                                        try {
+                                                          config['width'] = 40;
+                                                          config['height'] = 70;
+                                                          config['gap'] = 2;
+
+                                                          //    List<LineText> list = [];
+                                                          base64Image =
+                                                              base64Encode(
+                                                                  _imageFile);
+                                                          list.add(LineText(
+                                                            type: LineText
+                                                                .TYPE_IMAGE,
+                                                            x: 10,
+                                                            y: 0,
+                                                            content:
+                                                                base64Image,
+                                                          ));
+                                                          await bluetoothPrint
+                                                              .printReceipt(
+                                                                  config, list)
+                                                              .then((value) {
+                                                            print(
+                                                                'value is $value');
+                                                            Navigator.pushReplacement(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            EntryScreen()));
+                                                          }).onError((error,
+                                                                  stackTrace) {
+                                                            print(
+                                                                'this is error $error');
+                                                          });
+                                                        } on PlatformException catch (err) {
+                                                          print('=2=> $err');
+                                                        } catch (error) {
+                                                          print(
+                                                              'eeeeeeeeeeeeeeeeeee  $error');
+                                                        }
+                                                      }).catchError((onError) {
+                                                        print(
+                                                            'onError $onError');
+                                                      }).whenComplete(() {
+                                                        print('complete');
+                                                      });
                                                     }
-                                                  }).catchError((onError) {
-                                                    print('onError $onError');
-                                                  }).whenComplete(() {
-                                                    print('complete');
+                                                  });
+                                                }
+                                              })
+                                            : Provider.of<VisitorProv>(context,
+                                                    listen: false)
+                                                .checkIn(
+                                                    visitorProv.rokhsa,
+                                                    visitorProv.idCard,
+                                                    Provider.of<AuthProv>(
+                                                            context,
+                                                            listen: false)
+                                                        .guardId,
+                                                    widget.typeId,
+                                                    widget.civilCount,
+                                                    widget.militaryCount,
+                                                    context)
+                                                .then((value) async {
+                                                if (value.message ==
+                                                    'Success') {
+                                                  prefs.setDouble(
+                                                      'balance',
+                                                      Provider.of<AuthProv>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .balance +
+                                                          visitorProv
+                                                              .totalPrice);
+                                                  Provider.of<AuthProv>(context,
+                                                              listen: false)
+                                                          .balance =
+                                                      prefs
+                                                          .getDouble('balance');
+                                                  print(
+                                                      'new balance is ${prefs.getDouble('balance')}');
+
+                                                  Future.delayed(
+                                                          Duration(seconds: 1))
+                                                      .whenComplete(() async {
+                                                    setState(() {
+                                                      _device = d;
+                                                    });
+
+                                                    // first we will connect the printer
+                                                    if (!_connected) {
+                                                      print(
+                                                          'printer is not connected');
+
+                                                      if (_device != null &&
+                                                          _device.address !=
+                                                              null) {
+                                                        await bluetoothPrint
+                                                            .connect(_device)
+                                                            .then((value) {
+                                                          print(
+                                                              'printer is connected with value $value');
+                                                          Future.delayed(
+                                                                  Duration(
+                                                                      seconds:
+                                                                          6))
+                                                              .whenComplete(() {
+                                                            screenshotController
+                                                                .capture()
+                                                                .then((Uint8List
+                                                                    image) async {
+                                                              //Capture Done
+                                                              setState(() {
+                                                                _imageFile =
+                                                                    image;
+                                                                print(
+                                                                    'image is $_imageFile');
+                                                              });
+
+                                                              try {
+                                                                config['width'] =
+                                                                    40;
+                                                                config['height'] =
+                                                                    70;
+                                                                config['gap'] =
+                                                                    2;
+                                                                base64Image =
+                                                                    base64Encode(
+                                                                        _imageFile);
+                                                                list.add(
+                                                                    LineText(
+                                                                  type: LineText
+                                                                      .TYPE_IMAGE,
+                                                                  x: 10,
+                                                                  y: 0,
+                                                                  content:
+                                                                      base64Image,
+                                                                ));
+
+                                                                await bluetoothPrint
+                                                                    .printReceipt(
+                                                                        config,
+                                                                        list)
+                                                                    .then(
+                                                                        (value) {
+                                                                  print(
+                                                                      'value is $value');
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  Navigator.pushReplacement(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              EntryScreen()));
+                                                                });
+                                                              } on PlatformException catch (err) {
+                                                                print(
+                                                                    '=1=> $err');
+                                                              } catch (error) {
+                                                                print(
+                                                                    'aaaaaaaaaaaaaaaaaaaaa $error');
+                                                              }
+                                                            }).catchError(
+                                                                    (onError) {
+                                                              print(
+                                                                  'onError $onError');
+                                                            });
+                                                          });
+                                                        });
+                                                      } else {
+                                                        print('device is null');
+                                                      }
+                                                    } else {
+                                                      print(
+                                                          'printer is connected 2');
+                                                      // secondly we will print
+                                                      await screenshotController
+                                                          .capture()
+                                                          .then((Uint8List
+                                                              image) async {
+                                                        //Capture Done
+                                                        setState(() {
+                                                          _imageFile = image;
+                                                          print(
+                                                              'image is $_imageFile');
+                                                        });
+
+                                                        try {
+                                                          config['width'] = 40;
+                                                          config['height'] = 70;
+                                                          config['gap'] = 2;
+
+                                                          //    List<LineText> list = [];
+                                                          base64Image =
+                                                              base64Encode(
+                                                                  _imageFile);
+                                                          list.add(LineText(
+                                                            type: LineText
+                                                                .TYPE_IMAGE,
+                                                            x: 10,
+                                                            y: 0,
+                                                            content:
+                                                                base64Image,
+                                                          ));
+                                                          await bluetoothPrint
+                                                              .printReceipt(
+                                                                  config, list)
+                                                              .then((value) {
+                                                            print(
+                                                                'value is $value');
+                                                            Navigator.pushReplacement(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            EntryScreen()));
+                                                          }).onError((error,
+                                                                  stackTrace) {
+                                                            print(
+                                                                'this is error $error');
+                                                          });
+                                                        } on PlatformException catch (err) {
+                                                          print('=2=> $err');
+                                                        } catch (error) {
+                                                          print(
+                                                              'eeeeeeeeeeeeeeeeeee  $error');
+                                                        }
+                                                      }).catchError((onError) {
+                                                        print(
+                                                            'onError $onError');
+                                                      }).whenComplete(() {
+                                                        print('complete');
+                                                      });
+                                                    }
                                                   });
                                                 }
                                               });
-                                            }
-                                          });
                                   },
                                   title: 'تأكيد',
                                   buttonColor: ColorManager.primary,
                                   titleColor: ColorManager.backGroundColor,
                                 )
-                              : Container(
-                                ))
+                              : Container())
                           .toList(),
                     ),
                   ),

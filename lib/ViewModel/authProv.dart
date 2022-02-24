@@ -13,6 +13,7 @@ class AuthProv with ChangeNotifier {
   String printerAddress;
   String gateName;
   double balance;
+  double lostTicketPrice;
   String rank;
   bool isLogged;
   bool loadingState = false;
@@ -23,11 +24,10 @@ class AuthProv with ChangeNotifier {
     notifyListeners();
   }
 
-
-  Future<dynamic> login(String username, String password,File guardImage) async {
+  Future<dynamic> login(
+      String username, String password, File guardImage) async {
     String data = '';
     Map<String, String> headers = {'Content-Type': 'application/json'};
-
 
     var uri = Uri.parse('$BASE_URL/api/user/LogIn');
 
@@ -39,10 +39,7 @@ class AuthProv with ChangeNotifier {
     request.fields['Password'] = password;
     request.fields['UserName'] = username;
 
-
     request.headers.addAll(headers);
-
-
 
     try {
       await request.send().then((response) async {
@@ -53,19 +50,21 @@ class AuthProv with ChangeNotifier {
 
           print('message is ${responseDecoded['message']}');
           if (responseDecoded['message'] == 'Success') {
-
             data = 'Success';
-            guardId = responseDecoded['response']['id'];
-            guardName = responseDecoded['response']['name'];
-            balance =   double.parse(responseDecoded['response']['balance'].toString());
-            printerAddress = responseDecoded['response']['printerMac'];
-            gateName = responseDecoded['response']['gateName'];
-            gateId = responseDecoded['response']['gateID'];
-            rank = responseDecoded['response']['rank'];
+            guardId = responseDecoded['response']['user']['id'];
+            guardName = responseDecoded['response']['user']['name'];
+            balance = double.parse(
+                responseDecoded['response']['user']['balance'].toString());
+            printerAddress = responseDecoded['response']['user']['printerMac'];
+            gateName = responseDecoded['response']['user']['gateName'];
+            gateId = responseDecoded['response']['user']['gateID'];
+            rank = responseDecoded['response']['user']['rank'];
             isLogged = true;
-
-
-          }else if (responseDecoded['message'] == 'Incorrect User') {
+            lostTicketPrice = double.parse(responseDecoded['response']
+                    ['printReasons'][0]['price']
+                .toString());
+            //print('ticket price $lostTicketPrice');
+          } else if (responseDecoded['message'] == 'Incorrect User') {
             data = 'Incorrect User';
           }
         });
@@ -78,6 +77,4 @@ class AuthProv with ChangeNotifier {
     notifyListeners();
     return data;
   }
-
-
 }
