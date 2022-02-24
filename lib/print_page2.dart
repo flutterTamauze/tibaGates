@@ -30,6 +30,7 @@ class PrintScreen2 extends StatefulWidget {
   final from;
   final logId;
   final reasonId;
+  final reasonPrice;
 
   const PrintScreen2(
       {Key key,
@@ -38,7 +39,7 @@ class PrintScreen2 extends StatefulWidget {
       this.civilCount,
       this.from,
       this.logId,
-      this.reasonId})
+      this.reasonId, this.reasonPrice})
       : super(key: key);
 
   @override
@@ -54,7 +55,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
   bool _connected = false;
   BluetoothDevice _device;
   String base64Image;
-  String tips = 'no device connect';
 
   @override
   void initState() {
@@ -80,14 +80,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
         print('value is $value');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => EntryScreen()));
-        /*    showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) {
-              return ConfirmPrinted(
-                logId: widget.logId,
-              );
-            });*/
+
       });
     } on PlatformException catch (err) {
       print('=3=> $err');
@@ -111,7 +104,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
           setState(() {
             print('*** connected');
             _connected = true;
-            tips = 'connect success';
           });
           break;
         case BluetoothPrint.DISCONNECTED:
@@ -119,7 +111,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
             print('*** dis_connected');
 
             _connected = false;
-            tips = 'disconnect success';
           });
           break;
         default:
@@ -149,10 +140,11 @@ class _PrintScreen2State extends State<PrintScreen2> {
     var visitorProv = Provider.of<VisitorProv>(context, listen: false);
     return WillPopScope(
       onWillPop: () {
-        widget.from == 'resend'
-            ? Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => EntryScreen()))
-            : Navigator.pop(context);
+        if(widget.from== 'resend'||widget.typeId==null){
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => EntryScreen()));
+        }
+        else Navigator.pop(context);
         throw '';
       },
       child: Scaffold(
@@ -289,15 +281,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                     SizedBox(
                                       height: 8.h,
                                     ),
-                                    /*widget.logId != null
-                                        ? Text(
-                                            'G-${widget.logId}',
-                                            style: TextStyle(
-                                                fontSize:
-                                                    setResponsiveFontSize(36),
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        : */
+
                                     Provider.of<VisitorProv>(context,
                                                     listen: true)
                                                 .logId !=
@@ -557,7 +541,9 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                   width: 220,
                                   ontap: () async {
                                     showLoaderDialog(context, 'Loading...');
-
+                                    SharedPreferences prefs =
+                                    await SharedPreferences
+                                        .getInstance();
                                     widget.from == 'resend'
                                         ? Future.delayed(
                                                 Duration(milliseconds: 1500))
@@ -581,6 +567,24 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                 .then((value) async {
                                               if (value == 'Success') {
                                                 // first we will connect the printer
+
+
+
+                                                prefs.setDouble(
+                                                    'balance',
+                                                    Provider.of<AuthProv>(context,
+                                                        listen: false)
+                                                        .balance +
+                                                        widget.reasonPrice);
+
+                                                Provider.of<AuthProv>(context,
+                                                    listen: false)
+                                                    .balance =
+                                                    prefs.getDouble('balance');
+                                                print(
+                                                    'new balance in resend is ${prefs.getDouble('balance')}');
+
+
                                                 if (!_connected) {
                                                   print(
                                                       'printer is not connected');
@@ -641,15 +645,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                           (context) =>
                                                                               EntryScreen()));
 
-                                                              /*    showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (context) {
-                                                                return ConfirmPrinted(
-                                                                  logId: widget
-                                                                      .logId,
-                                                                );
-                                                              });*/
                                                             }).onError((error,
                                                                     stackTrace) {
                                                               print(
@@ -714,13 +709,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                 builder:
                                                                     (context) =>
                                                                         EntryScreen()));
-                                                        /*     showDialog(
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return ConfirmPrinted(
-                                                            logId: widget.logId,
-                                                          );
-                                                        });*/
+
                                                       }).onError((error,
                                                               stackTrace) {
                                                         print(
@@ -741,7 +730,134 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                               }
                                             });
                                           })
-                                        : Provider.of<VisitorProv>(context,
+                                        :
+                                    widget.typeId==null?
+                                    Provider.of<VisitorProv>(context,
+                                        listen: false)
+                                        .checkInInvitation(
+                                        visitorProv.rokhsa,
+                                        visitorProv.idCard,
+                                        Provider.of<AuthProv>(context,
+                                            listen: false)
+                                            .guardId,
+                                        Provider.of<VisitorProv>(context,listen: false).invitationID,
+
+                                        context)
+                                        .then((value) async {
+                                      if (value.message == 'Success') {
+
+                                        Future.delayed(Duration(seconds: 1)).whenComplete(() async {
+                                          setState(() {
+                                            _device = d;
+                                          });
+
+                                          // first we will connect the printer
+                                          if (!_connected) {
+                                            print('printer is not connected');
+
+                                            if (_device != null && _device.address != null) {
+                                              await bluetoothPrint.connect(_device).then((value) {
+                                                print('printer is connected with value $value');
+                                                Future.delayed(Duration(seconds: 6)).whenComplete(() {
+                                                  screenshotController.capture().then((Uint8List image) async {
+                                                    //Capture Done
+                                                    setState(() {
+                                                      _imageFile = image;
+                                                      print('image is $_imageFile');
+                                                    });
+
+                                                    try {
+                                                      config['width'] = 40;
+                                                      config['height'] = 70;
+                                                      config['gap'] = 2;
+                                                      base64Image = base64Encode(_imageFile);
+                                                      list.add(LineText(type: LineText.TYPE_IMAGE, x: 10, y: 0, content: base64Image,));
+
+                                                      await bluetoothPrint.printReceipt(config, list).then((value) {
+                                                        print('value is $value');
+                                                        Navigator.pop(context);
+                                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => EntryScreen()));
+                                                      });
+                                                    } on PlatformException catch (err) {
+                                                      print('=1=> $err');
+                                                    } catch (error) {
+                                                      print('aaaaaaaaaaaaaaaaaaaaa $error');
+                                                    }
+                                                  }).catchError((onError) {
+                                                    print('onError $onError');
+                                                  });
+                                                });
+                                              });
+                                            } else {
+                                              print('device is null');
+                                            }
+                                          } else {
+                                            print(
+                                                'printer is connected 2');
+                                            // secondly we will print
+                                            await screenshotController
+                                                .capture()
+                                                .then((Uint8List
+                                            image) async {
+                                              //Capture Done
+                                              setState(() {
+                                                _imageFile = image;
+                                                print(
+                                                    'image is $_imageFile');
+                                              });
+
+                                              try {
+                                                config['width'] = 40;
+                                                config['height'] = 70;
+                                                config['gap'] = 2;
+
+                                                //    List<LineText> list = [];
+                                                base64Image =
+                                                    base64Encode(
+                                                        _imageFile);
+                                                list.add(LineText(
+                                                  type:
+                                                  LineText.TYPE_IMAGE,
+                                                  x: 10,
+                                                  y: 0,
+                                                  content: base64Image,
+                                                ));
+                                                await bluetoothPrint
+                                                    .printReceipt(
+                                                    config, list)
+                                                    .then((value) {
+                                                  print(
+                                                      'value is $value');
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder:
+                                                              (context) =>
+                                                              EntryScreen()));
+
+                                                }).onError((error,
+                                                    stackTrace) {
+                                                  print(
+                                                      'this is error $error');
+                                                });
+                                              } on PlatformException catch (err) {
+                                                print('=2=> $err');
+                                              } catch (error) {
+                                                print(
+                                                    'eeeeeeeeeeeeeeeeeee  $error');
+                                              }
+                                            }).catchError((onError) {
+                                              print('onError $onError');
+                                            }).whenComplete(() {
+                                              print('complete');
+                                            });
+                                          }
+                                        });
+                                      }
+                                    })
+
+
+                                   : Provider.of<VisitorProv>(context,
                                                 listen: false)
                                             .checkIn(
                                                 visitorProv.rokhsa,
@@ -755,124 +871,55 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                 context)
                                             .then((value) async {
                                             if (value.message == 'Success') {
-                                              SharedPreferences prefs =
-                                                  await SharedPreferences
-                                                      .getInstance();
 
-                                              prefs.setDouble(
-                                                  'balance',
-                                                  Provider.of<AuthProv>(context,
-                                                              listen: false)
-                                                          .balance +
-                                                      visitorProv.totalPrice);
+                                              prefs.setDouble('balance', Provider.of<AuthProv>(context, listen: false).balance + visitorProv.totalPrice);
+                                              Provider.of<AuthProv>(context, listen: false).balance = prefs.getDouble('balance');
+                                              print('new balance is ${prefs.getDouble('balance')}');
 
-                                              Provider.of<AuthProv>(context,
-                                                          listen: false)
-                                                      .balance =
-                                                  prefs.getDouble('balance');
-                                              print(
-                                                  'new balance is ${prefs.getDouble('balance')}');
-
-                                              Future.delayed(
-                                                      Duration(seconds: 1))
-                                                  .whenComplete(() async {
+                                              Future.delayed(Duration(seconds: 1)).whenComplete(() async {
                                                 setState(() {
                                                   _device = d;
                                                 });
 
                                                 // first we will connect the printer
                                                 if (!_connected) {
-                                                  print(
-                                                      'printer is not connected');
+                                                  print('printer is not connected');
 
-                                                  if (_device != null &&
-                                                      _device.address != null) {
-                                                    await bluetoothPrint
-                                                        .connect(_device)
-                                                        .then((value) {
-                                                      print(
-                                                          'printer is connected with value $value');
-                                                      Future.delayed(Duration(
-                                                              seconds: 6))
-                                                          .whenComplete(() {
-                                                        screenshotController
-                                                            .capture()
-                                                            .then((Uint8List
-                                                                image) async {
+                                                  if (_device != null && _device.address != null) {
+                                                    await bluetoothPrint.connect(_device).then((value) {
+                                                      print('printer is connected with value $value');
+                                                      Future.delayed(Duration(seconds: 6)).whenComplete(() {
+                                                        screenshotController.capture().then((Uint8List image) async {
                                                           //Capture Done
                                                           setState(() {
                                                             _imageFile = image;
-                                                            print(
-                                                                'image is $_imageFile');
+                                                            print('image is $_imageFile');
                                                           });
 
                                                           try {
-                                                            config['width'] =
-                                                                40;
-                                                            config['height'] =
-                                                                70;
+                                                            config['width'] = 40;
+                                                            config['height'] = 70;
                                                             config['gap'] = 2;
-                                                            base64Image =
-                                                                base64Encode(
-                                                                    _imageFile);
-                                                            list.add(LineText(
-                                                              type: LineText
-                                                                  .TYPE_IMAGE,
-                                                              x: 10,
-                                                              y: 0,
-                                                              content:
-                                                                  base64Image,
-                                                            ));
+                                                            base64Image = base64Encode(_imageFile);
+                                                            list.add(LineText(type: LineText.TYPE_IMAGE, x: 10, y: 0, content: base64Image,));
 
-                                                            await bluetoothPrint
-                                                                .printReceipt(
-                                                                    config,
-                                                                    list)
-                                                                .then((value) {
-                                                              print(
-                                                                  'value is $value');
-                                                              Navigator.pop(
-                                                                  context);
-                                                              Navigator.pushReplacement(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              EntryScreen()));
-                                                              /*    showDialog(
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (context) {
-                                                                    return ConfirmPrinted(
-                                                                      logId: widget
-                                                                          .logId,
-                                                                    );
-                                                                  });*/
+                                                            await bluetoothPrint.printReceipt(config, list).then((value) {
+                                                              print('value is $value');
+                                                              Navigator.pop(context);
+                                                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => EntryScreen()));
                                                             });
                                                           } on PlatformException catch (err) {
                                                             print('=1=> $err');
                                                           } catch (error) {
-                                                            print(
-                                                                'aaaaaaaaaaaaaaaaaaaaa $error');
+                                                            print('aaaaaaaaaaaaaaaaaaaaa $error');
                                                           }
-                                                        }).catchError(
-                                                                (onError) {
-                                                          print(
-                                                              'onError $onError');
+                                                        }).catchError((onError) {
+                                                          print('onError $onError');
                                                         });
                                                       });
-
-                                                      // secondly we will print
                                                     });
                                                   } else {
                                                     print('device is null');
-                                                    /*     setState(() {
-                                                      tips =
-                                                          'please select device';
-                                                    });
-                                                    print(
-                                                        'please select device');*/
                                                   }
                                                 } else {
                                                   print(
@@ -917,14 +964,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                 builder:
                                                                     (context) =>
                                                                         EntryScreen()));
-                                                        /*      showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return ConfirmPrinted(
-                                                                logId: widget
-                                                                    .logId,
-                                                              );
-                                                            });*/
+
                                                       }).onError((error,
                                                               stackTrace) {
                                                         print(

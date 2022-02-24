@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:clean_app/Presentation/home_screen/home.dart';
 import 'package:clean_app/ViewModel/visitorProv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,6 +16,10 @@ import 'Core/Shared/dialogs/successDialog.dart';
 import 'Presentation/entry_screen/entryScreen.dart';
 
 class QrCodeScreen extends StatefulWidget {
+  final screen;
+
+  const QrCodeScreen({Key key, this.screen}) : super(key: key);
+
   @override
   _QrCodeScreenState createState() => _QrCodeScreenState();
 }
@@ -73,47 +78,68 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       if (!scanned) {
         scanned = true;
 
-        Provider.of<VisitorProv>(context, listen: false)
-            .checkOut(result)
-            .then((value) {
-          if (value == 'Success') {
+        if (widget.screen == 'invitation') {
+          Provider.of<VisitorProv>(context, listen: false)
+              .checkOutInvitation(result)
+              .then((value) {
+            if (value == 'Success') {
+              Fluttertoast.showToast(
+                  msg: 'كود صحيح , مرحباً بك',
+                  backgroundColor: Colors.green,
+                  toastLength: Toast.LENGTH_LONG);
 
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomeScreen(screen: 'invitation',)));
+            } else {
+              print('value is $value');
+              Fluttertoast.showToast(
+                  msg: 'كود غير صحيح',
+                  backgroundColor: Colors.green,
+                  toastLength: Toast.LENGTH_LONG);
 
-
-            showDialog(
-              context: context,
-              builder: (context) {
-                return invitationSendDialog(
-                  text: 'تم تسجيل الخروج بنجاح',
-                );
-              }
-            );
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EntryScreen()));
+            }
+          });
+        } else {
+          Provider.of<VisitorProv>(context, listen: false)
+              .checkOut(result)
+              .then((value) {
+            if (value == 'Success') {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return invitationSendDialog(
+                      text: 'تم تسجيل الخروج بنجاح',
+                    );
+                  });
               Future.delayed(Duration(seconds: 1)).whenComplete(() {
-
-         /*       Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => EntryScreen()));*/
                 Navigator.pop(context);
-                   scanned = false;
-              });
-
-          } else {
-            print('value is $value');
-            Fluttertoast.showToast(
-                    msg: 'كود غير صحيح',
-                    backgroundColor: Colors.green,
-                    toastLength: Toast.LENGTH_LONG)
-                .then((value) {
-              Future.delayed(Duration(seconds: 1)).whenComplete(() {
                 scanned = false;
               });
-            });
+            } else {
+              print('value is $value');
+              Fluttertoast.showToast(
+                      msg: 'كود غير صحيح',
+                      backgroundColor: Colors.green,
+                      toastLength: Toast.LENGTH_LONG)
+                  .then((value) {
+                Future.delayed(Duration(seconds: 1)).whenComplete(() {
+                  scanned = false;
+                });
+              });
 
-            /*  Navigator.pushReplacement(
+              /*  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => EntryScreen()));*/
-          }
-        });
+            }
+          });
+        }
       }
     });
   }

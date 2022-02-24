@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:clean_app/Core/Constants/constants.dart';
-import 'package:clean_app/Data/Models/reasons_model.dart';
-import 'package:clean_app/Data/Models/visitorTypes_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,11 +16,6 @@ class AuthProv with ChangeNotifier {
   String rank;
   bool isLogged;
   bool loadingState = false;
-/*  List<ReasonModel> reasonsObjects = [];
-  List<String> reasons = [];
-
-  List<VisitorTypesModel> visitorObjects = [];
-  List<String> visitorTypes = [];*/
 
   void changeLoadingState(bool newValue) {
     loadingState = newValue;
@@ -30,82 +23,61 @@ class AuthProv with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<dynamic> login(String username, String password) async {
+
+  Future<dynamic> login(String username, String password,File guardImage) async {
     String data = '';
     Map<String, String> headers = {'Content-Type': 'application/json'};
 
-    String body = jsonEncode({'Password': password, 'UserName': username});
-    http.Response response;
+
+    var uri = Uri.parse('$BASE_URL/api/user/LogIn');
+
+    var request = new http.MultipartRequest("POST", uri);
+    request.files.add(
+      await http.MultipartFile.fromPath("file", guardImage.path),
+    );
+
+    request.fields['Password'] = password;
+    request.fields['UserName'] = username;
+
+
+    request.headers.addAll(headers);
+
+
 
     try {
-      response = await http
-          .post(Uri.parse('$BASE_URL/api/gate/LogIn'),
-              body: body, headers: headers)
-          .timeout(Duration(seconds: 4), onTimeout: () {
-        print('status code is ${response.statusCode}');
-        Fluttertoast.showToast(
-            msg: 'تأكد من إتصالك بالإنترنت وحاول مجدداً',
-            gravity: ToastGravity.CENTER,
-            backgroundColor: Colors.green,
-            textColor: Colors.white);
+      await request.send().then((response) async {
+        print(response.statusCode);
+        response.stream.transform(utf8.decoder).listen((value) {
+          Map<String, dynamic> responseDecoded = json.decode(value);
+          print("ah ah ${responseDecoded['response']}");
 
-        return http.Response(
-            'internal server error', 500); // Replace 500 with your http code.
+          print('message is ${responseDecoded['message']}');
+          if (responseDecoded['message'] == 'Success') {
+
+            data = 'Success';
+            guardId = responseDecoded['response']['id'];
+            guardName = responseDecoded['response']['name'];
+            balance =   double.parse(responseDecoded['response']['balance'].toString());
+            printerAddress = responseDecoded['response']['printerMac'];
+            gateName = responseDecoded['response']['gateName'];
+            gateId = responseDecoded['response']['gateID'];
+            rank = responseDecoded['response']['rank'];
+            isLogged = true;
+
+
+          }else if (responseDecoded['message'] == 'Incorrect User') {
+            data = 'Incorrect User';
+          }
+        });
+      }).catchError((e) {
+        print(e);
       });
-
-      print('response.statusCode ${response.statusCode}');
-
-      String responseBody = response.body;
-      print('response  $responseBody');
-      var decodedRes = jsonDecode(responseBody);
-      print('response is $decodedRes');
-
-      if (decodedRes['message'] == 'Success') {
-
-
-        data = 'Success';
-
-        guardId = decodedRes['response']['id'];
-        guardName = decodedRes['response']['name'];
-        balance =   double.parse(decodedRes['response']['balance'].toString());
-        printerAddress = decodedRes['response']['printerMac'];
-        gateName = decodedRes['response']['gateName'];
-        gateId = decodedRes['response']['gateID'];
-        rank = decodedRes['response']['rank'];
-        isLogged = true;
-
-    /*    var reasonObj = jsonDecode(response.body)['response']['reasonDTO'] as List;
-        var visitorTypeObj = jsonDecode(response.body)['response']['ownerDTO'] as List;
-
-        reasonsObjects =
-            reasonObj.map((item) => ReasonModel.fromJson(item)).toList();
-
-        visitorObjects =
-            visitorTypeObj.map((item) => VisitorTypesModel.fromJson(item)).toList();
-
-        for (int i = 0; i < reasonsObjects.length; i++) {
-          if (!reasons.contains(reasonsObjects[i].reason)) {
-            reasons.add(reasonsObjects[i].reason);
-          }
-        }
-        for (int i = 0; i < visitorObjects.length; i++) {
-          if (!visitorTypes.contains(visitorObjects[i].visitorType)) {
-            visitorTypes.add(visitorObjects[i].visitorType);
-          }
-        }
-
-        print('length of reasons ${reasonsObjects.length}');
-        print('length of visitorTypes ${visitorObjects.length}');*/
-
-
-      } else if (decodedRes['message'] == 'Incorrect User') {
-        data = 'Incorrect User';
-      }
-
-      notifyListeners();
-      return data;
     } catch (e) {
       print(e);
     }
+    notifyListeners();
+    return data;
   }
+
+
 }

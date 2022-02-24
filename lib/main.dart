@@ -1,15 +1,19 @@
 import 'dart:io';
 
 import 'package:clean_app/Core/Routes/routes.dart';
-import 'package:clean_app/Presentation/splash_screen/Screens/splash_screen.dart';
+import 'package:clean_app/Presentation/splash_screen/splash_screen.dart';
 import 'package:clean_app/ViewModel/authProv.dart';
 import 'package:clean_app/ViewModel/visitorProv.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   //HttpOverrides.global = MyHttpOverrides();
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MyApp(Routes()));
 }
 

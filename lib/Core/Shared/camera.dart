@@ -22,9 +22,9 @@ class CameraPicker extends StatefulWidget {
 
   CameraPicker({
     Key key,
-     this.camera,
-     this.dropdownValue,
-     this.instruction,
+    this.camera,
+    this.dropdownValue,
+    this.instruction,
   }) : super(key: key);
 
   @override
@@ -33,8 +33,8 @@ class CameraPicker extends StatefulWidget {
 
 class TakePictureScreenState extends State<CameraPicker>
     with WidgetsBindingObserver {
-   CameraController _controller;
-   Future<void> _initializeControllerFuture;
+  CameraController _controller;
+  Future<void> _initializeControllerFuture;
   List<File> images = [];
 
   @override
@@ -50,8 +50,7 @@ class TakePictureScreenState extends State<CameraPicker>
     _initializeControllerFuture = _controller.initialize();
   }
 
-  Future<File> testCompressAndGetFile(
-      { File file,  String targetPath}) async {
+  Future<File> testCompressAndGetFile({File file, String targetPath}) async {
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       targetPath,
@@ -69,14 +68,17 @@ class TakePictureScreenState extends State<CameraPicker>
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       onWillPop: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>HomeScreen(),
+            builder: (context) => HomeScreen(),
           ),
         );
         throw '';
@@ -90,11 +92,12 @@ class TakePictureScreenState extends State<CameraPicker>
               if (snapshot.connectionState == ConnectionState.done) {
                 // If the Future is complete, display the preview.
                 return Center(
-                  child: Container(
-                      height: 400.h,
-                      width: 600.w,
-                      child: CameraPreview(_controller)),
-                );
+                    child:
+                        //height: MediaQuery.of(context).size.height,
+                        //width: MediaQuery.of(context).size.width,
+                        CameraPreview(
+                  _controller,
+                ));
               } else {
                 // Otherwise, display a loading indicator.
                 return Center(
@@ -131,13 +134,11 @@ class TakePictureScreenState extends State<CameraPicker>
                     // If the picture was taken, display it on a new screen.
                     File img = File(path);
 
-     /*               widget.instruction == '1'
+                    /*               widget.instruction == '1'
                         ? Provider.of<VisitorProv>(context, listen: false)
                             .addRokhsa(img)
                         : Provider.of<VisitorProv>(context, listen: false)
                             .addIdCard(img);*/
-
-
 
                     print(img.lengthSync());
 
@@ -146,16 +147,19 @@ class TakePictureScreenState extends State<CameraPicker>
                       '${DateTime.now().toString().split(":")[2]}.jpg',
                     );
 
-                  File compressedFile=  await testCompressAndGetFile(
+                    File compressedFile = await testCompressAndGetFile(
                         file: img, targetPath: newPath);
+
+                    // here we will crop
+
                     print('=====Compressed==========');
                     print(newPath);
 
                     widget.instruction == '1'
                         ? Provider.of<VisitorProv>(context, listen: false)
-                        .addRokhsa(compressedFile)
+                            .addRokhsa(compressedFile)
                         : Provider.of<VisitorProv>(context, listen: false)
-                        .addIdCard(compressedFile);
+                            .addIdCard(compressedFile);
                     Navigator.pop(context);
 
                     _controller.dispose();
@@ -170,7 +174,7 @@ class TakePictureScreenState extends State<CameraPicker>
                       shape: BoxShape.circle, color: Colors.green),
                   child: Icon(
                     Icons.camera_alt,
-                    size: 50,
+                    size: 40,
                     color: Colors.white,
                   ),
                 ),
@@ -195,20 +199,23 @@ class TakePictureScreenState extends State<CameraPicker>
               ),
             ),
           ),
-          /*      Positioned(
-            top: 20.0.h,
-            left: 150.w,
-            child: SafeArea(
-              child: AutoSizeText(
-                widget.instruction == '1'
-                    ? 'من فضلك ارفق رخصة القيادة'
-                    : 'من فضلك ارفق كارنيه العضوية او تحقيق الشخصية',
-                style: TextStyle(fontSize: setResponsiveFontSize(30), fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),*/
+
+          Positioned(
+              left: 70.w,
+              top: 430.h,
+              bottom: 430.h,
+              right: 70.w,
+              child: SafeArea(
+                child: Container(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      border: Border.all(color: Colors.green, width: 10.w)),
+                ),
+              ))
         ]),
       ),
     );
   }
+
+
 }

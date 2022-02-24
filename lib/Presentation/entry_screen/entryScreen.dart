@@ -1,10 +1,12 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:camera/camera.dart';
 import 'package:clean_app/Core/Fonts/fontsManager.dart';
 import 'package:clean_app/Core/Shared/exitDialog.dart';
 import 'package:clean_app/Presentation/intro_screen/Widgets/outlined_button.dart';
 import 'package:clean_app/Presentation/parking_carsList.dart';
 import 'package:clean_app/ViewModel/authProv.dart';
 import 'package:clean_app/scanner.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,8 +17,8 @@ import '../../Core/Colors/colorManager.dart';
 import '../../Core/Constants/constants.dart';
 import '../../Core/Shared/sharedWidgets.dart';
 import '../home_screen/home.dart';
-import '../intro_screen/Screens/intro_screen.dart';
-
+import '../intro_screen/Screens/login.dart';
+List<CameraDescription> cameras;
 class EntryScreen extends StatefulWidget {
   static const String routeName = "/firstScreen";
 
@@ -160,37 +162,43 @@ class _EntryScreenState extends State<EntryScreen> {
                                           Radius.circular(20))))),
                         ),
 
-                        /*       OutlinedButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        NotPrintedListScreen()));
-                          },
-                          child: Container(
-                            height: 45.h,
-                            child: Row(
-                              children: [      Text('151 ',style: TextStyle(fontSize: setResponsiveFontSize(28),fontWeight: FontManager.bold,color: Colors.red)),
-                                Text('LE   إجمالى فواتير',style: TextStyle(fontSize: setResponsiveFontSize(22)),),
+                      ],
+                    ),
 
-                              ],
+                    SizedBox(height: 8.h,),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => QrCodeScreen(screen: 'invitation',)),
+                                  (Route<dynamic> route) => false);
+                        },
+                        child: Container(
+                          height: 45.h,
+                          width: 50.w,
+                          child: Center(
+                            child: Icon(
+                              Icons.card_giftcard,
+                              color: Colors.orange,
+                              size: 36,
                             ),
                           ),
-                          style: ButtonStyle(
-                              side: MaterialStateProperty.all(
-                                  BorderSide(color: Colors.blue, width: 1.4.w)),
-                              backgroundColor:
-                                  MaterialStateProperty.all<Color>(Colors.white),
-                              padding: MaterialStateProperty.all(
-                                  EdgeInsets.symmetric(
-                                      vertical: 20.h, horizontal: 20.w)),
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20))))),
-                        ),*/
-                      ],
+                        ),
+                        style: ButtonStyle(
+                            side: MaterialStateProperty.all(
+                                BorderSide(color: Colors.orange, width: 1.4.w)),
+                            backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                            padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(
+                                    vertical: 20.h, horizontal: 20.w)),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(20))))),
+                      ),
                     ),
                     SizedBox(height: 15.h,),
                     Hero(
@@ -227,9 +235,12 @@ class _EntryScreenState extends State<EntryScreen> {
                         child: Column(
                           children: [
                             RoundedButton(
-                              ontap: () {
-                                Navigator.pushReplacementNamed(
-                                    context, HomeScreen.routeName);
+                              ontap: ()async {
+                                cameras = await availableCameras();
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) => HomeScreen(camera: cameras[1],)),
+                                        (Route<dynamic> route) => false);
                               },
                               title: 'تسجيل دخول',
                               width: 220,
@@ -258,7 +269,7 @@ class _EntryScreenState extends State<EntryScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 330.h,
+                      height: 220.h,
                     ),
                     FadeInUp(
                         child: OutlineButtonFb1(

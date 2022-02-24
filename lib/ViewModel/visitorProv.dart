@@ -17,6 +17,7 @@ class VisitorProv with ChangeNotifier {
   List<String> reasons = [];
   File rokhsa;
   File idCard;
+  int invitationID;
   var totalPrice, militaryPrice, citizenPrice, parkPrice, qrCode, printTime;
   var logId;
   List<ParkingCarsModel> parkingList = [];
@@ -54,41 +55,10 @@ class VisitorProv with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<dynamic> getReasons() async {
-/*    reasonsObjects = [];
-    reasons = [];*/
-    try {
-      Map<String, String> headers = {
-        'Content-Type': 'application/json',
-      };
-      if (reasonsObjects != null) {
-        return;
-      } else {
-        var response = await http
-            .get(Uri.parse('$BASE_URL/api/gate/getreasons'), headers: headers);
 
-        var jsonObj = jsonDecode(response.body)['response'] as List;
-
-        reasonsObjects =
-            jsonObj.map((item) => ReasonModel.fromJson(item)).toList();
-        for (int i = 0; i < reasonsObjects.length; i++) {
-          if (!reasons.contains(reasonsObjects[i].reason)) {
-            reasons.add(reasonsObjects[i].reason);
-          }
-        }
-
-        print('length of reasons ${reasons.length}');
-
-        notifyListeners();
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
 
   Future<dynamic> getVisitorTypes() async {
-/*    reasonsObjects = [];
-    reasons = [];*/
+
     try {
       Map<String, String> headers = {
         'Content-Type': 'application/json',
@@ -100,7 +70,7 @@ class VisitorProv with ChangeNotifier {
       } else {
         print('visitorObjects null');
 
-        var response = await http.get(Uri.parse('$BASE_URL/api/gate/getOwners'),
+        var response = await http.get(Uri.parse('$BASE_URL/api/guest/getOwners'),
             headers: headers);
 
         print('status code ${response.statusCode}');
@@ -159,7 +129,7 @@ class VisitorProv with ChangeNotifier {
 
       parkingList = parkingList.reversed.toList();
 
-      print('unprinted bills length  ${parkingList.length}');
+      print('parking length  ${parkingList.length}');
       print('reasons length  ${reasons.length}');
 
       notifyListeners();
@@ -188,6 +158,55 @@ class VisitorProv with ChangeNotifier {
     request.fields['TypeID'] = typeID.toString();
     request.fields['militryCount'] = militaryCount.toString();
     request.fields['civilCount'] = citizenCount.toString();
+
+    request.headers.addAll(headers);
+
+    try {
+      await request.send().then((response) async {
+        print(response.statusCode);
+        response.stream.transform(utf8.decoder).listen((value) {
+          Map<String, dynamic> responseDecoded = json.decode(value);
+          print("ah ah ${responseDecoded['response']}");
+
+          print('message is ${responseDecoded['message']}');
+          if (responseDecoded['message'] == 'Success') {
+            responseData.message = 'Success';
+            qrCode = responseDecoded['response']['qrCode'];
+            printTime = responseDecoded['response']['printTime'];
+            logId = responseDecoded['response']['id'];
+          }
+        });
+      }).catchError((e) {
+        print(e);
+      });
+    } catch (e) {
+      print(e);
+    }
+    notifyListeners();
+    return responseData;
+  }
+
+
+
+
+  Future<ResponseData> checkInInvitation(File carImg, File identityImg, int userID, int invitationID,
+     BuildContext context) async {
+    ResponseData responseData=ResponseData();
+    print('userID $userID');
+    Map<String, String> headers = {'Content-Type': 'application/json'};
+
+    var uri = Uri.parse('$BASE_URL/api/invitation/CheckInInvitation');
+
+    var request = new http.MultipartRequest("POST", uri);
+    request.files.add(
+      await http.MultipartFile.fromPath("file", carImg.path),
+    );
+    request.files.add(
+      await http.MultipartFile.fromPath("file1", identityImg.path),
+    );
+
+    request.fields['UserID'] = userID.toString();
+    request.fields['invitationID'] = invitationID.toString();
 
     request.headers.addAll(headers);
 
@@ -325,33 +344,7 @@ class VisitorProv with ChangeNotifier {
     }
   }
 
-/*  Future<dynamic> cancelPrint(int logId) async {
-    String data = '';
 
-    Map<String, String> headers = {'Content-Type': 'application/json'};
-
-    try {
-      http.Response response = await http.post(
-          Uri.parse('$BASE_URL/api/gate/unprint/$logId'),
-          headers: headers);
-
-      String responseBody = response.body;
-      print('response $responseBody');
-
-      var decodedRes = jsonDecode(responseBody);
-
-      print('response is $decodedRes');
-
-      if (decodedRes['message'] == 'Success') {
-        data = 'Success';
-      }
-
-      notifyListeners();
-      return data;
-    } catch (e) {
-      print(e);
-    }
-  }*/
 
   Future<dynamic> cancel(int logId) async {
     String data = '';
@@ -397,6 +390,50 @@ class VisitorProv with ChangeNotifier {
             Map<String, dynamic> responseDecoded = json.decode(value);
             print('5*');
             print("ah ah ${responseDecoded['response']}");
+
+            print('message is $responseDecoded');
+
+            if (responseDecoded['message'] == 'Success') {
+              data = 'Success';
+            }
+          });
+        }).catchError((e) {
+          print(e);
+        });
+      } catch (e) {
+        print(e);
+      }
+
+      notifyListeners();
+      return data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
+
+  Future<dynamic> checkOutInvitation(String qrCode) async {
+    String data = '';
+    print('qrCode $qrCode');
+    Map<String, String> headers = {'Content-Type': 'application/json'};
+
+    try {
+      var uri = Uri.parse("$BASE_URL/api/Invitation/ScanInvitationQr");
+      var request = new http.MultipartRequest("POST", uri);
+
+      request.fields['QrCode'] = qrCode;
+      request.headers.addAll(headers);
+
+      try {
+        await request.send().then((response) async {
+          print(' status code is ${response.statusCode}');
+
+          response.stream.transform(utf8.decoder).listen((value) {
+
+            Map<String, dynamic> responseDecoded = json.decode(value);
+            invitationID=responseDecoded['response'];
+            print("response ${responseDecoded['response']}");
 
             print('message is $responseDecoded');
 

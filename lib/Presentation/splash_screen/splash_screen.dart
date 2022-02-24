@@ -1,15 +1,16 @@
 import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:camera/camera.dart';
 import 'package:clean_app/Core/Routes/routesStrings.dart';
 import 'package:clean_app/Core/imageAssets/assetsManager.dart';
 import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
-import 'package:clean_app/Presentation/intro_screen/Screens/intro_screen.dart';
+import 'package:clean_app/Presentation/intro_screen/Screens/login.dart';
 import 'package:clean_app/ViewModel/authProv.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+List<CameraDescription> cameras;
 class SplashScreen extends StatefulWidget {
   static const routeName = '/splash';
 
@@ -45,8 +46,9 @@ class _SplashScreenState extends State<SplashScreen> {
               builder: (context) => EntryScreen()));
 
     } else {
+      cameras = await availableCameras();
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => IntroScreen()));
+          context, MaterialPageRoute(builder: (context) => IntroScreen(camera: cameras[1],)));
     }
   }
   @override
