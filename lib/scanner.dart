@@ -92,7 +92,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PrintScreen2(  from: 'vip',)));
+                      builder: (context) => PrintScreen2(  from: 'send',resendType: 'VIP Invitation',)));
             }
 
 

@@ -13,7 +13,7 @@ class ParkingCarsModel {
       identityImage:
           "$BASE_URL${json["image2"].toString().replaceAll("\\", "/")}",
       logId: json["id"],
-      type: json["type"] ?? "",
+      type: json["car"] ?? "",
     );
   }
 }

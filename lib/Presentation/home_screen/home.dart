@@ -109,656 +109,611 @@ class _HomeScreenState extends State<HomeScreen>     with WidgetsBindingObserver
       child: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
-            child: InkWell(
-              onTap: () async {
-                try {
-                  print('tapped');
-                  // Ensure that the camera is initialized.
-                  await _initializeControllerFuture;
-
-                  // Construct the path where the image should be saved using the
-                  // pattern package.
-
-                  final path = nPath.join(
-                      (await getTemporaryDirectory()).path,
-                '${DateTime.now().toString().split(":")[2]}.jpg',
-                );
-
-                await _controller
-                    .takePicture()
-                    .then((value) => value.saveTo(path));
-
-                // If the picture was taken, display it on a new screen.
-                File img = File(path);
-
-
-                print(img.lengthSync());
-
-                String newPath = nPath.join(
-                (await getTemporaryDirectory()).path,
-                '${DateTime.now().toString().split(":")[2]}.jpg',
-                );
-
-                File compressedFile = await testCompressAndGetFile(
-                file: img, targetPath: newPath);
-
-                // here we will crop
-
-                print('=====Compressed==========');
-                print(newPath);
-
-
-                 Provider.of<VisitorProv>(context, listen: false)
-                    .addRokhsa(compressedFile);
-
-
-
-                _controller.dispose();
-                } catch (e) {
-                print(e);
-                }
-              },
-              child: Container(
-                height: height,
-                width: width,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  image: DecorationImage(
-                      image: AssetImage(
-                        "assets/images/bg1.jpeg",
+            child: Container(
+              height: height,
+              width: width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                image: DecorationImage(
+                    image: AssetImage(
+                      "assets/images/bg1.jpeg",
+                    ),
+                    fit: BoxFit.fill),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 40.h),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20.h,
                       ),
-                      fit: BoxFit.fill),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 40.h),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        Hero(
-                          tag: "logo",
-                          child: ZoomIn(
+                      Hero(
+                        tag: "logo",
+                        child: ZoomIn(
+                          child: Container(
+                            height: (height * 0.15),
+                            width: (width * 0.32),
                             child: Container(
-                              height: (height * 0.15),
-                              width: (width * 0.32),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                      color: ColorManager.primary, width: 2.w),
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/images/tipasplash.png")),
-                                  shape: BoxShape.circle,
-                                ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: ColorManager.primary, width: 2.w),
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                        "assets/images/tipasplash.png")),
+                                shape: BoxShape.circle,
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 40.h,
-                        ),
-                        Container(
-                          width: width,
-                          child: Card(
-                            elevation: 6,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 20.h),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 60.w, vertical: 20.h),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        FutureBuilder(
-                                            future: typesListener,
-                                            builder: (BuildContext context,
-                                                AsyncSnapshot<dynamic> snapshot) {
-                                              if (snapshot.connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return Center(
-                                                  child: Platform.isIOS
-                                                      ? CupertinoActivityIndicator()
-                                                      : Center(
-                                                          child:
-                                                              CircularProgressIndicator(
-                                                            backgroundColor:
-                                                                Colors.green,
-                                                          ),
-                                                        ),
-                                                );
-                                              } else if (snapshot
-                                                      .connectionState ==
-                                                  ConnectionState.done) {
-                                                if (visitorTypeId == null)
-                                                  visitorTypeId =
-                                                      Provider.of<VisitorProv>(
-                                                              context,
-                                                              listen: false)
-                                                          .visitorObjects[0]
-                                                          .id;
-
-                                                print('type id $visitorTypeId');
-                                                return widget.screen !=
-                                                        'invitation'
-                                                    ? Container(
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(10),
-                                                            border: Border.all(
-                                                                color:
-                                                                    Colors.green,
-                                                                width: 1.w)),
-                                                        width: 250.w,
-                                                        height: 70.h,
+                      ),
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      Container(
+                        width: width,
+                        child: Card(
+                          elevation: 6,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20.h),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 60.w, vertical: 20.h),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      FutureBuilder(
+                                          future: typesListener,
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<dynamic> snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return Center(
+                                                child: Platform.isIOS
+                                                    ? CupertinoActivityIndicator()
+                                                    : Center(
                                                         child:
-                                                            DropdownButtonHideUnderline(
-                                                                child:
-                                                                    ButtonTheme(
-                                                          alignedDropdown: true,
-                                                          child: Container(
-                                                              child:
-                                                                  DropdownButton(
-                                                            elevation: 2,
-                                                            isExpanded: true,
-                                                            items: Provider.of<
-                                                                        VisitorProv>(
-                                                                    context,
-                                                                    listen: false)
-                                                                .visitorTypes
-                                                                .map((String x) {
-                                                              return DropdownMenuItem<
-                                                                      String>(
-                                                                  value: x,
-                                                                  child: Center(
-                                                                    child: Text(
-                                                                      x,
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              setResponsiveFontSize(
-                                                                                  25),
-                                                                          color: Colors
-                                                                              .green,
-                                                                          fontFamily:
-                                                                              'Almarai'),
-                                                                    ),
-                                                                  ));
-                                                            }).toList(),
-                                                            onChanged: (value) {
-                                                              setState(() {
-                                                                visitorTypeId = Provider.of<
-                                                                            VisitorProv>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .visitorObjects[Provider.of<
-                                                                                VisitorProv>(
-                                                                            context,
-                                                                            listen:
-                                                                                false)
-                                                                        .visitorTypes
-                                                                        .indexOf(
-                                                                            value)]
-                                                                    .id;
-                                                                selectedVisitorType =
-                                                                    value;
+                                                            CircularProgressIndicator(
+                                                          backgroundColor:
+                                                              Colors.green,
+                                                        ),
+                                                      ),
+                                              );
+                                            } else if (snapshot
+                                                    .connectionState ==
+                                                ConnectionState.done) {
+                                              if (visitorTypeId == null)
+                                                visitorTypeId =
+                                                    Provider.of<VisitorProv>(
+                                                            context,
+                                                            listen: false)
+                                                        .visitorObjects[0]
+                                                        .id;
 
-                                                                print(
-                                                                    'selected visitor type is $selectedVisitorType');
-                                                                print(
-                                                                    'selected visitor type id is $visitorTypeId');
-                                                              });
-                                                            },
-                                                            value: selectedVisitorType ??
+                                              print('type id $visitorTypeId');
+                                              return widget.screen !=
+                                                      'invitation'
+                                                  ? Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.green,
+                                                              width: 1.w)),
+                                                      width: 250.w,
+                                                      height: 70.h,
+                                                      child:
+                                                          DropdownButtonHideUnderline(
+                                                              child:
+                                                                  ButtonTheme(
+                                                        alignedDropdown: true,
+                                                        child: Container(
+                                                            child:
+                                                                DropdownButton(
+                                                          elevation: 2,
+                                                          isExpanded: true,
+                                                          items: Provider.of<
+                                                                      VisitorProv>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .visitorTypes
+                                                              .map((String x) {
+                                                            return DropdownMenuItem<
+                                                                    String>(
+                                                                value: x,
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    x,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            setResponsiveFontSize(
+                                                                                25),
+                                                                        color: Colors
+                                                                            .green,
+                                                                        fontFamily:
+                                                                            'Almarai'),
+                                                                  ),
+                                                                ));
+                                                          }).toList(),
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              visitorTypeId = Provider.of<
+                                                                          VisitorProv>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .visitorObjects[Provider.of<
+                                                                              VisitorProv>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .visitorTypes
+                                                                      .indexOf(
+                                                                          value)]
+                                                                  .id;
+                                                              selectedVisitorType =
+                                                                  value;
+
+                                                              print(
+                                                                  'selected visitor type is $selectedVisitorType');
+                                                              print(
+                                                                  'selected visitor type id is $visitorTypeId');
+                                                            });
+                                                          },
+                                                          value: selectedVisitorType ??
+                                                              Provider.of<VisitorProv>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .visitorTypes[0],
+                                                        )),
+                                                      )),
+                                                    )
+                                                  : Text('دعوة',
+                                                      style: TextStyle(
+                                                          fontSize:
+                                                              setResponsiveFontSize(
+                                                                  28),
+                                                          color: Colors.green,
+                                                          fontWeight:
+                                                              FontManager
+                                                                  .bold));
+                                            }
+                                            return Container();
+                                          }),
+                                      AutoSizeText(
+                                        ' : نوع الزائر',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            fontSize: setResponsiveFontSize(28),
+                                            fontWeight: FontManager.bold),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 60.w,
+                                  ),
+                                  child: Divider(
+                                    thickness: 1,
+                                    height: 2.h,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                widget.screen != 'invitation'
+                                    ? Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 60.w, vertical: 20.h),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                AutoSizeText(
+                                                  'عسكرى',
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          setResponsiveFontSize(
+                                                              28),
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
+                                                NumberPicker(
+                                                  value: _militaryValue,
+                                                  minValue: 0,
+                                                  selectedTextStyle: TextStyle(
+                                                      color: Colors.green,
+                                                      fontSize:
+                                                          setResponsiveFontSize(
+                                                              30),
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  maxValue: 30,
+                                                  onChanged: (value) =>
+                                                      setState(() =>
+                                                          _militaryValue =
+                                                              value),
+                                                ),
+                                                AutoSizeText(
+                                                  'مدنى',
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          setResponsiveFontSize(
+                                                              28),
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
+                                                NumberPicker(
+                                                  value: _citizensValue,
+                                                  minValue: 0,
+                                                  selectedTextStyle: TextStyle(
+                                                      color: Colors.green,
+                                                      fontSize:
+                                                          setResponsiveFontSize(
+                                                              30),
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  maxValue: 30,
+                                                  onChanged: (value) =>
+                                                      setState(() =>
+                                                          _citizensValue =
+                                                              value),
+                                                ),
+                                              ],
+                                            ),
+                                            AutoSizeText(
+                                              ' : المرافقين',
+                                              textAlign: TextAlign.end,
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      setResponsiveFontSize(26),
+                                                  fontWeight: FontManager.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : Container(),
+                                widget.screen != 'invitation'
+                                    ? Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 60.w),
+                                        child: Divider(
+                                          thickness: 1,
+                                          height: 2.h,
+                                          color: Colors.green,
+                                        ),
+                                      )
+                                    : Container(),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 60.w),
+                                  child: Directionality(
+                                    textDirection: ui.TextDirection.rtl,
+                                    child: Row(
+                                      children: [
+                                        AutoSizeText(
+                                          'رخصة السيارة      ',
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  setResponsiveFontSize(28),
+                                              fontWeight: FontManager.bold),
+                                        ),
+                                        SizedBox(
+                                          width: 8.w,
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            cameras = await availableCameras();
+
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        CameraPicker(
+                                                          camera: cameras[0],
+                                                          instruction: '1',
+                                                          dropdownValue:
+                                                              selectedVisitorType,
+                                                        )));
+                                          },
+                                          child: Icon(
+                                            Icons.camera_alt_outlined,
+                                            color: Colors.green,
+                                            size: 35,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 16.w,
+                                        ),
+                                        Provider.of<VisitorProv>(context,
+                                                        listen: true)
+                                                    .rokhsa !=
+                                                null
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 2),
+                                                child: InkWell(
+                                                    onTap: () {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return Dialog(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              40)),
+                                                              elevation: 16,
+                                                              child: Image.file(
                                                                 Provider.of<VisitorProv>(
                                                                         context,
                                                                         listen:
-                                                                            false)
-                                                                    .visitorTypes[0],
-                                                          )),
-                                                        )),
-                                                      )
-                                                    : Text('دعوة',
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                setResponsiveFontSize(
-                                                                    28),
-                                                            color: Colors.green,
-                                                            fontWeight:
-                                                                FontManager
-                                                                    .bold));
-                                              }
-                                              return Container();
-                                            }),
-                                        AutoSizeText(
-                                          ' : نوع الزائر',
-                                          textAlign: TextAlign.end,
-                                          style: TextStyle(
-                                              fontSize: setResponsiveFontSize(28),
-                                              fontWeight: FontManager.bold),
-                                        ),
+                                                                            true)
+                                                                    .rokhsa,
+                                                                width: 600.w,
+                                                                height: 600.h,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              ),
+                                                            );
+                                                          });
+                                                    },
+                                                    child: Stack(
+                                                      children: [
+                                                        Image.file(
+                                                          Provider.of<VisitorProv>(
+                                                                  context,
+                                                                  listen: true)
+                                                              .rokhsa,
+                                                          width: 300.w,
+                                                          height: 150.h,
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                        Positioned(
+                                                          left: 4.w,
+                                                          top: 4.w,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              print('deleted');
+                                                              Provider.of<VisitorProv>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .deleteRokhsa();
+                                                            },
+                                                            child: Icon(
+                                                              FontAwesomeIcons
+                                                                  .solidWindowClose,
+                                                              color: Colors
+                                                                  .grey[500],
+                                                              size: 35,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                              )
+                                            : Container(),
                                       ],
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 60.w,
-                                    ),
-                                    child: Divider(
-                                      thickness: 1,
-                                      height: 2.h,
-                                      color: Colors.green,
-                                    ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 60.w),
+                                  child: Divider(
+                                    thickness: 1,
+                                    height: 2.h,
+                                    color: Colors.green,
                                   ),
-                                  widget.screen != 'invitation'
-                                      ? Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 60.w, vertical: 20.h),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  AutoSizeText(
-                                                    'عسكرى',
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            setResponsiveFontSize(
-                                                                28),
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                  NumberPicker(
-                                                    value: _militaryValue,
-                                                    minValue: 0,
-                                                    selectedTextStyle: TextStyle(
-                                                        color: Colors.green,
-                                                        fontSize:
-                                                            setResponsiveFontSize(
-                                                                30),
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                    maxValue: 30,
-                                                    onChanged: (value) =>
-                                                        setState(() =>
-                                                            _militaryValue =
-                                                                value),
-                                                  ),
-                                                  AutoSizeText(
-                                                    'مدنى',
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            setResponsiveFontSize(
-                                                                28),
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                  NumberPicker(
-                                                    value: _citizensValue,
-                                                    minValue: 0,
-                                                    selectedTextStyle: TextStyle(
-                                                        color: Colors.green,
-                                                        fontSize:
-                                                            setResponsiveFontSize(
-                                                                30),
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                    maxValue: 30,
-                                                    onChanged: (value) =>
-                                                        setState(() =>
-                                                            _citizensValue =
-                                                                value),
-                                                  ),
-                                                ],
-                                              ),
-                                              AutoSizeText(
-                                                ' : المرافقين',
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        setResponsiveFontSize(26),
-                                                    fontWeight: FontManager.bold),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      : Container(),
-                                  widget.screen != 'invitation'
-                                      ? Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 60.w),
-                                          child: Divider(
-                                            thickness: 1,
-                                            height: 2.h,
-                                            color: Colors.green,
-                                          ),
-                                        )
-                                      : Container(),
-                                  SizedBox(
-                                    height: 20.h,
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 60.w),
-                                    child: Directionality(
-                                      textDirection: ui.TextDirection.rtl,
-                                      child: Row(
-                                        children: [
-                                          AutoSizeText(
-                                            'رخصة السيارة      ',
-                                            textAlign: TextAlign.end,
-                                            style: TextStyle(
-                                                fontSize:
-                                                    setResponsiveFontSize(28),
-                                                fontWeight: FontManager.bold),
-                                          ),
-                                          SizedBox(
-                                            width: 8.w,
-                                          ),
-                                          InkWell(
-                                            onTap: () async {
-                                              cameras = await availableCameras();
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 60.w),
+                                  child: Directionality(
+                                    textDirection: ui.TextDirection.rtl,
+                                    child: Row(
+                                      children: [
+                                        AutoSizeText(
+                                          'تحقيق الشخصية',
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  setResponsiveFontSize(28),
+                                              fontWeight: FontManager.bold),
+                                        ),
+                                        SizedBox(
+                                          width: 8.w,
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            cameras = await availableCameras();
 
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (BuildContext
-                                                              context) =>
-                                                          CameraPicker(
-                                                            camera: cameras[0],
-                                                            instruction: '1',
-                                                            dropdownValue:
-                                                                selectedVisitorType,
-                                                          )));
-                                            },
-                                            child: Icon(
-                                              Icons.camera_alt_outlined,
-                                              color: Colors.green,
-                                              size: 35,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 16.w,
-                                          ),
-                                          Provider.of<VisitorProv>(context,
-                                                          listen: true)
-                                                      .rokhsa !=
-                                                  null
-                                              ? Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 2),
-                                                  child: InkWell(
-                                                      onTap: () {
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return Dialog(
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                40)),
-                                                                elevation: 16,
-                                                                child: Image.file(
-                                                                  Provider.of<VisitorProv>(
-                                                                          context,
-                                                                          listen:
-                                                                              true)
-                                                                      .rokhsa,
-                                                                  width: 600.w,
-                                                                  height: 600.h,
-                                                                  fit:
-                                                                      BoxFit.fill,
-                                                                ),
-                                                              );
-                                                            });
-                                                      },
-                                                      child: Stack(
-                                                        children: [
-                                                          Image.file(
-                                                            Provider.of<VisitorProv>(
-                                                                    context,
-                                                                    listen: true)
-                                                                .rokhsa,
-                                                            width: 300.w,
-                                                            height: 150.h,
-                                                            fit: BoxFit.fill,
-                                                          ),
-                                                          Positioned(
-                                                            left: 4.w,
-                                                            top: 4.w,
-                                                            child: InkWell(
-                                                              onTap: () {
-                                                                print('deleted');
-                                                                Provider.of<VisitorProv>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .deleteRokhsa();
-                                                              },
-                                                              child: Icon(
-                                                                FontAwesomeIcons
-                                                                    .solidWindowClose,
-                                                                color: Colors
-                                                                    .grey[500],
-                                                                size: 35,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )),
-                                                )
-                                              : Container(),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20.h,
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 60.w),
-                                    child: Divider(
-                                      thickness: 1,
-                                      height: 2.h,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20.h,
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 60.w),
-                                    child: Directionality(
-                                      textDirection: ui.TextDirection.rtl,
-                                      child: Row(
-                                        children: [
-                                          AutoSizeText(
-                                            'تحقيق الشخصية',
-                                            textAlign: TextAlign.end,
-                                            style: TextStyle(
-                                                fontSize:
-                                                    setResponsiveFontSize(28),
-                                                fontWeight: FontManager.bold),
-                                          ),
-                                          SizedBox(
-                                            width: 8.w,
-                                          ),
-                                          InkWell(
-                                            onTap: () async {
-                                              cameras = await availableCameras();
-
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (BuildContext
-                                                              context) =>
-                                                          CameraPicker(
-                                                            camera: cameras[0],
-                                                            instruction: '2',
-                                                            dropdownValue:
-                                                                selectedVisitorType,
-                                                          )));
-                                            },
-                                            child: Icon(
-                                              Icons.camera_alt_outlined,
-                                              color: Colors.green,
-                                              size: 35,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 16.w,
-                                          ),
-                                          Provider.of<VisitorProv>(context,
-                                                          listen: true)
-                                                      .idCard !=
-                                                  null
-                                              ? Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 2),
-                                                  child: InkWell(
-                                                      onTap: () {
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return Dialog(
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                40)),
-                                                                elevation: 16,
-                                                                child: Image.file(
-                                                                  Provider.of<VisitorProv>(
-                                                                          context,
-                                                                          listen:
-                                                                              true)
-                                                                      .idCard,
-                                                                  width: 600.w,
-                                                                  height: 600.h,
-                                                                  fit:
-                                                                      BoxFit.fill,
-                                                                ),
-                                                              );
-                                                            });
-                                                      },
-                                                      child: Stack(
-                                                        children: [
-                                                          Image.file(
-                                                            Provider.of<VisitorProv>(
-                                                                    context,
-                                                                    listen: true)
-                                                                .idCard,
-                                                            width: 300.w,
-                                                            height: 150.h,
-                                                            fit: BoxFit.fill,
-                                                          ),
-                                                          Positioned(
-                                                            left: 4.w,
-                                                            top: 4.w,
-                                                            child: InkWell(
-                                                              onTap: () {
-                                                                print('deleted');
-                                                                Provider.of<VisitorProv>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .deleteId();
-                                                              },
-                                                              child: Icon(
-                                                                FontAwesomeIcons
-                                                                    .solidWindowClose,
-                                                                color: Colors
-                                                                    .grey[500],
-                                                                size: 35,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )),
-                                                )
-                                              : Container(),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20.h,
-                                  ),
-                                  (Provider.of<VisitorProv>(context, listen: true)
-                                                  .idCard !=
-                                              null &&
-                                          Provider.of<VisitorProv>(context,
-                                                      listen: true)
-                                                  .rokhsa !=
-                                              null)
-                                      ? RoundedButton(
-                                          width: 220,
-                                          height: 60,
-                                          ontap: () async {
-                                            showLoaderDialog(
-                                                context, 'Loading...');
-
-                                            widget.screen == 'invitation'
-                                                ? Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            PrintScreen2(
-                                                              civilCount: 0,
-                                                              militaryCount: 0,
-                                                            )))
-                                                : Provider.of<VisitorProv>(
-                                                        context,
-                                                        listen: false)
-                                                    .getBill(
-                                                        visitorTypeId.toString(),
-                                                        _citizensValue.toString(),
-                                                        _militaryValue.toString())
-                                                    .then((value) {
-                                                    print('value is $value');
-                                                    Navigator.pop(context);
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return BillDialog(
-                                                              typeValue:
-                                                                  visitorTypeId,
-                                                              citizenValue:
-                                                                  _citizensValue,
-                                                              militaryValue:
-                                                                  _militaryValue);
-                                                        });
-                                                  });
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        CameraPicker(
+                                                          camera: cameras[0],
+                                                          instruction: '2',
+                                                          dropdownValue:
+                                                              selectedVisitorType,
+                                                        )));
                                           },
-                                          title: 'إستمرار',
-                                          buttonColor: ColorManager.primary,
-                                          titleColor:
-                                              ColorManager.backGroundColor,
-                                        )
-                                      : Container(),
-                                ],
-                              ),
+                                          child: Icon(
+                                            Icons.camera_alt_outlined,
+                                            color: Colors.green,
+                                            size: 35,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 16.w,
+                                        ),
+                                        Provider.of<VisitorProv>(context,
+                                                        listen: true)
+                                                    .idCard !=
+                                                null
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 2),
+                                                child: InkWell(
+                                                    onTap: () {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return Dialog(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              40)),
+                                                              elevation: 16,
+                                                              child: Image.file(
+                                                                Provider.of<VisitorProv>(
+                                                                        context,
+                                                                        listen:
+                                                                            true)
+                                                                    .idCard,
+                                                                width: 600.w,
+                                                                height: 600.h,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              ),
+                                                            );
+                                                          });
+                                                    },
+                                                    child: Stack(
+                                                      children: [
+                                                        Image.file(
+                                                          Provider.of<VisitorProv>(
+                                                                  context,
+                                                                  listen: true)
+                                                              .idCard,
+                                                          width: 300.w,
+                                                          height: 150.h,
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                        Positioned(
+                                                          left: 4.w,
+                                                          top: 4.w,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              print('deleted');
+                                                              Provider.of<VisitorProv>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .deleteId();
+                                                            },
+                                                            child: Icon(
+                                                              FontAwesomeIcons
+                                                                  .solidWindowClose,
+                                                              color: Colors
+                                                                  .grey[500],
+                                                              size: 35,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                              )
+                                            : Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                (Provider.of<VisitorProv>(context, listen: true)
+                                                .idCard !=
+                                            null &&
+                                        Provider.of<VisitorProv>(context,
+                                                    listen: true)
+                                                .rokhsa !=
+                                            null)
+                                    ? RoundedButton(
+                                        width: 220,
+                                        height: 60,
+                                        ontap: () async {
+                                          showLoaderDialog(
+                                              context, 'Loading...');
+
+
+
+                                          widget.screen == 'invitation'
+                                              ? Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          PrintScreen2(
+                                                            civilCount: 0,
+                                                            militaryCount: 0,resendType: 'Normal',from: 'send',
+                                                          )))
+
+
+
+                                              : Provider.of<VisitorProv>(
+                                                      context,
+                                                      listen: false)
+                                                  .getBill(
+                                                      visitorTypeId.toString(),
+                                                      _citizensValue.toString(),
+                                                      _militaryValue.toString())
+                                                  .then((value) {
+                                                  print('value is $value');
+                                                  Navigator.pop(context);
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return BillDialog(
+                                                            typeValue:
+                                                                visitorTypeId,
+                                                            citizenValue:
+                                                                _citizensValue,
+                                                            militaryValue:
+                                                                _militaryValue);
+                                                      });
+                                                });
+                                        },
+                                        title: 'إستمرار',
+                                        buttonColor: ColorManager.primary,
+                                        titleColor:
+                                            ColorManager.backGroundColor,
+                                      )
+                                    : Container(),
+                              ],
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

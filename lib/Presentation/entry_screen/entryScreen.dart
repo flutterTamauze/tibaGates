@@ -5,9 +5,11 @@ import 'package:clean_app/Core/Shared/exitDialog.dart';
 import 'package:clean_app/Presentation/intro_screen/Widgets/outlined_button.dart';
 import 'package:clean_app/Presentation/parking_carsList.dart';
 import 'package:clean_app/ViewModel/authProv.dart';
+import 'package:clean_app/ViewModel/visitorProv.dart';
 import 'package:clean_app/scanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +48,7 @@ class _EntryScreenState extends State<EntryScreen> {
 
   void cachingData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    Provider.of<VisitorProv>(context, listen: false).logId=null;
     Provider.of<AuthProv>(context, listen: false).guardName =
         prefs.getString('guardName');
     Provider.of<AuthProv>(context, listen: false).printerAddress =
@@ -69,7 +71,7 @@ class _EntryScreenState extends State<EntryScreen> {
     var width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: (){
-
+        SystemNavigator.pop();
       },
       child: Scaffold(
         body: SafeArea(

@@ -9,6 +9,7 @@ import 'package:clean_app/Core/imageAssets/assetsManager.dart';
 import 'package:clean_app/Presentation/intro_screen/Widgets/memberDisplay.dart';
 import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
 import 'package:clean_app/ViewModel/authProv.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path/path.dart' as nPath;
 
@@ -66,165 +67,170 @@ class _IntroScreenState extends State<IntroScreen> with WidgetsBindingObserver {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     authProv = Provider.of<AuthProv>(context, listen: true);
-    return SafeArea(
-      child: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Scaffold(
-          body: SingleChildScrollView(
-            child: Container(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/tiba.jpg'),
-                      fit: BoxFit.fitHeight)),
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Hero(
-                    tag: "logo",
-                    child: Container(
-                      height: (height * 0.15),
-                      width: (width * 0.32),
+    return WillPopScope(
+      onWillPop: (){
+        SystemNavigator.pop();
+      },
+      child: SafeArea(
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Scaffold(
+            body: SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/images/tiba.jpg'),
+                        fit: BoxFit.fitHeight)),
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Hero(
+                      tag: "logo",
                       child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          image: DecorationImage(
-                              image:
-                                  AssetImage("assets/images/tipasplash.png")),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: ColorManager.primary, width: 2.w),
+                        height: (height * 0.15),
+                        width: (width * 0.32),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            image: DecorationImage(
+                                image:
+                                    AssetImage("assets/images/tipasplash.png")),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: ColorManager.primary, width: 2.w),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: BorderedText(
-                        strokeWidth: 4.0.w,
-                        strokeColor: Colors.black,
-                        child: Text(
-                          "Tiba Rose دار الدفاع الجوى ",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              letterSpacing: 2,
-                              fontSize: setResponsiveFontSize(26),
-                              decoration: TextDecoration.none,
-                              decorationColor: Colors.black,
-                              height: 1.5.h,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      )),
-                  SizedBox(
-                    height: 36.h,
-                  ),
-                  Center(
-                    child: Container(
-                      width: 500.w,
-                      height: 400.h,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        elevation: 4,
-                        child: Column(
-                          children: [
-                            Container(
-                              child: Padding(
-                                padding: EdgeInsets.all(25.0),
-                                child: Form(
-                                  key: _forgetFormKey,
-                                  child: Column(
-                                    children: <Widget>[
-                                      AutoSizeText(
-                                        'قم بتسجيل الدخول',
-                                        style: TextStyle(
-                                            color: ColorManager.primary,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize:
-                                                setResponsiveFontSize(24)),
-                                      ),
-                                      SizedBox(
-                                        height: 25.h,
-                                      ),
-                                      MemberDisplay(
-                                        isLogin: true,
-                                        memberShipController:
-                                            _memberShipController,
-                                        passwordController: _passwordController,
-                                      ),
-                                      SizedBox(
-                                        height: 25.0.h,
-                                      ),
-                                      Provider.of<AuthProv>(context,
-                                                  listen: true)
-                                              .loadingState
-                                          ? Center(
-                                              child: Platform.isIOS
-                                                  ? CupertinoActivityIndicator()
-                                                  : CircularProgressIndicator(
-                                                      backgroundColor:
-                                                          ColorManager.primary,
-                                                      valueColor:
-                                                          AlwaysStoppedAnimation<
-                                                                  Color>(
-                                                              ColorManager
-                                                                  .primary),
-                                                    ),
-                                            )
-                                          : RoundedButton(
-                                              height: 55,
-                                              width: 220,
-                                              ontap: () {
-                                                if (!_forgetFormKey.currentState
-                                                    .validate()) {
-                                                  return;
-                                                } else {
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: BorderedText(
+                          strokeWidth: 4.0.w,
+                          strokeColor: Colors.black,
+                          child: Text(
+                            "Tiba Rose دار الدفاع الجوى ",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                letterSpacing: 2,
+                                fontSize: setResponsiveFontSize(26),
+                                decoration: TextDecoration.none,
+                                decorationColor: Colors.black,
+                                height: 1.5.h,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )),
+                    SizedBox(
+                      height: 36.h,
+                    ),
+                    Center(
+                      child: Container(
+                        width: 500.w,
+                        height: 400.h,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          elevation: 4,
+                          child: Column(
+                            children: [
+                              Container(
+                                child: Padding(
+                                  padding: EdgeInsets.all(25.0),
+                                  child: Form(
+                                    key: _forgetFormKey,
+                                    child: Column(
+                                      children: <Widget>[
+                                        AutoSizeText(
+                                          'قم بتسجيل الدخول',
+                                          style: TextStyle(
+                                              color: ColorManager.primary,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize:
+                                                  setResponsiveFontSize(24)),
+                                        ),
+                                        SizedBox(
+                                          height: 25.h,
+                                        ),
+                                        MemberDisplay(
+                                          isLogin: true,
+                                          memberShipController:
+                                              _memberShipController,
+                                          passwordController: _passwordController,
+                                        ),
+                                        SizedBox(
+                                          height: 25.0.h,
+                                        ),
+                                        Provider.of<AuthProv>(context,
+                                                    listen: true)
+                                                .loadingState
+                                            ? Center(
+                                                child: Platform.isIOS
+                                                    ? CupertinoActivityIndicator()
+                                                    : CircularProgressIndicator(
+                                                        backgroundColor:
+                                                            ColorManager.primary,
+                                                        valueColor:
+                                                            AlwaysStoppedAnimation<
+                                                                    Color>(
+                                                                ColorManager
+                                                                    .primary),
+                                                      ),
+                                              )
+                                            : RoundedButton(
+                                                height: 55,
+                                                width: 220,
+                                                ontap: () {
+                                                  if (!_forgetFormKey.currentState
+                                                      .validate()) {
+                                                    return;
+                                                  } else {
 
-                                                  takeImage().then((image) {
-                                                    print('**  $image');
-                                                    if(image==null){
-                                                      authProv.changeLoadingState(false);
-                                                      Fluttertoast.showToast(
-                                                          msg: 'حدث خطأ ما برجاء المحاولة مجدداً',
-                                                          backgroundColor: Colors.green,
-                                                          toastLength: Toast.LENGTH_LONG);
-                                                      return;
-                                                    }
-                                                    else{
+                                                    takeImage().then((image) {
+                                                      print('**  $image');
+                                                      if(image==null){
+                                                        authProv.changeLoadingState(false);
+                                                        Fluttertoast.showToast(
+                                                            msg: 'حدث خطأ ما برجاء المحاولة مجدداً',
+                                                            backgroundColor: Colors.green,
+                                                            toastLength: Toast.LENGTH_LONG);
+                                                        return;
+                                                      }
+                                                      else{
 
-                                                      login(image);
-                                                    }
+                                                        login(image);
+                                                      }
 
-                                                  });
+                                                    });
 
-                                                }
-                                              },
-                                              title: 'تسجيل',
-                                              buttonColor: ColorManager.primary,
-                                              titleColor:
-                                                  ColorManager.backGroundColor,
-                                            ),
-                                      SizedBox(
-                                        height: 10.h,
-                                      ),
-                                    ],
+                                                  }
+                                                },
+                                                title: 'تسجيل',
+                                                buttonColor: ColorManager.primary,
+                                                titleColor:
+                                                    ColorManager.backGroundColor,
+                                              ),
+                                        SizedBox(
+                                          height: 10.h,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

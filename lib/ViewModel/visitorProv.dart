@@ -201,7 +201,8 @@ class VisitorProv with ChangeNotifier {
     var request = new http.MultipartRequest("POST", uri);
 
 
-    if(carImg!=null&&identityImg!=null){
+    if(carImg !=null&&identityImg!=null){
+      print('images not null');
       request.files.add(
         await http.MultipartFile.fromPath("file", carImg.path),
       );
@@ -318,6 +319,7 @@ class VisitorProv with ChangeNotifier {
       print(e);
     }
   }
+
 
   Future<dynamic> confirmPrint(int userId, int logId, int reasonId) async {
     String data = '';

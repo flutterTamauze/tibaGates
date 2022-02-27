@@ -111,8 +111,12 @@ class TakePictureScreenState extends State<CameraPicker>
               bottom: 16.h,
               right: 0.w,
               left: 0.w,
-              child: InkWell(
-                onTap: () async {
+              child: Container(
+                height: 80.h,
+                width: 80.w,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: Colors.green),
+                child: InkWell(onTap: ()async{
                   // Take the Picture in a try / catch block. If anything goes wrong,
                   // catch the error.
                   try {
@@ -157,22 +161,17 @@ class TakePictureScreenState extends State<CameraPicker>
 
                     widget.instruction == '1'
                         ? Provider.of<VisitorProv>(context, listen: false)
-                            .addRokhsa(compressedFile)
+                        .addRokhsa(compressedFile)
                         : Provider.of<VisitorProv>(context, listen: false)
-                            .addIdCard(compressedFile);
+                        .addIdCard(compressedFile);
                     Navigator.pop(context);
 
                     _controller.dispose();
                   } catch (e) {
                     print(e);
                   }
-                },
-                child: Container(
-                  height: 80.h,
-                  width: 80.w,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.green),
-                  child: Icon(
+                }
+                  ,child: Icon(
                     Icons.camera_alt,
                     size: 40,
                     color: Colors.white,

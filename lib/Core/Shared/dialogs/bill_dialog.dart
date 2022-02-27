@@ -294,7 +294,7 @@ class BillDialog extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => PrintScreen2(
                                   civilCount: citizenValue,
-                                  militaryCount: militaryValue ,
+                                  militaryCount: militaryValue ,from: 'send',
                                   typeId: typeValue,
                                 )));
                       },
