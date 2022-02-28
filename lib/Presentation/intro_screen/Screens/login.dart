@@ -2,12 +2,12 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Core/Colors/colorManager.dart';
-import 'package:clean_app/Core/Constants/constants.dart';
-import 'package:clean_app/Core/Shared/sharedWidgets.dart';
-import 'package:clean_app/Core/imageAssets/assetsManager.dart';
+
 import 'package:clean_app/Presentation/intro_screen/Widgets/memberDisplay.dart';
 import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
+import 'package:clean_app/Utilities/Colors/colorManager.dart';
+import 'package:clean_app/Utilities/Constants/constants.dart';
+import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
 import 'package:clean_app/ViewModel/authProv.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -24,24 +24,26 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../main.dart';
+
 List<CameraDescription> cameras = [];
 
-class IntroScreen extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   static const String routeName = "/intro";
   final CameraDescription camera;
 
-  const IntroScreen({Key key, this.camera}) : super(key: key);
+  const LoginScreen({Key key, this.camera}) : super(key: key);
 
   @override
-  _IntroScreenState createState() => _IntroScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _IntroScreenState extends State<IntroScreen> with WidgetsBindingObserver {
+class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   final _forgetFormKey = GlobalKey<FormState>();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _memberShipController = TextEditingController();
   CameraController _controller;
-  SharedPreferences prefs;
+
   bool isLoggedIn;
   Future<void> _initializeControllerFuture;
 
@@ -51,14 +53,13 @@ class _IntroScreenState extends State<IntroScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _controller = CameraController(
+/*    _controller = CameraController(
       widget.camera,
       ResolutionPreset.medium,
     );
 
-    _initializeControllerFuture = _controller.initialize();
+    _initializeControllerFuture = _controller.initialize();*/
   }
-
 
   bool isArabic = true;
 
@@ -68,7 +69,7 @@ class _IntroScreenState extends State<IntroScreen> with WidgetsBindingObserver {
     var width = MediaQuery.of(context).size.width;
     authProv = Provider.of<AuthProv>(context, listen: true);
     return WillPopScope(
-      onWillPop: (){
+      onWillPop: () {
         SystemNavigator.pop();
       },
       child: SafeArea(
@@ -130,7 +131,7 @@ class _IntroScreenState extends State<IntroScreen> with WidgetsBindingObserver {
                       height: 36.h,
                     ),
                     Center(
-                      child: Container(
+                      child: SizedBox(
                         width: 500.w,
                         height: 400.h,
                         child: Card(
@@ -140,87 +141,89 @@ class _IntroScreenState extends State<IntroScreen> with WidgetsBindingObserver {
                           elevation: 4,
                           child: Column(
                             children: [
-                              Container(
-                                child: Padding(
-                                  padding: EdgeInsets.all(25.0),
-                                  child: Form(
-                                    key: _forgetFormKey,
-                                    child: Column(
-                                      children: <Widget>[
-                                        AutoSizeText(
-                                          'قم بتسجيل الدخول',
-                                          style: TextStyle(
-                                              color: ColorManager.primary,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize:
-                                                  setResponsiveFontSize(24)),
-                                        ),
-                                        SizedBox(
-                                          height: 25.h,
-                                        ),
-                                        MemberDisplay(
-                                          isLogin: true,
-                                          memberShipController:
-                                              _memberShipController,
-                                          passwordController: _passwordController,
-                                        ),
-                                        SizedBox(
-                                          height: 25.0.h,
-                                        ),
-                                        Provider.of<AuthProv>(context,
-                                                    listen: true)
-                                                .loadingState
-                                            ? Center(
-                                                child: Platform.isIOS
-                                                    ? CupertinoActivityIndicator()
-                                                    : CircularProgressIndicator(
-                                                        backgroundColor:
-                                                            ColorManager.primary,
-                                                        valueColor:
-                                                            AlwaysStoppedAnimation<
-                                                                    Color>(
-                                                                ColorManager
-                                                                    .primary),
-                                                      ),
-                                              )
-                                            : RoundedButton(
-                                                height: 55,
-                                                width: 220,
-                                                ontap: () {
-                                                  if (!_forgetFormKey.currentState
-                                                      .validate()) {
-                                                    return;
-                                                  } else {
+                              Padding(
+                                padding: const EdgeInsets.all(25.0),
+                                child: Form(
+                                  key: _forgetFormKey,
+                                  child: Column(
+                                    children: <Widget>[
+                                      AutoSizeText(
+                                        'قم بتسجيل الدخول',
+                                        style: TextStyle(
+                                            color: ColorManager.primary,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize:
+                                                setResponsiveFontSize(24)),
+                                      ),
+                                      SizedBox(
+                                        height: 25.h,
+                                      ),
+                                      MemberDisplay(
+                                        isLogin: true,
+                                        memberShipController:
+                                            _memberShipController,
+                                        passwordController:
+                                            _passwordController,
+                                      ),
+                                      SizedBox(
+                                        height: 25.0.h,
+                                      ),
+                                      Provider.of<AuthProv>(context,
+                                                  listen: true)
+                                              .loadingState
+                                          ? Center(
+                                              child: Platform.isIOS
+                                                  ? const CupertinoActivityIndicator()
+                                                  : const CircularProgressIndicator(
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation<
+                                                                  Color>(
+                                                              Colors.green),
+                                                    ),
+                                            )
+                                          : RoundedButton(
+                                              height: 55,
+                                              width: 220,
+                                              ontap: () {
+                                                if (!_forgetFormKey
+                                                    .currentState
+                                                    .validate()) {
+                                                  return;
+                                                } else {
 
-                                                    takeImage().then((image) {
-                                                      print('**  $image');
-                                                      if(image==null){
-                                                        authProv.changeLoadingState(false);
-                                                        Fluttertoast.showToast(
-                                                            msg: 'حدث خطأ ما برجاء المحاولة مجدداً',
-                                                            backgroundColor: Colors.green,
-                                                            toastLength: Toast.LENGTH_LONG);
-                                                        return;
-                                                      }
-                                                      else{
-
-                                                        login(image);
-                                                      }
-
-                                                    });
-
-                                                  }
-                                                },
-                                                title: 'تسجيل',
-                                                buttonColor: ColorManager.primary,
-                                                titleColor:
-                                                    ColorManager.backGroundColor,
-                                              ),
-                                        SizedBox(
-                                          height: 10.h,
-                                        ),
-                                      ],
-                                    ),
+                                                  takeImage().then((image) {
+                                                    print(
+                                                        'image during login is   $image');
+                                                    if (image == null) {
+                                                      authProv
+                                                          .changeLoadingState(
+                                                              false);
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              'حدث خطأ ما برجاء المحاولة مجدداً',
+                                                          backgroundColor:
+                                                              Colors.green,
+                                                          toastLength: Toast
+                                                              .LENGTH_LONG);
+                                                      return;
+                                                    } else {
+                                                      login(image);
+                                                    }
+                                                  });
+                                                }
+                                              },
+                                              title: 'تسجيل',
+                                              buttonColor:
+                                                  ColorManager.primary,
+                                              titleColor: ColorManager
+                                                  .backGroundColor,
+                                            ),
+                                      SizedBox(
+                                        height: 10.h,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -240,34 +243,18 @@ class _IntroScreenState extends State<IntroScreen> with WidgetsBindingObserver {
   }
 
   login(File img) {
-    print('image is $img');
+    var authProv = Provider.of<AuthProv>(context, listen: false);
     authProv.changeLoadingState(true);
-    Provider.of<AuthProv>(context, listen: false)
-        .login(_memberShipController.text, _passwordController.text,img)
+    authProv
+        .login(_memberShipController.text, _passwordController.text, img)
         .then((value) async {
       authProv.changeLoadingState(false);
+
       print('value => $value');
       if (value == 'Success') {
-        prefs = await SharedPreferences.getInstance();
         print('caching data');
-        prefs.setInt(
-            'guardId', Provider.of<AuthProv>(context, listen: false).guardId);
-        prefs.setInt(
-            'gateId', Provider.of<AuthProv>(context, listen: false).gateId);
-        prefs.setString('guardName',
-            Provider.of<AuthProv>(context, listen: false).guardName);
-        prefs.setDouble(
-            'balance', Provider.of<AuthProv>(context, listen: false).balance);
-        prefs.setDouble(
-            'ticketLostPrice', Provider.of<AuthProv>(context, listen: false).lostTicketPrice);
-        prefs.setString('printerAddress',
-            Provider.of<AuthProv>(context, listen: false).printerAddress ?? '');
-        prefs.setString(
-            'gateName', Provider.of<AuthProv>(context, listen: false).gateName);
-        prefs.setBool('isLoggedIn',
-            Provider.of<AuthProv>(context, listen: false).isLogged);
-        prefs.setString(
-            'guardRank', Provider.of<AuthProv>(context, listen: false).rank);
+        await cachingData();
+
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => EntryScreen()));
       } else if (value == 'Incorrect User') {
@@ -275,16 +262,38 @@ class _IntroScreenState extends State<IntroScreen> with WidgetsBindingObserver {
             msg: 'بيانات غير صحيحة',
             backgroundColor: Colors.green,
             toastLength: Toast.LENGTH_LONG);
+      } else if (value == 'you need to be at same network with local host') {
+        Fluttertoast.showToast(
+            msg: value,
+            backgroundColor: Colors.green,
+            toastLength: Toast.LENGTH_LONG);
       }
     });
   }
 
+  Future<void> cachingData() async {
+    await prefs.setString('guardId', authProv.guardId);
+    await prefs.setString('token', authProv.token);
+    await prefs.setString('guardName', authProv.guardName);
+    await prefs.setDouble('balance', authProv.balance);
+    await prefs.setDouble('ticketLostPrice', authProv.lostTicketPrice);
+    await prefs.setString('printerAddress', authProv.printerAddress ?? '');
+    await prefs.setString('gateName', authProv.gateName);
+    await prefs.setBool('isLoggedIn', authProv.isLogged);
+  }
+
   Future<File> takeImage() async {
+    _controller = CameraController(
+      widget.camera,
+      ResolutionPreset.medium,
+    );
+
+    _initializeControllerFuture = _controller.initialize();
     File compressedFile;
     try {
       // Ensure that the camera is initialized.
       await _initializeControllerFuture;
-print('1');
+      print('1');
       // Construct the path where the image should be saved using the
       // pattern package.
 
@@ -292,12 +301,10 @@ print('1');
         (await getTemporaryDirectory()).path,
         '${DateTime.now().toString().split(":")[2]}.jpg',
       );
-      print('2');
       await _controller.takePicture().then((value) => value.saveTo(path));
 
       // If the picture was taken, display it on a new screen.
       File img = File(path);
-      print('3');
       print(img.lengthSync());
 
       String newPath = nPath.join(
@@ -305,7 +312,7 @@ print('1');
         '${DateTime.now().toString().split(":")[2]}.jpg',
       );
 
-       compressedFile =
+      compressedFile =
           await testCompressAndGetFile(file: img, targetPath: newPath);
 
       // here we will crop
@@ -314,7 +321,6 @@ print('1');
       print(newPath);
 
       _controller.dispose();
-
     } catch (e) {
       print(e);
     }
@@ -333,9 +339,7 @@ print('1');
 
   @override
   void dispose() {
-    // Dispose of the controller when the widget is disposed.
     _controller.dispose();
-
     super.dispose();
   }
 }

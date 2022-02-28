@@ -1,20 +1,31 @@
 import 'dart:io';
 
-import 'package:clean_app/Core/Routes/routes.dart';
 import 'package:clean_app/Presentation/splash_screen/splash_screen.dart';
 import 'package:clean_app/ViewModel/authProv.dart';
 import 'package:clean_app/ViewModel/visitorProv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  //HttpOverrides.global = MyHttpOverrides();
+import 'Utilities/Routes/routes.dart';
+import 'Utilities/locators.dart';
+SharedPreferences prefs;
+GetIt getIt = GetIt.instance;
+Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
+  prefs=await SharedPreferences.getInstance();
+  InitLocator locator = InitLocator();
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  locator.intalizeLocator();
+
   runApp(MyApp(Routes()));
+
 }
 
 class MyApp extends StatelessWidget {
@@ -28,9 +39,9 @@ class MyApp extends StatelessWidget {
         return MultiProvider(
           providers: [
           ChangeNotifierProvider(
-            create: (context) => VisitorProv(),
+            create: (context) => getIt <VisitorProv>(),
           ),     ChangeNotifierProvider(
-            create: (context) => AuthProv(),
+            create: (context) => getIt<AuthProv>(),
           ),
 
         ],
@@ -46,11 +57,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-/*
-class MyHttpOverrides extends HttpOverrides{
-  @override
-  HttpClient createHttpClient(SecurityContext context){
-    return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
-  }
-}*/
+

@@ -13,9 +13,9 @@ class Routes {
         return MaterialPageRoute(
           builder: (context) => SplashScreen(),
         );
-      case IntroScreen.routeName:
+      case LoginScreen.routeName:
         return MaterialPageRoute(
-          builder: (context) => IntroScreen(),
+          builder: (context) => LoginScreen(),
         );
         case HomeScreen.routeName:
         return MaterialPageRoute(

@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:clean_app/Core/Colors/colorManager.dart';
-import 'package:clean_app/Core/Constants/constants.dart';
+
+import '../../../Utilities/Colors/colorManager.dart';
+import '../../../Utilities/Constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,8 +29,8 @@ class _MemberDisplayState extends State<MemberDisplay> {
         keyboardType: TextInputType.text,
         maxLengthEnforced: true,
         validator: (text) {
-          if (text == "") {
-            return "مطلوب";
+          if (text == '') {
+            return 'مطلوب';
           }
 
           return null;
@@ -41,7 +42,7 @@ class _MemberDisplayState extends State<MemberDisplay> {
             fontWeight: FontWeight.bold),
         textAlign: TextAlign.right,
         decoration: kTextFieldDecorationWhite.copyWith(
-            hintText: widget.isLogin ? "اسم المستخدم" : "",
+            hintText: widget.isLogin ? 'اسم المستخدم' : '',
             suffixIcon: Icon(
               Icons.person,
               color: ColorManager.primary,
@@ -52,8 +53,8 @@ class _MemberDisplayState extends State<MemberDisplay> {
           ? TextFormField(
               textInputAction: TextInputAction.next,
               validator: (text) {
-                if (text == "") {
-                  return "مطلوب";
+                if (text == '') {
+                  return 'مطلوب';
                 }
                 return null;
               },
@@ -65,7 +66,7 @@ class _MemberDisplayState extends State<MemberDisplay> {
                   fontWeight: FontWeight.bold),
               textAlign: TextAlign.right,
               decoration: kTextFieldDecorationWhite.copyWith(
-                  hintText: "كلمة المرور",  prefixIcon: IconButton(
+                  hintText: 'كلمة المرور',  prefixIcon: IconButton(
                 icon: Icon(
                   // Based on passwordVisible state choose the icon
                   _passwordVisible
@@ -91,7 +92,7 @@ class _MemberDisplayState extends State<MemberDisplay> {
               maxLengthEnforced: true,
               maxLength: 11,
               validator: (text) {
-                RegExp regex = RegExp("^01[0-2|5]{1}[0-9]{8}\$");
+                RegExp regex = RegExp('^01[0-2|5]{1}[0-9]{8}\$');
                 if (text.isEmpty || text == null) {
                   return 'برجاء إدخال رقم هاتفك';
                 }
@@ -107,7 +108,7 @@ class _MemberDisplayState extends State<MemberDisplay> {
                   fontWeight: FontWeight.bold),
               textAlign: TextAlign.right,
               decoration: kTextFieldDecorationWhite.copyWith(
-                  hintText: "رقم الهاتف",
+                  hintText: 'رقم الهاتف',
                   suffixIcon: Icon(
                     Icons.phone_android,
                     color: ColorManager.primary,

@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:clean_app/Core/Constants/constants.dart';
-import 'package:clean_app/Core/Fonts/fontsManager.dart';
-import 'package:clean_app/Core/Shared/sharedWidgets.dart';
+
 import 'package:clean_app/Data/Models/parked_model.dart';
+import 'package:clean_app/Utilities/Constants/constants.dart';
+import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
+import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
 import 'package:clean_app/ViewModel/authProv.dart';
 import 'package:clean_app/ViewModel/visitorProv.dart';
 import 'package:flutter/cupertino.dart';

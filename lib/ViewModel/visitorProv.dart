@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:clean_app/Core/Constants/constants.dart';
 import 'package:clean_app/Data/Models/parked_model.dart';
 import 'package:clean_app/Data/Models/reasons_model.dart';
 import 'package:clean_app/Data/Models/visitorTypes_model.dart';
-import 'package:clean_app/Data/response.dart';
+import 'package:clean_app/Data/Models/response.dart';
+import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:clean_app/ViewModel/authProv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -11,7 +11,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
+
 class VisitorProv with ChangeNotifier {
+
+  Map<String, String> mHeaders = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ${prefs.getString('token')}'
+  };
+
+
   List<File> images = [];
   List<ReasonModel> reasonsObjects = [];
   List<String> reasons = [];
@@ -56,23 +65,16 @@ class VisitorProv with ChangeNotifier {
     notifyListeners();
   }
 
-
-
   Future<dynamic> getVisitorTypes() async {
-
     try {
-      Map<String, String> headers = {
-        'Content-Type': 'application/json',
-      };
-
       if (visitorObjects.isNotEmpty) {
         print('visitorObjects not null');
         return;
       } else {
         print('visitorObjects null');
 
-        var response = await http.get(Uri.parse('$BASE_URL/api/guest/getOwners'),
-            headers: headers);
+        var response = await http
+            .get(Uri.parse('$BASE_URL/api/guest/getOwners'), headers: mHeaders);
 
         print('status code ${response.statusCode}');
 
@@ -81,8 +83,6 @@ class VisitorProv with ChangeNotifier {
 
         visitorObjects =
             jsonObj.map((item) => VisitorTypesModel.fromJson(item)).toList();
-
-
 
         for (int i = 0; i < visitorObjects.length; i++) {
           print(visitorObjects[i].visitorType);
@@ -101,11 +101,9 @@ class VisitorProv with ChangeNotifier {
   }
 
   Future<void> getParkingList() async {
-    Map<String, String> headers = {'Content-Type': 'application/json'};
-
     try {
       http.Response response = await http
-          .get(Uri.parse('$BASE_URL/api/gate/parked'), headers: headers);
+          .get(Uri.parse('$BASE_URL/api/gate/parked'), headers: mHeaders);
 
       var parkJsonObj =
           jsonDecode(response.body)['response']['parkedDTO'] as List;
@@ -127,7 +125,6 @@ class VisitorProv with ChangeNotifier {
         }
       }
 
-
       parkingList = parkingList.reversed.toList();
 
       print('parking length  ${parkingList.length}');
@@ -139,20 +136,28 @@ class VisitorProv with ChangeNotifier {
     }
   }
 
-  Future<ResponseData> checkIn(File carImg, File identityImg, int userID, int typeID,
-      int citizenCount, int militaryCount,BuildContext context) async {
-    ResponseData responseData=ResponseData();
+  Future<ResponseData> checkIn(
+      File carImg,
+      File identityImg,
+      String userID,
+      int typeID,
+      int citizenCount,
+      int militaryCount,
+      BuildContext context) async {
+    ResponseData responseData = ResponseData();
     print('userID $userID');
-    Map<String, String> headers = {'Content-Type': 'application/json'};
+
+
+
 
     var uri = Uri.parse('$BASE_URL/api/gate/CheckIn');
 
-    var request = new http.MultipartRequest("POST", uri);
+    var request =  http.MultipartRequest('POST', uri);
     request.files.add(
-      await http.MultipartFile.fromPath("file", carImg.path),
+      await http.MultipartFile.fromPath('file', carImg.path),
     );
     request.files.add(
-      await http.MultipartFile.fromPath("file1", identityImg.path),
+      await http.MultipartFile.fromPath('file1', identityImg.path),
     );
 
     request.fields['UserID'] = userID.toString();
@@ -160,11 +165,14 @@ class VisitorProv with ChangeNotifier {
     request.fields['militryCount'] = militaryCount.toString();
     request.fields['civilCount'] = citizenCount.toString();
 
-    request.headers.addAll(headers);
+    request.headers.addAll(mHeaders);
 
     try {
       await request.send().then((response) async {
-        print(response.statusCode);
+        print('status code ${response.statusCode}');
+        if(response.statusCode==401){
+          responseData.message = 'unAuth';
+        }
         response.stream.transform(utf8.decoder).listen((value) {
           Map<String, dynamic> responseDecoded = json.decode(value);
           print("ah ah ${responseDecoded['response']}");
@@ -187,35 +195,33 @@ class VisitorProv with ChangeNotifier {
     return responseData;
   }
 
-
-
-
-
-  Future<ResponseData> checkInInvitation( int userID, int invitationID,
-     BuildContext context,[File carImg, File identityImg,]) async {
-    ResponseData responseData=ResponseData();
+  Future<ResponseData> checkInInvitation(
+    String userID,
+    int invitationID,
+    BuildContext context, [
+    File carImg,
+    File identityImg,
+  ]) async {
+    ResponseData responseData = ResponseData();
     print('userID $userID');
-    Map<String, String> headers = {'Content-Type': 'application/json'};
 
     var uri = Uri.parse('$BASE_URL/api/invitation/CheckInInvitation');
-    var request = new http.MultipartRequest("POST", uri);
+    var request =  http.MultipartRequest('POST', uri);
 
-
-    if(carImg !=null&&identityImg!=null){
+    if (carImg != null && identityImg != null) {
       print('images not null');
       request.files.add(
-        await http.MultipartFile.fromPath("file", carImg.path),
+        await http.MultipartFile.fromPath('file', carImg.path),
       );
       request.files.add(
-        await http.MultipartFile.fromPath("file1", identityImg.path),
+        await http.MultipartFile.fromPath('file1', identityImg.path),
       );
     }
-
 
     request.fields['UserID'] = userID.toString();
     request.fields['invitationID'] = invitationID.toString();
 
-    request.headers.addAll(headers);
+    request.headers.addAll(mHeaders);
 
     try {
       await request.send().then((response) async {
@@ -247,8 +253,6 @@ class VisitorProv with ChangeNotifier {
     print('type id $typeID');
     String data = '';
 
-    Map<String, String> headers = {'Content-Type': 'application/json'};
-
     String body = jsonEncode({
       'TypeID': typeID,
       'militryCount': militaryCount,
@@ -259,7 +263,7 @@ class VisitorProv with ChangeNotifier {
       http.Response response = await http.post(
           Uri.parse('$BASE_URL/api/gate/bill'),
           body: body,
-          headers: headers);
+          headers: mHeaders);
 
       String responseBody = response.body;
       print('response $responseBody');
@@ -288,12 +292,10 @@ class VisitorProv with ChangeNotifier {
   Future<dynamic> getLogById(int logId) async {
     String data = '';
 
-    Map<String, String> headers = {'Content-Type': 'application/json'};
-
     try {
       http.Response response = await http.post(
           Uri.parse('$BASE_URL/api/gate/GetLogByID/$logId'),
-          headers: headers);
+          headers: mHeaders);
 
       String responseBody = response.body;
       print('response $responseBody');
@@ -320,18 +322,15 @@ class VisitorProv with ChangeNotifier {
     }
   }
 
-
-  Future<dynamic> confirmPrint(int userId, int logId, int reasonId) async {
+  Future<dynamic> confirmPrint(String userId, int logId, int reasonId) async {
     String data = '';
     print('logId $logId  userId $userId  reasonId $reasonId');
 
-    Map<String, String> headers = {'Content-Type': 'application/json'};
-
     try {
-
       http.Response response = await http.post(
-          Uri.parse('$BASE_URL/api/gate/print?UserID=$userId&LogID=$logId&ReasonID=$reasonId'),
-          headers: headers);
+          Uri.parse(
+              '$BASE_URL/api/gate/print?UserID=$userId&LogID=$logId&ReasonID=$reasonId'),
+          headers: mHeaders);
 
       String responseBody = response.body;
       print('response $responseBody');
@@ -351,16 +350,13 @@ class VisitorProv with ChangeNotifier {
     }
   }
 
-
-
   Future<dynamic> cancel(int logId) async {
     String data = '';
-    Map<String, String> headers = {'Content-Type': 'application/json'};
 
     try {
       http.Response response = await http.delete(
           Uri.parse('$BASE_URL/api/gate/Cancel/$logId'),
-          headers: headers);
+          headers: mHeaders);
 
       String responseBody = response.body;
       var decodedRes = jsonDecode(responseBody);
@@ -379,14 +375,13 @@ class VisitorProv with ChangeNotifier {
   Future<dynamic> checkOut(String qrCode) async {
     String data = '';
     print('qrCode $qrCode');
-    Map<String, String> headers = {'Content-Type': 'application/json'};
 
     try {
-      var uri = Uri.parse("$BASE_URL/api/gate/CheckOut");
-      var request = new http.MultipartRequest("PUT", uri);
+      var uri = Uri.parse('$BASE_URL/api/gate/CheckOut');
+      var request = new http.MultipartRequest('PUT', uri);
       print('1*');
       request.fields['QrCode'] = qrCode;
-      request.headers.addAll(headers);
+      request.headers.addAll(mHeaders);
       print('2*');
       try {
         await request.send().then((response) async {
@@ -418,41 +413,32 @@ class VisitorProv with ChangeNotifier {
     }
   }
 
-
-
   Future<dynamic> checkOutInvitation(String qrCode) async {
     String data = '';
     print('qrCode $qrCode');
-    Map<String, String> headers = {'Content-Type': 'application/json'};
 
     try {
-      var uri = Uri.parse("$BASE_URL/api/Invitation/ScanInvitationQr");
-      var request = new http.MultipartRequest("POST", uri);
+      var uri = Uri.parse('$BASE_URL/api/Invitation/ScanInvitationQr');
+      var request = new http.MultipartRequest('POST', uri);
 
       request.fields['QrCode'] = qrCode;
-      request.headers.addAll(headers);
+      request.headers.addAll(mHeaders);
 
       try {
         await request.send().then((response) async {
           print(' status code is ${response.statusCode}');
 
           response.stream.transform(utf8.decoder).listen((value) {
-
             Map<String, dynamic> responseDecoded = json.decode(value);
             print("response ${responseDecoded['response']}");
-            invitationID=responseDecoded['response']['id'];
-            isVIP=responseDecoded['response']['isVIP'];
-
+            invitationID = responseDecoded['response']['id'];
+            isVIP = responseDecoded['response']['isVIP'];
 
             print('message is $responseDecoded');
 
-
-
-            if(isVIP){
-              data='vip';
-            }
-
-            else if (responseDecoded['message'] == 'Success') {
+            if (isVIP) {
+              data = 'vip';
+            } else if (responseDecoded['message'] == 'Success') {
               data = 'Success';
             }
           });

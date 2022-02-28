@@ -1,4 +1,4 @@
-import 'package:clean_app/Core/Colors/colorManager.dart';
+import 'package:clean_app/Utilities/Colors/colorManager.dart';
 import 'package:flutter/material.dart';
 
 class HeaderWidget extends StatefulWidget {

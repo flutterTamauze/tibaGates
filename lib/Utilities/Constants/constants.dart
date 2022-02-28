@@ -1,16 +1,17 @@
-import 'package:clean_app/Core/Colors/colorManager.dart';
-import 'package:clean_app/Core/Fonts/fontsManager.dart';
+
+import 'package:clean_app/Utilities/Colors/colorManager.dart';
+import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 //const String BASE_URL = 'https://tibarose.tibarosehotel.com';
-const String BASE_URL = 'http://192.168.1.208:8007';
+const String BASE_URL = 'http://192.168.2.40:8007';
 //const String BASE_URL = 'http://10.0.0.242/GATE';
 
 const kTextFieldDecorationWhite = InputDecoration(
   isDense: true,
 
-  contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+  contentPadding:  EdgeInsets.symmetric(vertical: 10.0),
   hintText: 'Enter a value',
   hintStyle:
       TextStyle(color: Colors.grey, fontSize: 15, fontWeight: FontWeight.w500),

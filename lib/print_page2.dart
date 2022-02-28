@@ -4,7 +4,9 @@ import 'dart:ui' as ui;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:bluetooth_print/bluetooth_print_model.dart';
-import 'package:clean_app/Core/Fonts/fontsManager.dart';
+import 'package:camera/camera.dart';
+import 'package:clean_app/Presentation/intro_screen/Screens/login.dart';
+import 'package:clean_app/Utilities/Shared/noInternet.dart';
 import 'package:clean_app/ViewModel/authProv.dart';
 import 'package:clean_app/ViewModel/visitorProv.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
@@ -15,16 +17,22 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Core/Colors/colorManager.dart';
-import 'Core/Constants/constants.dart';
-import 'Core/Shared/dialogs/loading_dialog.dart';
-import 'Core/Shared/qr.dart';
-import 'Core/Shared/sharedWidgets.dart';
+
 import 'Presentation/entry_screen/entryScreen.dart';
+import 'Utilities/Colors/colorManager.dart';
+import 'Utilities/Constants/constants.dart';
+import 'Utilities/Fonts/fontsManager.dart';
+import 'Utilities/Shared/dialogs/loading_dialog.dart';
+import 'Utilities/Shared/qr.dart';
+import 'Utilities/Shared/sharedWidgets.dart';
+import 'Utilities/connectivityStatus.dart';
+
+List<CameraDescription> cameras;
 
 class PrintScreen2 extends StatefulWidget {
   final typeId, militaryCount, civilCount;
@@ -61,6 +69,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
   BluetoothDevice _device;
   String base64Image;
   final visibleNotifier = ValueNotifier<bool>(false);
+  bool finishScanning = false;
 
   @override
   void initState() {
@@ -108,8 +117,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
       print('onError $onError');
     });
   }
-
-  bool finishScanning = false;
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initBluetooth() async {
@@ -163,13 +170,15 @@ class _PrintScreen2State extends State<PrintScreen2> {
     var width = MediaQuery.of(context).size.width;
     var visitorProv = Provider.of<VisitorProv>(context, listen: false);
     var authProv = Provider.of<AuthProv>(context, listen: false);
+    //   var connectionStatus = Provider.of<ConnectivityStatus>(context);
     return WillPopScope(
       onWillPop: () {
         if (widget.from == 'resend' || widget.typeId == null) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => EntryScreen()));
-        } else
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const EntryScreen()));
+        } else {
           Navigator.pop(context);
+        }
         throw '';
       },
       child: Scaffold(
@@ -178,9 +187,12 @@ class _PrintScreen2State extends State<PrintScreen2> {
           backgroundColor: Colors.green,
           title: const Text('Connect your printer'),
         ),
-        body: RefreshIndicator(
+        body: /* connectionStatus == ConnectivityStatus.Offline
+            ? NoInternet()
+            :*/
+            RefreshIndicator(
           onRefresh: () =>
-              bluetoothPrint.startScan(timeout: Duration(seconds: 4)),
+              bluetoothPrint.startScan(timeout: const Duration(seconds: 4)),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -204,15 +216,15 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                     Padding(
                                       padding: const EdgeInsets.only(
                                           left: 15, right: 8),
-                                      child: Container(
+                                      child: SizedBox(
                                         height: (height * 0.18),
                                         width: (width * 0.34),
                                         child: Container(
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             color: Colors.white,
                                             image: DecorationImage(
                                                 image: AssetImage(
-                                                    "assets/images/tipasplash.png")),
+                                                    'assets/images/tipasplash.png')),
                                             shape: BoxShape.circle,
                                           ),
                                         ),
@@ -287,11 +299,12 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                 height: (height * 0.13),
                                                 width: (width * 0.3),
                                                 child: Container(
-                                                  decoration: BoxDecoration(
+                                                  decoration:
+                                                      const BoxDecoration(
                                                     color: Colors.white,
                                                     image: DecorationImage(
                                                         image: AssetImage(
-                                                            "assets/images/vip.png")),
+                                                            'assets/images/vip.png')),
                                                     shape: BoxShape.circle,
                                                   ),
                                                 ),
@@ -320,8 +333,8 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                         data: Provider.of<VisitorProv>(context,
                                                     listen: true)
                                                 .qrCode ??
-                                            "abc",
-                                        size: 280.0.w,
+                                            'abc',
+                                        size: 290.0.w,
                                         version: QrVersions.auto,
                                       ),
                                     ),
@@ -351,8 +364,8 @@ class _PrintScreen2State extends State<PrintScreen2> {
                               ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
                             child: Divider(
                               color: Colors.black,
                             ),
@@ -561,7 +574,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                             SizedBox(
                                               height: 20.h,
                                             ),
-                                            Divider(
+                                            const Divider(
                                               height: 2,
                                               thickness: 2,
                                               color: Colors.black,
@@ -655,7 +668,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                       builder: (c, snapshot) {
                         print('snapshot = ${snapshot.data.length}');
 
-                        return snapshot.data.length != 0
+                        return snapshot.data.isNotEmpty
                             ? Column(
                                 children: snapshot.data
                                     .map((d) => d.address ==
@@ -666,10 +679,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                             height: 60,
                                             width: 220,
                                             ontap: () async {
-                                              bool isDeviceNotNull =
-                                                  (_device != null &&
-                                                      _device.address != null);
-
                                               showLoaderDialog(
                                                   context, 'Loading...');
                                               SharedPreferences prefs =
@@ -717,9 +726,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                 await printScreenShot();
                                                               });
                                                             });
-                                                          } else
+                                                          } else {
                                                             print(
                                                                 'device is null 1');
+                                                          }
                                                         } else {
                                                           print(
                                                               'printer is connected asln');
@@ -781,9 +791,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                 await printScreenShot();
                                                               });
                                                             });
-                                                          } else
+                                                          } else {
                                                             print(
                                                                 'device is null 2');
+                                                          }
                                                         } else {
                                                           print(
                                                               'printer is connected asln');
@@ -835,7 +846,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                               print(
                                                                   'printer is connected with value $value');
                                                               Future.delayed(
-                                                                      Duration(
+                                                                      const Duration(
                                                                           seconds:
                                                                               6))
                                                                   .whenComplete(
@@ -843,9 +854,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                 await printScreenShot();
                                                               });
                                                             });
-                                                          } else
+                                                          } else {
                                                             print(
                                                                 'device is null 3');
+                                                          }
                                                         } else {
                                                           await printScreenShot();
                                                         }
@@ -875,8 +887,9 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                       print(
                                                           'new balance is ${prefs.getDouble('balance')}');
 
-                                                      Future.delayed(Duration(
-                                                              seconds: 1))
+                                                      Future.delayed(
+                                                              const Duration(
+                                                                  seconds: 1))
                                                           .whenComplete(
                                                               () async {
                                                         setState(() {
@@ -898,7 +911,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                               print(
                                                                   'printer is connected with value $value');
                                                               Future.delayed(
-                                                                      Duration(
+                                                                      const Duration(
                                                                           seconds:
                                                                               6))
                                                                   .whenComplete(
@@ -906,9 +919,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                 await printScreenShot();
                                                               });
                                                             });
-                                                          } else
+                                                          } else {
                                                             print(
                                                                 'device is null 4');
+                                                          }
                                                         } else {
                                                           print(
                                                               'printer is connected 2');
@@ -916,122 +930,30 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                           await printScreenShot();
                                                         }
                                                       });
+                                                    } else if (value.message ==
+                                                        'unAuth') {
+                                                      cameras =
+                                                          await availableCameras();
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              'برجاء تسجيل الدخول من جديد',
+                                                          backgroundColor:
+                                                              Colors.green,
+                                                          toastLength: Toast
+                                                              .LENGTH_LONG);
+                                                      Navigator.pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      LoginScreen(
+                                                                        camera:
+                                                                            cameras[1],
+                                                                      )));
                                                     }
                                                   });
                                                 }
                                               }
-
-                                              /*      ((widget.from!='Normal'  && widget.from!='VIP Invitation' && widget.from!=null))
-                                                  ? Future.delayed(Duration(
-                                                          milliseconds: 1500))
-                                                      .whenComplete(() async {
-                                                      print('resend case');
-                                                      setState(() {
-                                                        _device = d;
-                                                      });
-                                                      visitorProv.confirmPrint(authProv.guardId, visitorProv.logId, widget.reasonId)
-                                                          .then((value) async {
-                                                        if (value ==
-                                                            'Success') {
-
-                                                          // we will update balance
-                                                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                          prefs.setDouble('balance', authProv.balance + widget.reasonPrice);
-                                                          authProv.balance = prefs.getDouble('balance');
-                                                          print('new balance in resend is ${authProv.balance}');
-
-                                                          // we will connect the printer
-                                                          if (!_connected) {
-                                                            print('printer is not connected');
-
-                                                            if (isDeviceNotNull) {
-                                                              await bluetoothPrint
-                                                                  .connect(
-                                                                      _device)
-                                                                  .then(
-                                                                      (value) {
-                                                                Future.delayed(Duration(
-                                                                        seconds:
-                                                                            6))
-                                                                    .whenComplete(() async {
-                                                                  // take screenshot
-                                                                  await printScreenShot();
-                                                                });
-                                                              });
-                                                            } else
-                                                              print(
-                                                                  'device is null');
-                                                          } else {
-                                                            print(
-                                                                'printer is connected asln');
-                                                            // we will take screenshot
-                                                            await printScreenShot();
-                                                          }
-                                                        }
-                                                      });
-                                                    })
-
-
-*/
-
-                                              /*        // invitation case
-                                                  : (widget.from=='Normal'  || widget.from=='VIP Invitation')
-                                                      ? visitorProv
-                                                          .checkInInvitation(
-                                                          authProv.guardId,
-                                                          visitorProv
-                                                              .invitationID,
-                                                          context,
-                                                          visitorProv.rokhsa,
-                                                          visitorProv.idCard,
-                                                        )
-                                                          .then((value) async {
-                                                          print('vip case');
-                                                          if (value.message ==
-                                                              'Success') {
-                                                            Future.delayed(
-                                                                    Duration(
-                                                                        seconds:
-                                                                            1))
-                                                                .whenComplete(
-                                                                    () async {
-                                                              setState(() {
-                                                                _device = d;
-                                                              });
-
-                                                              // first we will connect the printer
-                                                              if (!_connected) {
-                                                                print(
-                                                                    'printer is not connected in vip');
-
-                                                                if (isDeviceNotNull) {
-                                                                  await bluetoothPrint
-                                                                      .connect(
-                                                                          _device)
-                                                                      .then(
-                                                                          (value) {
-                                                                    print(
-                                                                        'printer is connected with value $value');
-                                                                    Future.delayed(Duration(
-                                                                            seconds:
-                                                                                6))
-                                                                        .whenComplete(
-                                                                            () async {
-                                                                      await printScreenShot();
-                                                                    });
-                                                                  });
-                                                                } else
-                                                                  print(
-                                                                      'device is null');
-                                                              } else {
-                                                                await printScreenShot();
-                                                              }
-                                                            });
-                                                          }
-                                                        })
-
-
-*/
                                             },
                                             title: 'تأكيد',
                                             buttonColor: ColorManager.primary,
@@ -1055,13 +977,12 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                               if (finishScanning == true) {
                                                 bluetoothPrint
                                                     .startScan(
-                                                        timeout: Duration(
+                                                        timeout: const Duration(
                                                             seconds: 4))
                                                     .then((value) {
                                                   print(
                                                       'scan result is $value');
-                                                  if (snapshot.data.length ==
-                                                      0) {
+                                                  if (snapshot.data.isEmpty) {
                                                     Fluttertoast.showToast(
                                                         msg:
                                                             'Make Sure to open Bluetooth and Location',
@@ -1073,8 +994,8 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                   visibleNotifier.value = false;
                                                 });
                                               } else {
-                                                Future.delayed(
-                                                        Duration(seconds: 2))
+                                                Future.delayed(const Duration(
+                                                        seconds: 2))
                                                     .whenComplete(() {
                                                   visibleNotifier.value = false;
                                                 });
@@ -1088,7 +1009,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                           titleColor:
                                               ColorManager.backGroundColor,
                                         )
-                                      : CircularProgressIndicator(
+                                      : const CircularProgressIndicator(
                                           color: Colors.green,
                                         );
                                 },

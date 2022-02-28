@@ -1,4 +1,5 @@
-import 'package:clean_app/Core/Constants/constants.dart';
+
+import 'package:clean_app/Utilities/Constants/constants.dart';
 
 class ParkingCarsModel {
   String carImage, identityImage;

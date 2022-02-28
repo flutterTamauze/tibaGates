@@ -44,7 +44,8 @@ dependencies:
   flutter_svg: 
   fluttertoast: ^8.0.8
   #esc_pos_bluetooth: ^0.1.0
-
+  get_it: ^7.2.0
+  connectivity: ^3.0.6
   font_awesome_flutter: ^9.2.0
   #getwidget: ^2.0.4
   #google_nav_bar: ^5.0.5
@@ -65,6 +66,7 @@ dependencies:
   url_launcher:
  
 dev_dependencies:
+  flutter_lints: ^1.0.4
   flutter_test:
     sdk: flutter
 flutter_icons:

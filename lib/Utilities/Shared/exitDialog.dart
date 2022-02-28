@@ -1,5 +1,4 @@
 import 'package:camera/camera.dart';
-import 'package:clean_app/Core/Routes/routesStrings.dart';
 import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
 import 'package:clean_app/Presentation/intro_screen/Screens/login.dart';
 import 'package:clean_app/ViewModel/authProv.dart';
@@ -58,13 +57,14 @@ class exitDialog extends StatelessWidget {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 Provider.of<AuthProv>(context, listen: false).isLogged = false;
                 prefs.setString('guardName', '');
-                prefs.setInt('gateId', -1);
-                prefs.setInt('guardId', -1);
+                //prefs.setString('token', null);
+
+                prefs.setString('guardId', '');
                 prefs.setBool('isLoggedIn', false);
 
                 cameras = await availableCameras();
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => IntroScreen(camera: cameras[1],)));
+                    context, MaterialPageRoute(builder: (context) => LoginScreen(camera: cameras[1],)));
 
 
                 // SystemNavigator.pop();

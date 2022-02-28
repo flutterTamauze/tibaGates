@@ -1,6 +1,4 @@
-import 'package:clean_app/Core/AppStrings/stringsManager.dart';
-import 'package:clean_app/Core/Colors/colorManager.dart';
-import 'package:clean_app/Core/Constants/constants.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

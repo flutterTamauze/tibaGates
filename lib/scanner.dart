@@ -10,11 +10,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:ui' as ui;
-import 'Core/Colors/colorManager.dart';
-import 'Core/Constants/constants.dart';
-import 'Core/Shared/sharedWidgets.dart';
-import 'Core/Shared/dialogs/successDialog.dart';
+
 import 'Presentation/entry_screen/entryScreen.dart';
+import 'Utilities/Shared/dialogs/successDialog.dart';
 
 class QrCodeScreen extends StatefulWidget {
   final screen;

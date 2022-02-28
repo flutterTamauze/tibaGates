@@ -1,7 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:clean_app/Core/Colors/colorManager.dart';
-import 'package:clean_app/Core/Constants/constants.dart';
+
 import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
+import 'package:clean_app/Utilities/Colors/colorManager.dart';
+import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:clean_app/ViewModel/visitorProv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

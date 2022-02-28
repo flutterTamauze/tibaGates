@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Core/Routes/routesStrings.dart';
-import 'package:clean_app/Core/imageAssets/assetsManager.dart';
+
 import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
 import 'package:clean_app/Presentation/intro_screen/Screens/login.dart';
+import 'package:clean_app/Utilities/Routes/routesStrings.dart';
 import 'package:clean_app/ViewModel/authProv.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -48,13 +48,13 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       cameras = await availableCameras();
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => IntroScreen(camera: cameras[1],)));
+          context, MaterialPageRoute(builder: (context) => LoginScreen(camera: cameras[1],)));
     }
   }
   @override
   void initState() {
     checkSignInStatus();
-   // _startDelay();
+    // _startDelay();
     super.initState();
   }
 
@@ -69,11 +69,11 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height/2,
           width: MediaQuery.of(context).size.width/2,
           child: ZoomIn(
-            child: Image(
+            child: const Image(
               image: AssetImage(
                 'assets/images/tipasplash.png',
               ),
