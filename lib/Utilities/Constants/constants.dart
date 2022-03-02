@@ -1,12 +1,13 @@
-
-import 'package:clean_app/Utilities/Colors/colorManager.dart';
-import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
+import 'package:intl/intl.dart';
+import '../Colors/colorManager.dart';
+import '../Fonts/fontsManager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 //const String BASE_URL = 'https://tibarose.tibarosehotel.com';
-const String BASE_URL = 'http://192.168.2.40:8007';
+//const String BASE_URL = 'http://192.168.2.51:8007';
 //const String BASE_URL = 'http://10.0.0.242/GATE';
+const String BASE_URL = 'http://10.0.0.242/PARKING';
 
 const kTextFieldDecorationWhite = InputDecoration(
   isDense: true,
@@ -42,6 +43,17 @@ setResponsiveFontSize(size) {
   return ScreenUtil().setSp(size);
 }
 
+class DateUtil{
+
+  static String formatDate(DateTime date){
+
+    final DateFormat formatter = DateFormat().add_yMMMd();
+    final String formatted = formatter.format(date);
+
+    return formatted;
+  }
+
+}
 final ktextFieldDecoration = InputDecoration(
   errorStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
   focusedBorder: OutlineInputBorder(
@@ -58,10 +70,10 @@ final ktextFieldDecoration = InputDecoration(
       borderSide: BorderSide(color: Colors.grey, width: 0)),
   hintStyle: TextStyle(
       fontWeight: FontWeight.w600, fontSize: setResponsiveFontSize(13)),
-  hintText: "قم بأدخال ملاحظتك هنا",
+  hintText: 'قم بأدخال ملاحظتك هنا',
 );
 final menuBoxDecoartionCard = BoxDecoration(
-  borderRadius: BorderRadius.horizontal(
+  borderRadius: const BorderRadius.horizontal(
     left: Radius.circular(40.0),
     right: Radius.circular(10.0),
   ),
@@ -69,13 +81,13 @@ final menuBoxDecoartionCard = BoxDecoration(
   boxShadow: [
     BoxShadow(
         color: Colors.black.withOpacity(0.16),
-        offset: Offset(0, 3.0),
+        offset: const Offset(0, 3.0),
         blurRadius: 12.0,
         spreadRadius: 5),
   ],
 );
-const Color facebookColor = const Color(0xff39579A);
-const Color twitterColor = const Color(0xff00ABEA);
-const Color instaColor = const Color(0xffBE2289);
-const Color whatsappColor = const Color(0xff075E54);
-const Color googleColor = const Color(0xffDF4A32);
+const Color facebookColor =  Color(0xff39579A);
+const Color twitterColor =  Color(0xff00ABEA);
+const Color instaColor =  Color(0xffBE2289);
+const Color whatsappColor =  Color(0xff075E54);
+const Color googleColor =  Color(0xffDF4A32);

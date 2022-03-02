@@ -6,8 +6,8 @@ import 'package:clean_app/Data/Models/parked_model.dart';
 import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
 import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
-import 'package:clean_app/ViewModel/authProv.dart';
-import 'package:clean_app/ViewModel/visitorProv.dart';
+import 'package:clean_app/ViewModel/guard/authProv.dart';
+import 'package:clean_app/ViewModel/guard/visitorProv.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -424,7 +424,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                   horizontal:
                                                                       20.w)),
                                                           shape: MaterialStateProperty.all(
-                                                              RoundedRectangleBorder(
+                                                              const RoundedRectangleBorder(
                                                                   borderRadius: BorderRadius.all(Radius.circular(20))))),
                                                     ),
                                                     !(tmpList == null
@@ -459,7 +459,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                       elevation:
                                                                           16,
                                                                       child:
-                                                                          Container(
+                                                                          SizedBox(
                                                                         height:
                                                                             400.h,
                                                                         width:

@@ -7,8 +7,8 @@ import 'package:bluetooth_print/bluetooth_print_model.dart';
 import 'package:camera/camera.dart';
 import 'package:clean_app/Presentation/intro_screen/Screens/login.dart';
 import 'package:clean_app/Utilities/Shared/noInternet.dart';
-import 'package:clean_app/ViewModel/authProv.dart';
-import 'package:clean_app/ViewModel/visitorProv.dart';
+import 'package:clean_app/ViewModel/guard/authProv.dart';
+import 'package:clean_app/ViewModel/guard/visitorProv.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -235,7 +235,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: setResponsiveFontSize(26),
-                                            // fontFamily: GoogleFonts.getFont('Reem Kufi').fontFamily,
                                             fontFamily: GoogleFonts.getFont(
                                                     'Staatliches')
                                                 .fontFamily,
@@ -243,11 +242,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                     SizedBox(
                                       height: 20.h,
                                     ),
-                                    /*    Container(
-                                       // height: 20.h,
-                                        width: 90.w
-                                        ,
-                                        child: Image.asset('assets/images/decoration.png')),*/
+
                                     Provider.of<VisitorProv>(context,
                                                     listen: true)
                                                 .printTime !=
@@ -334,7 +329,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                     listen: true)
                                                 .qrCode ??
                                             'abc',
-                                        size: 290.0.w,
+                                        size: 270.0.w,
                                         version: QrVersions.auto,
                                       ),
                                     ),
@@ -699,7 +694,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
 
                                                     visitorProv
                                                         .confirmPrint(
-                                                            authProv.guardId,
+                                                            authProv.userId,
                                                             visitorProv.logId,
                                                             widget.reasonId)
                                                         .then((value) async {
@@ -748,7 +743,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                     });
                                                     visitorProv
                                                         .confirmPrint(
-                                                            authProv.guardId,
+                                                            authProv.userId,
                                                             visitorProv.logId,
                                                             widget.reasonId)
                                                         .then((value) async {
@@ -814,7 +809,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                   //  print('image is ${visitorProv.rokhsa.path}');
                                                   visitorProv
                                                       .checkInInvitation(
-                                                    authProv.guardId,
+                                                    authProv.userId,
                                                     visitorProv.invitationID,
                                                     context,
                                                     visitorProv.rokhsa,
@@ -823,7 +818,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                       .then((value) async {
                                                     if (value.message ==
                                                         'Success') {
-                                                      Future.delayed(Duration(
+                                                      Future.delayed(const Duration(
                                                               seconds: 1))
                                                           .whenComplete(
                                                               () async {
@@ -869,7 +864,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                       .checkIn(
                                                           visitorProv.rokhsa,
                                                           visitorProv.idCard,
-                                                          authProv.guardId,
+                                                          authProv.userId,
                                                           widget.typeId,
                                                           widget.civilCount,
                                                           widget.militaryCount,

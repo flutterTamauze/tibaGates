@@ -1,4 +1,4 @@
-import 'package:clean_app/Presentation/home_screen/home.dart';
+import 'package:clean_app/Presentation/home_screen/g_home_screen.dart';
 import 'package:clean_app/Presentation/intro_screen/Screens/login.dart';
 import 'package:clean_app/Presentation/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';

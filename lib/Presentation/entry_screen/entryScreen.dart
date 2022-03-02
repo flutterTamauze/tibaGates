@@ -2,18 +2,20 @@ import 'package:animate_do/animate_do.dart';
 import 'package:camera/camera.dart';
 
 import 'package:clean_app/Presentation/intro_screen/Widgets/outlined_button.dart';
+import 'package:clean_app/Presentation/manager/m_home_screen.dart';
 import 'package:clean_app/Presentation/parking_carsList.dart';
 import 'package:clean_app/Utilities/Colors/colorManager.dart';
 import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
 import 'package:clean_app/Utilities/Shared/exitDialog.dart';
 import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
-import 'package:clean_app/ViewModel/authProv.dart';
-import 'package:clean_app/ViewModel/visitorProv.dart';
+import 'package:clean_app/ViewModel/guard/authProv.dart';
+import 'package:clean_app/ViewModel/guard/visitorProv.dart';
 import 'package:clean_app/api/sharedPrefs.dart';
 import 'package:clean_app/scanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,7 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../../main.dart';
-import '../home_screen/home.dart';
+import '../home_screen/g_home_screen.dart';
 import '../intro_screen/Screens/login.dart';
 List<CameraDescription> cameras;
 class EntryScreen extends StatefulWidget {
@@ -37,9 +39,6 @@ class EntryScreen extends StatefulWidget {
 class _EntryScreenState extends State<EntryScreen> {
 
 String token;
-
-
-
 
   @override
   void initState() {
@@ -69,7 +68,7 @@ String token;
     Provider.of<AuthProv>(context, listen: false).token =
         prefs.getString('token');
 
-    Provider.of<AuthProv>(context, listen: false).guardId =
+    Provider.of<AuthProv>(context, listen: false).userId =
         prefs.getString('guardId');
   }
 
@@ -86,7 +85,7 @@ String token;
             child: Container(
           height: height,
           width: width,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
             image: DecorationImage(
                 image: AssetImage(
@@ -108,7 +107,7 @@ String token;
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      NotPrintedListScreen()));
+                                      const NotPrintedListScreen()));
                         },
                         child: SizedBox(
                           height: 45.h,
@@ -150,11 +149,16 @@ String token;
                                       fontFamily:
                                           GoogleFonts.getFont('Redressed')
                                               .fontFamily)),
-                              Text(
-                                'LE   إجمالى فواتير',
+                              Text(Provider.of<AuthProv>(context, listen: true).guardName
+                                ,
+                                style: TextStyle(
+                                    fontSize: setResponsiveFontSize(22),fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                              ),     Text(
+                                ' إجمالى فواتير',
                                 style: TextStyle(
                                     fontSize: setResponsiveFontSize(22),
-                                    color: Colors.black),
+                                    color: Colors.black,),
                               ),
                             ],
                           ),
@@ -186,7 +190,7 @@ String token;
                                 builder: (context) => const QrCodeScreen(screen: 'invitation',)),
                                 (Route<dynamic> route) => false);
                       },
-                      child: Container(
+                      child: SizedBox(
                         height: 45.h,
                         width: 50.w,
                         child: const Center(

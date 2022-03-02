@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:clean_app/Presentation/splash_screen/splash_screen.dart';
-import 'package:clean_app/ViewModel/authProv.dart';
-import 'package:clean_app/ViewModel/visitorProv.dart';
+import 'package:clean_app/ViewModel/guard/authProv.dart';
+import 'package:clean_app/ViewModel/guard/visitorProv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,12 +12,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Utilities/Routes/routes.dart';
 import 'Utilities/locators.dart';
+import 'ViewModel/manager/managerProv.dart';
+
 SharedPreferences prefs;
 GetIt getIt = GetIt.instance;
-Future<void> main() async {
 
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  prefs=await SharedPreferences.getInstance();
+  prefs = await SharedPreferences.getInstance();
   InitLocator locator = InitLocator();
 
   SystemChrome.setPreferredOrientations(
@@ -25,12 +27,13 @@ Future<void> main() async {
   locator.intalizeLocator();
 
   runApp(MyApp(Routes()));
-
 }
 
 class MyApp extends StatelessWidget {
   final Routes routes;
+
   MyApp(this.routes);
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -38,18 +41,21 @@ class MyApp extends StatelessWidget {
       builder: () {
         return MultiProvider(
           providers: [
-          ChangeNotifierProvider(
-            create: (context) => getIt <VisitorProv>(),
-          ),     ChangeNotifierProvider(
-            create: (context) => getIt<AuthProv>(),
-          ),
-
-        ],
+            ChangeNotifierProvider(
+              create: (context) => getIt<VisitorProv>(),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => getIt<AuthProv>(),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => getIt<ManagerProv>(),
+            ),
+          ],
           child: MaterialApp(
-            title: "Tiba Rose",
+            title: 'Tiba Rose',
             debugShowCheckedModeBanner: false,
             home: SplashScreen(),
-            theme: ThemeData(fontFamily: "Almarai"),
+            theme: ThemeData(fontFamily: 'Almarai'),
             onGenerateRoute: routes.onGenerateRoute,
           ),
         );
@@ -57,4 +63,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

@@ -4,14 +4,14 @@ import 'package:clean_app/Data/Models/reasons_model.dart';
 import 'package:clean_app/Data/Models/visitorTypes_model.dart';
 import 'package:clean_app/Data/Models/response.dart';
 import 'package:clean_app/Utilities/Constants/constants.dart';
-import 'package:clean_app/ViewModel/authProv.dart';
+import 'package:clean_app/ViewModel/guard/authProv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../main.dart';
+import '../../main.dart';
 
 class VisitorProv with ChangeNotifier {
 
@@ -340,6 +340,8 @@ class VisitorProv with ChangeNotifier {
       print('response is $decodedRes');
 
       if (decodedRes['message'] == 'Success') {
+        print(decodedRes['response']);
+        printTime = decodedRes['response']['printTime'];
         data = 'Success';
       }
 
@@ -419,7 +421,7 @@ class VisitorProv with ChangeNotifier {
 
     try {
       var uri = Uri.parse('$BASE_URL/api/Invitation/ScanInvitationQr');
-      var request = new http.MultipartRequest('POST', uri);
+      var request =  http.MultipartRequest('POST', uri);
 
       request.fields['QrCode'] = qrCode;
       request.headers.addAll(mHeaders);

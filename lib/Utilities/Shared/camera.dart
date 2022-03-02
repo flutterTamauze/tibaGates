@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Presentation/home_screen/home.dart';
-import 'package:clean_app/ViewModel/visitorProv.dart';
+import 'package:clean_app/Presentation/home_screen/g_home_screen.dart';
+import 'package:clean_app/ViewModel/guard/visitorProv.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';

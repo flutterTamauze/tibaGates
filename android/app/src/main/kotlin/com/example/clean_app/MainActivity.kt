@@ -1,4 +1,4 @@
-package com.tds.tiba
+package com.tds.tibaParking
 
 import io.flutter.embedding.android.FlutterActivity
 

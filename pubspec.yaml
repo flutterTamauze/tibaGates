@@ -26,6 +26,11 @@ dependencies:
   auto_size_text: ^3.0.0
   bordered_text: ^2.0.0
   #card_swiper: ^1.0.4
+  flutter_udid: ^2.0.0
+  expandable: ^5.0.1
+  share: ^2.0.1
+  share_plus: ^2.1.4
+
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter

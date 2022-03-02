@@ -5,8 +5,9 @@ import 'package:camera/camera.dart';
 
 import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
 import 'package:clean_app/Presentation/intro_screen/Screens/login.dart';
+import 'package:clean_app/Presentation/manager/m_home_screen.dart';
 import 'package:clean_app/Utilities/Routes/routesStrings.dart';
-import 'package:clean_app/ViewModel/authProv.dart';
+import 'package:clean_app/ViewModel/guard/authProv.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,25 +21,25 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Timer _timer;
-
-  _startDelay() {
-    _timer = Timer(Duration(seconds: 2), _goNext);
-  }
-
-  _goNext() {
-    Navigator.pushReplacementNamed(context, RoutesPath.intro);
-  }
   bool isLoggedIn;
-
+  String role;
 
   Future<void> checkSignInStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    role = prefs.getString('role') ;
 
     if (isLoggedIn == true) {
       print('isLoggedIn is true');
-
+if(role=='Manager'){
+  print('role is manager');
+  Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => MHomeScreen()));
+}
+else
 
       Navigator.pushReplacement(
           context,

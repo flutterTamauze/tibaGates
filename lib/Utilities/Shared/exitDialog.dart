@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
 import 'package:clean_app/Presentation/intro_screen/Screens/login.dart';
-import 'package:clean_app/ViewModel/authProv.dart';
+import 'package:clean_app/ViewModel/guard/authProv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -57,7 +57,6 @@ class exitDialog extends StatelessWidget {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 Provider.of<AuthProv>(context, listen: false).isLogged = false;
                 prefs.setString('guardName', '');
-                //prefs.setString('token', null);
 
                 prefs.setString('guardId', '');
                 prefs.setBool('isLoggedIn', false);

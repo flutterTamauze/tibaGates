@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import '../Utilities/Constants/constants.dart';
-import '../api/sharedPrefs.dart';
+import '../../Utilities/Constants/constants.dart';
+import '../../api/sharedPrefs.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,9 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProv with ChangeNotifier {
-  var guardId;
+  var userId;
 
   String guardName;
+  String userRole;
   String token;
   String printerAddress;
   String gateName;
@@ -28,7 +29,7 @@ class AuthProv with ChangeNotifier {
   }
 
   Future<dynamic> login(
-      String username, String password, File guardImage) async {
+      String username, String password, File guardImage,String tabAddress) async {
     String data = '';
     Map<String, String> headers = {'Content-Type': 'application/json'};
 
@@ -42,6 +43,7 @@ class AuthProv with ChangeNotifier {
 
     request.fields['Password'] = password;
     request.fields['UserName'] = username;
+    request.fields['PhoneMac'] = tabAddress;
 
     request.headers.addAll(headers);
 
@@ -60,18 +62,24 @@ class AuthProv with ChangeNotifier {
 
           if (responseDecoded['message'] == 'Success') {
             var userJson=responseDecoded['response']['user'];
+            userRole  =responseDecoded['response']['roles'][0];
             data = 'Success';
-            guardId = userJson['id'];
-            guardName = userJson['name'];
-            token = userJson['token'];
-            balance = double.parse(userJson['balance'].toString());
-            printerAddress = userJson['printerMac'];
-            gateName = userJson['gateName'];
-
             isLogged = true;
-            lostTicketPrice = double.parse(responseDecoded['response']
-                    ['printReasons'][0]['price']
-                .toString());
+            userId = userJson['id'];
+            token = userJson['token'];
+
+            if(userRole !='Manager'){
+
+              guardName = userJson['name'];
+              balance = double.parse(userJson['balance'].toString());
+              printerAddress = userJson['printerMac'];
+              lostTicketPrice = double.parse(responseDecoded['response']
+              ['printReasons'][0]['price']
+                  .toString());
+              gateName = userJson['gateName'];
+            }
+
+
           } else if (responseDecoded['message'] == 'Incorrect User') {
             data = 'Incorrect User';
           }

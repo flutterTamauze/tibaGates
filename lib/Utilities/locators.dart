@@ -1,5 +1,6 @@
-import 'package:clean_app/ViewModel/authProv.dart';
-import 'package:clean_app/ViewModel/visitorProv.dart';
+import 'package:clean_app/ViewModel/guard/authProv.dart';
+import 'package:clean_app/ViewModel/guard/visitorProv.dart';
+import 'package:clean_app/ViewModel/manager/managerProv.dart';
 import 'package:get_it/get_it.dart';
 
 
@@ -18,6 +19,7 @@ class InitLocator {
     locator.registerLazySingleton(() => VisitorProv());
 
     locator.registerLazySingleton(() => AuthProv());
+    locator.registerLazySingleton(() => ManagerProv());
 
 
     //Network

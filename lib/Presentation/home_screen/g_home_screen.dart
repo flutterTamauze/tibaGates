@@ -1,22 +1,16 @@
 import 'dart:io';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:camera/camera.dart';
-
-import 'package:clean_app/Presentation/intro_screen/Screens/login.dart';
-import 'package:clean_app/Utilities/Colors/colorManager.dart';
-import 'package:clean_app/Utilities/Constants/constants.dart';
-import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
-import 'package:clean_app/Utilities/Shared/camera.dart';
-import 'package:clean_app/Utilities/Shared/dialogs/bill_dialog.dart';
-import 'package:clean_app/Utilities/Shared/dialogs/loading_dialog.dart';
-import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
-import 'package:clean_app/ViewModel/authProv.dart';
-import 'package:clean_app/ViewModel/visitorProv.dart';
-import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
-import 'package:clean_app/print_page.dart';
+import '../../Utilities/Colors/colorManager.dart';
+import '../../Utilities/Constants/constants.dart';
+import '../../Utilities/Fonts/fontsManager.dart';
+import '../../Utilities/Shared/camera.dart';
+import '../../Utilities/Shared/dialogs/bill_dialog.dart';
+import '../../Utilities/Shared/dialogs/loading_dialog.dart';
+import '../../Utilities/Shared/sharedWidgets.dart';
+import '../../ViewModel/guard/visitorProv.dart';
+import '../entry_screen/entryScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -24,28 +18,20 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'dart:ui' as ui;
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as nPath;
-
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../print_page2.dart';
 
 List<CameraDescription> cameras = [];
 
 class HomeScreen extends StatefulWidget {
-  static const String routeName = "/Home";
+  static const String routeName = '/Home';
   final screen;
   final CameraDescription camera;
 
-
-  // String selectedAction = 'عضو دار';
 
   HomeScreen({Key key, this.screen, this.camera}) : super(key: key);
 
@@ -53,7 +39,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>     with WidgetsBindingObserver{
+class _HomeScreenState extends State<HomeScreen>   with WidgetsBindingObserver{
   int _citizensValue = 0;
   int _militaryValue = 0;
   int visitorTypeId;
@@ -96,14 +82,13 @@ class _HomeScreenState extends State<HomeScreen>     with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
-    var visitorProv = Provider.of<VisitorProv>(context, listen: false);
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () {
         // Provider.of<VisitorProv>(context,listen: false).cancel(widget.logId)
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => EntryScreen()));
+            context, MaterialPageRoute(builder: (context) => const EntryScreen()));
         throw '';
       },
       child: Scaffold(
@@ -112,11 +97,11 @@ class _HomeScreenState extends State<HomeScreen>     with WidgetsBindingObserver
             child: Container(
               height: height,
               width: width,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 image: DecorationImage(
                     image: AssetImage(
-                      "assets/images/bg1.jpeg",
+                      'assets/images/bg1.jpeg',
                     ),
                     fit: BoxFit.fill),
               ),
@@ -129,9 +114,9 @@ class _HomeScreenState extends State<HomeScreen>     with WidgetsBindingObserver
                         height: 20.h,
                       ),
                       Hero(
-                        tag: "logo",
+                        tag: 'logo',
                         child: ZoomIn(
-                          child: Container(
+                          child: SizedBox(
                             height: (height * 0.15),
                             width: (width * 0.32),
                             child: Container(
@@ -139,9 +124,9 @@ class _HomeScreenState extends State<HomeScreen>     with WidgetsBindingObserver
                                 color: Colors.white,
                                 border: Border.all(
                                     color: ColorManager.primary, width: 2.w),
-                                image: DecorationImage(
+                                image: const DecorationImage(
                                     image: AssetImage(
-                                        "assets/images/tipasplash.png")),
+                                        'assets/images/tipasplash.png')),
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -151,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen>     with WidgetsBindingObserver
                       SizedBox(
                         height: 40.h,
                       ),
-                      Container(
+                      SizedBox(
                         width: width,
                         child: Card(
                           elevation: 6,
@@ -177,8 +162,8 @@ class _HomeScreenState extends State<HomeScreen>     with WidgetsBindingObserver
                                                 ConnectionState.waiting) {
                                               return Center(
                                                 child: Platform.isIOS
-                                                    ? CupertinoActivityIndicator()
-                                                    : Center(
+                                                    ? const CupertinoActivityIndicator()
+                                                    : const Center(
                                                         child:
                                                             CircularProgressIndicator(
                                                           backgroundColor:
@@ -189,9 +174,7 @@ class _HomeScreenState extends State<HomeScreen>     with WidgetsBindingObserver
                                             } else if (snapshot
                                                     .connectionState ==
                                                 ConnectionState.done) {
-                                              if (visitorTypeId == null)
-                                                visitorTypeId =
-                                                    Provider.of<VisitorProv>(
+                                              visitorTypeId ??= Provider.of<VisitorProv>(
                                                             context,
                                                             listen: false)
                                                         .visitorObjects[0]
@@ -435,7 +418,7 @@ class _HomeScreenState extends State<HomeScreen>     with WidgetsBindingObserver
                                                               selectedVisitorType,
                                                         )));
                                           },
-                                          child: Icon(
+                                          child: const Icon(
                                             Icons.camera_alt_outlined,
                                             color: Colors.green,
                                             size: 35,
@@ -566,7 +549,7 @@ class _HomeScreenState extends State<HomeScreen>     with WidgetsBindingObserver
                                                               selectedVisitorType,
                                                         )));
                                           },
-                                          child: Icon(
+                                          child: const Icon(
                                             Icons.camera_alt_outlined,
                                             color: Colors.green,
                                             size: 35,
