@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 
-import 'package:clean_app/Data/Models/parked_model.dart';
-import 'package:clean_app/Utilities/Constants/constants.dart';
-import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
-import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
-import 'package:clean_app/ViewModel/guard/authProv.dart';
-import 'package:clean_app/ViewModel/guard/visitorProv.dart';
+import '../Data/Models/guard/parked_model.dart';
+import '../Utilities/Constants/constants.dart';
+import '../Utilities/Fonts/fontsManager.dart';
+import '../Utilities/Shared/sharedWidgets.dart';
+import '../ViewModel/guard/authProv.dart';
+import '../ViewModel/guard/visitorProv.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -77,7 +77,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => EntryScreen()));
             },
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back,
               size: 30,
             )),
@@ -94,8 +94,8 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: Platform.isIOS
-                        ? CupertinoActivityIndicator()
-                        : Center(
+                        ? const CupertinoActivityIndicator()
+                        : const Center(
                             child: CircularProgressIndicator(
                               backgroundColor: Colors.green,
                             ),
@@ -106,7 +106,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                       Provider.of<VisitorProv>(context, listen: true)
                           .parkingList;
 
-                  return (unprintedList.length != 0)
+                  return (unprintedList.isNotEmpty)
                       ? SmartRefresher(
                     onRefresh: _onRefresh,
                     controller: _refreshController,
@@ -167,7 +167,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.directions_car_rounded,
                                             color: Colors.blue,
                                             size: 36,
@@ -197,7 +197,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                 vertical: 20.h,
                                                 horizontal: 20.w)),
                                         shape: MaterialStateProperty.all(
-                                            RoundedRectangleBorder(
+                                            const RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(20))))),
                                   ),
@@ -256,9 +256,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                         context,
                                                                         listen:
                                                                             false)
-                                                                    .reasons
-                                                                    .length ==
-                                                                0) {
+                                                                    .reasons.isEmpty) {
                                                           Fluttertoast.showToast(
                                                               msg:
                                                                   'عذراً , لا توجد حالياً أسباب للطباعة',
@@ -308,30 +306,29 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                                     child: DropdownButtonHideUnderline(
                                                                                         child: ButtonTheme(
                                                                                       alignedDropdown: true,
-                                                                                      child: Container(
-                                                                                          child: DropdownButton(
+                                                                                      child: DropdownButton(
                                                                                         elevation: 2,
                                                                                         isExpanded: true,
                                                                                         items: Provider.of<VisitorProv>(context, listen: false).reasons.map((String x) {
-                                                                                          return DropdownMenuItem<String>(
-                                                                                              value: x,
-                                                                                              child: Center(
-                                                                                                child: Text(
-                                                                                                  x,
-                                                                                                  textAlign: TextAlign.center,
-                                                                                                  style: TextStyle(fontSize: setResponsiveFontSize(22), color: Colors.green, fontFamily: 'Almarai'),
-                                                                                                ),
-                                                                                              ));
+                                                                                      return DropdownMenuItem<String>(
+                                                                                          value: x,
+                                                                                          child: Center(
+                                                                                            child: Text(
+                                                                                              x,
+                                                                                              textAlign: TextAlign.center,
+                                                                                              style: TextStyle(fontSize: setResponsiveFontSize(22), color: Colors.green, fontFamily: 'Almarai'),
+                                                                                            ),
+                                                                                          ));
                                                                                         }).toList(),
                                                                                         onChanged: (value) {
-                                                                                          setState(() {
-                                                                                            reasonTypeId = Provider.of<VisitorProv>(context, listen: false).reasonsObjects[Provider.of<VisitorProv>(context, listen: false).reasons.indexOf(value)].id;
-                                                                                            selectedReason = value;
-                                                                                            print(value);
-                                                                                          });
+                                                                                      setState(() {
+                                                                                        reasonTypeId = Provider.of<VisitorProv>(context, listen: false).reasonsObjects[Provider.of<VisitorProv>(context, listen: false).reasons.indexOf(value)].id;
+                                                                                        selectedReason = value;
+                                                                                        print(value);
+                                                                                      });
                                                                                         },
                                                                                         value: selectedReason ?? Provider.of<VisitorProv>(context, listen: false).reasons[0],
-                                                                                      )),
+                                                                                      ),
                                                                                     )),
                                                                                   ),
                                                                                   Text(
@@ -352,7 +349,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                               width:
                                                                                   270.w,
                                                                               title:
-                                                                                  "تأكيد",
+                                                                                  'تأكيد',
                                                                               titleColor:
                                                                                   Colors.white,
                                                                               buttonColor:
@@ -363,7 +360,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                                 Provider.of<VisitorProv>(context, listen: false).getLogById(unprintedList[index].logId).then((value) {
                                                                                   if (value == 'Success') {
 
-                                                                                    if (reasonTypeId == null) reasonTypeId = Provider.of<VisitorProv>(context, listen: false).reasonsObjects[0].id;
+                                                                                    reasonTypeId ??= Provider.of<VisitorProv>(context, listen: false).reasonsObjects[0].id;
 
                                                                                     print('reasonTypeId $reasonTypeId');
 
@@ -406,7 +403,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                               });
                                                         }
                                                       },
-                                                      child: Icon(
+                                                      child: const Icon(
                                                         Icons.print,
                                                         color: Colors.green,
                                                         size: 36,

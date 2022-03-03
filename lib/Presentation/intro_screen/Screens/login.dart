@@ -302,6 +302,12 @@ if(authProv.userRole=='Manager'){
             backgroundColor: Colors.green,
             toastLength: Toast.LENGTH_LONG);
       }
+      else{
+        Fluttertoast.showToast(
+            msg: value,
+            backgroundColor: Colors.green,
+            toastLength: Toast.LENGTH_LONG);
+      }
     });
   }
 

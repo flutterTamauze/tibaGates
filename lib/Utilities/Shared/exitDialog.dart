@@ -54,16 +54,21 @@ class exitDialog extends StatelessWidget {
             ),
             FlatButton(
               onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                Provider.of<AuthProv>(context, listen: false).isLogged = false;
-                prefs.setString('guardName', '');
+                Provider.of<AuthProv>(context,listen: false).logout(Provider.of<AuthProv>(context,listen: false).userId).then((value) async {
+                  if(value=='Success'){
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    Provider.of<AuthProv>(context, listen: false).isLogged = false;
+                    prefs.setString('guardName', '');
 
-                prefs.setString('guardId', '');
-                prefs.setBool('isLoggedIn', false);
+                    prefs.setString('guardId', '');
+                    prefs.setBool('isLoggedIn', false);
 
-                cameras = await availableCameras();
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => LoginScreen(camera: cameras[1],)));
+                    cameras = await availableCameras();
+                    Navigator.pushReplacement(
+                        context, MaterialPageRoute(builder: (context) => LoginScreen(camera: cameras[1],)));
+                  }
+                });
+
 
 
                 // SystemNavigator.pop();

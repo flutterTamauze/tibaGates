@@ -1,5 +1,5 @@
 
-import 'package:clean_app/Utilities/Constants/constants.dart';
+import '../../../Utilities/Constants/constants.dart';
 
 class ParkingCarsModel {
   String carImage, identityImage;
@@ -13,8 +13,8 @@ class ParkingCarsModel {
       carImage: "$BASE_URL${json["image1"].toString().replaceAll("\\", "/")}",
       identityImage:
           "$BASE_URL${json["image2"].toString().replaceAll("\\", "/")}",
-      logId: json["id"],
-      type: json["car"] ?? "",
+      logId: json['id'],
+      type: json['car'] ?? '',
     );
   }
 }

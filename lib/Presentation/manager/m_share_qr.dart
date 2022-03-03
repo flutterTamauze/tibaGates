@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:clean_app/Presentation/manager/m_home_screen.dart';
+import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:clean_app/ViewModel/manager/managerProv.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -41,8 +42,7 @@ class _MShareQrState extends State<MShareQr> {
             onPressed: () async {
               final byteImage = await screenshotController.captureFromWidget(Qr(
                 version: QrVersions.auto,
-                data: Provider.of<ManagerProv>(context, listen: false)
-                                          .qrCode ??'abc',
+                data: Provider.of<ManagerProv>(context, listen: false).qrCode ??'abc',
                 size: 250.0,
               ));
               final directory = await getApplicationDocumentsDirectory();
@@ -72,6 +72,12 @@ class _MShareQrState extends State<MShareQr> {
                         color: Colors.white,
                         child: Column(
                           children: [
+                   /*         Text(
+                              '',textAlign: TextAlign.center,
+                              style:
+                              TextStyle(fontSize: setResponsiveFontSize(36)),
+                            ),
+                            SizedBox(height: 30.h,),*/
                             Center(
                               child: Container(
                                 //    margin: const EdgeInsets.only(top: 0),
@@ -83,7 +89,7 @@ class _MShareQrState extends State<MShareQr> {
                                   data: Provider.of<ManagerProv>(context,
                                               listen: true)
                                           .qrCode??'abc',
-                                  size: 330.0.w,
+                                  size: 350.0.w,
                                   version: QrVersions.auto,
                                 ),
                               ),

@@ -4,15 +4,15 @@ import '../Fonts/fontsManager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-//const String BASE_URL = 'https://tibarose.tibarosehotel.com';
+const String BASE_URL = 'https://tibarose.tibarosehotel.com';
 //const String BASE_URL = 'http://192.168.2.51:8007';
 //const String BASE_URL = 'http://10.0.0.242/GATE';
-const String BASE_URL = 'http://10.0.0.242/PARKING';
+//const String BASE_URL = 'http://10.0.0.242/PARKING';
 
 const kTextFieldDecorationWhite = InputDecoration(
   isDense: true,
 
-  contentPadding:  EdgeInsets.symmetric(vertical: 10.0),
+  contentPadding: EdgeInsets.symmetric(vertical: 10.0),
   hintText: 'Enter a value',
   hintStyle:
       TextStyle(color: Colors.grey, fontSize: 15, fontWeight: FontWeight.w500),
@@ -39,21 +39,20 @@ TextStyle boldStyle = TextStyle(
     fontWeight: FontManager.bold, fontSize: setResponsiveFontSize(16));
 TextStyle extraBoldStyle = TextStyle(
     fontWeight: FontManager.extraBold, fontSize: setResponsiveFontSize(20));
+
 setResponsiveFontSize(size) {
   return ScreenUtil().setSp(size);
 }
 
-class DateUtil{
-
-  static String formatDate(DateTime date){
-
+class DateUtil {
+  static String formatDate(DateTime date) {
     final DateFormat formatter = DateFormat().add_yMMMd();
     final String formatted = formatter.format(date);
 
     return formatted;
   }
-
 }
+
 final ktextFieldDecoration = InputDecoration(
   errorStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
   focusedBorder: OutlineInputBorder(
@@ -86,8 +85,8 @@ final menuBoxDecoartionCard = BoxDecoration(
         spreadRadius: 5),
   ],
 );
-const Color facebookColor =  Color(0xff39579A);
-const Color twitterColor =  Color(0xff00ABEA);
-const Color instaColor =  Color(0xffBE2289);
-const Color whatsappColor =  Color(0xff075E54);
-const Color googleColor =  Color(0xffDF4A32);
+const Color facebookColor = Color(0xff39579A);
+const Color twitterColor = Color(0xff00ABEA);
+const Color instaColor = Color(0xffBE2289);
+const Color whatsappColor = Color(0xff075E54);
+const Color googleColor = Color(0xffDF4A32);

@@ -28,6 +28,46 @@ class AuthProv with ChangeNotifier {
     notifyListeners();
   }
 
+
+
+  Future<dynamic> logout(String userID) async {
+    String data = '';
+
+
+    try {
+      http.Response response = await http.post(
+          Uri.parse('$BASE_URL/api/User/SignOut?UserId=$userId'),
+
+      );
+
+      String responseBody = response.body;
+      print('response $responseBody');
+
+      var decodedRes = jsonDecode(responseBody);
+
+      print('response is $decodedRes');
+
+      if (decodedRes['message'] == 'success') {
+        data = 'Success';
+      }
+
+      notifyListeners();
+      return data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
   Future<dynamic> login(
       String username, String password, File guardImage,String tabAddress) async {
     String data = '';
@@ -39,14 +79,14 @@ class AuthProv with ChangeNotifier {
     request.files.add(
       await http.MultipartFile.fromPath('file', guardImage.path),
     );
-
+print('1');
 
     request.fields['Password'] = password;
     request.fields['UserName'] = username;
     request.fields['PhoneMac'] = tabAddress;
 
     request.headers.addAll(headers);
-
+    print('2');
     try {
       await request.send().then((response) async {
 
@@ -82,6 +122,9 @@ class AuthProv with ChangeNotifier {
 
           } else if (responseDecoded['message'] == 'Incorrect User') {
             data = 'Incorrect User';
+          }
+          else{
+            data=responseDecoded['message'];
           }
         });
       }).catchError((e) {

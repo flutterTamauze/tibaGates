@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:clean_app/Data/Models/parked_model.dart';
-import 'package:clean_app/Data/Models/reasons_model.dart';
-import 'package:clean_app/Data/Models/visitorTypes_model.dart';
+import 'package:clean_app/Data/Models/guard/parked_model.dart';
+import 'package:clean_app/Data/Models/guard/reasons_model.dart';
+import 'package:clean_app/Data/Models/guard/visitorTypes_model.dart';
 import 'package:clean_app/Data/Models/response.dart';
 import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:clean_app/ViewModel/guard/authProv.dart';

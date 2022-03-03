@@ -228,8 +228,7 @@ String token;
                             border: Border.all(
                                 color: ColorManager.primary, width: 2.w),
                             image: const DecorationImage(
-                                image:
-                                    AssetImage('assets/images/tipasplash.png')),
+                                image: AssetImage('assets/images/tipasplash.png')),
                             shape: BoxShape.circle,
                           ),
                         ),

@@ -29,6 +29,7 @@ class _MAddInvitationState extends State<MAddInvitation> {
   TextEditingController descriptionController = TextEditingController();
   final startDateController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  String date;
 
   @override
   Widget build(BuildContext context) {
@@ -262,6 +263,9 @@ class _MAddInvitationState extends State<MAddInvitation> {
                                                     .toString();
                                             print(
                                                 'Date Time Value : ${value.toString()}\n');
+                                            date = value
+                                                .toString()
+                                                .substring(0, 10);
                                           }
                                         });
                                       },
@@ -329,23 +333,28 @@ class _MAddInvitationState extends State<MAddInvitation> {
                         } else {
                           showLoaderDialog(context, 'Loading...');
                           print(
-                              'visitor name ${visitorNameController.text}  description ${descriptionController.text}  managerId ${Provider.of<AuthProv>(context, listen: false).userId}    invitationTypeID ${widget.invitationTypeId}  ');
-                          Provider.of<ManagerProv>(context,listen: false).addInvitation(visitorNameController.text, descriptionController.text, Provider.of<AuthProv>(context, listen: false).userId, widget.invitationTypeId).then((value) {
-                            print('value is $value' );
-
-                          });
-
-
-
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => MShareQr()),
+                              'visitor name ${visitorNameController.text}  description ${descriptionController.text}  managerId ${Provider.of<AuthProv>(context, listen: false).userId}  invitationTypeID ${widget.invitationTypeId} date $date ');
+                          Provider.of<ManagerProv>(context, listen: false)
+                              .addInvitation(
+                                  visitorNameController.text,
+                                  descriptionController.text,
+                                  Provider.of<AuthProv>(context, listen: false)
+                                      .userId,
+                                  widget.invitationTypeId,
+                                  date)
+                              .then((value) {
+                            print('value is $value');
+                            if (value == 'Success') {
+                              print('Success');
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => MShareQr()),
                                   (Route<dynamic> route) => false);
-
+                            } else {
+                              print('حدث خطا ما');
+                            }
+                          });
                         }
-
-
-
                       },
                       title: 'إضافة',
                       width: 220,
