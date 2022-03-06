@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
-import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
-import 'package:clean_app/Presentation/intro_screen/Screens/login.dart';
-import 'package:clean_app/ViewModel/guard/authProv.dart';
+import '../../Presentation/login_screen/Screens/login.dart';
+
+import '../../ViewModel/guard/authProv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

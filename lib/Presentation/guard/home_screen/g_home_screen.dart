@@ -2,14 +2,16 @@ import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
-import '../../Utilities/Colors/colorManager.dart';
-import '../../Utilities/Constants/constants.dart';
-import '../../Utilities/Fonts/fontsManager.dart';
-import '../../Utilities/Shared/camera.dart';
-import '../../Utilities/Shared/dialogs/bill_dialog.dart';
-import '../../Utilities/Shared/dialogs/loading_dialog.dart';
-import '../../Utilities/Shared/sharedWidgets.dart';
-import '../../ViewModel/guard/visitorProv.dart';
+import 'package:clean_app/Utilities/Colors/colorManager.dart';
+import 'package:clean_app/Utilities/Constants/constants.dart';
+import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
+import 'package:clean_app/Utilities/Shared/camera.dart';
+import 'package:clean_app/Utilities/Shared/dialogs/bill_dialog.dart';
+import 'package:clean_app/Utilities/Shared/dialogs/loading_dialog.dart';
+import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
+import 'package:clean_app/ViewModel/guard/visitorProv.dart';
+
+import '../print_page2.dart';
 import '../entry_screen/entryScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,6 @@ import 'package:numberpicker/numberpicker.dart';
 import 'dart:ui' as ui;
 import 'package:path/path.dart' as nPath;
 import 'package:provider/provider.dart';
-import '../../print_page2.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -655,7 +656,7 @@ class _HomeScreenState extends State<HomeScreen>   with WidgetsBindingObserver{
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          PrintScreen2(
+                                                          const PrintScreen2(
                                                             civilCount: 0,
                                                             militaryCount: 0,resendType: 'Normal',from: 'send',
                                                           )))

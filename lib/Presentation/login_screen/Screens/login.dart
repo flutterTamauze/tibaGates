@@ -2,16 +2,19 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Presentation/manager/m_home_screen.dart';
-import 'package:clean_app/ViewModel/manager/managerProv.dart';
-import 'package:flutter_udid/flutter_udid.dart';
-
-import '../Widgets/memberDisplay.dart';
-import '../../entry_screen/entryScreen.dart';
+import 'package:clean_app/Presentation/admin/a_home_screen.dart';
+import '../../guard/entry_screen/entryScreen.dart';
+import '../../manager/m_home_screen.dart';
 import '../../../Utilities/Colors/colorManager.dart';
 import '../../../Utilities/Constants/constants.dart';
 import '../../../Utilities/Shared/sharedWidgets.dart';
 import '../../../ViewModel/guard/authProv.dart';
+import '../../../ViewModel/manager/managerProv.dart';
+import 'package:flutter_udid/flutter_udid.dart';
+
+import '../../../../main.dart';
+import '../Widgets/memberDisplay.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path/path.dart' as nPath;
@@ -25,7 +28,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../../main.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -41,8 +43,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   final _forgetFormKey = GlobalKey<FormState>();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _memberShipController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _memberShipController = TextEditingController();
   CameraController _controller;
 
   bool isLoggedIn;
@@ -284,6 +286,13 @@ if(authProv.userRole=='Manager'){
   print('manager');
   Navigator.pushReplacement(
       context, MaterialPageRoute(builder: (context) => MHomeScreen()));
+  return;
+
+}else if(authProv.userRole=='Admin'){
+
+  print('admin');
+  Navigator.pushReplacement(
+      context, MaterialPageRoute(builder: (context) => AHomeScreen()));
   return;
 
 }

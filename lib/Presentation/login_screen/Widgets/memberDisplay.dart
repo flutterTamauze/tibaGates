@@ -1,7 +1,6 @@
-import 'package:animate_do/animate_do.dart';
 
-import '../../../Utilities/Colors/colorManager.dart';
-import '../../../Utilities/Constants/constants.dart';
+import 'package:clean_app/Utilities/Colors/colorManager.dart';
+import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

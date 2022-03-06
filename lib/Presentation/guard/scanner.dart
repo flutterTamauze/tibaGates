@@ -1,9 +1,10 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:clean_app/Presentation/home_screen/g_home_screen.dart';
-import 'package:clean_app/ViewModel/guard/visitorProv.dart';
-import 'package:clean_app/print_page2.dart';
+import 'entry_screen/entryScreen.dart';
+import 'home_screen/g_home_screen.dart';
+import '../../ViewModel/guard/visitorProv.dart';
+import 'print_page2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,8 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:ui' as ui;
 
-import 'Presentation/entry_screen/entryScreen.dart';
-import 'Utilities/Shared/dialogs/successDialog.dart';
+import '../../Utilities/Shared/dialogs/successDialog.dart';
 
 class QrCodeScreen extends StatefulWidget {
   final screen;
@@ -127,11 +127,11 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
               showDialog(
                   context: context,
                   builder: (context) {
-                    return invitationSendDialog(
+                    return const invitationSendDialog(
                       text: 'تم تسجيل الخروج بنجاح',
                     );
                   });
-              Future.delayed(Duration(seconds: 1)).whenComplete(() {
+              Future.delayed(const Duration(seconds: 1)).whenComplete(() {
                 Navigator.pop(context);
                 scanned = false;
               });
@@ -142,7 +142,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                       backgroundColor: Colors.green,
                       toastLength: Toast.LENGTH_LONG)
                   .then((value) {
-                Future.delayed(Duration(seconds: 1)).whenComplete(() {
+                Future.delayed(const Duration(seconds: 1)).whenComplete(() {
                   scanned = false;
                 });
               });
@@ -169,9 +169,9 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
           title: InkWell(
               onTap: () {
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => EntryScreen()));
+                    MaterialPageRoute(builder: (BuildContext context) => EntryScreen()));
               },
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_back,
                 size: 30,
               )),
@@ -179,7 +179,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
         body: WillPopScope(
           onWillPop: () {
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => EntryScreen()));
+                MaterialPageRoute(builder: (BuildContext context) => EntryScreen()));
             throw '';
           },
           child: Column(

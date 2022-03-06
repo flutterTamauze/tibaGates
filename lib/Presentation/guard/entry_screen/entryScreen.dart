@@ -1,18 +1,18 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:camera/camera.dart';
+import '../../login_screen/Widgets/outlined_button.dart';
 
-import 'package:clean_app/Presentation/intro_screen/Widgets/outlined_button.dart';
-import 'package:clean_app/Presentation/manager/m_home_screen.dart';
-import 'package:clean_app/Presentation/parking_carsList.dart';
-import 'package:clean_app/Utilities/Colors/colorManager.dart';
-import 'package:clean_app/Utilities/Constants/constants.dart';
-import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
-import 'package:clean_app/Utilities/Shared/exitDialog.dart';
-import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
-import 'package:clean_app/ViewModel/guard/authProv.dart';
-import 'package:clean_app/ViewModel/guard/visitorProv.dart';
-import 'package:clean_app/api/sharedPrefs.dart';
-import 'package:clean_app/scanner.dart';
+import '../../manager/m_home_screen.dart';
+import '../parking_carsList.dart';
+import '../../../Utilities/Colors/colorManager.dart';
+import '../../../Utilities/Constants/constants.dart';
+import '../../../Utilities/Fonts/fontsManager.dart';
+import '../../../Utilities/Shared/exitDialog.dart';
+import '../../../Utilities/Shared/sharedWidgets.dart';
+import '../../../ViewModel/guard/authProv.dart';
+import '../../../ViewModel/guard/visitorProv.dart';
+import '../../../api/sharedPrefs.dart';
+import '../scanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -23,9 +23,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-import '../../main.dart';
+import '../../../main.dart';
 import '../home_screen/g_home_screen.dart';
-import '../intro_screen/Screens/login.dart';
 List<CameraDescription> cameras;
 class EntryScreen extends StatefulWidget {
   static const String routeName = '/firstScreen';

@@ -101,10 +101,11 @@ class VisitorProv with ChangeNotifier {
   }
 
   Future<void> getParkingList() async {
+    print('token ${prefs.getString('token')}');
     try {
       http.Response response = await http
           .get(Uri.parse('$BASE_URL/api/gate/parked'), headers: mHeaders);
-
+print('statusCode ${response.statusCode}');
       var parkJsonObj =
           jsonDecode(response.body)['response']['parkedDTO'] as List;
       var reasonsJsonObj =

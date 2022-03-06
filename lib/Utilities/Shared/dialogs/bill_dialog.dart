@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:clean_app/Presentation/guard/entry_screen/entryScreen.dart';
 
-import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
 import 'package:clean_app/Utilities/Colors/colorManager.dart';
 import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:clean_app/ViewModel/guard/visitorProv.dart';
@@ -10,7 +10,7 @@ import 'dart:ui' as ui;
 
 import 'package:provider/provider.dart';
 
-import '../../../print_page2.dart';
+import '../../../Presentation/guard/print_page2.dart';
 import '../sharedWidgets.dart';
 class BillDialog extends StatelessWidget {
   final citizenValue,militaryValue,typeValue;

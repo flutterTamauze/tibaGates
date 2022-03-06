@@ -4,10 +4,10 @@ import '../Fonts/fontsManager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-const String BASE_URL = 'https://tibarose.tibarosehotel.com';
+//const String BASE_URL = 'https://tibarose.tibarosehotel.com';
 //const String BASE_URL = 'http://192.168.2.51:8007';
 //const String BASE_URL = 'http://10.0.0.242/GATE';
-//const String BASE_URL = 'http://10.0.0.242/PARKING';
+const String BASE_URL = 'http://10.0.0.242/PARKING';
 
 const kTextFieldDecorationWhite = InputDecoration(
   isDense: true,
@@ -54,19 +54,19 @@ class DateUtil {
 }
 
 final ktextFieldDecoration = InputDecoration(
-  errorStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+  errorStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(10),
-    borderSide: BorderSide(width: 2, color: Colors.orange),
+    borderSide: const BorderSide(width: 2, color: Colors.orange),
   ),
   disabledBorder:
-      OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 4)),
+      const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 4)),
   enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(color: Colors.grey, width: 0)),
+      borderSide: const BorderSide(color: Colors.grey, width: 0)),
   border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(color: Colors.grey, width: 0)),
+      borderSide: const BorderSide(color: Colors.grey, width: 0)),
   hintStyle: TextStyle(
       fontWeight: FontWeight.w600, fontSize: setResponsiveFontSize(13)),
   hintText: 'قم بأدخال ملاحظتك هنا',

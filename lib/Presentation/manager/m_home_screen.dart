@@ -14,7 +14,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../main.dart';
-import '../entry_screen/entryScreen.dart';
 import '../../Utilities/Constants/constants.dart';
 import '../../Utilities/Fonts/fontsManager.dart';
 import '../../ViewModel/guard/visitorProv.dart';

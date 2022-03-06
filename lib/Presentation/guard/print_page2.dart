@@ -5,10 +5,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:bluetooth_print/bluetooth_print_model.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Presentation/intro_screen/Screens/login.dart';
-import 'package:clean_app/Utilities/Shared/noInternet.dart';
-import 'package:clean_app/ViewModel/guard/authProv.dart';
-import 'package:clean_app/ViewModel/guard/visitorProv.dart';
+import '../login_screen/Screens/login.dart';
+import '../../Utilities/Shared/noInternet.dart';
+import '../../ViewModel/guard/authProv.dart';
+import '../../ViewModel/guard/visitorProv.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,14 +23,14 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Presentation/entry_screen/entryScreen.dart';
-import 'Utilities/Colors/colorManager.dart';
-import 'Utilities/Constants/constants.dart';
-import 'Utilities/Fonts/fontsManager.dart';
-import 'Utilities/Shared/dialogs/loading_dialog.dart';
-import 'Utilities/Shared/qr.dart';
-import 'Utilities/Shared/sharedWidgets.dart';
-import 'Utilities/connectivityStatus.dart';
+import 'entry_screen/entryScreen.dart';
+import '../../Utilities/Colors/colorManager.dart';
+import '../../Utilities/Constants/constants.dart';
+import '../../Utilities/Fonts/fontsManager.dart';
+import '../../Utilities/Shared/dialogs/loading_dialog.dart';
+import '../../Utilities/Shared/qr.dart';
+import '../../Utilities/Shared/sharedWidgets.dart';
+import '../../Utilities/connectivityStatus.dart';
 
 List<CameraDescription> cameras;
 

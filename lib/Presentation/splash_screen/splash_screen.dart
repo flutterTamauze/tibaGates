@@ -2,16 +2,19 @@ import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:camera/camera.dart';
+import 'package:clean_app/Presentation/admin/a_home_screen.dart';
+import 'package:clean_app/Presentation/login_screen/Screens/login.dart';
 
-import 'package:clean_app/Presentation/entry_screen/entryScreen.dart';
-import 'package:clean_app/Presentation/intro_screen/Screens/login.dart';
-import 'package:clean_app/Presentation/manager/m_home_screen.dart';
-import 'package:clean_app/Utilities/Routes/routesStrings.dart';
-import 'package:clean_app/ViewModel/guard/authProv.dart';
+import '../guard/entry_screen/entryScreen.dart';
+import '../manager/m_home_screen.dart';
+import '../../Utilities/Routes/routesStrings.dart';
+import '../../ViewModel/guard/authProv.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 List<CameraDescription> cameras;
+
 class SplashScreen extends StatefulWidget {
   static const routeName = '/splash';
 
@@ -28,34 +31,35 @@ class _SplashScreenState extends State<SplashScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    role = prefs.getString('role') ;
+    role = prefs.getString('role');
 
     if (isLoggedIn == true) {
       print('isLoggedIn is true');
-if(role=='Manager'){
-  print('role is manager');
-  Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-          builder: (context) => MHomeScreen()));
-}
-else
-
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => EntryScreen()));
-
+      if (role == 'Manager') {
+        print('role is manager');
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => MHomeScreen()));
+      }  else if (role == 'Admin') {
+        print('role is admin');
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => AHomeScreen()));
+      } else
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => EntryScreen()));
     } else {
       cameras = await availableCameras();
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginScreen(camera: cameras[1],)));
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginScreen(
+                    camera: cameras[1],
+                  )));
     }
   }
+
   @override
   void initState() {
     checkSignInStatus();
-    // _startDelay();
     super.initState();
   }
 
@@ -71,8 +75,8 @@ else
       backgroundColor: Colors.black,
       body: Center(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height/2,
-          width: MediaQuery.of(context).size.width/2,
+          height: MediaQuery.of(context).size.height / 2,
+          width: MediaQuery.of(context).size.width / 2,
           child: ZoomIn(
             child: const Image(
               image: AssetImage(
