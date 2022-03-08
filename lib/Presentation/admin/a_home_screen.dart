@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:clean_app/Data/Models/admin/parking.dart';
 import 'package:clean_app/Presentation/guard/entry_screen/entryScreen.dart';
 import 'package:clean_app/Utilities/Shared/exitDialog.dart';
+import 'package:clean_app/ViewModel/admin/adminProv.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/services.dart';
 
 import '../../Data/Models/guard/parked_model.dart';
@@ -30,20 +33,17 @@ class AHomeScreen extends StatefulWidget {
 }
 
 class _AHomeScreenState extends State<AHomeScreen> {
-  Future unprintedListener;
+  Future parkingCarsListener;
   String searchText;
   final RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
-  List<ParkingCarsModel> unprintedList;
-  int reasonTypeId;
-  var selectedReason;
+      RefreshController(initialRefresh: false);
+  List<ParkingModel> parkingList;
   var tmpList;
-  var reportsProv;
 
   @override
   void initState() {
-    unprintedListener =
-        Provider.of<VisitorProv>(context, listen: false).getParkingList();
+    parkingCarsListener =
+        Provider.of<AdminProv>(context, listen: false).getParkingListForAdmin();
     super.initState();
   }
 
@@ -53,8 +53,8 @@ class _AHomeScreenState extends State<AHomeScreen> {
     // if failed,use refreshFailed()
     setState(() {
       setState(() {
-        unprintedListener =
-            Provider.of<VisitorProv>(context, listen: false).getParkingList();
+        parkingCarsListener = Provider.of<AdminProv>(context, listen: false)
+            .getParkingListForAdmin();
       });
     });
     _refreshController.refreshCompleted();
@@ -64,7 +64,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
     print('inside filter');
 
     setState(() {
-      tmpList = unprintedList
+      tmpList = parkingList
           .where((item) => item.logId.toString().contains(value.toString()))
           .toList();
 
@@ -74,673 +74,525 @@ class _AHomeScreenState extends State<AHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            InkWell(
-                onTap: () async {
-                  await showDialog(
-                      context: context,
-                      builder: (context) => ZoomIn(
-                    child: const exitDialog(),
-                  ));
-                },
-                child: const RotatedBox(
-                  quarterTurns: 2,
-                  child: Icon(
-                    Icons.exit_to_app,
-                    size: 30,
-                  ),
-                )),
-            const Text('Admin')
-          ],
+    var adminProv = Provider.of<AdminProv>(context, listen: false);
+    return WillPopScope(
+      onWillPop: () {
+        SystemNavigator.pop();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.green,
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                  onTap: () async {
+                    await showDialog(
+                        context: context,
+                        builder: (context) => ZoomIn(
+                              child: const exitDialog(),
+                            ));
+                  },
+                  child: const RotatedBox(
+                    quarterTurns: 2,
+                    child: Icon(
+                      Icons.exit_to_app,
+                      size: 30,
+                    ),
+                  )),
+              const Text('Admin')
+            ],
+          ),
         ),
-      ),
-      body: WillPopScope(
-        onWillPop: () {
+        body: WillPopScope(
+          onWillPop: () {
+            SystemNavigator.pop();
+            throw '';
+          },
+          child: SafeArea(
+            child: FutureBuilder(
+                future: parkingCarsListener,
+                builder:
+                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: Platform.isIOS
+                          ? const CupertinoActivityIndicator()
+                          : const Center(
+                              child: CircularProgressIndicator(
+                                backgroundColor: Colors.green,
+                              ),
+                            ),
+                    );
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    parkingList = Provider.of<AdminProv>(context, listen: true)
+                        .parkingList;
 
-          SystemNavigator.pop();
-          throw '';
+                    return (parkingList.isNotEmpty)
+                        ? SmartRefresher(
+                            onRefresh: _onRefresh,
+                            controller: _refreshController,
+                            enablePullDown: true,
+                            header: const WaterDropMaterialHeader(
+                              color: Colors.white,
+                              backgroundColor: Colors.green,
+                            ),
+                            child:
 
-        },
-        child: SafeArea(
-          child: FutureBuilder(
-              future: unprintedListener,
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: Platform.isIOS
-                        ? const CupertinoActivityIndicator()
-                        : const Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor: Colors.green,
-                      ),
-                    ),
-                  );
-                } else if (snapshot.connectionState == ConnectionState.done) {
-                  unprintedList =
-                      Provider
-                          .of<VisitorProv>(context, listen: true)
-                          .parkingList;
 
-                  return (unprintedList.isNotEmpty)
-                      ? SmartRefresher(
-                    onRefresh: _onRefresh,
-                    controller: _refreshController,
-                    enablePullDown: true,
-                    header: const WaterDropMaterialHeader(
-                      color: Colors.white,
-                      backgroundColor: Colors.green,
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: SizedBox(
-                                height: 60.h,
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width -
-                                    200.w,
-                                child: TextField(
-                                  onChanged: (value) {
-                                    setState(() {
-                                      searchText = value;
-                                    });
-                                    print('filter');
-                                    filterServices(value);
-                                    print('value is $value');
-                                  },
-                                  keyboardType: TextInputType.number,
-                                  cursorColor: Colors.green,
-                                  style:
-                                  const TextStyle(color: Colors.green),
-                                  textAlign: TextAlign.right,
-                                  decoration: InputDecoration(
-                                      hintText: '      رقم الفاتورة',
-                                      focusColor: Colors.green,
-                                      hoverColor: Colors.green,
-                                      fillColor: Colors.green,
-                                      icon: Padding(
-                                        padding:
-                                        EdgeInsets.only(left: 20.w),
-                                        child: const Icon(
-                                          Icons.search,
-                                          color: Colors.green,
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: SizedBox(
+                                        height: 60.h,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                410.w,
+                                        child: TextField(
+                                          onChanged: (value) {
+                                            setState(() {
+                                              searchText = value;
+                                            });
+                                            print('filter');
+                                            filterServices(value);
+                                            print('value is $value');
+                                          },
+                                          keyboardType: TextInputType.number,
+                                          cursorColor: Colors.green,
+                                          style: const TextStyle(
+                                              color: Colors.green),
+                                          textAlign: TextAlign.right,
+                                          decoration: InputDecoration(
+                                              hintText: '      رقم الفاتورة',
+                                              focusColor: Colors.green,
+                                              hoverColor: Colors.green,
+                                              fillColor: Colors.green,
+                                              icon: Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 20.w),
+                                                child: const Icon(
+                                                  Icons.search,
+                                                  color: Colors.green,
+                                                ),
+                                              ),
+                                              hintStyle: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontFamily: 'Almarai')),
                                         ),
                                       ),
-                                      hintStyle: const TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'Almarai')),
-                                ),
-                              ),
-                            ),
-                            OutlinedButton(
-                              onPressed: () {},
-                              child: Container(
-                                height: 40.h,
-                                width: 100.w,
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Icon(
-                                      Icons.directions_car_rounded,
-                                      color: Colors.blue,
-                                      size: 36,
+                                    ),   SizedBox(width: 12.w,),
+                                    OutlinedButton(
+                                      onPressed: () {},
+                                      child: SizedBox(
+                                        height: 40.h,
+                                        width: 120.w,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Icon(
+                                              Icons.directions_car_rounded,
+                                              color: Colors.blue,
+                                              size: 36,
+                                            ),
+                                            Text(parkingList.length.toString(),
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        setResponsiveFontSize(
+                                                            28),
+                                                    fontWeight:
+                                                        FontManager.bold,
+                                                    color: Colors.red,
+                                                    fontFamily:
+                                                        GoogleFonts.getFont(
+                                                                'Redressed')
+                                                            .fontFamily))
+                                          ],
+                                        ),
+                                      ),
+                                      style: ButtonStyle(
+                                          side: MaterialStateProperty.all(
+                                              BorderSide(
+                                                  color: Colors.blue,
+                                                  width: 1.4.w)),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.white),
+                                          padding: MaterialStateProperty.all(
+                                              EdgeInsets.symmetric(
+                                                  vertical: 20.h,
+                                                  horizontal: 20.w)),
+                                          shape: MaterialStateProperty.all(
+                                              const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.all(
+                                                      Radius.circular(20))))),
                                     ),
-                                    Text(unprintedList.length.toString(),
-                                        style: TextStyle(
-                                            fontSize:
-                                            setResponsiveFontSize(28),
-                                            fontWeight: FontManager.bold,
-                                            color: Colors.red,
-                                            fontFamily: GoogleFonts
-                                                .getFont(
-                                                'Redressed')
-                                                .fontFamily))
+                                    SizedBox(width: 10.w,),
+                                    OutlinedButton(
+                                      onPressed: () {},
+                                      child: SizedBox(
+                                        height: 40.h,
+                                        width: 120.w,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Icon(
+                                              Icons.monetization_on,
+                                              color: Colors.green,
+                                              size: 36,
+                                            ),
+                                            Text(
+                                                adminProv.totalBalance
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        setResponsiveFontSize(
+                                                            28),
+                                                    fontWeight:
+                                                        FontManager.bold,
+                                                    color: Colors.red,
+                                                    fontFamily:
+                                                        GoogleFonts.getFont(
+                                                                'Cairo')
+                                                            .fontFamily))
+                                          ],
+                                        ),
+                                      ),
+                                      style: ButtonStyle(
+                                          side: MaterialStateProperty.all(
+                                              BorderSide(
+                                                  color: Colors.green,
+                                                  width: 1.4.w)),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.white),
+                                          padding: MaterialStateProperty.all(
+                                              EdgeInsets.symmetric(
+                                                  vertical: 20.h,
+                                                  horizontal: 20.w)),
+                                          shape: MaterialStateProperty.all(
+                                              const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.all(
+                                                      Radius.circular(20))))),
+                                    ),
                                   ],
                                 ),
-                              ),
-                              style: ButtonStyle(
-                                  side: MaterialStateProperty.all(
-                                      BorderSide(
-                                          color: Colors.blue,
-                                          width: 1.4.w)),
-                                  backgroundColor:
-                                  MaterialStateProperty.all<Color>(
-                                      Colors.white),
-                                  padding: MaterialStateProperty.all(
-                                      EdgeInsets.symmetric(
-                                          vertical: 20.h,
-                                          horizontal: 20.w)),
-                                  shape: MaterialStateProperty.all(
-                                      const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(20))))),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: tmpList == null
-                                ? unprintedList.length
-                                : tmpList.length,
-                            scrollDirection: Axis.vertical,
-                            //  shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
-                                child: SizedBox(
-                                  height: 290.h,
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(25.0),
-                                    ),
-                                    elevation: 4,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 15),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            'G-${tmpList == null
-                                                ? unprintedList[index].logId
-                                                : tmpList[index].logId}',
-                                            style: TextStyle(
-                                                fontSize:
-                                                setResponsiveFontSize(
-                                                    26),
-                                                fontWeight:
-                                                FontManager.bold),
-                                          ),
-                                          SizedBox(
-                                            height: 12.h,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceBetween,
-                                            children: [
-                                              OutlinedButton(
-                                                onPressed: () {
-                                                  if (Provider
-                                                      .of<VisitorProv>(
-                                                      context,
-                                                      listen:
-                                                      false)
-                                                      .reasons ==
-                                                      null ||
-                                                      Provider
-                                                          .of<VisitorProv>(
-                                                          context,
-                                                          listen:
-                                                          false)
-                                                          .reasons
-                                                          .isEmpty) {
-                                                    Fluttertoast.showToast(
-                                                        msg:
-                                                        'عذراً , لا توجد حالياً أسباب للطباعة',
-                                                        backgroundColor:
-                                                        Colors.green,
-                                                        toastLength: Toast
-                                                            .LENGTH_LONG);
-                                                  } else {
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return StatefulBuilder(
-                                                              builder: (context,
-                                                                  setState) {
-                                                                return Dialog(
-                                                                  shape: RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                          40)),
-                                                                  elevation: 16,
-                                                                  child:
-                                                                  Container(
-                                                                    height:
-                                                                    300.h,
-                                                                    width:
-                                                                    600.w,
-                                                                    child:
-                                                                    Padding(
-                                                                      padding: EdgeInsets
-                                                                          .only(
-                                                                          top: 40
-                                                                              .h),
-                                                                      child:
-                                                                      Column(
-                                                                        mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .center,
-                                                                        children: [
-                                                                          Padding(
-                                                                            padding:
-                                                                            const EdgeInsets
-                                                                                .symmetric(
-                                                                                horizontal: 20),
-                                                                            child:
-                                                                            Row(
-                                                                              children: [
-                                                                                Container(
-                                                                                  decoration: BoxDecoration(
-                                                                                      borderRadius: BorderRadius
-                                                                                          .circular(
-                                                                                          10),
-                                                                                      border: Border
-                                                                                          .all(
-                                                                                          color: Colors
-                                                                                              .green,
-                                                                                          width: 1
-                                                                                              .w)),
-                                                                                  width: 300
-                                                                                      .w,
-                                                                                  height: 70
-                                                                                      .h,
-                                                                                  child: DropdownButtonHideUnderline(
-                                                                                      child: ButtonTheme(
-                                                                                        alignedDropdown: true,
-                                                                                        child: DropdownButton(
-                                                                                          elevation: 2,
-                                                                                          isExpanded: true,
-                                                                                          items: Provider
-                                                                                              .of<
-                                                                                              VisitorProv>(
-                                                                                              context,
-                                                                                              listen: false)
-                                                                                              .reasons
-                                                                                              .map((
-                                                                                              String x) {
-                                                                                            return DropdownMenuItem<
-                                                                                                String>(
-                                                                                                value: x,
-                                                                                                child: Center(
-                                                                                                  child: Text(
-                                                                                                    x,
-                                                                                                    textAlign: TextAlign
-                                                                                                        .center,
-                                                                                                    style: TextStyle(
-                                                                                                        fontSize: setResponsiveFontSize(
-                                                                                                            22),
-                                                                                                        color: Colors
-                                                                                                            .green,
-                                                                                                        fontFamily: 'Almarai'),
-                                                                                                  ),
-                                                                                                ));
-                                                                                          })
-                                                                                              .toList(),
-                                                                                          onChanged: (
-                                                                                              value) {
-                                                                                            setState(() {
-                                                                                              reasonTypeId =
-                                                                                                  Provider
-                                                                                                      .of<
-                                                                                                      VisitorProv>(
-                                                                                                      context,
-                                                                                                      listen: false)
-                                                                                                      .reasonsObjects[Provider
-                                                                                                      .of<
-                                                                                                      VisitorProv>(
-                                                                                                      context,
-                                                                                                      listen: false)
-                                                                                                      .reasons
-                                                                                                      .indexOf(
-                                                                                                      value)]
-                                                                                                      .id;
-                                                                                              selectedReason =
-                                                                                                  value;
-                                                                                              print(
-                                                                                                  value);
-                                                                                            });
-                                                                                          },
-                                                                                          value: selectedReason ??
-                                                                                              Provider
-                                                                                                  .of<
-                                                                                                  VisitorProv>(
-                                                                                                  context,
-                                                                                                  listen: false)
-                                                                                                  .reasons[0],
-                                                                                        ),
-                                                                                      )),
-                                                                                ),
-                                                                                Text(
-                                                                                  ' سبب إعادة الطباعة',
-                                                                                  style: TextStyle(
-                                                                                      fontSize: setResponsiveFontSize(
-                                                                                          26)),
-                                                                                ),
-                                                                              ],
-                                                                              mainAxisAlignment: MainAxisAlignment
-                                                                                  .spaceBetween,
-                                                                            ),
-                                                                          ),
-                                                                          SizedBox(
-                                                                            height:
-                                                                            70
-                                                                                .h,
-                                                                          ),
-                                                                          RoundedButton(
-                                                                            height:
-                                                                            65
-                                                                                .h,
-                                                                            width:
-                                                                            270
-                                                                                .w,
-                                                                            title:
-                                                                            'تأكيد',
-                                                                            titleColor:
-                                                                            Colors
-                                                                                .white,
-                                                                            buttonColor:
-                                                                            Colors
-                                                                                .green,
-                                                                            ontap:
-                                                                                () {
-                                                                              Provider
-                                                                                  .of<
-                                                                                  VisitorProv>(
-                                                                                  context,
-                                                                                  listen: false)
-                                                                                  .getLogById(
-                                                                                  unprintedList[index]
-                                                                                      .logId)
-                                                                                  .then((
-                                                                                  value) {
-                                                                                if (value ==
-                                                                                    'Success') {
-                                                                                  reasonTypeId ??=
-                                                                                      Provider
-                                                                                          .of<
-                                                                                          VisitorProv>(
-                                                                                          context,
-                                                                                          listen: false)
-                                                                                          .reasonsObjects[0]
-                                                                                          .id;
-
-                                                                                  print(
-                                                                                      'reasonTypeId $reasonTypeId');
-
-                                                                                  Provider
-                                                                                      .of<
-                                                                                      VisitorProv>(
-                                                                                      context,
-                                                                                      listen: false)
-                                                                                      .logId =
-                                                                                  tmpList ==
-                                                                                      null
-                                                                                      ? unprintedList[index]
-                                                                                      .logId
-                                                                                      : tmpList[index]
-                                                                                      .logId;
-
-                                                                                  print(
-                                                                                      'price = ${Provider
-                                                                                          .of<
-                                                                                          VisitorProv>(
-                                                                                          context,
-                                                                                          listen: false)
-                                                                                          .reasonsObjects[Provider
-                                                                                          .of<
-                                                                                          VisitorProv>(
-                                                                                          context,
-                                                                                          listen: false)
-
-                                                                                          .reasons
-                                                                                          .indexOf(
-                                                                                          selectedReason ??
-                                                                                              Provider
-                                                                                                  .of<
-                                                                                                  VisitorProv>(
-                                                                                                  context,
-                                                                                                  listen: false)
-                                                                                                  .reasons[0])]
-                                                                                          .price}');
-
-
-                                                                                  var type = tmpList ==
-                                                                                      null
-                                                                                      ? unprintedList[index]
-                                                                                      .type
-                                                                                      : tmpList[index]
-                                                                                      .type;
-                                                                                  print(
-                                                                                      'type is $type');
-
-
-                                                                                  Navigator
-                                                                                      .pushReplacement(
-                                                                                      context,
-                                                                                      MaterialPageRoute(
-                                                                                          builder: (
-                                                                                              context) =>
-                                                                                              PrintScreen2(
-                                                                                                from: 'resend',
-                                                                                                resendType: type,
-                                                                                                reasonPrice: Provider
-                                                                                                    .of<
-                                                                                                    VisitorProv>(
-                                                                                                    context,
-                                                                                                    listen: false)
-                                                                                                    .reasonsObjects[Provider
-                                                                                                    .of<
-                                                                                                    VisitorProv>(
-                                                                                                    context,
-                                                                                                    listen: false)
-                                                                                                    .reasons
-                                                                                                    .indexOf(
-                                                                                                    selectedReason ??
-                                                                                                        Provider
-                                                                                                            .of<
-                                                                                                            VisitorProv>(
-                                                                                                            context,
-                                                                                                            listen: false)
-                                                                                                            .reasons[0])]
-                                                                                                    .price,
-                                                                                                reasonId: reasonTypeId,
-                                                                                                //    logId: tmpList == null ? unprintedList[index].logId : tmpList[index].logId,
-                                                                                              )));
-                                                                                }
-                                                                              });
-                                                                            },
-                                                                          )
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              });
-                                                        });
-                                                  }
-                                                },
-                                                child: const Icon(
-                                                  Icons.print,
-                                                  color: Colors.green,
-                                                  size: 36,
-                                                ),
-                                                style: ButtonStyle(
-                                                    side: MaterialStateProperty
-                                                        .all(BorderSide(
-                                                        color: Colors.green,
-                                                        width: 1.4.w)),
-                                                    backgroundColor:
-                                                    MaterialStateProperty.all<
-                                                        Color>(
-                                                        Colors.white),
-                                                    padding: MaterialStateProperty
-                                                        .all(
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 20.h,
-                                                            horizontal:
-                                                            20.w)),
-                                                    shape: MaterialStateProperty
-                                                        .all(
-                                                        const RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius
-                                                                .all(
-                                                                Radius.circular(
-                                                                    20))))),
-                                              ),
-                                              !(tmpList == null
-                                                  ? unprintedList[index]
-                                                  .carImage
-                                                  .contains('null')
-                                                  : tmpList[index]
-                                                  .carImage
-                                                  .contains('null'))
-                                                  ? InkWell(
-                                                child: Image.network(
-                                                  tmpList == null
-                                                      ? unprintedList[
-                                                  index]
-                                                      .carImage
-                                                      : tmpList[index]
-                                                      .carImage,
-                                                  width: 300.w,
-                                                  height: 170.h,
-                                                  fit: BoxFit.fill,
-                                                ),
-                                                onTap: () {
-                                                  showDialog(
-                                                      context:
-                                                      context,
-                                                      builder:
-                                                          (context) {
-                                                        return Dialog(
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  40)),
-                                                          elevation:
-                                                          16,
-                                                          child:
-                                                          SizedBox(
-                                                            height:
-                                                            400.h,
-                                                            width:
-                                                            600.w,
-                                                            child: Image
-                                                                .network(
-                                                              tmpList ==
-                                                                  null
-                                                                  ? unprintedList[index]
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: tmpList == null
+                                        ? parkingList.length
+                                        : tmpList.length,
+                                    scrollDirection: Axis.vertical,
+                                    //  shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        child: SizedBox(
+                                        //  height: 380.h,
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(25.0),
+                                            ),
+                                            elevation: 4,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 15),
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                    'G-${tmpList == null ? parkingList[index].logId : tmpList[index].logId}',
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            setResponsiveFontSize(
+                                                                26),
+                                                        fontWeight:
+                                                            FontManager.bold),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 12.h,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      !(tmpList == null
+                                                              ? parkingList[
+                                                                      index]
                                                                   .carImage
-                                                                  : tmpList[index]
-                                                                  .carImage,
-                                                              fit: BoxFit
-                                                                  .fill,
+                                                                  .contains(
+                                                                      'null')
+                                                              : tmpList[index]
+                                                                  .carImage
+                                                                  .contains(
+                                                                      'null'))
+                                                          ? InkWell(
+                                                              child:
+                                                                  Image.network(
+                                                                tmpList == null
+                                                                    ? parkingList[
+                                                                            index]
+                                                                        .carImage
+                                                                    : tmpList[
+                                                                            index]
+                                                                        .carImage,
+                                                                width: 300.w,
+                                                                height: 170.h,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              ),
+                                                              onTap: () {
+                                                                showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (context) {
+                                                                      return Dialog(
+                                                                        shape: RoundedRectangleBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(40)),
+                                                                        elevation:
+                                                                            16,
+                                                                        child:
+                                                                            SizedBox(
+                                                                          height:
+                                                                              400.h,
+                                                                          width:
+                                                                              600.w,
+                                                                          child:
+                                                                              Image.network(
+                                                                            tmpList == null
+                                                                                ? parkingList[index].carImage
+                                                                                : tmpList[index].carImage,
+                                                                            fit:
+                                                                                BoxFit.fill,
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                                    });
+                                                              },
+                                                            )
+                                                          : Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      right:
+                                                                          50.w),
+                                                              child: Container(
+                                                                  height: 170.h,
+                                                                  child: Image
+                                                                      .asset(
+                                                                          'assets/images/vip.png')),
                                                             ),
+                                                      !(tmpList == null
+                                                              ? parkingList[
+                                                                      index]
+                                                                  .carImage
+                                                                  .contains(
+                                                                      'null')
+                                                              : tmpList[index]
+                                                                  .carImage
+                                                                  .contains(
+                                                                      'null'))
+                                                          ? InkWell(
+                                                              onTap: () {
+                                                                showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (context) {
+                                                                      return Dialog(
+                                                                        shape: RoundedRectangleBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(40)),
+                                                                        elevation:
+                                                                            16,
+                                                                        child:
+                                                                            Container(
+                                                                          height:
+                                                                              400.h,
+                                                                          width:
+                                                                              600.w,
+                                                                          child:
+                                                                              Image.network(
+                                                                            tmpList == null
+                                                                                ? parkingList[index].identityImage
+                                                                                : tmpList[index].identityImage,
+                                                                            fit:
+                                                                                BoxFit.fill,
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                                    });
+                                                              },
+                                                              child:
+                                                                  Image.network(
+                                                                tmpList == null
+                                                                    ? parkingList[
+                                                                            index]
+                                                                        .identityImage
+                                                                    : tmpList[
+                                                                            index]
+                                                                        .identityImage,
+                                                                width: 300.w,
+                                                                height: 170.h,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              ),
+                                                            )
+                                                          : Container(),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 25.h,
+                                                  ),
+                                                  ExpandablePanel(
+                                                    expanded: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Column(
+                                                        children: [
+
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Text(
+                                                                  adminProv.parkingList[index].parkType,
+                                                                  style: TextStyle(
+                                                                      fontSize: setResponsiveFontSize(22),
+                                                                      color: Colors.green,
+                                                                      fontWeight: FontManager.bold),
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                'نوع الزائر',
+                                                                style: TextStyle(
+                                                                  fontWeight: FontWeight.bold,
+                                                                  color: Colors.black,
+                                                                  fontSize: setResponsiveFontSize(20),
+                                                                ),
+                                                                softWrap: true,
+                                                                textAlign: TextAlign.end,
+                                                              ),
+                                                            ],
                                                           ),
-                                                        );
-                                                      });
-                                                },
-                                              )
-                                                  : Padding(
-                                                padding: EdgeInsets.only(
-                                                    right: 50.w),
-                                                child: Container(
-                                                    height: 170.h,
-                                                    child: Image.asset(
-                                                        'assets/images/vip.png')),
+                                                          SizedBox(
+                                                            height: 12.h,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                adminProv.parkingList[index].inDateTime.length > 2
+                                                                    ? adminProv.parkingList[index].inDateTime
+                                                                    : 'لم يتم الدخول بعد',
+                                                                style: TextStyle(
+                                                                    fontSize: setResponsiveFontSize(22),
+                                                                    color: Colors.green,
+                                                                    fontWeight: FontManager.bold),
+                                                              ),
+                                                              Text('تاريخ الدخول',
+                                                                  softWrap: true,
+                                                                  textAlign: TextAlign.end,
+                                                                  style: TextStyle(
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: Colors.black,
+                                                                    fontSize: setResponsiveFontSize(20),
+                                                                  ))
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 12.h,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                adminProv.parkingList[index].outDateTime.length>2
+                                                                    ? adminProv.parkingList[index].outDateTime
+                                                                    : 'لم يتم الخروج بعد',
+                                                                style: TextStyle(
+                                                                    fontSize: setResponsiveFontSize(22),
+                                                                    color: Colors.green,
+                                                                    fontWeight: FontManager.bold),
+                                                              ),
+                                                              Text(
+                                                                'تاريخ الخروج',
+                                                                style: TextStyle(
+                                                                  fontWeight: FontWeight.bold,
+                                                                  color: Colors.black,
+                                                                  fontSize: setResponsiveFontSize(20),
+                                                                ),
+                                                                softWrap: true,
+                                                                textAlign: TextAlign.end,
+                                                              ),
+                                                            ],
+                                                          )   ,SizedBox(
+                                                            height: 12.h,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                adminProv.parkingList[index].totalPrice.toString() ,
+                                                                style: TextStyle(
+                                                                    fontSize: setResponsiveFontSize(22),
+                                                                    color: Colors.green,
+                                                                    fontWeight: FontManager.bold),
+                                                              ),
+                                                              Text(
+                                                                'إجمالى الفاتورة',
+                                                                style: TextStyle(
+                                                                  fontWeight: FontWeight.bold,
+                                                                  color: Colors.black,
+                                                                  fontSize: setResponsiveFontSize(20),
+                                                                ),
+                                                                softWrap: true,
+                                                                textAlign: TextAlign.end,
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    collapsed: null,
+                                                    header: SizedBox(
+                                                      height: 1.h,
+                                                    ),
+                                                  )
+
+                                                ],
                                               ),
-
-
-                                              !(tmpList == null
-                                                  ? unprintedList[index]
-                                                  .carImage
-                                                  .contains('null')
-                                                  : tmpList[index]
-                                                  .carImage
-                                                  .contains('null'))
-                                                  ? InkWell(
-                                                onTap: () {
-                                                  showDialog(
-                                                      context:
-                                                      context,
-                                                      builder:
-                                                          (context) {
-                                                        return Dialog(
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  40)),
-                                                          elevation:
-                                                          16,
-                                                          child:
-                                                          Container(
-                                                            height:
-                                                            400.h,
-                                                            width:
-                                                            600.w,
-                                                            child: Image
-                                                                .network(
-                                                              tmpList ==
-                                                                  null
-                                                                  ? unprintedList[index]
-                                                                  .identityImage
-                                                                  : tmpList[index]
-                                                                  .identityImage,
-                                                              fit: BoxFit
-                                                                  .fill,
-                                                            ),
-                                                          ),
-                                                        );
-                                                      });
-                                                },
-                                                child: Image.network(
-                                                  tmpList == null
-                                                      ? unprintedList[
-                                                  index]
-                                                      .identityImage
-                                                      : tmpList[index]
-                                                      .identityImage,
-                                                  width: 300.w,
-                                                  height: 170.h,
-                                                  fit: BoxFit.fill,
-                                                ),
-                                              )
-                                                  : Container(),
-                                            ],
+                                            ),
                                           ),
-                                          SizedBox(
-                                            height: 25.h,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                      : ZoomIn(
-                    child: Center(
-                        child: Text(
-                          'لا توجد فواتير معلقة',
-                          style:
-                          TextStyle(fontSize: setResponsiveFontSize(46)),
-                        )),
-                  );
-                }
-                return Container();
-              }),
+                              ],
+                            ),
+                          )
+                        : ZoomIn(
+                            child: Center(
+                                child: Text(
+                              'لا توجد فواتير معلقة',
+                              style: TextStyle(
+                                  fontSize: setResponsiveFontSize(46)),
+                            )),
+                          );
+                  }
+                  return Container();
+                }),
+          ),
         ),
       ),
     );

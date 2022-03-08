@@ -30,42 +30,61 @@ class AuthProv with ChangeNotifier {
 
   Future<dynamic> logout(String userID) async {
     String data = '';
-
+    print('logout method');
     try {
-      http.Response response = await http.post(
+      http.Response response = await http
+          .post(
         Uri.parse('$BASE_URL/api/User/SignOut?UserId=$userId'),
+      )
+          .timeout(
+        const Duration(seconds: 3),
+        onTimeout: () {
+          return http.Response('time out', 408);
+        },
       );
 
+      print('logout method  2');
       String responseBody = response.body;
-      print('response $responseBody');
+      print('response is $responseBody');
 
+      if(responseBody=='time out'){
+        data = 'Time Out';
+        return data;
+      }
       var decodedRes = jsonDecode(responseBody);
 
       print('response is $decodedRes');
 
-      if (decodedRes['message'] == 'success') {
-        data = 'Success';
-      }
 
-      notifyListeners();
-      return data;
-    } catch (e) {
-      print(e);
+     if (decodedRes['message'] == 'success') {
+    data = 'Success';
     }
+
+    notifyListeners();
+    return data;
+    }
+
+
+    catch (e) {
+
+    print('ex is ${e}');
+    }
+
+
   }
 
   Future<dynamic> login(String username, String password, File guardImage,
       String tabAddress) async {
     String data = '';
     Map<String, String> headers = {'Content-Type': 'application/json'};
-
+print('1');
     var uri = Uri.parse('$BASE_URL/api/user/LogIn');
-
+    print('2');
     var request = http.MultipartRequest('POST', uri);
     request.files.add(
       await http.MultipartFile.fromPath('file', guardImage.path),
     );
-
+    print('3');
     request.fields['Password'] = password;
     request.fields['UserName'] = username;
     request.fields['PhoneMac'] = tabAddress;
@@ -83,7 +102,6 @@ class AuthProv with ChangeNotifier {
           print('message is ${responseDecoded['message']}');
 
           if (responseDecoded['message'] == 'Success') {
-
             var userJson = responseDecoded['response']['user'];
             userRole = responseDecoded['response']['roles'][0];
             data = 'Success';
@@ -96,12 +114,15 @@ class AuthProv with ChangeNotifier {
               balance = double.parse(userJson['balance'].toString());
               printerAddress = userJson['printerMac'];
               lostTicketPrice = double.parse(responseDecoded['response']
-                      ['printReasons'][0]['price']
+              ['printReasons'][0]['price']
                   .toString());
               gateName = userJson['gateName'];
             }
           } else if (responseDecoded['message'] == 'Incorrect User') {
             data = 'Incorrect User';
+          } else if (responseDecoded['message'] ==
+              'failure during signning in') {
+            data = 'Incorrect Password';
           } else {
             data = responseDecoded['message'];
           }

@@ -28,7 +28,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
-
 List<CameraDescription> cameras = [];
 
 class LoginScreen extends StatefulWidget {
@@ -256,12 +255,11 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     authProv.changeLoadingState(true);
 
     print('_platformVersion  =   $_udid');
-    Fluttertoast.showToast(
+/*    Fluttertoast.showToast(
         msg: 'MAC ADDRESS IS $_udid',
         backgroundColor: Colors.green,
-        toastLength: Toast.LENGTH_LONG);
+        toastLength: Toast.LENGTH_LONG);*/
     if (_udid == 'Unknown' || _udid == null) {
-
       Fluttertoast.showToast(
           msg: 'حدث خطأ ما برجاء المحاولة لاحقاً',
           backgroundColor: Colors.green,
@@ -274,6 +272,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     authProv
         .login(_memberShipController.text, _passwordController.text, img, _udid)
         .then((value) async {
+
       authProv.changeLoadingState(false);
 
       print('value => $value');
@@ -281,22 +280,17 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         print('caching data');
         await cachingData();
         print('role is ${authProv.userRole}');
-if(authProv.userRole=='Manager'){
-
-  print('manager');
-  Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => MHomeScreen()));
-  return;
-
-}else if(authProv.userRole=='Admin'){
-
-  print('admin');
-  Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => AHomeScreen()));
-  return;
-
-}
-
+        if (authProv.userRole == 'Manager') {
+          print('manager');
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => MHomeScreen()));
+          return;
+        } else if (authProv.userRole == 'Admin') {
+          print('admin');
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => AHomeScreen()));
+          return;
+        }
 
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => EntryScreen()));
@@ -305,13 +299,17 @@ if(authProv.userRole=='Manager'){
             msg: 'بيانات غير صحيحة',
             backgroundColor: Colors.green,
             toastLength: Toast.LENGTH_LONG);
+      }else if (value == 'Incorrect Password') {
+        Fluttertoast.showToast(
+            msg: 'كلمة المرور غير صحيحة ',
+            backgroundColor: Colors.green,
+            toastLength: Toast.LENGTH_LONG);
       } else if (value == 'you need to be at same network with local host') {
         Fluttertoast.showToast(
             msg: value,
             backgroundColor: Colors.green,
             toastLength: Toast.LENGTH_LONG);
-      }
-      else{
+      } else {
         Fluttertoast.showToast(
             msg: value,
             backgroundColor: Colors.green,
@@ -322,13 +320,13 @@ if(authProv.userRole=='Manager'){
 
   Future<void> cachingData() async {
     await prefs.setString('guardId', authProv.userId);
-    await prefs.setString('role', authProv.userRole??'');
+    await prefs.setString('role', authProv.userRole ?? '');
     await prefs.setString('token', authProv.token);
-    await prefs.setString('guardName', authProv.guardName??'');
-    await prefs.setDouble('balance', authProv.balance??0.0);
-    await prefs.setDouble('ticketLostPrice', authProv.lostTicketPrice??0.0);
+    await prefs.setString('guardName', authProv.guardName ?? '');
+    await prefs.setDouble('balance', authProv.balance ?? 0.0);
+    await prefs.setDouble('ticketLostPrice', authProv.lostTicketPrice ?? 0.0);
     await prefs.setString('printerAddress', authProv.printerAddress ?? '');
-    await prefs.setString('gateName', authProv.gateName??'');
+    await prefs.setString('gateName', authProv.gateName ?? '');
     await prefs.setBool('isLoggedIn', authProv.isLogged);
   }
 

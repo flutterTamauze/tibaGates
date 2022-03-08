@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Utilities/Routes/routes.dart';
 import 'Utilities/locators.dart';
+import 'ViewModel/admin/adminProv.dart';
 import 'ViewModel/manager/managerProv.dart';
 
 SharedPreferences prefs;
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(800.0, 1232.0),
+      designSize: const Size(800.0, 1232.0),
       builder: () {
         return MultiProvider(
           providers: [
@@ -49,6 +50,8 @@ class MyApp extends StatelessWidget {
             ),
             ChangeNotifierProvider(
               create: (context) => getIt<ManagerProv>(),
+            ),   ChangeNotifierProvider(
+              create: (context) => getIt<AdminProv>(),
             ),
           ],
           child: MaterialApp(

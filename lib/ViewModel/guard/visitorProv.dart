@@ -14,12 +14,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../main.dart';
 
 class VisitorProv with ChangeNotifier {
-
   Map<String, String> mHeaders = {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer ${prefs.getString('token')}'
   };
-
 
   List<File> images = [];
   List<ReasonModel> reasonsObjects = [];
@@ -105,7 +103,7 @@ class VisitorProv with ChangeNotifier {
     try {
       http.Response response = await http
           .get(Uri.parse('$BASE_URL/api/gate/parked'), headers: mHeaders);
-print('statusCode ${response.statusCode}');
+      print('statusCode ${response.statusCode}');
       var parkJsonObj =
           jsonDecode(response.body)['response']['parkedDTO'] as List;
       var reasonsJsonObj =
@@ -137,6 +135,8 @@ print('statusCode ${response.statusCode}');
     }
   }
 
+
+
   Future<ResponseData> checkIn(
       File carImg,
       File identityImg,
@@ -148,12 +148,9 @@ print('statusCode ${response.statusCode}');
     ResponseData responseData = ResponseData();
     print('userID $userID');
 
-
-
-
     var uri = Uri.parse('$BASE_URL/api/gate/CheckIn');
 
-    var request =  http.MultipartRequest('POST', uri);
+    var request = http.MultipartRequest('POST', uri);
     request.files.add(
       await http.MultipartFile.fromPath('file', carImg.path),
     );
@@ -171,7 +168,7 @@ print('statusCode ${response.statusCode}');
     try {
       await request.send().then((response) async {
         print('status code ${response.statusCode}');
-        if(response.statusCode==401){
+        if (response.statusCode == 401) {
           responseData.message = 'unAuth';
         }
         response.stream.transform(utf8.decoder).listen((value) {
@@ -207,7 +204,7 @@ print('statusCode ${response.statusCode}');
     print('userID $userID');
 
     var uri = Uri.parse('$BASE_URL/api/invitation/CheckInInvitation');
-    var request =  http.MultipartRequest('POST', uri);
+    var request = http.MultipartRequest('POST', uri);
 
     if (carImg != null && identityImg != null) {
       print('images not null');
@@ -422,7 +419,7 @@ print('statusCode ${response.statusCode}');
 
     try {
       var uri = Uri.parse('$BASE_URL/api/Invitation/ScanInvitationQr');
-      var request =  http.MultipartRequest('POST', uri);
+      var request = http.MultipartRequest('POST', uri);
 
       request.fields['QrCode'] = qrCode;
       request.headers.addAll(mHeaders);

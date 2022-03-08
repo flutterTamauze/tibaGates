@@ -1,3 +1,4 @@
+import 'package:clean_app/ViewModel/admin/adminProv.dart';
 import 'package:clean_app/ViewModel/guard/authProv.dart';
 import 'package:clean_app/ViewModel/guard/visitorProv.dart';
 import 'package:clean_app/ViewModel/manager/managerProv.dart';
@@ -17,9 +18,9 @@ class InitLocator {
   void _setUpLocator() async {
     //Providers
     locator.registerLazySingleton(() => VisitorProv());
-
     locator.registerLazySingleton(() => AuthProv());
     locator.registerLazySingleton(() => ManagerProv());
+    locator.registerLazySingleton(() => AdminProv());
 
 
     //Network
