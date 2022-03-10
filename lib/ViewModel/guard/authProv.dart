@@ -37,7 +37,7 @@ class AuthProv with ChangeNotifier {
         Uri.parse('$BASE_URL/api/User/SignOut?UserId=$userId'),
       )
           .timeout(
-        const Duration(seconds: 3),
+        const Duration(seconds: 6),
         onTimeout: () {
           return http.Response('time out', 408);
         },
@@ -47,7 +47,7 @@ class AuthProv with ChangeNotifier {
       String responseBody = response.body;
       print('response is $responseBody');
 
-      if(responseBody=='time out'){
+      if (responseBody == 'time out') {
         data = 'Time Out';
         return data;
       }
@@ -55,29 +55,25 @@ class AuthProv with ChangeNotifier {
 
       print('response is $decodedRes');
 
+      if (decodedRes['message'] == 'success') {
+        data = 'Success';
+      }
+      if (decodedRes['message'] == 'incorrect user') {
+        data = 'incorrect user';
+      }
 
-     if (decodedRes['message'] == 'success') {
-    data = 'Success';
+      notifyListeners();
+      return data;
+    } catch (e) {
+      print('ex is ${e}');
     }
-
-    notifyListeners();
-    return data;
-    }
-
-
-    catch (e) {
-
-    print('ex is ${e}');
-    }
-
-
   }
 
   Future<dynamic> login(String username, String password, File guardImage,
       String tabAddress) async {
     String data = '';
     Map<String, String> headers = {'Content-Type': 'application/json'};
-print('1');
+    print('1');
     var uri = Uri.parse('$BASE_URL/api/user/LogIn');
     print('2');
     var request = http.MultipartRequest('POST', uri);
@@ -114,7 +110,7 @@ print('1');
               balance = double.parse(userJson['balance'].toString());
               printerAddress = userJson['printerMac'];
               lostTicketPrice = double.parse(responseDecoded['response']
-              ['printReasons'][0]['price']
+                      ['printReasons'][0]['price']
                   .toString());
               gateName = userJson['gateName'];
             }

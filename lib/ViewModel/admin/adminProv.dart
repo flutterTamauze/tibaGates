@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../../Data/Models/admin/parking.dart';
+import '../../Data/Models/admin/a_parking_model.dart';
 import '../../Utilities/Constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,8 +35,7 @@ List<ParkingModel> parkingList = [];
       print('parking response  $parkJsonObj');
       carsCount=jsonDecode(response.body)['response']['summaryDTO']['count'];
       totalBalance=jsonDecode(response.body)['response']['summaryDTO']['total_Fines'];
-      parkingList =
-          parkJsonObj.map((item) => ParkingModel.fromJson(item)).toList();
+      parkingList = parkJsonObj.map((item) => ParkingModel.fromJson(item)).toList();
       parkingList = parkingList.reversed.toList();
       print('parking length  ${parkingList.length}');
 
@@ -46,6 +45,8 @@ List<ParkingModel> parkingList = [];
       print(e);
     }
   }
+
+
 
 
 }

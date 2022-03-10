@@ -30,7 +30,7 @@ dependencies:
   expandable: ^5.0.1
   share: ^2.0.1
   share_plus: ^2.1.4
-
+  fl_chart: 0.36.4
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
@@ -52,6 +52,8 @@ dependencies:
   get_it: ^7.2.0
   connectivity: ^3.0.6
   font_awesome_flutter: ^9.2.0
+  #date_range_picker: ^1.0.7
+
   #getwidget: ^2.0.4
   #google_nav_bar: ^5.0.5
   #image_picker:
@@ -61,6 +63,7 @@ dependencies:
   intl: ^0.17.0
   bluetooth_print: ^3.0.1
   dotted_decoration: ^2.0.0
+  syncfusion_flutter_datepicker: ^19.4.55
 
 
   #pin_code_fields: ^7.3.0

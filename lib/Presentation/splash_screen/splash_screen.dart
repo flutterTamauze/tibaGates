@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Presentation/admin/a_home_screen.dart';
+import 'package:clean_app/Presentation/admin/dailyReports_screen.dart';
+import 'package:clean_app/Presentation/admin/admin_bottomNav.dart';
 import 'package:clean_app/Presentation/login_screen/Screens/login.dart';
 
 import '../guard/entry_screen/entryScreen.dart';
@@ -42,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
       }  else if (role == 'Admin') {
         print('role is admin');
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => AHomeScreen()));
+            context, MaterialPageRoute(builder: (context) => BottomNav(comingIndex: 3,)));
       } else
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => EntryScreen()));

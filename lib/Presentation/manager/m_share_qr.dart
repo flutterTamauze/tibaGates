@@ -31,7 +31,7 @@ class _MShareQrState extends State<MShareQr> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return WillPopScope(
-      onWillPop: (){
+      onWillPop: () {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MHomeScreen()));
       },
@@ -42,7 +42,8 @@ class _MShareQrState extends State<MShareQr> {
             onPressed: () async {
               final byteImage = await screenshotController.captureFromWidget(Qr(
                 version: QrVersions.auto,
-                data: Provider.of<ManagerProv>(context, listen: false).qrCode ??'abc',
+                data: Provider.of<ManagerProv>(context, listen: false).qrCode ??
+                    'abc',
                 size: 250.0,
               ));
               final directory = await getApplicationDocumentsDirectory();
@@ -59,45 +60,28 @@ class _MShareQrState extends State<MShareQr> {
           ),
         ),
         body: SingleChildScrollView(
-          child: SizedBox(
-            height: height,
+          child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
+              children: [
+                SizedBox(height: 400.h,),
                 Screenshot(
                   controller: screenshotController,
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Container(
                         color: Colors.white,
-                        child: Column(
-                          children: [
-                   /*         Text(
-                              '',textAlign: TextAlign.center,
-                              style:
-                              TextStyle(fontSize: setResponsiveFontSize(36)),
-                            ),
-                            SizedBox(height: 30.h,),*/
-                            Center(
-                              child: Container(
-                                //    margin: const EdgeInsets.only(top: 0),
-                                padding: const EdgeInsets.all(3.0),
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 2.w, color: Colors.green)),
-                                child: Qr(
-                                  data: Provider.of<ManagerProv>(context,
-                                              listen: true)
-                                          .qrCode??'abc',
-                                  size: 350.0.w,
-                                  version: QrVersions.auto,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 8.h,
-                            ),
-                          ],
+                        child: Container(
+                          padding: const EdgeInsets.all(3.0),
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 2.w, color: Colors.green)),
+                          child: Qr(
+                            data: Provider.of<ManagerProv>(context, listen: true)
+                                    .qrCode ??
+                                'abc',
+                            size: 350.0.w,
+                            version: QrVersions.auto,
+                          ),
                         )),
                   ),
                 ),

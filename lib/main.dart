@@ -12,7 +12,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Utilities/Routes/routes.dart';
 import 'Utilities/locators.dart';
+import 'ViewModel/admin/a_homeBioProv.dart';
 import 'ViewModel/admin/adminProv.dart';
+import 'ViewModel/admin/reports/admin_reportsProv.dart';
 import 'ViewModel/manager/managerProv.dart';
 
 SharedPreferences prefs;
@@ -52,6 +54,10 @@ class MyApp extends StatelessWidget {
               create: (context) => getIt<ManagerProv>(),
             ),   ChangeNotifierProvider(
               create: (context) => getIt<AdminProv>(),
+            ), ChangeNotifierProvider(
+              create: (context) => getIt<AdminHomeProv>(),
+            ),ChangeNotifierProvider(
+              create: (context) => getIt<AReportsProv>(),
             ),
           ],
           child: MaterialApp(

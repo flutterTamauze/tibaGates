@@ -1,4 +1,6 @@
+import 'package:clean_app/ViewModel/admin/a_homeBioProv.dart';
 import 'package:clean_app/ViewModel/admin/adminProv.dart';
+import 'package:clean_app/ViewModel/admin/reports/admin_reportsProv.dart';
 import 'package:clean_app/ViewModel/guard/authProv.dart';
 import 'package:clean_app/ViewModel/guard/visitorProv.dart';
 import 'package:clean_app/ViewModel/manager/managerProv.dart';
@@ -21,6 +23,8 @@ class InitLocator {
     locator.registerLazySingleton(() => AuthProv());
     locator.registerLazySingleton(() => ManagerProv());
     locator.registerLazySingleton(() => AdminProv());
+    locator.registerLazySingleton(() => AdminHomeProv());
+    locator.registerLazySingleton(() => AReportsProv());
 
 
     //Network

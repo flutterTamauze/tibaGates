@@ -24,8 +24,8 @@ class Invitation {
       invitationType: json['invitationType'],
       creationDate: json['creationDate'],
       qrCode: json['qrCode'],
-      inTime: json['inTime'],
-      outTime: json['outTime'],
+      inTime: json['inTime']??'',
+      outTime: json['outTime']??'',
       status: json['status'],
     );
   }

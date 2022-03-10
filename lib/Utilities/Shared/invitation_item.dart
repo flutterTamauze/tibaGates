@@ -1,8 +1,14 @@
-import 'package:clean_app/Data/Models/manager/invitation_model.dart';
-import 'package:clean_app/Utilities/Shared/qr.dart';
-import 'package:clean_app/ViewModel/manager/managerProv.dart';
+import 'dart:io';
+import 'dart:typed_data';
+
+import '../../Data/Models/manager/invitation_model.dart';
+import 'qr.dart';
+import '../../ViewModel/manager/managerProv.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../Constants/constants.dart';
 import '../Fonts/fontsManager.dart';
@@ -20,6 +26,8 @@ class InvitationItem extends StatefulWidget {
 }
 
 class _InvitationItemState extends State<InvitationItem> {
+  ScreenshotController screenshotController = ScreenshotController();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -95,16 +103,35 @@ class _InvitationItemState extends State<InvitationItem> {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(3.0),
-                          decoration: BoxDecoration(
-                              border:
-                                  Border.all(width: 2.w, color: Colors.green)),
-                          child: Qr(
-                            data: widget.invitation.qrCode ?? 'abc',
-                            size: 200.0.w,
-                            version: QrVersions.auto,
+                        InkWell(
+                          child: Container(
+                            padding: const EdgeInsets.all(3.0),
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 2.w, color: Colors.green)),
+                            child: Screenshot(
+                              controller: screenshotController,
+                              child: Qr(
+                                data: widget.invitation.qrCode ?? 'abc',
+                                size: 200.0.w,
+                                version: QrVersions.auto,
+                              ),
+                            ),
                           ),
+                          onTap: ()async{
+                            Uint8List byteImage = await screenshotController.captureFromWidget(Qr(
+                            version: QrVersions.auto,
+                            data: Provider.of<ManagerProv>(context, listen: false).qrCode ??'abc',
+                            size: 250.0,
+                          ));
+                          Directory directory = await getApplicationDocumentsDirectory();
+                           File image = File('${directory.path}/qr.png');
+                          image.writeAsBytesSync(byteImage);
+                          const String text = 'You are welcome to spend nice time ';
+                          await Share.shareFiles([image.path], text: text);},
+                        ),
+                        SizedBox(
+                          height: 12.h,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

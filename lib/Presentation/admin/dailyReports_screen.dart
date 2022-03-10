@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:clean_app/Data/Models/admin/parking.dart';
+import 'package:clean_app/Data/Models/admin/a_parking_model.dart';
 import 'package:clean_app/Presentation/guard/entry_screen/entryScreen.dart';
 import 'package:clean_app/Utilities/Shared/exitDialog.dart';
 import 'package:clean_app/ViewModel/admin/adminProv.dart';
@@ -25,25 +25,33 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../main.dart';
 import '../guard/print_page2.dart';
 
-class AHomeScreen extends StatefulWidget {
-  const AHomeScreen({Key key}) : super(key: key);
+class ADailyReportsScreen extends StatefulWidget {
+  const ADailyReportsScreen({Key key}) : super(key: key);
 
   @override
-  _AHomeScreenState createState() => _AHomeScreenState();
+  _ADailyReportsScreenState createState() => _ADailyReportsScreenState();
 }
 
-class _AHomeScreenState extends State<AHomeScreen> {
+class _ADailyReportsScreenState extends State<ADailyReportsScreen> {
   Future parkingCarsListener;
   String searchText;
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   List<ParkingModel> parkingList;
   var tmpList;
+  String role;
+  String token;
 
   @override
   void initState() {
-    parkingCarsListener =
-        Provider.of<AdminProv>(context, listen: false).getParkingListForAdmin();
+    token = prefs.getString('token');
+    role = prefs.getString('role');
+    Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {
+      cachingData();
+      parkingCarsListener = Provider.of<AdminProv>(context, listen: false)
+          .getParkingListForAdmin();
+    });
+
     super.initState();
   }
 
@@ -58,6 +66,16 @@ class _AHomeScreenState extends State<AHomeScreen> {
       });
     });
     _refreshController.refreshCompleted();
+  }
+
+  void cachingData() async {
+    Provider.of<AuthProv>(context, listen: false).token =
+        prefs.getString('token');
+    Provider.of<AuthProv>(context, listen: false).userRole =
+        prefs.getString('role');
+
+    Provider.of<AuthProv>(context, listen: false).userId =
+        prefs.getString('guardId');
   }
 
   void filterServices(value) {
@@ -138,10 +156,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                               color: Colors.white,
                               backgroundColor: Colors.green,
                             ),
-                            child:
-
-
-                            Column(
+                            child: Column(
                               children: [
                                 Row(
                                   children: [
@@ -184,7 +199,10 @@ class _AHomeScreenState extends State<AHomeScreen> {
                                                   fontFamily: 'Almarai')),
                                         ),
                                       ),
-                                    ),   SizedBox(width: 12.w,),
+                                    ),
+                                    SizedBox(
+                                      width: 12.w,
+                                    ),
                                     OutlinedButton(
                                       onPressed: () {},
                                       child: SizedBox(
@@ -231,7 +249,9 @@ class _AHomeScreenState extends State<AHomeScreen> {
                                                   borderRadius: BorderRadius.all(
                                                       Radius.circular(20))))),
                                     ),
-                                    SizedBox(width: 10.w,),
+                                    SizedBox(
+                                      width: 10.w,
+                                    ),
                                     OutlinedButton(
                                       onPressed: () {},
                                       child: SizedBox(
@@ -294,7 +314,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 10, vertical: 10),
                                         child: SizedBox(
-                                        //  height: 380.h,
+                                          //  height: 380.h,
                                           child: Card(
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
@@ -386,7 +406,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                                                                   .only(
                                                                       right:
                                                                           50.w),
-                                                              child: Container(
+                                                              child: SizedBox(
                                                                   height: 170.h,
                                                                   child: Image
                                                                       .asset(
@@ -456,31 +476,50 @@ class _AHomeScreenState extends State<AHomeScreen> {
                                                   ),
                                                   ExpandablePanel(
                                                     expanded: Padding(
-                                                      padding: const EdgeInsets.all(8.0),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
                                                       child: Column(
                                                         children: [
-
                                                           Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
                                                             children: [
                                                               Expanded(
                                                                 child: Text(
-                                                                  adminProv.parkingList[index].parkType,
+                                                                  adminProv
+                                                                      .parkingList[
+                                                                          index]
+                                                                      .parkType,
                                                                   style: TextStyle(
-                                                                      fontSize: setResponsiveFontSize(22),
-                                                                      color: Colors.green,
-                                                                      fontWeight: FontManager.bold),
+                                                                      fontSize:
+                                                                          setResponsiveFontSize(
+                                                                              22),
+                                                                      color: Colors
+                                                                          .green,
+                                                                      fontWeight:
+                                                                          FontManager
+                                                                              .bold),
                                                                 ),
                                                               ),
                                                               Text(
                                                                 'نوع الزائر',
-                                                                style: TextStyle(
-                                                                  fontWeight: FontWeight.bold,
-                                                                  color: Colors.black,
-                                                                  fontSize: setResponsiveFontSize(20),
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                      setResponsiveFontSize(
+                                                                          20),
                                                                 ),
                                                                 softWrap: true,
-                                                                textAlign: TextAlign.end,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .end,
                                                               ),
                                                             ],
                                                           ),
@@ -488,24 +527,49 @@ class _AHomeScreenState extends State<AHomeScreen> {
                                                             height: 12.h,
                                                           ),
                                                           Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
                                                             children: [
                                                               Text(
-                                                                adminProv.parkingList[index].inDateTime.length > 2
-                                                                    ? adminProv.parkingList[index].inDateTime
+                                                                adminProv
+                                                                            .parkingList[
+                                                                                index]
+                                                                            .inDateTime
+                                                                            .length >
+                                                                        2
+                                                                    ? adminProv
+                                                                        .parkingList[
+                                                                            index]
+                                                                        .inDateTime
                                                                     : 'لم يتم الدخول بعد',
                                                                 style: TextStyle(
-                                                                    fontSize: setResponsiveFontSize(22),
-                                                                    color: Colors.green,
-                                                                    fontWeight: FontManager.bold),
+                                                                    fontSize:
+                                                                        setResponsiveFontSize(
+                                                                            22),
+                                                                    color: Colors
+                                                                        .green,
+                                                                    fontWeight:
+                                                                        FontManager
+                                                                            .bold),
                                                               ),
-                                                              Text('تاريخ الدخول',
-                                                                  softWrap: true,
-                                                                  textAlign: TextAlign.end,
-                                                                  style: TextStyle(
-                                                                    fontWeight: FontWeight.bold,
-                                                                    color: Colors.black,
-                                                                    fontSize: setResponsiveFontSize(20),
+                                                              Text(
+                                                                  'تاريخ الدخول',
+                                                                  softWrap:
+                                                                      true,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .end,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        setResponsiveFontSize(
+                                                                            20),
                                                                   ))
                                                             ],
                                                           ),
@@ -513,50 +577,93 @@ class _AHomeScreenState extends State<AHomeScreen> {
                                                             height: 12.h,
                                                           ),
                                                           Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
                                                             children: [
                                                               Text(
-                                                                adminProv.parkingList[index].outDateTime.length>2
-                                                                    ? adminProv.parkingList[index].outDateTime
+                                                                adminProv
+                                                                            .parkingList[
+                                                                                index]
+                                                                            .outDateTime
+                                                                            .length >
+                                                                        2
+                                                                    ? adminProv
+                                                                        .parkingList[
+                                                                            index]
+                                                                        .outDateTime
                                                                     : 'لم يتم الخروج بعد',
                                                                 style: TextStyle(
-                                                                    fontSize: setResponsiveFontSize(22),
-                                                                    color: Colors.green,
-                                                                    fontWeight: FontManager.bold),
+                                                                    fontSize:
+                                                                        setResponsiveFontSize(
+                                                                            22),
+                                                                    color: Colors
+                                                                        .green,
+                                                                    fontWeight:
+                                                                        FontManager
+                                                                            .bold),
                                                               ),
                                                               Text(
                                                                 'تاريخ الخروج',
-                                                                style: TextStyle(
-                                                                  fontWeight: FontWeight.bold,
-                                                                  color: Colors.black,
-                                                                  fontSize: setResponsiveFontSize(20),
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                      setResponsiveFontSize(
+                                                                          20),
                                                                 ),
                                                                 softWrap: true,
-                                                                textAlign: TextAlign.end,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .end,
                                                               ),
                                                             ],
-                                                          )   ,SizedBox(
+                                                          ),
+                                                          SizedBox(
                                                             height: 12.h,
                                                           ),
                                                           Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
                                                             children: [
                                                               Text(
-                                                                adminProv.parkingList[index].totalPrice.toString() ,
+                                                                adminProv
+                                                                    .parkingList[
+                                                                        index]
+                                                                    .totalPrice
+                                                                    .toString(),
                                                                 style: TextStyle(
-                                                                    fontSize: setResponsiveFontSize(22),
-                                                                    color: Colors.green,
-                                                                    fontWeight: FontManager.bold),
+                                                                    fontSize:
+                                                                        setResponsiveFontSize(
+                                                                            22),
+                                                                    color: Colors
+                                                                        .green,
+                                                                    fontWeight:
+                                                                        FontManager
+                                                                            .bold),
                                                               ),
                                                               Text(
                                                                 'إجمالى الفاتورة',
-                                                                style: TextStyle(
-                                                                  fontWeight: FontWeight.bold,
-                                                                  color: Colors.black,
-                                                                  fontSize: setResponsiveFontSize(20),
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                      setResponsiveFontSize(
+                                                                          20),
                                                                 ),
                                                                 softWrap: true,
-                                                                textAlign: TextAlign.end,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .end,
                                                               ),
                                                             ],
                                                           )
@@ -568,7 +675,6 @@ class _AHomeScreenState extends State<AHomeScreen> {
                                                       height: 1.h,
                                                     ),
                                                   )
-
                                                 ],
                                               ),
                                             ),

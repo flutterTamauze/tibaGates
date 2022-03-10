@@ -2,7 +2,9 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Presentation/admin/a_home_screen.dart';
+
+import 'package:clean_app/Presentation/admin/dailyReports_screen.dart';
+import 'package:clean_app/Presentation/admin/admin_bottomNav.dart';
 import '../../guard/entry_screen/entryScreen.dart';
 import '../../manager/m_home_screen.dart';
 import '../../../Utilities/Colors/colorManager.dart';
@@ -288,7 +290,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         } else if (authProv.userRole == 'Admin') {
           print('admin');
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => AHomeScreen()));
+              context, MaterialPageRoute(builder: (context) => BottomNav(comingIndex: 3,)));
           return;
         }
 

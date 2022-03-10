@@ -60,7 +60,7 @@ class exitDialog extends StatelessWidget {
                 print('userId ${Provider.of<AuthProv>(context,listen: false).userId}');
                 Provider.of<AuthProv>(context,listen: false).logout(Provider.of<AuthProv>(context,listen: false).userId).then((value) async {
 
-                  if(value=='Success'){
+                  if(value=='Success'||value=='incorrect user'){
                     SharedPreferences prefs = await SharedPreferences.getInstance();
                     Provider.of<AuthProv>(context, listen: false).isLogged = false;
                     prefs.setString('guardName', '');
@@ -81,6 +81,7 @@ class exitDialog extends StatelessWidget {
                         Colors.green,
                         toastLength: Toast
                             .LENGTH_LONG);
+                    Navigator.pop(context);
                     Navigator.pop(context);
 
                   }

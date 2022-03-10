@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 //const String BASE_URL = 'https://tibarose.tibarosehotel.com';
-const String BASE_URL = 'http://192.168.2.51:8007';
+//const String BASE_URL = 'http://192.168.2.51:8007';
 //const String BASE_URL = 'http://10.0.0.242/GATE';
-//const String BASE_URL = 'http://10.0.0.242/PARKING';
+const String BASE_URL = 'http://10.0.0.242/PARKING';
 
 const kTextFieldDecorationWhite = InputDecoration(
   isDense: true,
@@ -52,6 +52,13 @@ class DateUtil {
     return formatted;
   }
 }
+
+void navigateTo(context, widget) => Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => widget,
+  ),
+);
 
 final ktextFieldDecoration = InputDecoration(
   errorStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
