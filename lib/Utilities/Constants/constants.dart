@@ -1,13 +1,14 @@
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import '../Colors/colorManager.dart';
 import '../Fonts/fontsManager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 //const String BASE_URL = 'https://tibarose.tibarosehotel.com';
-//const String BASE_URL = 'http://192.168.2.51:8007';
+const String BASE_URL = 'http://10.0.0.51:8007';
 //const String BASE_URL = 'http://10.0.0.242/GATE';
-const String BASE_URL = 'http://10.0.0.242/PARKING';
+//const String BASE_URL = 'http://10.0.0.242/PARKING';
 
 const kTextFieldDecorationWhite = InputDecoration(
   isDense: true,
@@ -53,12 +54,27 @@ class DateUtil {
   }
 }
 
-void navigateTo(context, widget) => Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => widget,
-  ),
+var logger = Logger(
+  printer: PrettyPrinter(
+      methodCount: 2,
+      // number of method calls to be displayed
+      errorMethodCount: 8,
+      // number of method calls if stacktrace is provided
+      //   lineLength: 120, // width of the output
+      colors: true,
+      // Colorful log messages
+      printEmojis: true,
+      // Print an emoji for each log message
+      printTime: true // Should each log print contain a timestamp
+      ),
 );
+
+void navigateTo(context, widget) => Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => widget,
+      ),
+    );
 
 final ktextFieldDecoration = InputDecoration(
   errorStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
@@ -66,8 +82,8 @@ final ktextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.circular(10),
     borderSide: const BorderSide(width: 2, color: Colors.orange),
   ),
-  disabledBorder:
-      const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 4)),
+  disabledBorder: const OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 4)),
   enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
       borderSide: const BorderSide(color: Colors.grey, width: 0)),

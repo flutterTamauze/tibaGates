@@ -49,7 +49,7 @@ class _MShareQrState extends State<MShareQr> {
               final directory = await getApplicationDocumentsDirectory();
               final image = File('${directory.path}/qr.png');
               image.writeAsBytesSync(byteImage);
-              final text = 'You are welcome to spend nice time ';
+              const text = 'You are welcome to spend nice time ';
               await Share.shareFiles([image.path], text: text);
             },
             backgroundColor: Colors.green,

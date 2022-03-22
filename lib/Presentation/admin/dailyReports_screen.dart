@@ -79,14 +79,14 @@ class _ADailyReportsScreenState extends State<ADailyReportsScreen> {
   }
 
   void filterServices(value) {
-    print('inside filter');
+    debugPrint('inside filter');
 
     setState(() {
       tmpList = parkingList
           .where((item) => item.logId.toString().contains(value.toString()))
           .toList();
 
-      print('filtered list now isss ${tmpList.length}');
+      debugPrint('filtered list now isss ${tmpList.length}');
     });
   }
 
@@ -172,9 +172,9 @@ class _ADailyReportsScreenState extends State<ADailyReportsScreen> {
                                             setState(() {
                                               searchText = value;
                                             });
-                                            print('filter');
+                                            debugPrint('filter');
                                             filterServices(value);
-                                            print('value is $value');
+                                            debugPrint('value is $value');
                                           },
                                           keyboardType: TextInputType.number,
                                           cursorColor: Colors.green,

@@ -24,7 +24,7 @@ class ManagerProv with ChangeNotifier {
   };
 
   Future<dynamic> addInvitation(String visitorName, String visitorDescription,
-      String managerId, int invitationTypeID,String date) async {
+      String managerId, int invitationTypeID, String date) async {
     String data = '';
 
     String body = jsonEncode({
@@ -38,8 +38,8 @@ class ManagerProv with ChangeNotifier {
     try {
       http.Response response = await http.post(
           Uri.parse('$BASE_URL/api/invitation/AddInvitation'),
-          body: body,headers: mHeaders
-        );
+          body: body,
+          headers: mHeaders);
 
       String responseBody = response.body;
       print('response $responseBody');
@@ -60,25 +60,58 @@ class ManagerProv with ChangeNotifier {
     }
   }
 
-/*  Future<dynamic> getInvitationTypes() async {
+  Future<dynamic> deleteInvitation(int invitationId,String userId) async {
+    String data = '';
+
     try {
-      if (invitationObjects.isNotEmpty) {
-        print('invitationObjects not null');
-        return;
-      } else {
-        print('invitationObjects null');
+      http.Response response = await http.delete(
+          Uri.parse('$BASE_URL/api/invitation/DeleteInvitation?id=$invitationId&UserId=$userId'),
+          headers: mHeaders);
 
-        var response = await http.get(
-            Uri.parse('$BASE_URL/api/invitation/getinvitationtypes'),
-            headers: mHeaders);
+      String responseBody = response.body;
 
-        print('status code ${response.statusCode}');
+      var decodedRes = jsonDecode(responseBody);
 
-        var jsonObj = jsonDecode(response.body)['response'] as List;
-        print('the response $jsonObj');
+      debugPrint('response is $decodedRes');
+      debugPrint('message is ${decodedRes['message']}');
 
-        invitationObjects =
-            jsonObj.map((item) => InvitationTypesModel.fromJson(item)).toList();
+      if (decodedRes['message'] == 'Success') {
+        data = 'success';
+
+        invitationsList.removeWhere((element) => element.id == invitationId);
+      }
+
+      notifyListeners();
+      return data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<dynamic> getInvitations(String userId, [String from]) async {
+    String data = '';
+    print('userId $userId');
+    String url = from == null
+        ? '$BASE_URL/api/invitation/getinvitations?UserId=$userId'
+        : '$BASE_URL/api/invitation/getinvitations?UserId=$userId&From=$from';
+    try {
+      http.Response response =
+          await http.get(Uri.parse(url), headers: mHeaders);
+      if (jsonDecode(response.body)['message'] == 'Success') {
+        data = 'Success';
+        var invitationObj =
+            jsonDecode(response.body)['response']['invitations'] as List;
+
+        var invitationTypesObj =
+            jsonDecode(response.body)['response']['types'] as List;
+
+        print(' response is ${jsonDecode(response.body)['response']}');
+        print('invitations response is $invitationObj');
+        print('invitations types response is $invitationTypesObj');
+
+        invitationObjects = invitationTypesObj
+            .map((item) => InvitationTypesModel.fromJson(item))
+            .toList();
 
         for (int i = 0; i < invitationObjects.length; i++) {
           print(invitationObjects[i].invitationType);
@@ -87,59 +120,16 @@ class ManagerProv with ChangeNotifier {
           }
         }
 
-        print('length of invitation types ${invitationObjects[0]}');
+        invitationsList =
+            invitationObj.map((item) => Invitation.fromJson(item)).toList();
 
-        notifyListeners();
+        invitationsList = invitationsList.reversed.toList();
+
+        print('invitations length  ${invitationsList.length}');
       }
-    } catch (e) {
-      print(e);
-    }
-  }*/
-
-  Future<dynamic> getInvitations(String userId, [String from]) async {
-    String data='';
-    print('userId $userId');
-    String url = from == null
-        ? '$BASE_URL/api/invitation/getinvitations?UserId=$userId'
-        : '$BASE_URL/api/invitation/getinvitations?UserId=$userId&From=$from';
-    try {
-      http.Response response =
-          await http.get(Uri.parse(url), headers: mHeaders);
-if(jsonDecode(response.body)['message']=='Success'){
-  data='Success';
-  var invitationObj =
-  jsonDecode(response.body)['response']['invitations'] as List;
-
-  var invitationTypesObj =
-  jsonDecode(response.body)['response']['types'] as List;
-
-  print(' response is ${jsonDecode(response.body)['response']}');
-  print('invitations response is $invitationObj');
-  print('invitations types response is $invitationTypesObj');
-
-  invitationObjects = invitationTypesObj
-      .map((item) => InvitationTypesModel.fromJson(item))
-      .toList();
-
-  for (int i = 0; i < invitationObjects.length; i++) {
-    print(invitationObjects[i].invitationType);
-    if (!invitationTypes.contains(invitationObjects[i].invitationType)) {
-      invitationTypes.add(invitationObjects[i].invitationType);
-    }
-  }
-
-  invitationsList =
-      invitationObj.map((item) => Invitation.fromJson(item)).toList();
-
-  invitationsList = invitationsList.reversed.toList();
-
-  print('invitations length  ${invitationsList.length}');
-}
-
-
 
       notifyListeners();
-return data;
+      return data;
     } catch (e) {
       print(e);
     }

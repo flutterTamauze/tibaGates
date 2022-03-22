@@ -9,6 +9,7 @@ import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
 import 'package:clean_app/ViewModel/admin/a_homeBioProv.dart';
 import 'package:clean_app/ViewModel/admin/adminProv.dart';
+import 'package:clean_app/ViewModel/guard/authProv.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,26 +18,44 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
+import '../../main.dart';
+
 class ABioHome extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => ABioHomeState();
 }
 
+
 class ABioHomeState extends State {
   int touchedIndex = -1;
   Future listener;
   List<HomeBioModel> parksTypes;
-
+String token;
+String role;
   @override
   void initState() {
     super.initState();
+    listener = Provider.of<AdminHomeProv>(context, listen: false).getBioData();
+    token = prefs.getString('token');
+    role = prefs.getString('role');
+    print(token);
+    cachingData();
+    print('userId = ${Provider.of<AuthProv>(context,listen: false).userId}');
     /*  final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     final String formatted = formatter.format(now);
     print('date $formatted');*/
-    listener = Provider.of<AdminHomeProv>(context, listen: false).getBioData();
-  }
 
+
+  }
+  void cachingData() async {
+    Provider.of<AuthProv>(context, listen: false).token =
+        prefs.getString('token');
+    Provider.of<AuthProv>(context, listen: false).userRole =
+        prefs.getString('role');
+    Provider.of<AuthProv>(context, listen: false).userId =
+        prefs.getString('guardId');
+  }
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;

@@ -69,6 +69,8 @@ String token;
 
     Provider.of<AuthProv>(context, listen: false).userId =
         prefs.getString('guardId');
+    Provider.of<AuthProv>(context, listen: false).parkTypes =
+        prefs.getStringList('parkingTypes');
   }
 
   @override

@@ -64,7 +64,8 @@ dependencies:
   bluetooth_print: ^3.0.1
   dotted_decoration: ^2.0.0
   syncfusion_flutter_datepicker: ^19.4.55
-
+  logger: ^1.1.0
+  flutter_slidable: ^0.6.0
 
   #pin_code_fields: ^7.3.0
   provider: ^6.0.1

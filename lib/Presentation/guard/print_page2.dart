@@ -74,7 +74,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
   @override
   void initState() {
     super.initState();
-    print(
+    debugPrint(
         'mac address is ${Provider.of<AuthProv>(context, listen: false).printerAddress}');
     WidgetsBinding.instance.addPostFrameCallback((_) => initBluetooth());
   }
@@ -101,20 +101,20 @@ class _PrintScreen2State extends State<PrintScreen2> {
         ));
 
         await bluetoothPrint.printReceipt(config, list).then((value) {
-          print('value is $value');
+          debugPrint('value is $value');
           Navigator.pop(context);
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => EntryScreen()));
         }).onError((error, stackTrace) {
-          print('this is error $error');
+          debugPrint('this is error $error');
         });
       } on PlatformException catch (err) {
-        print('error ==> $err');
+        debugPrint('error ==> $err');
       } catch (error) {
-        print('*error  $error');
+        debugPrint('*error  $error');
       }
     }).catchError((onError) {
-      print('onError $onError');
+      debugPrint('onError $onError');
     });
   }
 

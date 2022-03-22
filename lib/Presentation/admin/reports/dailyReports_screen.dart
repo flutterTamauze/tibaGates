@@ -35,7 +35,8 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
   var selectedType;
   String date;
   bool loadReport = false;
-
+  int pageNumber = 1;
+  int maxPages;
   @override
   void initState() {
     super.initState();
@@ -161,8 +162,9 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                   .toList()),
         ),
       );
-  int pageNumber = 1;
-int maxPages;
+
+
+
   @override
   Widget build(BuildContext context) {
     var reportProv = Provider.of<AReportsProv>(context, listen: false);

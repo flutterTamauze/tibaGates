@@ -75,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen>   with WidgetsBindingObserver{
 
   @override
   void dispose() {
-    // Dispose of the controller when the widget is disposed.
     _controller.dispose();
 
     super.dispose();
@@ -87,7 +86,6 @@ class _HomeScreenState extends State<HomeScreen>   with WidgetsBindingObserver{
     var width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () {
-        // Provider.of<VisitorProv>(context,listen: false).cancel(widget.logId)
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const EntryScreen()));
         throw '';

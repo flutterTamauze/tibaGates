@@ -40,7 +40,8 @@ class _MHomeScreenState extends State<MHomeScreen> {
   String date;
   String role;
   List<Invitation> invitationList = [];
-  List<Invitation> tmpList = [];
+
+  // List<Invitation> tmpList = [];
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
@@ -63,7 +64,7 @@ class _MHomeScreenState extends State<MHomeScreen> {
     _refreshController.refreshCompleted();
   }
 
-  void filterInvitations(value) {
+/*  void filterInvitations(value) {
     setState(() {
       tmpList = Provider.of<ManagerProv>(context, listen: false)
           .invitationsList
@@ -72,7 +73,7 @@ class _MHomeScreenState extends State<MHomeScreen> {
 
       print('filtered list now isss ${tmpList.length}');
     });
-  }
+  }*/
 
   @override
   void initState() {
@@ -254,12 +255,12 @@ class _MHomeScreenState extends State<MHomeScreen> {
                           width: 210.w,
                           child: TextField(
                             onChanged: (value) {
-                              setState(() {
+                              /*        setState(() {
                                 //    searchText = value;
                               });
                               print('filter');
                               //    filterServices(value);
-                              print('value is $value');
+                              print('value is $value');*/
                             },
                             keyboardType: TextInputType.number,
                             cursorColor: Colors.green,
@@ -352,7 +353,7 @@ class _MHomeScreenState extends State<MHomeScreen> {
                                         ));
                                   }).toList(),
                                   onChanged: (value) {
-                                    setState(() {
+                                    /*        setState(() {
 
                                       filterInvitations(value);
                                       invitationTypeId = managerProv
@@ -366,7 +367,7 @@ class _MHomeScreenState extends State<MHomeScreen> {
                                           'selected invitation type is $selectedInvitationType');
                                       print(
                                           'selected invitation type id is $invitationTypeId');
-                                    });
+                                    });*/
                                   },
                                   value: selectedInvitationType ??
                                       managerProv.invitationTypes[0],
@@ -393,7 +394,6 @@ class _MHomeScreenState extends State<MHomeScreen> {
                         );
                       } else if (snapshot.connectionState ==
                           ConnectionState.done) {
-
                         invitationTypeId ??=
                             managerProv.invitationObjects[0].id;
 
@@ -415,16 +415,36 @@ class _MHomeScreenState extends State<MHomeScreen> {
                                     backgroundColor: Colors.green,
                                   ),
                                   child: ListView.builder(
-                                    itemCount: tmpList.isEmpty
-                                        ? invitationList.length
-                                        : tmpList.length,
+                                    itemCount:
+                                        //tmpList.isEmpty ?
+                                        invitationList.length
+                                    //  : tmpList.length
+                                    ,
                                     scrollDirection: Axis.vertical,
                                     //  shrinkWrap: true,
                                     itemBuilder: (context, index) {
                                       return InvitationItem(
-                                        invitation: tmpList.isEmpty
-                                            ? invitationList[index]
-                                            : tmpList[index],
+                                        invitation:
+                                            //  tmpList.isEmpty ?
+                                            invitationList[index]
+                                        // : tmpList[index]
+                                        ,
+                                        callback: () {
+                                          showLoaderDialog(
+                                              context, 'جارى الحذف');
+                                          Provider.of<ManagerProv>(context,
+                                                  listen: false)
+                                              .deleteInvitation(
+                                                  invitationList[index].id,
+                                                  Provider.of<AuthProv>(context,
+                                                          listen: false)
+                                                      .userId).then((value) {
+                                                        if(value=='success'){
+                                                          Navigator.pop(context);
+                                                        }
+
+                                          });
+                                        },
                                       );
                                     },
                                   ),

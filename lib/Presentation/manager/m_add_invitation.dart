@@ -261,7 +261,7 @@ class _MAddInvitationState extends State<MAddInvitation> {
                                             startDateController.text =
                                                 DateUtil.formatDate(value)
                                                     .toString();
-                                            print(
+                                            debugPrint(
                                                 'Date Time Value : ${value.toString()}\n');
                                             date = value
                                                 .toString()
@@ -332,7 +332,7 @@ class _MAddInvitationState extends State<MAddInvitation> {
                           return;
                         } else {
                           showLoaderDialog(context, 'Loading...');
-                          print(
+                          debugPrint(
                               'visitor name ${visitorNameController.text}  description ${descriptionController.text}  managerId ${Provider.of<AuthProv>(context, listen: false).userId}  invitationTypeID ${widget.invitationTypeId} date $date ');
                           Provider.of<ManagerProv>(context, listen: false)
                               .addInvitation(
@@ -343,15 +343,15 @@ class _MAddInvitationState extends State<MAddInvitation> {
                                   widget.invitationTypeId,
                                   date)
                               .then((value) {
-                            print('value is $value');
+                            debugPrint('value is $value');
                             if (value == 'Success') {
-                              print('Success');
+                              debugPrint('Success');
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                       builder: (context) => MShareQr()),
                                   (Route<dynamic> route) => false);
                             } else {
-                              print('حدث خطا ما');
+                              debugPrint('حدث خطا ما');
                             }
                           });
                         }

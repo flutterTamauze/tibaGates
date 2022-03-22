@@ -18,7 +18,7 @@ class AuthProv with ChangeNotifier {
   String gateName;
   double balance;
   double lostTicketPrice;
-
+  List<String>parkTypes;
   bool isLogged;
   bool loadingState = false;
 
@@ -71,6 +71,7 @@ class AuthProv with ChangeNotifier {
 
   Future<dynamic> login(String username, String password, File guardImage,
       String tabAddress) async {
+    parkTypes=[];
     String data = '';
     Map<String, String> headers = {'Content-Type': 'application/json'};
     print('1');
@@ -88,7 +89,6 @@ class AuthProv with ChangeNotifier {
     request.headers.addAll(headers);
     try {
       await request.send().then((response) async {
-        print('rspnse $response');
         print('status code ${response.statusCode}');
 
         response.stream.transform(utf8.decoder).listen((value) async {
@@ -99,7 +99,20 @@ class AuthProv with ChangeNotifier {
 
           if (responseDecoded['message'] == 'Success') {
             var userJson = responseDecoded['response']['user'];
+
+
             userRole = responseDecoded['response']['roles'][0];
+
+            var reasonsJsonObj = responseDecoded['response']['parkTypes'] as List;
+
+            if(parkTypes.isEmpty){
+              parkTypes.add('الكل');
+              reasonsJsonObj.map((e) => parkTypes.add(e)).toList();
+              print(parkTypes.length);
+            }
+
+
+
             data = 'Success';
             isLogged = true;
             userId = userJson['id'];
@@ -113,6 +126,7 @@ class AuthProv with ChangeNotifier {
                       ['printReasons'][0]['price']
                   .toString());
               gateName = userJson['gateName'];
+
             }
           } else if (responseDecoded['message'] == 'Incorrect User') {
             data = 'Incorrect User';

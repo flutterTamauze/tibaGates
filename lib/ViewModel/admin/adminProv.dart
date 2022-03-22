@@ -17,7 +17,7 @@ List<ParkingModel> parkingList = [];
 
 
   Future<void> getParkingListForAdmin() async {
-    print('token ${prefs.getString('token')}');
+    debugPrint('token ${prefs.getString('token')}');
     Map<String, String> mHeaders = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${prefs.getString('token')}'
@@ -27,22 +27,22 @@ List<ParkingModel> parkingList = [];
           Uri.parse('$BASE_URL/api/gate/parkedforadmin'),
           headers: mHeaders);
 
-      print('statusCode ${response.statusCode}');
-      print('response ${jsonDecode(response.body)['response']}');
+      debugPrint('statusCode ${response.statusCode}');
+      debugPrint('response ${jsonDecode(response.body)['response']}');
 
       var parkJsonObj =
       jsonDecode(response.body)['response']['parkedDTO'] as List;
-      print('parking response  $parkJsonObj');
+      debugPrint('parking response  $parkJsonObj');
       carsCount=jsonDecode(response.body)['response']['summaryDTO']['count'];
       totalBalance=jsonDecode(response.body)['response']['summaryDTO']['total_Fines'];
       parkingList = parkJsonObj.map((item) => ParkingModel.fromJson(item)).toList();
       parkingList = parkingList.reversed.toList();
-      print('parking length  ${parkingList.length}');
+      debugPrint('parking length  ${parkingList.length}');
 
 
       notifyListeners();
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
   }
 

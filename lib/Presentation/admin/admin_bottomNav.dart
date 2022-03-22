@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'a_BioHome_screen.dart';
 import 'a_reports_screen.dart';
 import 'dailyReports_screen.dart';
+import 'moreScreen/more_screen.dart';
 
 class BottomNav extends StatefulWidget {
   int comingIndex = -1;
@@ -20,7 +21,7 @@ class _BottomNavState extends State<BottomNav> {
   int currentIndex = 3;
 
   final tabs = [
-    ABioHome(),
+    MoreScreen(),
     ADailyReportsScreen(),
     AReportsScreen(),
     ABioHome(),

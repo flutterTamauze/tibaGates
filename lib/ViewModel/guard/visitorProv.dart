@@ -24,10 +24,12 @@ class VisitorProv with ChangeNotifier {
   List<String> reasons = [];
   File rokhsa;
   File idCard;
+  int totalParkedCars;
   bool isVIP;
   int invitationID;
   var totalPrice, militaryPrice, citizenPrice, parkPrice, qrCode, printTime;
   var logId;
+
   List<ParkingCarsModel> parkingList = [];
 
   List<VisitorTypesModel> visitorObjects = [];
@@ -61,6 +63,23 @@ class VisitorProv with ChangeNotifier {
   void deleteImage(int index) {
     images.removeAt(index);
     notifyListeners();
+  }
+
+
+
+
+  Future<void> searchParking(String searchText,String filterType,int pageNumber){
+    if(searchText==''){
+      getParkingList(filterType,pageNumber);
+    }
+    else{
+      parkingList= parkingList
+          .where((item) => item.logId.toString().contains(searchText))
+          .toList();
+      print('search list length is ${parkingList.length}');
+    }
+notifyListeners();
+
   }
 
   Future<dynamic> getVisitorTypes() async {
@@ -98,17 +117,31 @@ class VisitorProv with ChangeNotifier {
     }
   }
 
-  Future<void> getParkingList() async {
+  Future<void> getParkingList(String filterType, int pageNumber) async {
+    print('filter type = $filterType  pageNumber = $pageNumber');
+    String url;
+
+    if (filterType == 'الكل' && pageNumber == 1) {
+      url = '$BASE_URL/api/Gate/Parked';
+    } else if(filterType== 'الكل'&& pageNumber != 1) {
+      url = '$BASE_URL/api/Gate/Parked?pageNo=$pageNumber';
+    }
+    else{
+      url = '$BASE_URL/api/Gate/Parked?parkType=$filterType&pageNo=$pageNumber';
+    }
+
     print('token ${prefs.getString('token')}');
     try {
-      http.Response response = await http
-          .get(Uri.parse('$BASE_URL/api/gate/parked'), headers: mHeaders);
+      http.Response response =
+          await http.get(Uri.parse(url), headers: mHeaders);
       print('statusCode ${response.statusCode}');
+      print('response ${response.body}');
       var parkJsonObj =
           jsonDecode(response.body)['response']['parkedDTO'] as List;
       var reasonsJsonObj =
           jsonDecode(response.body)['response']['reasonDTO'] as List;
-
+      totalParkedCars = jsonDecode(response.body)['response']['count'];
+      print('all parked cars $totalParkedCars');
       print('parking response  $parkJsonObj');
       print('reasons response  $reasonsJsonObj');
 
@@ -134,8 +167,6 @@ class VisitorProv with ChangeNotifier {
       print(e);
     }
   }
-
-
 
   Future<ResponseData> checkIn(
       File carImg,

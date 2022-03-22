@@ -330,6 +330,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     await prefs.setString('printerAddress', authProv.printerAddress ?? '');
     await prefs.setString('gateName', authProv.gateName ?? '');
     await prefs.setBool('isLoggedIn', authProv.isLogged);
+    await prefs.setStringList('parkingTypes', authProv.parkTypes);
   }
 
   Future<File> takeImage() async {

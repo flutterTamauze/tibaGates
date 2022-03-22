@@ -11,17 +11,31 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Utilities/Routes/routes.dart';
+import 'Utilities/connectivityStatus.dart';
 import 'Utilities/locators.dart';
 import 'ViewModel/admin/a_homeBioProv.dart';
 import 'ViewModel/admin/adminProv.dart';
+import 'ViewModel/admin/more/publicHolidaysProv.dart';
 import 'ViewModel/admin/reports/admin_reportsProv.dart';
+import 'ViewModel/admin/more/holidaysProv.dart';
 import 'ViewModel/manager/managerProv.dart';
+import 'ViewModel/admin/more/pricesProv.dart';
 
 SharedPreferences prefs;
 GetIt getIt = GetIt.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  bool isInRelease = true;
+
+  assert(() {
+    isInRelease = false;
+    return true;
+  }());
+
+  if (isInRelease) {
+    debugPrint = (String message, {int wrapWidth}) {};
+  }
   prefs = await SharedPreferences.getInstance();
   InitLocator locator = InitLocator();
 
@@ -58,14 +72,33 @@ class MyApp extends StatelessWidget {
               create: (context) => getIt<AdminHomeProv>(),
             ),ChangeNotifierProvider(
               create: (context) => getIt<AReportsProv>(),
+            ),ChangeNotifierProvider(
+              create: (context) => getIt<PricesProv>(),
+            ),ChangeNotifierProvider(
+              create: (context) => getIt<HolidaysProv>(),
+            ),ChangeNotifierProvider(
+              create: (context) => getIt<PublicHolidaysProv>(),
             ),
           ],
-          child: MaterialApp(
-            title: 'Tiba Rose',
-            debugShowCheckedModeBanner: false,
-            home: SplashScreen(),
-            theme: ThemeData(fontFamily: 'Almarai'),
-            onGenerateRoute: routes.onGenerateRoute,
+          child: FutureBuilder(
+            future: Future.delayed(const Duration(seconds: 3)),
+            builder: (context, AsyncSnapshot snapshot) {
+              return StreamProvider<ConnectivityStatus>(
+                  initialData: ConnectivityStatus.Wifi,
+                  create: (context) => ConnectivityService()
+                      .connectionStatusController
+                      .stream,
+                  builder: (context, snapshot) {
+                    return  MaterialApp(
+                      title: 'Tiba Rose',
+                      debugShowCheckedModeBanner: false,
+                      home: SplashScreen(),
+                      theme: ThemeData(fontFamily: 'Almarai'),
+                      onGenerateRoute: routes.onGenerateRoute,
+                    );
+                  });
+            }
+
           ),
         );
       },

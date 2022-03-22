@@ -35,13 +35,13 @@ class _SplashScreenState extends State<SplashScreen> {
     role = prefs.getString('role');
 
     if (isLoggedIn == true) {
-      print('isLoggedIn is true');
+      debugPrint('isLoggedIn is true');
       if (role == 'Manager') {
-        print('role is manager');
+        debugPrint('role is manager');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MHomeScreen()));
       }  else if (role == 'Admin') {
-        print('role is admin');
+        debugPrint('role is admin');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => BottomNav(comingIndex: 3,)));
       } else

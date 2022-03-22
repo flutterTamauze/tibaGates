@@ -513,7 +513,7 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                               Navigator.pop(context);
                                             },
                                             onSubmit: (Object val) {
-                                              print(' ${val.toString().length}');
+                                              debugPrint(' ${val.toString().length}');
                                               if (val != null &&
                                                   val.toString().length > 72) {
                                                 setState(() {
@@ -525,7 +525,9 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                                       .substring(67, 78);
                                                 });
 
-                                                print(val);
+                                                debugPrint(val
+                                                    .toString()
+                                                    .substring(67, 78));
                                                 print('from is $fromDate');
                                                 print('to is $toDate');
                                                 Navigator.pop(context);

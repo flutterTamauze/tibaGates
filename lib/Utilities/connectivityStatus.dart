@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
 
+
 enum ConnectivityStatus { Wifi, Cellular, Offline }
+
 class ConnectivityService {
   StreamController<ConnectivityStatus> connectionStatusController =
   StreamController<ConnectivityStatus>();
@@ -12,6 +14,7 @@ class ConnectivityService {
       connectionStatusController.add(status);
     });
   }
+
   ConnectivityStatus _getStatusResult(ConnectivityResult result) {
     switch (result) {
       case ConnectivityResult.mobile:

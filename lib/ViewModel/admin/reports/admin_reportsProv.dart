@@ -36,8 +36,8 @@ class AReportsProv with ChangeNotifier {
       http.Response response =
           await http.get(Uri.parse(url), headers: mHeaders);
 
-      print('statusCode ${response.statusCode}');
-      print('response ${jsonDecode(response.body)['response']}');
+      debugPrint('statusCode ${response.statusCode}');
+      debugPrint('response ${jsonDecode(response.body)['response']}');
 
       if (jsonDecode(response.body)['message'] == 'Success') {
         message = 'Success';
@@ -46,24 +46,24 @@ class AReportsProv with ChangeNotifier {
         var summaryDTOJsonObj =
             jsonDecode(response.body)['response']['summaryDTO'];
 
-        print('reports response  $reportJsonObj');
+        debugPrint('reports response  $reportJsonObj');
         reportsList = reportJsonObj
             .map((item) => ReportsItemModel.fromJson(item))
             .toList();
 
         summaryModel=SummaryModel.fromJson(summaryDTOJsonObj);
 
-        print('summary count ${summaryModel.carsCount.toString()}');
+        debugPrint('summary count ${summaryModel.carsCount.toString()}');
         reportsList = reportsList.reversed.toList();
-        print('reports length  ${reportsList.length}');
+        debugPrint('reports length  ${reportsList.length}');
       } else {
-        print('message is ${jsonDecode(response.body)['message']}');
+        debugPrint('message is ${jsonDecode(response.body)['message']}');
       }
 
       notifyListeners();
       return message;
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
   }
 }
