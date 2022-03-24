@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:clean_app/Data/Models/admin/weeklyHolidays.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
 import 'package:clean_app/ViewModel/admin/more/holidaysProv.dart';
+import 'package:lottie/lottie.dart';
 import '../../../Data/Models/admin/prices.dart';
 import '../admin_bottomNav.dart';
 import '../../../Utilities/Colors/colorManager.dart';
@@ -151,10 +153,18 @@ class _WeeklyHolidaysScreenState extends State<WeeklyHolidaysScreen> {
     var holidayProv = Provider.of<HolidaysProv>(context, listen: false);
     var height=MediaQuery.of(context).size.height;
     var width=MediaQuery.of(context).size.width;
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
 
     return SafeArea(
       child: Scaffold(
-        body: WillPopScope(
+        body: connectionStatus == ConnectivityStatus.Offline
+            ? Center(
+            child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
+            : WillPopScope(
             onWillPop: () {
               navigateTo(
                   context,

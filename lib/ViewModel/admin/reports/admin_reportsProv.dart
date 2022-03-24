@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:clean_app/Data/Models/admin/a_summary_model.dart';
+import 'package:clean_app/api/base_client.dart';
+import 'package:clean_app/api/base_exception_handling.dart';
 
 import '../../../Data/Models/admin/reportsItemModel.dart';
 import '../../../Utilities/Constants/constants.dart';
@@ -9,61 +11,58 @@ import 'package:flutter/material.dart';
 import '../../../main.dart';
 import 'package:http/http.dart' as http;
 
-class AReportsProv with ChangeNotifier {
+class AReportsProv with ChangeNotifier ,BaseExceptionHandling{
   List<ReportsItemModel> reportsList = [];
-  SummaryModel summaryModel=SummaryModel();
+  SummaryModel summaryModel = SummaryModel();
+
+
 
 
   Future<String> getDailyReport(String startDate, String endDate,
-      [String parkType,int pageNumber=0]) async {
-    String message = '';
-    print('start date $startDate    end date $endDate   park type $parkType   pagenumber $pageNumber');
-    Map<String, String> mHeaders = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${prefs.getString('token')}'
-    };
+      [String parkType, int pageNumber = 0]) async {
 
-    String url;
+    String message = '';
+    print('start $startDate    end $endDate   park type $parkType   pagenumber $pageNumber');
+    String endPoint;
     if (parkType == null) {
-      url =
-          '$BASE_URL/api/gate/ReportLogs?StartDate=$startDate&EndDate=$endDate&pageNo=$pageNumber';
+      endPoint='/api/gate/ReportLogs?StartDate=$startDate&EndDate=$endDate&pageNo=$pageNumber';
     } else {
-      url =
-          '$BASE_URL/api/gate/ReportLogs?StartDate=$startDate&EndDate=$endDate&ParkType=$parkType&pageNo=$pageNumber';
+      endPoint='/api/gate/ReportLogs?StartDate=$startDate&EndDate=$endDate&ParkType=$parkType&pageNo=$pageNumber';
     }
 
     try {
-      http.Response response =
-          await http.get(Uri.parse(url), headers: mHeaders);
 
-      debugPrint('statusCode ${response.statusCode}');
-      debugPrint('response ${jsonDecode(response.body)['response']}');
+      var response = await BaseClient()
+          .get(BASE_URL, endPoint)
+          .catchError(handleError);
 
-      if (jsonDecode(response.body)['message'] == 'Success') {
+      debugPrint('response ${jsonDecode(response)['response']}');
+
+      if (jsonDecode(response)['message'] == 'Success') {
         message = 'Success';
         var reportJsonObj =
-            jsonDecode(response.body)['response']['logDTO'] as List;
+            jsonDecode(response)['response']['logDTO'] as List;
         var summaryDTOJsonObj =
-            jsonDecode(response.body)['response']['summaryDTO'];
+            jsonDecode(response)['response']['summaryDTO'];
 
         debugPrint('reports response  $reportJsonObj');
         reportsList = reportJsonObj
             .map((item) => ReportsItemModel.fromJson(item))
             .toList();
 
-        summaryModel=SummaryModel.fromJson(summaryDTOJsonObj);
+        summaryModel = SummaryModel.fromJson(summaryDTOJsonObj);
 
         debugPrint('summary count ${summaryModel.carsCount.toString()}');
         reportsList = reportsList.reversed.toList();
         debugPrint('reports length  ${reportsList.length}');
       } else {
-        debugPrint('message is ${jsonDecode(response.body)['message']}');
+        debugPrint('message is ${jsonDecode(response)['message']}');
       }
 
       notifyListeners();
       return message;
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e.toString()??'');
     }
   }
 }

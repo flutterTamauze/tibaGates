@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:animate_do/animate_do.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
+import 'package:lottie/lottie.dart';
 import '../../Data/Models/manager/invitation_model.dart';
 import '../../Utilities/Shared/dialogs/loading_dialog.dart';
 import '../../Utilities/Shared/exitDialog.dart';
@@ -102,7 +104,8 @@ class _MHomeScreenState extends State<MHomeScreen> {
   @override
   Widget build(BuildContext context) {
     var managerProv = Provider.of<ManagerProv>(context, listen: false);
-    var authProv = Provider.of<AuthProv>(context, listen: false);
+    var authProv = Provider.of<AuthProv>(context, listen: false);    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     return WillPopScope(
       onWillPop: () {
         SystemNavigator.pop();
@@ -150,19 +153,30 @@ class _MHomeScreenState extends State<MHomeScreen> {
                       child: ZoomIn(
                         child: FloatingActionButton(
                           onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MAddInvitation(
-                                          invitationType:
-                                              selectedInvitationType ??
-                                                  managerProv
-                                                      .invitationObjects[0]
-                                                      .invitationType,
-                                          invitationTypeId: invitationTypeId ??
-                                              managerProv
-                                                  .invitationObjects[0].id,
-                                        )));
+                            if (Provider.of<ManagerProv>(context, listen: false)
+                                .invitationTypes
+                                .isNotEmpty) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MAddInvitation(
+                                            invitationType:
+                                                selectedInvitationType ??
+                                                    managerProv
+                                                        .invitationObjects[0]
+                                                        .invitationType,
+                                            invitationTypeId:
+                                                invitationTypeId ??
+                                                    managerProv
+                                                        .invitationObjects[0]
+                                                        .id,
+                                          )));
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: 'يجب اختيار نوع الدعوة اولاً',
+                                  backgroundColor: Colors.green,
+                                  toastLength: Toast.LENGTH_LONG);
+                            }
                           },
                           backgroundColor: Colors.green,
                           child: const Icon(
@@ -174,7 +188,14 @@ class _MHomeScreenState extends State<MHomeScreen> {
                     ),
                   )
                 : Container(),
-            body: Column(
+            body:  connectionStatus == ConnectivityStatus.Offline
+                ? Center(
+                child: SizedBox(
+                  height: 400.h,
+                  width: 400.w,
+                  child: Lottie.asset('assets/lotties/noInternet.json'),
+                ))
+                :Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -394,15 +415,19 @@ class _MHomeScreenState extends State<MHomeScreen> {
                         );
                       } else if (snapshot.connectionState ==
                           ConnectionState.done) {
-                        invitationTypeId ??=
-                            managerProv.invitationObjects[0].id;
+                        if (Provider.of<ManagerProv>(context, listen: true)
+                            .invitationTypes
+                            .isNotEmpty) {
+                          invitationTypeId ??=
+                              managerProv.invitationObjects[0].id;
 
-                        selectedInvitationType ??=
-                            managerProv.invitationObjects[0].invitationType;
-                        invitationList =
-                            Provider.of<ManagerProv>(context, listen: true)
-                                .invitationsList;
-                        print('type id $invitationTypeId');
+                          selectedInvitationType ??=
+                              managerProv.invitationObjects[0].invitationType;
+                          invitationList =
+                              Provider.of<ManagerProv>(context, listen: true)
+                                  .invitationsList;
+                          print('type id $invitationTypeId');
+                        }
 
                         return managerProv.invitationsList.isNotEmpty
                             ? Expanded(
@@ -438,11 +463,11 @@ class _MHomeScreenState extends State<MHomeScreen> {
                                                   invitationList[index].id,
                                                   Provider.of<AuthProv>(context,
                                                           listen: false)
-                                                      .userId).then((value) {
-                                                        if(value=='success'){
-                                                          Navigator.pop(context);
-                                                        }
-
+                                                      .userId)
+                                              .then((value) {
+                                            if (value == 'success') {
+                                              Navigator.pop(context);
+                                            }
                                           });
                                         },
                                       );

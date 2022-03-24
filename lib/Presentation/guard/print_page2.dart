@@ -170,7 +170,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
     var width = MediaQuery.of(context).size.width;
     var visitorProv = Provider.of<VisitorProv>(context, listen: false);
     var authProv = Provider.of<AuthProv>(context, listen: false);
-    //   var connectionStatus = Provider.of<ConnectivityStatus>(context);
+      var connectionStatus = Provider.of<ConnectivityStatus>(context);
     return WillPopScope(
       onWillPop: () {
         if (widget.from == 'resend' || widget.typeId == null) {
@@ -187,9 +187,14 @@ class _PrintScreen2State extends State<PrintScreen2> {
           backgroundColor: Colors.green,
           title: const Text('Connect your printer'),
         ),
-        body: /* connectionStatus == ConnectivityStatus.Offline
-            ? NoInternet()
-            :*/
+        body:  connectionStatus == ConnectivityStatus.Offline
+            ? Center(
+            child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
+            :
             RefreshIndicator(
           onRefresh: () =>
               bluetoothPrint.startScan(timeout: const Duration(seconds: 4)),

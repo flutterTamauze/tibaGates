@@ -4,6 +4,8 @@ import 'package:clean_app/Data/Models/manager/invitationType_model.dart';
 import 'package:clean_app/Data/Models/manager/invitation_model.dart';
 import 'package:clean_app/Data/Models/admin/prices.dart';
 import 'package:clean_app/Data/Models/admin/weeklyHolidays.dart';
+import 'package:clean_app/api/base_client.dart';
+import 'package:clean_app/api/base_exception_handling.dart';
 
 import '../../../Utilities/Constants/constants.dart';
 import '../../../api/sharedPrefs.dart';
@@ -15,46 +17,39 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../main.dart';
 
-class HolidaysProv with ChangeNotifier {
+class HolidaysProv with ChangeNotifier,BaseExceptionHandling {
   List<WeeklyHolidaysModel> holidaysObjects = [];
-
-
-
 
   Map<String, String> mHeaders = {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer ${prefs.getString('token')}'
   };
 
-  Future<dynamic> updateWeeklyHolidays(int id, String day, String isHoliday) async {
+  Future<dynamic> updateWeeklyHolidays(
+      int id, String day, String isHoliday) async {
     String data = '';
 
-    String body =
-        jsonEncode({'id': id, 'day': day, 'isHoliday': isHoliday.toString()=='false'?false:true});
-
     try {
-      http.Response response = await http.put(
-          Uri.parse('$BASE_URL/api/Holiday/UpdateWeeklyHoliday'),
-          body: body,
-          headers: mHeaders);
+      var response =
+          await BaseClient().put(BASE_URL, '/api/Holiday/UpdateWeeklyHoliday', {
+        'id': id,
+        'day': day,
+        'isHoliday': isHoliday.toString() == 'false' ? false : true
+      }).catchError(handleError);
 
-      String responseBody = response.body;
-      debugPrint('response $responseBody');
-
-      var decodedRes = jsonDecode(responseBody);
+      var decodedRes = jsonDecode(response);
 
       debugPrint('response is $decodedRes');
 
       if (decodedRes['message'] == 'Success') {
         data = 'Success';
         getWeeklyHolidays();
-
       }
 
       notifyListeners();
       return data;
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e??'');
     }
   }
 
@@ -62,16 +57,18 @@ class HolidaysProv with ChangeNotifier {
     String data = '';
 
     try {
-      http.Response response = await http.get(
-          Uri.parse('$BASE_URL/api/Holiday/GetWeeklyHoliday'),
-          headers: mHeaders);
-      debugPrint(' response is ${jsonDecode(response.body)['response']}');
-      debugPrint(' message is ${jsonDecode(response.body)['message']}');
+      var response = await BaseClient()
+          .get(BASE_URL, '/api/Holiday/GetWeeklyHoliday')
+          .catchError(handleError);
 
-      if (jsonDecode(response.body)['message'] == 'Success') {
+
+      debugPrint(' response is ${jsonDecode(response)['response']}');
+      debugPrint(' message is ${jsonDecode(response)['message']}');
+
+      if (jsonDecode(response)['message'] == 'Success') {
         data = 'Success';
 
-        var holidaysObj = jsonDecode(response.body)['response'] as List;
+        var holidaysObj = jsonDecode(response)['response'] as List;
 
         holidaysObjects = holidaysObj
             .map((item) => WeeklyHolidaysModel.fromJson(item))
@@ -83,10 +80,8 @@ class HolidaysProv with ChangeNotifier {
 
       notifyListeners();
       return data;
-    }
-
-    catch (e) {
-      debugPrint(e);
+    } catch (e) {
+      debugPrint(e??'');
     }
   }
 }

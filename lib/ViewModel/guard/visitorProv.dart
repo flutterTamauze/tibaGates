@@ -1,19 +1,18 @@
 import 'dart:io';
-import 'package:clean_app/Data/Models/guard/parked_model.dart';
-import 'package:clean_app/Data/Models/guard/reasons_model.dart';
-import 'package:clean_app/Data/Models/guard/visitorTypes_model.dart';
-import 'package:clean_app/Data/Models/response.dart';
-import 'package:clean_app/Utilities/Constants/constants.dart';
-import 'package:clean_app/ViewModel/guard/authProv.dart';
+import 'package:clean_app/api/base_client.dart';
+import 'package:clean_app/api/base_exception_handling.dart';
+
+import '../../Data/Models/guard/parked_model.dart';
+import '../../Data/Models/guard/reasons_model.dart';
+import '../../Data/Models/guard/visitorTypes_model.dart';
+import '../../Data/Models/response.dart';
+import '../../Utilities/Constants/constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../main.dart';
 
-class VisitorProv with ChangeNotifier {
+class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   Map<String, String> mHeaders = {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer ${prefs.getString('token')}'
@@ -65,21 +64,17 @@ class VisitorProv with ChangeNotifier {
     notifyListeners();
   }
 
-
-
-
-  Future<void> searchParking(String searchText,String filterType,int pageNumber){
-    if(searchText==''){
-      getParkingList(filterType,pageNumber);
-    }
-    else{
-      parkingList= parkingList
+  Future<void> searchParking(
+      String searchText, String filterType, int pageNumber) {
+    if (searchText == '') {
+      getParkingList(filterType, pageNumber);
+    } else {
+      parkingList = parkingList
           .where((item) => item.logId.toString().contains(searchText))
           .toList();
       print('search list length is ${parkingList.length}');
     }
-notifyListeners();
-
+    notifyListeners();
   }
 
   Future<dynamic> getVisitorTypes() async {
@@ -90,60 +85,54 @@ notifyListeners();
       } else {
         print('visitorObjects null');
 
-        var response = await http
-            .get(Uri.parse('$BASE_URL/api/guest/getOwners'), headers: mHeaders);
+        var response = await BaseClient()
+            .get(BASE_URL, '/api/guest/getOwners')
+            .catchError(handleError);
 
-        print('status code ${response.statusCode}');
-
-        var jsonObj = jsonDecode(response.body)['response'] as List;
-        print('the response $jsonObj');
+        var jsonObj = jsonDecode(response)['response'] as List;
 
         visitorObjects =
             jsonObj.map((item) => VisitorTypesModel.fromJson(item)).toList();
 
         for (int i = 0; i < visitorObjects.length; i++) {
-          print(visitorObjects[i].visitorType);
+          debugPrint(visitorObjects[i].visitorType);
           if (!visitorTypes.contains(visitorObjects[i].visitorType)) {
             visitorTypes.add(visitorObjects[i].visitorType);
           }
         }
 
-        print('length of visitor types ${visitorTypes[0]}');
+        debugPrint('length of visitor types ${visitorTypes[0]}');
 
         notifyListeners();
       }
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
   }
 
   Future<void> getParkingList(String filterType, int pageNumber) async {
-    print('filter type = $filterType  pageNumber = $pageNumber');
-    String url;
+    debugPrint('filter type = $filterType  pageNumber = $pageNumber');
+    String endPoint;
 
     if (filterType == 'الكل' && pageNumber == 1) {
-      url = '$BASE_URL/api/Gate/Parked';
-    } else if(filterType== 'الكل'&& pageNumber != 1) {
-      url = '$BASE_URL/api/Gate/Parked?pageNo=$pageNumber';
-    }
-    else{
-      url = '$BASE_URL/api/Gate/Parked?parkType=$filterType&pageNo=$pageNumber';
+      endPoint = '/api/Gate/Parked';
+    } else if (filterType == 'الكل' && pageNumber != 1) {
+      endPoint = '/api/Gate/Parked?pageNo=$pageNumber';
+    } else {
+      endPoint = '/api/Gate/Parked?parkType=$filterType&pageNo=$pageNumber';
     }
 
-    print('token ${prefs.getString('token')}');
     try {
-      http.Response response =
-          await http.get(Uri.parse(url), headers: mHeaders);
-      print('statusCode ${response.statusCode}');
-      print('response ${response.body}');
-      var parkJsonObj =
-          jsonDecode(response.body)['response']['parkedDTO'] as List;
+      var response =
+          await BaseClient().get(BASE_URL, endPoint).catchError(handleError);
+
+      var parkJsonObj = jsonDecode(response)['response']['parkedDTO'] as List;
       var reasonsJsonObj =
-          jsonDecode(response.body)['response']['reasonDTO'] as List;
-      totalParkedCars = jsonDecode(response.body)['response']['count'];
-      print('all parked cars $totalParkedCars');
-      print('parking response  $parkJsonObj');
-      print('reasons response  $reasonsJsonObj');
+          jsonDecode(response)['response']['reasonDTO'] as List;
+      totalParkedCars = jsonDecode(response)['response']['count'];
+      debugPrint('all parked cars $totalParkedCars');
+      debugPrint('parking response  $parkJsonObj');
+      debugPrint('reasons response  $reasonsJsonObj');
 
       parkingList =
           parkJsonObj.map((item) => ParkingCarsModel.fromJson(item)).toList();
@@ -151,7 +140,7 @@ notifyListeners();
           reasonsJsonObj.map((item) => ReasonModel.fromJson(item)).toList();
 
       for (int i = 0; i < reasonsObjects.length; i++) {
-        print(reasonsObjects[i].reason);
+        debugPrint(reasonsObjects[i].reason);
         if (!reasons.contains(reasonsObjects[i].reason)) {
           reasons.add(reasonsObjects[i].reason);
         }
@@ -159,12 +148,12 @@ notifyListeners();
 
       parkingList = parkingList.reversed.toList();
 
-      print('parking length  ${parkingList.length}');
-      print('reasons length  ${reasons.length}');
+      debugPrint('parking length  ${parkingList.length}');
+      debugPrint('reasons length  ${reasons.length}');
 
       notifyListeners();
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
   }
 
@@ -177,7 +166,7 @@ notifyListeners();
       int militaryCount,
       BuildContext context) async {
     ResponseData responseData = ResponseData();
-    print('userID $userID');
+    debugPrint('userID $userID');
 
     var uri = Uri.parse('$BASE_URL/api/gate/CheckIn');
 
@@ -198,15 +187,15 @@ notifyListeners();
 
     try {
       await request.send().then((response) async {
-        print('status code ${response.statusCode}');
+        debugPrint('status code ${response.statusCode}');
         if (response.statusCode == 401) {
           responseData.message = 'unAuth';
         }
         response.stream.transform(utf8.decoder).listen((value) {
           Map<String, dynamic> responseDecoded = json.decode(value);
-          print("ah ah ${responseDecoded['response']}");
+          debugPrint("ah ah ${responseDecoded['response']}");
 
-          print('message is ${responseDecoded['message']}');
+          debugPrint('message is ${responseDecoded['message']}');
           if (responseDecoded['message'] == 'Success') {
             responseData.message = 'Success';
             qrCode = responseDecoded['response']['qrCode'];
@@ -215,10 +204,10 @@ notifyListeners();
           }
         });
       }).catchError((e) {
-        print(e);
+        debugPrint(e);
       });
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
     notifyListeners();
     return responseData;
@@ -232,13 +221,13 @@ notifyListeners();
     File identityImg,
   ]) async {
     ResponseData responseData = ResponseData();
-    print('userID $userID');
+    debugPrint('userID $userID');
 
     var uri = Uri.parse('$BASE_URL/api/invitation/CheckInInvitation');
     var request = http.MultipartRequest('POST', uri);
 
     if (carImg != null && identityImg != null) {
-      print('images not null');
+      debugPrint('images not null');
       request.files.add(
         await http.MultipartFile.fromPath('file', carImg.path),
       );
@@ -254,12 +243,11 @@ notifyListeners();
 
     try {
       await request.send().then((response) async {
-        print(response.statusCode);
         response.stream.transform(utf8.decoder).listen((value) {
           Map<String, dynamic> responseDecoded = json.decode(value);
-          print("ah ah ${responseDecoded['response']}");
+          debugPrint("ah ah ${responseDecoded['response']}");
 
-          print('message is ${responseDecoded['message']}');
+          debugPrint('message is ${responseDecoded['message']}');
           if (responseDecoded['message'] == 'Success') {
             responseData.message = 'Success';
             qrCode = responseDecoded['response']['qrCode'];
@@ -268,10 +256,10 @@ notifyListeners();
           }
         });
       }).catchError((e) {
-        print(e);
+        debugPrint(e);
       });
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
     notifyListeners();
     return responseData;
@@ -279,27 +267,19 @@ notifyListeners();
 
   Future<dynamic> getBill(
       String typeID, String citizenCount, String militaryCount) async {
-    print('type id $typeID');
+    debugPrint('type id $typeID');
     String data = '';
 
-    String body = jsonEncode({
-      'TypeID': typeID,
-      'militryCount': militaryCount,
-      'civilCount': citizenCount
-    });
-
     try {
-      http.Response response = await http.post(
-          Uri.parse('$BASE_URL/api/gate/bill'),
-          body: body,
-          headers: mHeaders);
+      var response = await BaseClient().post(BASE_URL, '/api/gate/bill', {
+        'TypeID': typeID,
+        'militryCount': militaryCount,
+        'civilCount': citizenCount
+      }).catchError(handleError);
 
-      String responseBody = response.body;
-      print('response $responseBody');
+      String responseBody = response;
 
       var decodedRes = jsonDecode(responseBody);
-
-      print('response is $decodedRes');
 
       if (decodedRes['message'] == 'Success') {
         totalPrice = decodedRes['response']['total'];
@@ -314,7 +294,7 @@ notifyListeners();
       notifyListeners();
       return data;
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
   }
 
@@ -322,16 +302,11 @@ notifyListeners();
     String data = '';
 
     try {
-      http.Response response = await http.post(
-          Uri.parse('$BASE_URL/api/gate/GetLogByID/$logId'),
-          headers: mHeaders);
+      var response = await BaseClient()
+          .post(BASE_URL, '/api/gate/GetLogByID/$logId')
+          .catchError(handleError);
 
-      String responseBody = response.body;
-      print('response $responseBody');
-
-      var decodedRes = jsonDecode(responseBody);
-
-      print('response is $decodedRes');
+      var decodedRes = jsonDecode(response);
 
       if (decodedRes['message'] == 'Success') {
         qrCode = decodedRes['response']['qrCode'];
@@ -347,29 +322,26 @@ notifyListeners();
       notifyListeners();
       return data;
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
   }
 
   Future<dynamic> confirmPrint(String userId, int logId, int reasonId) async {
     String data = '';
-    print('logId $logId  userId $userId  reasonId $reasonId');
+    debugPrint('logId $logId  userId $userId  reasonId $reasonId');
 
     try {
-      http.Response response = await http.post(
-          Uri.parse(
-              '$BASE_URL/api/gate/print?UserID=$userId&LogID=$logId&ReasonID=$reasonId'),
-          headers: mHeaders);
+      var response = await BaseClient()
+          .post(BASE_URL,
+              '/api/gate/print?UserID=$userId&LogID=$logId&ReasonID=$reasonId')
+          .catchError(handleError);
 
-      String responseBody = response.body;
-      print('response $responseBody');
+      var decodedRes = jsonDecode(response);
 
-      var decodedRes = jsonDecode(responseBody);
-
-      print('response is $decodedRes');
+      debugPrint('response is $decodedRes');
 
       if (decodedRes['message'] == 'Success') {
-        print(decodedRes['response']);
+        debugPrint(decodedRes['response']);
         printTime = decodedRes['response']['printTime'];
         data = 'Success';
       }
@@ -377,7 +349,7 @@ notifyListeners();
       notifyListeners();
       return data;
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
   }
 
@@ -385,13 +357,12 @@ notifyListeners();
     String data = '';
 
     try {
-      http.Response response = await http.delete(
-          Uri.parse('$BASE_URL/api/gate/Cancel/$logId'),
-          headers: mHeaders);
+      var response = await BaseClient()
+          .delete(BASE_URL, '/api/gate/Cancel/$logId')
+          .catchError(handleError);
 
-      String responseBody = response.body;
-      var decodedRes = jsonDecode(responseBody);
-      print('response is $decodedRes');
+      var decodedRes = jsonDecode(response);
+      debugPrint('response is $decodedRes');
       if (decodedRes['message'] == 'Success') {
         data = 'Success';
       }
@@ -399,54 +370,49 @@ notifyListeners();
       notifyListeners();
       return data;
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
   }
 
   Future<dynamic> checkOut(String qrCode) async {
     String data = '';
-    print('qrCode $qrCode');
+    debugPrint('qrCode $qrCode');
 
     try {
       var uri = Uri.parse('$BASE_URL/api/gate/CheckOut');
-      var request = new http.MultipartRequest('PUT', uri);
-      print('1*');
+      var request = http.MultipartRequest('PUT', uri);
       request.fields['QrCode'] = qrCode;
       request.headers.addAll(mHeaders);
-      print('2*');
       try {
         await request.send().then((response) async {
-          print(' status code is ${response.statusCode}');
-          print('3*');
           response.stream.transform(utf8.decoder).listen((value) {
-            print('4*');
             Map<String, dynamic> responseDecoded = json.decode(value);
-            print('5*');
-            print("ah ah ${responseDecoded['response']}");
 
-            print('message is $responseDecoded');
+            debugPrint("response is ${responseDecoded['response']}");
+
+            debugPrint('message is $responseDecoded');
 
             if (responseDecoded['message'] == 'Success') {
               data = 'Success';
             }
           });
         }).catchError((e) {
-          print(e);
+          debugPrint(e);
         });
       } catch (e) {
-        print(e);
+        debugPrint(e);
       }
 
       notifyListeners();
       return data;
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
   }
 
   Future<dynamic> checkOutInvitation(String qrCode) async {
     String data = '';
-    print('qrCode $qrCode');
+    debugPrint('qrCode $qrCode');
 
     try {
       var uri = Uri.parse('$BASE_URL/api/Invitation/ScanInvitationQr');
@@ -457,15 +423,15 @@ notifyListeners();
 
       try {
         await request.send().then((response) async {
-          print(' status code is ${response.statusCode}');
+          debugPrint(' status code is ${response.statusCode}');
 
           response.stream.transform(utf8.decoder).listen((value) {
             Map<String, dynamic> responseDecoded = json.decode(value);
-            print("response ${responseDecoded['response']}");
+            debugPrint("response ${responseDecoded['response']}");
             invitationID = responseDecoded['response']['id'];
             isVIP = responseDecoded['response']['isVIP'];
 
-            print('message is $responseDecoded');
+            debugPrint('message is $responseDecoded');
 
             if (isVIP) {
               data = 'vip';
@@ -474,16 +440,16 @@ notifyListeners();
             }
           });
         }).catchError((e) {
-          print(e);
+          debugPrint(e);
         });
       } catch (e) {
-        print(e);
+        debugPrint(e);
       }
 
       notifyListeners();
       return data;
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
   }
 }

@@ -1,11 +1,15 @@
 import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 import 'a_BioHome_screen.dart';
 import 'a_reports_screen.dart';
-import 'dailyReports_screen.dart';
+import 'a_invitations_screen.dart';
 import 'moreScreen/more_screen.dart';
 
 class BottomNav extends StatefulWidget {
@@ -22,8 +26,8 @@ class _BottomNavState extends State<BottomNav> {
 
   final tabs = [
     MoreScreen(),
-    ADailyReportsScreen(),
-    AReportsScreen(),
+    const AInvitationScreen(),
+    const AReportsScreen(),
     ABioHome(),
   ];
 
@@ -37,12 +41,21 @@ class _BottomNavState extends State<BottomNav> {
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     return WillPopScope(
       onWillPop: () {
         SystemNavigator.pop();
       },
       child: Scaffold(
-        body: tabs[currentIndex],
+        body: connectionStatus == ConnectivityStatus.Offline
+            ? Center(
+            child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
+            : tabs[currentIndex],
         bottomNavigationBar: Padding(
           padding:
               const EdgeInsets.only(left: 32, right: 32, top: 8, bottom: 16),

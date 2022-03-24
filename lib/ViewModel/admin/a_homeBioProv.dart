@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:clean_app/api/base_client.dart';
+import 'package:clean_app/api/base_exception_handling.dart';
+
 import '../../Data/Models/admin/a_homeBio_model.dart';
 
 import '../../Data/Models/admin/a_parking_model.dart';
@@ -10,52 +13,43 @@ import 'package:http/http.dart' as http;
 
 import '../../main.dart';
 
-class AdminHomeProv with ChangeNotifier {
+class AdminHomeProv with ChangeNotifier, BaseExceptionHandling {
   int carsCount;
   double totalBalance;
   List<HomeBioModel> parkingList = [];
   List<String> parkTypes = [];
 
   Future<void> getBioData() async {
-
-    Map<String, String> mHeaders = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${prefs.getString('token')}'
-    };
-
     try {
-      http.Response response = await http.get(
-          Uri.parse('$BASE_URL/api/gate/summaryforparked'),
-          headers: mHeaders);
+      var response = await BaseClient()
+          .get(BASE_URL, '/api/gate/summaryforparked')
+          .catchError(handleError);
 
-      print('statusCode ${response.statusCode}');
-      print('response ${jsonDecode(response.body)['response']}');
+      debugPrint('response ${jsonDecode(response)['response']}');
 
       var parkJsonObj =
-          jsonDecode(response.body)['response']['parkTypeCountDTO'] as List;
-      print('parking response  $parkJsonObj');
-      carsCount = jsonDecode(response.body)['response']['summaryDTO']['count'];
-      totalBalance = double.parse(jsonDecode(response.body)['response']
-              ['summaryDTO']['total_Fines']
+          jsonDecode(response)['response']['parkTypeCountDTO'] as List;
+      debugPrint('parking response  $parkJsonObj');
+      carsCount = jsonDecode(response)['response']['summaryDTO']['count'];
+      totalBalance = double.parse(jsonDecode(response)['response']['summaryDTO']
+              ['total_Fines']
           .toString());
       parkingList =
           parkJsonObj.map((item) => HomeBioModel.fromJson(item)).toList();
-      if(parkTypes.isEmpty){
+      if (parkTypes.isEmpty) {
         parkTypes.add('الكل');
-        for(int i=0;i<parkingList.length;i++){
+        for (int i = 0; i < parkingList.length; i++) {
           parkTypes.add(parkingList[i].type);
         }
       }
 
       parkingList = parkingList.reversed.toList();
-      print('parking length  ${parkingList.length}');
-      print('parking types length  ${parkTypes.length}');
+      debugPrint('parking length  ${parkingList.length}');
+      debugPrint('parking types length  ${parkTypes.length}');
 
       notifyListeners();
     } catch (e) {
-      print(e);
+      debugPrint(e.toString() ?? '');
     }
   }
-
-
 }

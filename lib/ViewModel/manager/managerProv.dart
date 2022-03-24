@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:clean_app/Data/Models/manager/invitationType_model.dart';
 import 'package:clean_app/Data/Models/manager/invitation_model.dart';
+import 'package:clean_app/api/app_exceptions.dart';
+import 'package:clean_app/api/base_client.dart';
+import 'package:clean_app/api/base_exception_handling.dart';
 
 import '../../Utilities/Constants/constants.dart';
 import '../../api/sharedPrefs.dart';
@@ -13,11 +17,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
 
-class ManagerProv with ChangeNotifier {
+class ManagerProv with ChangeNotifier, BaseExceptionHandling {
   List<InvitationTypesModel> invitationObjects = [];
   List<String> invitationTypes = [];
   List<Invitation> invitationsList = [];
   String qrCode;
+
   Map<String, String> mHeaders = {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer ${prefs.getString('token')}'
@@ -27,24 +32,19 @@ class ManagerProv with ChangeNotifier {
       String managerId, int invitationTypeID, String date) async {
     String data = '';
 
-    String body = jsonEncode({
-      'Name': visitorName,
-      'Description': visitorDescription,
-      'GardUserId': managerId,
-      'InvitationTypeID': invitationTypeID,
-      'date': date,
-    });
-
     try {
-      http.Response response = await http.post(
-          Uri.parse('$BASE_URL/api/invitation/AddInvitation'),
-          body: body,
-          headers: mHeaders);
+      var response =
+          await BaseClient().post(BASE_URL, '/api/invitation/AddInvitation', {
+        'Name': visitorName,
+        'Description': visitorDescription,
+        'GardUserId': managerId,
+        'InvitationTypeID': invitationTypeID,
+        'date': date,
+      }).catchError(handleError);
 
-      String responseBody = response.body;
-      print('response $responseBody');
+      print('response $response');
 
-      var decodedRes = jsonDecode(responseBody);
+      var decodedRes = jsonDecode(response);
 
       print('response is $decodedRes');
 
@@ -60,17 +60,16 @@ class ManagerProv with ChangeNotifier {
     }
   }
 
-  Future<dynamic> deleteInvitation(int invitationId,String userId) async {
+  Future<dynamic> deleteInvitation(int invitationId, String userId) async {
     String data = '';
 
     try {
-      http.Response response = await http.delete(
-          Uri.parse('$BASE_URL/api/invitation/DeleteInvitation?id=$invitationId&UserId=$userId'),
-          headers: mHeaders);
+      var response = await BaseClient()
+          .delete(BASE_URL,
+              '/api/invitation/DeleteInvitation?id=$invitationId&UserId=$userId')
+          .catchError(handleError);
 
-      String responseBody = response.body;
-
-      var decodedRes = jsonDecode(responseBody);
+      var decodedRes = jsonDecode(response);
 
       debugPrint('response is $decodedRes');
       debugPrint('message is ${decodedRes['message']}');
@@ -84,37 +83,37 @@ class ManagerProv with ChangeNotifier {
       notifyListeners();
       return data;
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
   }
 
   Future<dynamic> getInvitations(String userId, [String from]) async {
     String data = '';
     print('userId $userId');
-    String url = from == null
-        ? '$BASE_URL/api/invitation/getinvitations?UserId=$userId'
-        : '$BASE_URL/api/invitation/getinvitations?UserId=$userId&From=$from';
+    String endPoint = from == null
+        ? '/api/invitation/getinvitations?UserId=$userId'
+        : '/api/invitation/getinvitations?UserId=$userId&From=$from';
     try {
-      http.Response response =
-          await http.get(Uri.parse(url), headers: mHeaders);
-      if (jsonDecode(response.body)['message'] == 'Success') {
+      var response =
+          await BaseClient().get(BASE_URL, endPoint).catchError(handleError);
+
+      if (jsonDecode(response)['message'] == 'Success') {
         data = 'Success';
         var invitationObj =
-            jsonDecode(response.body)['response']['invitations'] as List;
+            jsonDecode(response)['response']['invitations'] as List;
 
         var invitationTypesObj =
-            jsonDecode(response.body)['response']['types'] as List;
+            jsonDecode(response)['response']['types'] as List;
 
-        print(' response is ${jsonDecode(response.body)['response']}');
-        print('invitations response is $invitationObj');
-        print('invitations types response is $invitationTypesObj');
+        debugPrint('invitations response is $invitationObj');
+        debugPrint('invitations types response is $invitationTypesObj');
 
         invitationObjects = invitationTypesObj
             .map((item) => InvitationTypesModel.fromJson(item))
             .toList();
 
         for (int i = 0; i < invitationObjects.length; i++) {
-          print(invitationObjects[i].invitationType);
+          debugPrint(invitationObjects[i].invitationType);
           if (!invitationTypes.contains(invitationObjects[i].invitationType)) {
             invitationTypes.add(invitationObjects[i].invitationType);
           }
@@ -125,13 +124,23 @@ class ManagerProv with ChangeNotifier {
 
         invitationsList = invitationsList.reversed.toList();
 
-        print('invitations length  ${invitationsList.length}');
+        debugPrint('invitations length  ${invitationsList.length}');
+        debugPrint('invitationTypes length  ${invitationTypes.length}');
       }
 
       notifyListeners();
       return data;
     } catch (e) {
-      print(e);
+      debugPrint(e.toString() ?? '');
     }
   }
+}
+
+class Failure {
+  final String message;
+
+  Failure(this.message);
+
+  @override
+  String toString() => message;
 }

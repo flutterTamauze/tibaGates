@@ -11,6 +11,7 @@ import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
 import 'package:clean_app/Utilities/Shared/dialogs/loading_dialog.dart';
 import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
 import 'package:clean_app/Utilities/Shared/textField.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
 import 'package:clean_app/ViewModel/admin/reports/admin_reportsProv.dart';
 import 'package:clean_app/ViewModel/guard/authProv.dart';
 import 'package:clean_app/ViewModel/admin/more/pricesProv.dart';
@@ -18,6 +19,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 import 'dart:ui' as ui;
 
 import 'package:provider/provider.dart';
@@ -387,6 +389,8 @@ class _PricesScreenState extends State<PricesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     var height=MediaQuery.of(context).size.height;
     var width=MediaQuery.of(context).size.width;
     return SafeArea(
@@ -442,7 +446,14 @@ class _PricesScreenState extends State<PricesScreen> {
             ),
           ),
         ),
-        body: WillPopScope(
+        body:connectionStatus == ConnectivityStatus.Offline
+            ? Center(
+            child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
+            :  WillPopScope(
             onWillPop: () {
               navigateTo(
                   context,
@@ -450,64 +461,66 @@ class _PricesScreenState extends State<PricesScreen> {
                     comingIndex: 0,
                   ));
             },
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 30.h,
-                ),
-                ZoomIn(
-                  child: SizedBox(
-                    height: (height * 0.17),
-                    width: (width * 0.32),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                            color: ColorManager.primary, width: 2.w),
-                        image: const DecorationImage(
-                            image: AssetImage('assets/images/tipasplash.png')),
-                        shape: BoxShape.circle,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 30.h,
+                  ),
+                  ZoomIn(
+                    child: SizedBox(
+                      height: (height * 0.17),
+                      width: (width * 0.32),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                              color: ColorManager.primary, width: 2.w),
+                          image: const DecorationImage(
+                              image: AssetImage('assets/images/tipasplash.png')),
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 40.h,
-                ),
-                AutoSizeText(
-                  'قائمة الأسعار الحالية',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: setResponsiveFontSize(33)),
-                ),
-                SizedBox(
-                  height: 60.h,
-                ),
-                FutureBuilder(
-                    future: pricesListener,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<dynamic> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: Platform.isIOS
-                              ? const CupertinoActivityIndicator()
-                              : const Center(
-                                  child: CircularProgressIndicator(
-                                    backgroundColor: Colors.green,
+                  SizedBox(
+                    height: 40.h,
+                  ),
+                  AutoSizeText(
+                    'قائمة الأسعار الحالية',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: setResponsiveFontSize(33)),
+                  ),
+                  SizedBox(
+                    height: 60.h,
+                  ),
+                  FutureBuilder(
+                      future: pricesListener,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<dynamic> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(
+                            child: Platform.isIOS
+                                ? const CupertinoActivityIndicator()
+                                : const Center(
+                                    child: CircularProgressIndicator(
+                                      backgroundColor: Colors.green,
+                                    ),
                                   ),
-                                ),
-                        );
-                      } else if (snapshot.connectionState ==
-                          ConnectionState.done) {
-                        pricesList =
-                            Provider.of<PricesProv>(context, listen: true)
-                                .pricesObjects;
-                        return Center(child: bodyData());
-                      }
-                      return Container();
-                    }),
-              ],
+                          );
+                        } else if (snapshot.connectionState ==
+                            ConnectionState.done) {
+                          pricesList =
+                              Provider.of<PricesProv>(context, listen: true)
+                                  .pricesObjects;
+                          return Center(child: bodyData());
+                        }
+                        return Container();
+                      }),
+                ],
+              ),
             )),
         backgroundColor: Colors.green,
       ),

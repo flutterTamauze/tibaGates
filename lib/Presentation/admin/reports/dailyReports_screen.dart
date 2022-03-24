@@ -1,5 +1,6 @@
 import 'package:clean_app/Utilities/Colors/colorManager.dart';
 import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
 import 'package:clean_app/ViewModel/admin/a_homeBioProv.dart';
 import 'package:clean_app/ViewModel/admin/reports/admin_reportsProv.dart';
 import 'package:flutter/painting.dart';
@@ -123,7 +124,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                     (ReportRecord) => DataRow(
                       cells: [
                         DataCell(
-                          Text(ReportRecord.id.toString()),
+                          Text(ReportRecord.id.toString(),style: const TextStyle(color: Colors.red,fontWeight: FontWeight.bold),),
                           showEditIcon: false,
                           placeholder: false,
                         ),
@@ -168,6 +169,8 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
   @override
   Widget build(BuildContext context) {
     var reportProv = Provider.of<AReportsProv>(context, listen: false);
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
@@ -194,7 +197,14 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
           ],
         ),
       ),
-      body: Container(
+      body:  connectionStatus == ConnectivityStatus.Offline
+          ? Center(
+          child: SizedBox(
+            height: 400.h,
+            width: 400.w,
+            child: Lottie.asset('assets/lotties/noInternet.json'),
+          ))
+          :Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         color: Colors.white,

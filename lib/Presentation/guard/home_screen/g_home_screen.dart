@@ -9,7 +9,9 @@ import 'package:clean_app/Utilities/Shared/camera.dart';
 import 'package:clean_app/Utilities/Shared/dialogs/bill_dialog.dart';
 import 'package:clean_app/Utilities/Shared/dialogs/loading_dialog.dart';
 import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
 import 'package:clean_app/ViewModel/guard/visitorProv.dart';
+import 'package:lottie/lottie.dart';
 
 import '../print_page2.dart';
 import '../entry_screen/entryScreen.dart';
@@ -83,7 +85,8 @@ class _HomeScreenState extends State<HomeScreen>   with WidgetsBindingObserver{
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
+    var width = MediaQuery.of(context).size.width;    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     return WillPopScope(
       onWillPop: () {
         Navigator.pushReplacement(
@@ -91,7 +94,14 @@ class _HomeScreenState extends State<HomeScreen>   with WidgetsBindingObserver{
         throw '';
       },
       child: Scaffold(
-        body: SafeArea(
+        body:  connectionStatus == ConnectivityStatus.Offline
+            ? Center(
+            child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
+            :SafeArea(
           child: SingleChildScrollView(
             child: Container(
               height: height,

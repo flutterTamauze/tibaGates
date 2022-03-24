@@ -66,6 +66,7 @@ dependencies:
   syncfusion_flutter_datepicker: ^19.4.55
   logger: ^1.1.0
   flutter_slidable: ^0.6.0
+  dartz: ^0.9.0-dev.5
 
   #pin_code_fields: ^7.3.0
   provider: ^6.0.1
@@ -73,6 +74,7 @@ dependencies:
   qr_flutter: ^4.0.0
   #smooth_star_rating_null_safety: ^1.0.4+2
   url_launcher:
+  get: ^4.6.1
  
 dev_dependencies:
   flutter_lints: ^1.0.4

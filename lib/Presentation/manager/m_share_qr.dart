@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:clean_app/Presentation/manager/m_home_screen.dart';
 import 'package:clean_app/Utilities/Constants/constants.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
 import 'package:clean_app/ViewModel/manager/managerProv.dart';
+import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -29,7 +31,8 @@ class _MShareQrState extends State<MShareQr> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
+    var width = MediaQuery.of(context).size.width;    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     return WillPopScope(
       onWillPop: () {
         Navigator.pushReplacement(
@@ -49,7 +52,7 @@ class _MShareQrState extends State<MShareQr> {
               final directory = await getApplicationDocumentsDirectory();
               final image = File('${directory.path}/qr.png');
               image.writeAsBytesSync(byteImage);
-              const text = 'You are welcome to spend nice time ';
+              const String text = 'You are welcome to spend nice time ';
               await Share.shareFiles([image.path], text: text);
             },
             backgroundColor: Colors.green,
@@ -59,7 +62,14 @@ class _MShareQrState extends State<MShareQr> {
             ),
           ),
         ),
-        body: SingleChildScrollView(
+        body:  connectionStatus == ConnectivityStatus.Offline
+            ? Center(
+            child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
+            :SingleChildScrollView(
           child: Center(
             child: Column(
               children: [

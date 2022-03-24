@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:clean_app/Utilities/Shared/dialogs/loading_dialog.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../Data/Models/guard/parked_model.dart';
 import '../../Utilities/Constants/constants.dart';
@@ -76,6 +78,8 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -91,7 +95,14 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
               size: 30,
             )),
       ),
-      body: WillPopScope(
+      body: connectionStatus == ConnectivityStatus.Offline
+          ? Center(
+          child: SizedBox(
+            height: 400.h,
+            width: 400.w,
+            child: Lottie.asset('assets/lotties/noInternet.json'),
+          ))
+          : WillPopScope(
         onWillPop: () {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => const EntryScreen()));

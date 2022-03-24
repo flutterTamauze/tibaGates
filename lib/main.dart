@@ -6,6 +6,7 @@ import 'package:clean_app/ViewModel/guard/visitorProv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +16,7 @@ import 'Utilities/connectivityStatus.dart';
 import 'Utilities/locators.dart';
 import 'ViewModel/admin/a_homeBioProv.dart';
 import 'ViewModel/admin/adminProv.dart';
-import 'ViewModel/admin/more/publicHolidaysProv.dart';
+import 'ViewModel/admin/vm/publicHolidaysProv.dart';
 import 'ViewModel/admin/reports/admin_reportsProv.dart';
 import 'ViewModel/admin/more/holidaysProv.dart';
 import 'ViewModel/manager/managerProv.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return ScreenUtilInit(
       designSize: const Size(800.0, 1232.0),
       builder: () {
@@ -89,7 +91,7 @@ class MyApp extends StatelessWidget {
                       .connectionStatusController
                       .stream,
                   builder: (context, snapshot) {
-                    return  MaterialApp(
+                    return  GetMaterialApp(
                       title: 'Tiba Rose',
                       debugShowCheckedModeBanner: false,
                       home: SplashScreen(),

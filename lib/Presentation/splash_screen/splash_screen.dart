@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Presentation/admin/dailyReports_screen.dart';
+import 'package:clean_app/Presentation/admin/a_invitations_screen.dart';
 import 'package:clean_app/Presentation/admin/admin_bottomNav.dart';
 import 'package:clean_app/Presentation/login_screen/Screens/login.dart';
 

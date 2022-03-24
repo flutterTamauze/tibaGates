@@ -9,7 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 List<CameraDescription> cameras;
+
 class exitDialog extends StatelessWidget {
   const exitDialog({
     Key key,
@@ -57,12 +59,17 @@ class exitDialog extends StatelessWidget {
             FlatButton(
               onPressed: () async {
                 showLoaderDialog(context, 'جارى تسجيل الخروج');
-                print('userId ${Provider.of<AuthProv>(context,listen: false).userId}');
-                Provider.of<AuthProv>(context,listen: false).logout(Provider.of<AuthProv>(context,listen: false).userId).then((value) async {
-
-                  if(value=='Success'||value=='incorrect user'){
-                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                    Provider.of<AuthProv>(context, listen: false).isLogged = false;
+                debugPrint(
+                    'userId ${Provider.of<AuthProv>(context, listen: false).userId}');
+                Provider.of<AuthProv>(context, listen: false)
+                    .logout(
+                        Provider.of<AuthProv>(context, listen: false).userId)
+                    .then((value) async {
+                  if (value == 'Success' || value == 'incorrect user') {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    Provider.of<AuthProv>(context, listen: false).isLogged =
+                        false;
                     prefs.setString('guardName', '');
 
                     prefs.setString('guardId', '');
@@ -70,24 +77,20 @@ class exitDialog extends StatelessWidget {
 
                     cameras = await availableCameras();
                     Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (context) => LoginScreen(camera: cameras[1],)));
-                  }
-                  else if (value=='Time Out'){
-
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LoginScreen(
+                                  camera: cameras[1],
+                                )));
+                  } else if (value == 'Time Out') {
                     Fluttertoast.showToast(
-                        msg:
-                        'حدث خطأ ما , برجاء المحاولة مجدداً',
-                        backgroundColor:
-                        Colors.green,
-                        toastLength: Toast
-                            .LENGTH_LONG);
+                        msg: 'حدث خطأ ما , برجاء المحاولة مجدداً',
+                        backgroundColor: Colors.green,
+                        toastLength: Toast.LENGTH_LONG);
                     Navigator.pop(context);
                     Navigator.pop(context);
-
                   }
                 });
-
-
 
                 // SystemNavigator.pop();
               },

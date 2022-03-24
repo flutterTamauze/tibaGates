@@ -7,6 +7,7 @@ import 'package:clean_app/Presentation/admin/admin_bottomNav.dart';
 import 'package:clean_app/Utilities/Colors/colorManager.dart';
 import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
 import 'package:clean_app/ViewModel/admin/a_homeBioProv.dart';
 import 'package:clean_app/ViewModel/admin/adminProv.dart';
 import 'package:clean_app/ViewModel/guard/authProv.dart';
@@ -58,9 +59,18 @@ String role;
   }
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return FutureBuilder(
+    return  connectionStatus == ConnectivityStatus.Offline
+        ? Center(
+        child: SizedBox(
+          height: 400.h,
+          width: 400.w,
+          child: Lottie.asset('assets/lotties/noInternet.json'),
+        ))
+        :FutureBuilder(
         future: listener,
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

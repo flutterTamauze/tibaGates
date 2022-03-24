@@ -1,5 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:camera/camera.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
+import 'package:lottie/lottie.dart';
 import '../../login_screen/Widgets/outlined_button.dart';
 
 import '../../manager/m_home_screen.dart';
@@ -77,12 +79,21 @@ String token;
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     return WillPopScope(
       onWillPop: (){
         SystemNavigator.pop();
       },
       child: Scaffold(
-        body: SafeArea(
+        body: connectionStatus == ConnectivityStatus.Offline
+            ? Center(
+            child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
+            : SafeArea(
             child: Container(
           height: height,
           width: width,
@@ -150,7 +161,7 @@ String token;
                                       fontFamily:
                                           GoogleFonts.getFont('Redressed')
                                               .fontFamily)),
-                              Text(Provider.of<AuthProv>(context, listen: true).guardName
+                              Text(Provider.of<AuthProv>(context, listen: true).guardName??''
                                 ,
                                 style: TextStyle(
                                     fontSize: setResponsiveFontSize(22),fontWeight: FontWeight.bold,

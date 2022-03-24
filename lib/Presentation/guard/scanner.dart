@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
+import 'package:lottie/lottie.dart';
 import 'entry_screen/entryScreen.dart';
 import 'home_screen/g_home_screen.dart';
 import '../../ViewModel/guard/visitorProv.dart';
@@ -159,6 +161,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   }
 
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     return GestureDetector(
       onTap: () {
         print(result?.code);
@@ -176,7 +180,14 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                 size: 30,
               )),
         ),
-        body: WillPopScope(
+        body: connectionStatus == ConnectivityStatus.Offline
+            ? Center(
+            child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
+            : WillPopScope(
           onWillPop: () {
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (BuildContext context) => EntryScreen()));

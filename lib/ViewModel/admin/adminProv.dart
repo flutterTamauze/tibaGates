@@ -30,11 +30,11 @@ List<ParkingModel> parkingList = [];
       debugPrint('statusCode ${response.statusCode}');
       debugPrint('response ${jsonDecode(response.body)['response']}');
 
-      var parkJsonObj =
-      jsonDecode(response.body)['response']['parkedDTO'] as List;
+      var parkJsonObj = jsonDecode(response.body)['response']['parkedDTO'] as List;
       debugPrint('parking response  $parkJsonObj');
-      carsCount=jsonDecode(response.body)['response']['summaryDTO']['count'];
-      totalBalance=jsonDecode(response.body)['response']['summaryDTO']['total_Fines'];
+     carsCount=  jsonDecode(response.body)['response']['summaryDTO']['count']      ;
+
+      totalBalance= double.parse(jsonDecode(response.body)['response']['summaryDTO']['total_Fines'].toString())   ;
       parkingList = parkJsonObj.map((item) => ParkingModel.fromJson(item)).toList();
       parkingList = parkingList.reversed.toList();
       debugPrint('parking length  ${parkingList.length}');
@@ -42,7 +42,7 @@ List<ParkingModel> parkingList = [];
 
       notifyListeners();
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e.toString());
     }
   }
 

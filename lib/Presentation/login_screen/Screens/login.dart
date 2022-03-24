@@ -3,7 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:camera/camera.dart';
 
-import 'package:clean_app/Presentation/admin/dailyReports_screen.dart';
+import 'package:clean_app/Presentation/admin/a_invitations_screen.dart';
 import 'package:clean_app/Presentation/admin/admin_bottomNav.dart';
 import '../../guard/entry_screen/entryScreen.dart';
 import '../../manager/m_home_screen.dart';

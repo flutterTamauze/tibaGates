@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:clean_app/api/base_client.dart';
+import 'package:clean_app/api/base_exception_handling.dart';
+
 import '../../Utilities/Constants/constants.dart';
 import '../../api/sharedPrefs.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthProv with ChangeNotifier {
+class AuthProv with ChangeNotifier , BaseExceptionHandling{
   var userId;
 
   String guardName;
@@ -18,7 +21,7 @@ class AuthProv with ChangeNotifier {
   String gateName;
   double balance;
   double lostTicketPrice;
-  List<String>parkTypes;
+  List<String> parkTypes;
   bool isLogged;
   bool loadingState = false;
 
@@ -30,28 +33,17 @@ class AuthProv with ChangeNotifier {
 
   Future<dynamic> logout(String userID) async {
     String data = '';
-    print('logout method');
     try {
-      http.Response response = await http
+      var response = await BaseClient()
           .post(
-        Uri.parse('$BASE_URL/api/User/SignOut?UserId=$userId'),
-      )
-          .timeout(
-        const Duration(seconds: 6),
-        onTimeout: () {
-          return http.Response('time out', 408);
-        },
-      );
+            BASE_URL,
+            '/api/User/SignOut?UserId=$userId',
+          )
+          .catchError(handleError);
 
-      print('logout method  2');
-      String responseBody = response.body;
-      print('response is $responseBody');
+      print('response is $response');
 
-      if (responseBody == 'time out') {
-        data = 'Time Out';
-        return data;
-      }
-      var decodedRes = jsonDecode(responseBody);
+      var decodedRes = jsonDecode(response);
 
       print('response is $decodedRes');
 
@@ -61,7 +53,6 @@ class AuthProv with ChangeNotifier {
       if (decodedRes['message'] == 'incorrect user') {
         data = 'incorrect user';
       }
-
       notifyListeners();
       return data;
     } catch (e) {
@@ -71,17 +62,18 @@ class AuthProv with ChangeNotifier {
 
   Future<dynamic> login(String username, String password, File guardImage,
       String tabAddress) async {
-    parkTypes=[];
+    parkTypes = [];
     String data = '';
     Map<String, String> headers = {'Content-Type': 'application/json'};
-    print('1');
     var uri = Uri.parse('$BASE_URL/api/user/LogIn');
-    print('2');
+
+
+
+
     var request = http.MultipartRequest('POST', uri);
     request.files.add(
       await http.MultipartFile.fromPath('file', guardImage.path),
     );
-    print('3');
     request.fields['Password'] = password;
     request.fields['UserName'] = username;
     request.fields['PhoneMac'] = tabAddress;
@@ -100,18 +92,16 @@ class AuthProv with ChangeNotifier {
           if (responseDecoded['message'] == 'Success') {
             var userJson = responseDecoded['response']['user'];
 
-
             userRole = responseDecoded['response']['roles'][0];
 
-            var reasonsJsonObj = responseDecoded['response']['parkTypes'] as List;
+            var reasonsJsonObj =
+                responseDecoded['response']['parkTypes'] as List;
 
-            if(parkTypes.isEmpty){
+            if (parkTypes.isEmpty) {
               parkTypes.add('الكل');
               reasonsJsonObj.map((e) => parkTypes.add(e)).toList();
               print(parkTypes.length);
             }
-
-
 
             data = 'Success';
             isLogged = true;
@@ -126,7 +116,6 @@ class AuthProv with ChangeNotifier {
                       ['printReasons'][0]['price']
                   .toString());
               gateName = userJson['gateName'];
-
             }
           } else if (responseDecoded['message'] == 'Incorrect User') {
             data = 'Incorrect User';
@@ -137,14 +126,6 @@ class AuthProv with ChangeNotifier {
             data = responseDecoded['message'];
           }
         });
-      }).catchError((e) {
-        if (e
-            .toString()
-            .contains('SocketException: OS Error: No route to host')) {
-          data = 'you need to be at same network with local host';
-        }
-
-        print('catch error $e');
       });
     } catch (e) {
       print('error $e');

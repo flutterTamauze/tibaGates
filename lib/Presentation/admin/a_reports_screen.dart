@@ -1,5 +1,8 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:clean_app/Presentation/admin/reports/periodReports_screen.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'reports/dailyReports_screen.dart';
 import '../../Utilities/Colors/colorManager.dart';
 import '../../Utilities/Constants/constants.dart';
@@ -17,10 +20,19 @@ class AReportsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
+        body: connectionStatus == ConnectivityStatus.Offline
+            ? Center(
+            child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
+            : SingleChildScrollView(
           child: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,

@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:clean_app/Data/Models/admin/publicHolidaysModel.dart';
-import 'package:clean_app/ViewModel/admin/more/publicHolidaysProv.dart';
+import 'package:clean_app/Utilities/connectivityStatus.dart';
+import 'package:clean_app/ViewModel/admin/vm/publicHolidaysProv.dart';
+import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../../Data/Models/admin/prices.dart';
 import '../admin_bottomNav.dart';
@@ -34,10 +36,7 @@ class PublicHolidaysScreen extends StatefulWidget {
 
 class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceNholidayController =
-      TextEditingController();
   List<PublicHolidaysModel> publicHolidaysList = [];
   Future publicHolidaysListener;
 
@@ -153,33 +152,44 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                                         return AddOrEditPublicHoliday(
                                             successMessage: 'تم التعديل بنجاح',
                                             holidaysProv: holidaysProv,
-                                            descriptionHint: e.description,onSubmit: (){
+                                            descriptionHint: e.description,
+                                            onSubmit: () {
+                                              debugPrint(
+                                                  'desc is ${_descriptionController.text}  start date is ${Provider.of<PublicHolidaysProv>(context, listen: false).startDate}   end date is ${Provider.of<PublicHolidaysProv>(context, listen: false).endDate}');
 
-                                          debugPrint('desc is ${_descriptionController.text}  start date is ${Provider.of<PublicHolidaysProv>(context, listen: false).startDate}   end date is ${Provider.of<PublicHolidaysProv>(context, listen: false).endDate}');
-
-                                          showLoaderDialog(context, 'جارى التعديل');
-                                          Provider.of<PublicHolidaysProv>(context, listen: false)
-                                              .updatePublicHolidays(
-                                              e.id,
-                                              holidaysProv.startDate,
-                                             holidaysProv
-                                                  .endDate,
-                                              _descriptionController.text)
-                                              .then((value) {
-                                            if (value == 'Success') {
-
-                                              Navigator.pop(context);
-                                              Navigator.pop(context);
-                                              e.description = _descriptionController.text;
-                                              e.startDate = holidaysProv.startDate.toString();
-                                              e.endDate = holidaysProv.endDate.toString();
-                                              _descriptionController.text = '';
-                                              dateRangePickerController.selectedDates = null;
-                                              holidaysProv.changeDate(null, null);
-                                            }
-                                          });
-
-                                        },
+                                              showLoaderDialog(
+                                                  context, 'جارى التعديل');
+                                              Provider.of<PublicHolidaysProv>(
+                                                      context,
+                                                      listen: false)
+                                                  .updatePublicHolidays(
+                                                      e.id,
+                                                      holidaysProv.startDate,
+                                                      holidaysProv.endDate,
+                                                      _descriptionController
+                                                          .text)
+                                                  .then((value) {
+                                                if (value == 'Success') {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  e.description =
+                                                      _descriptionController
+                                                          .text;
+                                                  e.startDate = holidaysProv
+                                                      .startDate
+                                                      .toString();
+                                                  e.endDate = holidaysProv
+                                                      .endDate
+                                                      .toString();
+                                                  _descriptionController.text =
+                                                      '';
+                                                  dateRangePickerController
+                                                      .selectedDates = null;
+                                                  holidaysProv.changeDate(
+                                                      null, null);
+                                                }
+                                              });
+                                            },
                                             context: context,
                                             title: 'قم بتعديل العطلة');
                                       });
@@ -324,6 +334,8 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
     var holidaysProv = Provider.of<PublicHolidaysProv>(context, listen: false);
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     return SafeArea(
       child: Scaffold(
         floatingActionButton: ZoomIn(
@@ -379,7 +391,14 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
             ),
           ),
         ),
-        body: WillPopScope(
+        body:  connectionStatus == ConnectivityStatus.Offline
+            ? Center(
+            child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
+            :WillPopScope(
             onWillPop: () {
               navigateTo(
                   context,

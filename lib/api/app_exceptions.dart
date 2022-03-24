@@ -13,7 +13,7 @@ class BadRequestException extends AppException {
 
 class FetchDataException extends AppException {
   FetchDataException([String message, String url])
-      : super(message, 'Unable to process', url);
+      : super(message, 'Unable to process ..', url);
 }
 
 class ApiNotRespondingException extends AppException {
