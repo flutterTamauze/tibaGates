@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:clean_app/Presentation/manager/m_home_screen.dart';
-import 'package:clean_app/Utilities/Constants/constants.dart';
-import 'package:clean_app/Utilities/connectivityStatus.dart';
-import 'package:clean_app/ViewModel/manager/managerProv.dart';
+import '../admin/a_invitations_screen.dart';
+import 'm_home_screen.dart';
+import '../../Utilities/Constants/constants.dart';
+import '../../Utilities/connectivityStatus.dart';
+import '../../ViewModel/manager/managerProv.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -19,7 +20,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 
 class MShareQr extends StatefulWidget {
-  const MShareQr({Key key}) : super(key: key);
+  final String role;
+  const MShareQr({Key key, this.role}) : super(key: key);
 
   @override
   _MShareQrState createState() => _MShareQrState();
@@ -31,26 +33,32 @@ class _MShareQrState extends State<MShareQr> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    var width = MediaQuery.of(context).size.width;
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
 
     return WillPopScope(
       onWillPop: () {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MHomeScreen()));
+        if (widget.role == 'Admin') {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => AInvitationScreen()));
+        } else {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => MHomeScreen()));
+        }
       },
       child: Scaffold(
         backgroundColor: Colors.white,
         floatingActionButton: ZoomIn(
           child: FloatingActionButton(
             onPressed: () async {
-              final byteImage = await screenshotController.captureFromWidget(Qr(
+              var byteImage = await screenshotController.captureFromWidget(Qr(
                 version: QrVersions.auto,
                 data: Provider.of<ManagerProv>(context, listen: false).qrCode ??
                     'abc',
                 size: 250.0,
               ));
-              final directory = await getApplicationDocumentsDirectory();
-              final image = File('${directory.path}/qr.png');
+              var directory = await getApplicationDocumentsDirectory();
+              var image = File('${directory.path}/qr.png');
               image.writeAsBytesSync(byteImage);
               const String text = 'You are welcome to spend nice time ';
               await Share.shareFiles([image.path], text: text);
@@ -62,43 +70,46 @@ class _MShareQrState extends State<MShareQr> {
             ),
           ),
         ),
-        body:  connectionStatus == ConnectivityStatus.Offline
+        body: connectionStatus == ConnectivityStatus.Offline
             ? Center(
-            child: SizedBox(
-              height: 400.h,
-              width: 400.w,
-              child: Lottie.asset('assets/lotties/noInternet.json'),
-            ))
-            :SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                SizedBox(height: 400.h,),
-                Screenshot(
-                  controller: screenshotController,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Container(
-                        color: Colors.white,
-                        child: Container(
-                          padding: const EdgeInsets.all(3.0),
-                          decoration: BoxDecoration(
-                              border:
-                                  Border.all(width: 2.w, color: Colors.green)),
-                          child: Qr(
-                            data: Provider.of<ManagerProv>(context, listen: true)
-                                    .qrCode ??
-                                'abc',
-                            size: 350.0.w,
-                            version: QrVersions.auto,
-                          ),
-                        )),
+                child: SizedBox(
+                height: 400.h,
+                width: 400.w,
+                child: Lottie.asset('assets/lotties/noInternet.json'),
+              ))
+            : SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 400.h,
+                      ),
+                      Screenshot(
+                        controller: screenshotController,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Container(
+                              color: Colors.white,
+                              child: Container(
+                                padding: const EdgeInsets.all(3.0),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 2.w, color: Colors.green)),
+                                child: Qr(
+                                  data: Provider.of<ManagerProv>(context,
+                                              listen: true)
+                                          .qrCode ??
+                                      'abc',
+                                  size: 350.0.w,
+                                  version: QrVersions.auto,
+                                ),
+                              )),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }

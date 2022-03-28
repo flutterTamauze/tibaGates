@@ -3,8 +3,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:camera/camera.dart';
 
-import 'package:clean_app/Presentation/admin/a_invitations_screen.dart';
-import 'package:clean_app/Presentation/admin/admin_bottomNav.dart';
+import '../../admin/a_invitations_screen.dart';
+import '../../admin/admin_bottomNav.dart';
 import '../../guard/entry_screen/entryScreen.dart';
 import '../../manager/m_home_screen.dart';
 import '../../../Utilities/Colors/colorManager.dart';
@@ -204,7 +204,8 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                                     .validate()) {
                                                   return;
                                                 } else {
-                                                  takeImage().then((image) {
+                                                  takeImage()
+                                                      .then((image) async {
                                                     print(
                                                         'image during login is   $image');
                                                     if (image == null) {
@@ -220,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                                               .LENGTH_LONG);
                                                       return;
                                                     } else {
-                                                      login(image);
+                                                      await login(image);
                                                     }
                                                   });
                                                 }
@@ -252,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     );
   }
 
-  login(File img) {
+  login(File img) async {
     var authProv = Provider.of<AuthProv>(context, listen: false);
     authProv.changeLoadingState(true);
 
@@ -274,7 +275,6 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     authProv
         .login(_memberShipController.text, _passwordController.text, img, _udid)
         .then((value) async {
-
       authProv.changeLoadingState(false);
 
       print('value => $value');
@@ -290,7 +290,11 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         } else if (authProv.userRole == 'Admin') {
           print('admin');
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => BottomNav(comingIndex: 3,)));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BottomNav(
+                        comingIndex: 3,
+                      )));
           return;
         }
 
@@ -301,7 +305,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
             msg: 'بيانات غير صحيحة',
             backgroundColor: Colors.green,
             toastLength: Toast.LENGTH_LONG);
-      }else if (value == 'Incorrect Password') {
+      } else if (value == 'Incorrect Password') {
         Fluttertoast.showToast(
             msg: 'كلمة المرور غير صحيحة ',
             backgroundColor: Colors.green,
@@ -348,7 +352,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
       // Construct the path where the image should be saved using the
       // pattern package.
 
-      final path = nPath.join(
+      var path = nPath.join(
         (await getTemporaryDirectory()).path,
         '${DateTime.now().toString().split(":")[2]}.jpg',
       );

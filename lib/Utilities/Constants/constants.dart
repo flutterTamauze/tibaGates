@@ -10,7 +10,6 @@ const String BASE_URL = 'http://10.0.0.51:8007';
 //const String BASE_URL = 'http://10.0.0.242/GATE';
 //const String BASE_URL = 'http://10.0.0.242/PARKING';
 
-
 const kTextFieldDecorationWhite = InputDecoration(
   isDense: true,
 

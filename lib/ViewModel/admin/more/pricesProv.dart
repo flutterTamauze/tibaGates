@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:clean_app/api/app_exceptions.dart';
-import 'package:clean_app/api/base_client.dart';
-import 'package:clean_app/api/base_exception_handling.dart';
+import '../../../api/app_exceptions.dart';
+import '../../../api/base_client.dart';
+import '../../../api/base_exception_handling.dart';
 
 import '../../../Data/Models/manager/invitationType_model.dart';
 import '../../../Data/Models/manager/invitation_model.dart';
@@ -29,13 +29,11 @@ class PricesProv with ChangeNotifier, BaseExceptionHandling {
 
   Future<dynamic> deletePrice(int priceId, String userId) async {
     String data = '';
-
+    debugPrint('price id $priceId');
     try {
-
       var response = await BaseClient()
           .delete(BASE_URL, '/api/Guest/DeleteOwner?ID=$priceId&UserID=$userId')
           .catchError(handleError);
-
 
       var decodedRes = jsonDecode(response);
 

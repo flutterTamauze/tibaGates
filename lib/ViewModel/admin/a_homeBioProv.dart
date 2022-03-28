@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:clean_app/api/base_client.dart';
-import 'package:clean_app/api/base_exception_handling.dart';
+import '../../api/base_client.dart';
+import '../../api/base_exception_handling.dart';
 
 import '../../Data/Models/admin/a_homeBio_model.dart';
 
@@ -22,7 +22,7 @@ class AdminHomeProv with ChangeNotifier, BaseExceptionHandling {
   Future<void> getBioData() async {
     try {
       var response = await BaseClient()
-          .get(BASE_URL, '/api/gate/summaryforparked')
+          .get(BASE_URL, '/api/gate/summaryfortoday')
           .catchError(handleError);
 
       debugPrint('response ${jsonDecode(response)['response']}');

@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:clean_app/Presentation/splash_screen/splash_screen.dart';
-import 'package:clean_app/ViewModel/guard/authProv.dart';
-import 'package:clean_app/ViewModel/guard/visitorProv.dart';
+import 'Presentation/splash_screen/splash_screen.dart';
+import 'ViewModel/guard/authProv.dart';
+import 'ViewModel/guard/visitorProv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,6 +27,28 @@ GetIt getIt = GetIt.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Material(
+      child: Container(
+        color: Colors.green,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Text(
+                details.exception.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  };
   bool isInRelease = true;
 
   assert(() {
@@ -43,18 +65,16 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   locator.intalizeLocator();
-
   runApp(MyApp(Routes()));
 }
 
 class MyApp extends StatelessWidget {
   final Routes routes;
 
-  MyApp(this.routes);
+  const MyApp(this.routes);
 
   @override
   Widget build(BuildContext context) {
-
     return ScreenUtilInit(
       designSize: const Size(800.0, 1232.0),
       builder: () {
@@ -68,40 +88,43 @@ class MyApp extends StatelessWidget {
             ),
             ChangeNotifierProvider(
               create: (context) => getIt<ManagerProv>(),
-            ),   ChangeNotifierProvider(
+            ),
+            ChangeNotifierProvider(
               create: (context) => getIt<AdminProv>(),
-            ), ChangeNotifierProvider(
+            ),
+            ChangeNotifierProvider(
               create: (context) => getIt<AdminHomeProv>(),
-            ),ChangeNotifierProvider(
+            ),
+            ChangeNotifierProvider(
               create: (context) => getIt<AReportsProv>(),
-            ),ChangeNotifierProvider(
+            ),
+            ChangeNotifierProvider(
               create: (context) => getIt<PricesProv>(),
-            ),ChangeNotifierProvider(
+            ),
+            ChangeNotifierProvider(
               create: (context) => getIt<HolidaysProv>(),
-            ),ChangeNotifierProvider(
+            ),
+            ChangeNotifierProvider(
               create: (context) => getIt<PublicHolidaysProv>(),
             ),
           ],
           child: FutureBuilder(
-            future: Future.delayed(const Duration(seconds: 3)),
-            builder: (context, AsyncSnapshot snapshot) {
-              return StreamProvider<ConnectivityStatus>(
-                  initialData: ConnectivityStatus.Wifi,
-                  create: (context) => ConnectivityService()
-                      .connectionStatusController
-                      .stream,
-                  builder: (context, snapshot) {
-                    return  GetMaterialApp(
-                      title: 'Tiba Rose',
-                      debugShowCheckedModeBanner: false,
-                      home: SplashScreen(),
-                      theme: ThemeData(fontFamily: 'Almarai'),
-                      onGenerateRoute: routes.onGenerateRoute,
-                    );
-                  });
-            }
-
-          ),
+              future: Future.delayed(const Duration(seconds: 3)),
+              builder: (context, AsyncSnapshot snapshot) {
+                return StreamProvider<ConnectivityStatus>(
+                    initialData: ConnectivityStatus.Wifi,
+                    create: (context) =>
+                        ConnectivityService().connectionStatusController.stream,
+                    builder: (context, snapshot) {
+                      return GetMaterialApp(
+                        title: 'Tiba Rose',
+                        debugShowCheckedModeBanner: false,
+                        home: SplashScreen(),
+                        theme: ThemeData(fontFamily: 'Almarai'),
+                        onGenerateRoute: routes.onGenerateRoute,
+                      );
+                    });
+              }),
         );
       },
     );

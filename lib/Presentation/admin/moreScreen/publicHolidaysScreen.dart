@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:clean_app/Data/Models/admin/publicHolidaysModel.dart';
-import 'package:clean_app/Utilities/connectivityStatus.dart';
-import 'package:clean_app/ViewModel/admin/vm/publicHolidaysProv.dart';
+import '../../../Data/Models/admin/publicHolidaysModel.dart';
+import '../../../Utilities/connectivityStatus.dart';
+import '../../../ViewModel/admin/vm/publicHolidaysProv.dart';
 import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../../Data/Models/admin/prices.dart';
@@ -60,7 +60,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
               columns: <DataColumn>[
                 DataColumn(
                   label: Text(
-                    'Description',
+                    'الوصف',
                     style: TextStyle(
                         fontSize: setResponsiveFontSize(20),
                         fontWeight: FontManager.bold),
@@ -69,7 +69,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                 ),
                 DataColumn(
                   label: Text(
-                    'To',
+                    'من',
                     style: TextStyle(
                         fontSize: setResponsiveFontSize(20),
                         fontWeight: FontManager.bold),
@@ -78,7 +78,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                 ),
                 DataColumn(
                   label: Text(
-                    'From',
+                    'إلى',
                     style: TextStyle(
                         fontSize: setResponsiveFontSize(20),
                         fontWeight: FontManager.bold),
@@ -115,7 +115,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                         ),
                         DataCell(
                           Text(
-                            e.endDate.toString(),
+                            e.startDate.toString(),
                             textAlign: TextAlign.end,
                             style: TextStyle(
                                 fontSize: setResponsiveFontSize(20),
@@ -127,7 +127,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                         ),
                         DataCell(
                           Text(
-                            e.startDate.toString(),
+                            e.endDate.toString(),
                             textAlign: TextAlign.end,
                             style: TextStyle(
                                 fontSize: setResponsiveFontSize(20),
@@ -391,86 +391,86 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
             ),
           ),
         ),
-        body:  connectionStatus == ConnectivityStatus.Offline
+        body: connectionStatus == ConnectivityStatus.Offline
             ? Center(
-            child: SizedBox(
-              height: 400.h,
-              width: 400.w,
-              child: Lottie.asset('assets/lotties/noInternet.json'),
-            ))
-            :WillPopScope(
-            onWillPop: () {
-              navigateTo(
-                  context,
-                  BottomNav(
-                    comingIndex: 0,
-                  ));
-            },
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 30.h,
-                  ),
-                  ZoomIn(
-                    child: SizedBox(
-                      height: (height * 0.17),
-                      width: (width * 0.32),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                              color: ColorManager.primary, width: 2.w),
-                          image: const DecorationImage(
-                              image:
-                                  AssetImage('assets/images/tipasplash.png')),
-                          shape: BoxShape.circle,
+                child: SizedBox(
+                height: 400.h,
+                width: 400.w,
+                child: Lottie.asset('assets/lotties/noInternet.json'),
+              ))
+            : WillPopScope(
+                onWillPop: () {
+                  navigateTo(
+                      context,
+                      BottomNav(
+                        comingIndex: 0,
+                      ));
+                },
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 30.h,
+                      ),
+                      ZoomIn(
+                        child: SizedBox(
+                          height: (height * 0.17),
+                          width: (width * 0.32),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color: ColorManager.primary, width: 2.w),
+                              image: const DecorationImage(
+                                  image: AssetImage(
+                                      'assets/images/tipasplash.png')),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      AutoSizeText(
+                        'العطلات الرسمية الحالية',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: setResponsiveFontSize(33)),
+                      ),
+                      SizedBox(
+                        height: 60.h,
+                      ),
+                      FutureBuilder(
+                          future: publicHolidaysListener,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<dynamic> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: Platform.isIOS
+                                    ? const CupertinoActivityIndicator()
+                                    : const Center(
+                                        child: CircularProgressIndicator(
+                                          backgroundColor: Colors.green,
+                                        ),
+                                      ),
+                              );
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              publicHolidaysList =
+                                  Provider.of<PublicHolidaysProv>(context,
+                                          listen: true)
+                                      .holidaysList;
+                              return Center(child: bodyData());
+                            }
+                            return Container();
+                          }),
+                    ],
                   ),
-                  SizedBox(
-                    height: 40.h,
-                  ),
-                  AutoSizeText(
-                    'العطلات الرسمية الحالية',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: setResponsiveFontSize(33)),
-                  ),
-                  SizedBox(
-                    height: 60.h,
-                  ),
-                  FutureBuilder(
-                      future: publicHolidaysListener,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<dynamic> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: Platform.isIOS
-                                ? const CupertinoActivityIndicator()
-                                : const Center(
-                                    child: CircularProgressIndicator(
-                                      backgroundColor: Colors.green,
-                                    ),
-                                  ),
-                          );
-                        } else if (snapshot.connectionState ==
-                            ConnectionState.done) {
-                          publicHolidaysList = Provider.of<PublicHolidaysProv>(
-                                  context,
-                                  listen: true)
-                              .holidaysList;
-                          return Center(child: bodyData());
-                        }
-                        return Container();
-                      }),
-                ],
-              ),
-            )),
+                )),
         backgroundColor: Colors.green,
       ),
     );
@@ -520,9 +520,9 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                 ),
                 SizedBox(
                   child: TextFormField(
+                    autovalidateMode: AutovalidateMode.always,
                     controller: startDateController,
                     keyboardType: TextInputType.datetime,
-                    autovalidate: true,
                     readOnly: true,
                     onTap: () {
                       showDialog(
