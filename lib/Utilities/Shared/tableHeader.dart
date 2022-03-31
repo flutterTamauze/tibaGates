@@ -19,7 +19,7 @@ class _DataTableHeaderState extends State<DataTableHeader> {
       sortAscending: true,
       columns: <DataColumn>[
         DataColumn(
-          label: Text('First Name'),
+          label: const Text('First Name'),
           numeric: false,
           onSort: (i, b) {
             print('$i $b');
@@ -44,20 +44,20 @@ class _DataTableHeaderState extends State<DataTableHeader> {
       rows: names
           .map(
             (name) => DataRow(
-          cells: [
-            DataCell(
-              Text(name.firstName),
-              showEditIcon: false,
-              placeholder: false,
+              cells: [
+                DataCell(
+                  Text(name.firstName),
+                  showEditIcon: false,
+                  placeholder: false,
+                ),
+                DataCell(
+                  Text(name.lastName),
+                  showEditIcon: false,
+                  placeholder: false,
+                )
+              ],
             ),
-            DataCell(
-              Text(name.lastName),
-              showEditIcon: false,
-              placeholder: false,
-            )
-          ],
-        ),
-      )
+          )
           .toList());
 
   @override
@@ -97,7 +97,7 @@ var names = <Name>[
                   child: Center(
                       child: SizedBox(
                         height: 20,
-                        child: AutoSizeText(
+                        child: Text(
                        'الأسم',
                           maxLines: 1,
                           style: TextStyle(
@@ -147,7 +147,7 @@ class AttendProovTableHeader extends StatelessWidget {
                         child: Center(
                             child: Container(
                               height: 20,
-                              child: AutoSizeText(
+                              child: Text(
                                'الأسم',
                                 maxLines: 1,
                                 style: TextStyle(
@@ -189,7 +189,7 @@ class DataTableHeaderTitles extends StatelessWidget {
       child: Container(
           child: Center(
               child: Container(
-                child: AutoSizeText(
+                child: Text(
                   title,
                   maxLines: 1,
                   style: TextStyle(

@@ -161,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                   key: _forgetFormKey,
                                   child: Column(
                                     children: <Widget>[
-                                      AutoSizeText(
+                                      Text(
                                         'قم بتسجيل الدخول',
                                         style: TextStyle(
                                             color: ColorManager.primary,

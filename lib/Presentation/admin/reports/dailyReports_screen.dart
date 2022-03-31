@@ -1,5 +1,6 @@
-import '../../../Utilities/Colors/colorManager.dart';
-import '../../../Utilities/Shared/sharedWidgets.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
+
 import '../../../Utilities/connectivityStatus.dart';
 import '../../../ViewModel/admin/a_homeBioProv.dart';
 import '../../../ViewModel/admin/reports/admin_reportsProv.dart';
@@ -14,8 +15,6 @@ import '../admin_bottomNav.dart';
 import '../../../Utilities/Constants/constants.dart';
 import '../../../Utilities/Fonts/fontsManager.dart';
 import '../../../Utilities/Shared/dialogs/loading_dialog.dart';
-import '../../../Utilities/Shared/tableHeader.dart';
-import '../../../ViewModel/manager/managerProv.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
@@ -56,12 +55,22 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
         child: Directionality(
           textDirection: ui.TextDirection.rtl,
           child: DataTable(
+              dataRowHeight: 70.h,
+              dividerThickness: 3.w,
+              showBottomBorder: true,
+              headingRowColor:
+                  MaterialStateProperty.all<Color>(Colors.blueGrey),
+              headingTextStyle: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.white),
+
+              // dataRowColor: MaterialStateProperty.all<Color>(Colors.green),
               columns: <DataColumn>[
                 DataColumn(
                   label: Text(
                     'id',
                     style: TextStyle(
                         fontSize: setResponsiveFontSize(24),
+                        // background: Paint()..color = Colors.green,
                         fontWeight: FontManager.bold),
                   ),
                   numeric: false,
@@ -126,8 +135,10 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                         DataCell(
                           Text(
                             ReportRecord.id.toString(),
-                            style: const TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: setResponsiveFontSize(24)),
                           ),
                           showEditIcon: false,
                           placeholder: false,
@@ -138,26 +149,36 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                           placeholder: false,
                         ),
                         DataCell(
-                          Text(ReportRecord.civilCount.toString()),
+                          Text(ReportRecord.civilCount.toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: setResponsiveFontSize(26))),
                           showEditIcon: false,
                           placeholder: false,
                         ),
                         DataCell(
-                          Text(ReportRecord.militryCount.toString()),
+                          Text(ReportRecord.militryCount.toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: setResponsiveFontSize(26))),
                           showEditIcon: false,
                           placeholder: false,
                         ),
                         DataCell(
                           Directionality(
                               textDirection: ui.TextDirection.ltr,
-                              child: Text(ReportRecord.inDateTime.toString())),
+                              child: Text(ReportRecord.inDateTime.toString(),
+                                  style: TextStyle(color: Colors.green))),
                           showEditIcon: false,
                           placeholder: false,
                         ),
                         DataCell(
                           Directionality(
                               textDirection: ui.TextDirection.ltr,
-                              child: Text(ReportRecord.outDateTime.toString())),
+                              child: Text(
+                                ReportRecord.outDateTime.toString(),
+                                style: TextStyle(color: Colors.red),
+                              )),
                           showEditIcon: false,
                           placeholder: false,
                         ),
@@ -436,6 +457,14 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                       color: Colors.green,
                                       fontWeight: FontWeight.bold),
                                 ),
+                                Text(
+                                  '- ${Provider.of<AReportsProv>(context, listen: true).summaryModel.carsCount}   ',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: setResponsiveFontSize(30),
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.bold),
+                                ),
                                 if ((Provider.of<AReportsProv>(context,
                                                     listen: true)
                                                 .summaryModel
@@ -653,84 +682,89 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                       SizedBox(
                         height: 40.h,
                       ),
-                      OutlinedButton(
-                        onPressed: () {
-                          if (date == null) {
-                            final DateTime now = DateTime.now();
-                            final DateFormat formatter =
-                                DateFormat('yyyy-MM-dd');
-                            final String formatted = formatter.format(now);
-                            date = formatted;
-                          }
-                          showLoaderDialog(context, 'جارى تحميل التقرير');
+                      loadReport == false
+                          ? OutlinedButton(
+                              onPressed: () {
+                                if (date == null) {
+                                  final DateTime now = DateTime.now();
+                                  final DateFormat formatter =
+                                      DateFormat('yyyy-MM-dd');
+                                  final String formatted =
+                                      formatter.format(now);
+                                  date = formatted;
+                                }
+                                showLoaderDialog(context, 'جارى تحميل التقرير');
 
-                          print(
-                              'selectedType   ${selectedType ?? Provider.of<AdminHomeProv>(context, listen: false).parkTypes[0]}    date $date');
+                                print(
+                                    'selectedType   ${selectedType ?? Provider.of<AdminHomeProv>(context, listen: false).parkTypes[0]}    date $date');
 
-                          Provider.of<AReportsProv>(context, listen: false)
-                              .getDailyReport(date, date, selectedType)
-                              .then((value) {
-                            if (value == 'Success') {
-                              if (Provider.of<AReportsProv>(context,
-                                      listen: false)
-                                  .reportsList
-                                  .isNotEmpty) {
-                                setState(() {
-                                  loadReport = true;
+                                Provider.of<AReportsProv>(context,
+                                        listen: false)
+                                    .getDailyReport(date, date, selectedType)
+                                    .then((value) {
+                                  if (value == 'Success') {
+                                    if (Provider.of<AReportsProv>(context,
+                                            listen: false)
+                                        .reportsList
+                                        .isNotEmpty) {
+                                      setState(() {
+                                        loadReport = true;
+                                      });
+                                      Navigator.pop(context);
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg: 'لا توجد تقارير فى هذا اليوم',
+                                          backgroundColor: Colors.green,
+                                          toastLength: Toast.LENGTH_LONG);
+                                      Navigator.pop(context);
+                                      setState(() {
+                                        loadReport = false;
+                                      });
+                                    }
+                                  }
                                 });
-                                Navigator.pop(context);
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: 'لا توجد تقارير فى هذا اليوم',
-                                    backgroundColor: Colors.green,
-                                    toastLength: Toast.LENGTH_LONG);
-                                Navigator.pop(context);
-                                setState(() {
-                                  loadReport = false;
-                                });
-                              }
-                            }
-                          });
-                        },
-                        child: SizedBox(
-                          height: 45.h,
-                          width: 200.w,
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.description_outlined,
-                                color: Colors.black,
-                                size: 30,
+                              },
+                              child: SizedBox(
+                                height: 45.h,
+                                width: 200.w,
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.description_outlined,
+                                      color: Colors.black,
+                                      size: 30,
+                                    ),
+                                    const VerticalDivider(
+                                      thickness: 3,
+                                      color: Colors.green,
+                                      endIndent: 2,
+                                      indent: 4,
+                                    ),
+                                    Text(
+                                      'عرض التقرير',
+                                      style: TextStyle(
+                                          fontSize: setResponsiveFontSize(24),
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              const VerticalDivider(
-                                thickness: 3,
-                                color: Colors.green,
-                                endIndent: 2,
-                                indent: 4,
-                              ),
-                              Text(
-                                'عرض التقرير',
-                                style: TextStyle(
-                                    fontSize: setResponsiveFontSize(24),
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                        style: ButtonStyle(
-                            side: MaterialStateProperty.all(
-                                BorderSide(color: Colors.green, width: 3.w)),
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
-                            padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(
-                                    vertical: 20.h, horizontal: 20.w)),
-                            shape: MaterialStateProperty.all(
-                                const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(15))))),
-                      ),
+                              style: ButtonStyle(
+                                  side: MaterialStateProperty.all(BorderSide(
+                                      color: Colors.green, width: 3.w)),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.white),
+                                  padding: MaterialStateProperty.all(
+                                      EdgeInsets.symmetric(
+                                          vertical: 20.h, horizontal: 20.w)),
+                                  shape: MaterialStateProperty.all(
+                                      const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15))))),
+                            )
+                          : Container(),
                       loadReport == true ? const Spacer() : Container(),
                       /*   loadReport == true
                     ? const Align(

@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import '../../main.dart';
 import '../admin/a_invitations_screen.dart';
 import 'm_share_qr.dart';

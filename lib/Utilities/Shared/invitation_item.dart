@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../Data/Models/manager/invitation_model.dart';
@@ -22,7 +23,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class InvitationItem extends StatefulWidget {
   final Invitation invitation;
   final VoidCallback callback;
-  const InvitationItem({Key key, this.invitation, this.callback}) : super(key: key);
+  const InvitationItem({Key key, this.invitation, this.callback})
+      : super(key: key);
 
   @override
   _InvitationItemState createState() => _InvitationItemState();
@@ -39,16 +41,17 @@ class _InvitationItemState extends State<InvitationItem> {
         // height: 200.h,
         child: Slidable(
           actionPane: const SlidableDrawerActionPane(),
-          actionExtentRatio: 0.25,closeOnScroll: true,
+          actionExtentRatio: 0.25,
+          closeOnScroll: true,
           actions: [
             IconSlideAction(
-              caption: 'حذف',closeOnTap: true,
+              caption: 'حذف',
+              closeOnTap: true,
               color: Colors.redAccent,
               icon: Icons.delete,
               onTap: widget.callback,
             ),
           ],
-
           child: Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(25.0),
@@ -135,21 +138,31 @@ class _InvitationItemState extends State<InvitationItem> {
                               ),
                             ),
                             onTap: () async {
-                              Uint8List byteImage =
-                                  await screenshotController.captureFromWidget(Qr(
-                                version: QrVersions.auto,
-                                data: Provider.of<ManagerProv>(context,
-                                            listen: false)
-                                        .qrCode ??
-                                    'abc',
-                                size: 250.0,
+                              Uint8List byteImage = await screenshotController
+                                  .captureFromWidget(Container(
+                                height: 400.h,
+                                width: 400.w,
+                                color: Colors.white,
+                                child: Column(
+                                  children: [
+                                    const Spacer(),
+                                    Qr(
+                                      version: QrVersions.auto,
+                                      data: Provider.of<ManagerProv>(context,
+                                                  listen: false)
+                                              .qrCode ??
+                                          'abc',
+                                      size: 250.0,
+                                    ),
+                                  ],
+                                ),
                               ));
                               Directory directory =
                                   await getApplicationDocumentsDirectory();
                               File image = File('${directory.path}/qr.png');
                               image.writeAsBytesSync(byteImage);
                               const String text =
-                                  'You are welcome to spend nice time ';
+                                  'تسعدنا زيارتك فى دار الدفاع الجوى بالتجمع الخامس';
                               await Share.shareFiles([image.path], text: text);
                             },
                           ),

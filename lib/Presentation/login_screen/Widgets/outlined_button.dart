@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,7 +29,7 @@ class OutlineButtonFb1 extends StatelessWidget {
               letterSpacing: 2,
               fontFamily: GoogleFonts.getFont('Staatliches').fontFamily),
         ),
-        Icon(
+        const Icon(
           Icons.exit_to_app,
           color: primaryColor,
           size: 36,
@@ -41,7 +42,8 @@ class OutlineButtonFb1 extends StatelessWidget {
           padding: MaterialStateProperty.all(
               EdgeInsets.symmetric(vertical: 20.h, horizontal: 50.w)),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(borderRadius))))),
+              borderRadius:
+                  const BorderRadius.all(Radius.circular(borderRadius))))),
     );
   }
 }

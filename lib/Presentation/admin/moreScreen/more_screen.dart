@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:clean_app/Presentation/admin/moreScreen/pricesScreen.dart';
 import 'package:clean_app/Presentation/admin/moreScreen/weeklyHolidays.dart';
 import 'package:clean_app/Utilities/Constants/constants.dart';
@@ -12,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'publicHolidaysScreen.dart';
 
-
 class MoreScreen extends StatefulWidget {
   @override
   _MoreScreenState createState() => _MoreScreenState();
@@ -24,14 +24,13 @@ class _MoreScreenState extends State<MoreScreen> {
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
-      context: context,
-      builder: (context) => ZoomIn(
-        child: const exitDialog(),
-      ),
-    )) ??
+          context: context,
+          builder: (context) => ZoomIn(
+            child: const exitDialog(),
+          ),
+        )) ??
         false;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -43,106 +42,102 @@ class _MoreScreenState extends State<MoreScreen> {
         child: Scaffold(
           body: connectionStatus == ConnectivityStatus.Offline
               ? Center(
-              child: SizedBox(
-                height: 400.h,
-                width: 400.w,
-                child: Lottie.asset('assets/lotties/noInternet.json'),
-              ))
+                  child: SizedBox(
+                  height: 400.h,
+                  width: 400.w,
+                  child: Lottie.asset('assets/lotties/noInternet.json'),
+                ))
               : Padding(
-            padding: EdgeInsets.symmetric(vertical: 20.h),
-            child: Column(
-              children: [
-                InkWell(
-                  onTap: () {
-                    navigateTo(context, const PricesScreen());
-                  },
-                  child: const rowTile(
-                    icon: Icons.monetization_on,
-                    label: 'الأسعار',
+                  padding: EdgeInsets.symmetric(vertical: 20.h),
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          navigateTo(context, const PricesScreen());
+                        },
+                        child: const rowTile(
+                          icon: Icons.monetization_on,
+                          label: 'الأسعار',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 60.w),
+                        child: Divider(
+                          thickness: 1,
+                          height: 2.h,
+                          color: Colors.green,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          navigateTo(context, const WeeklyHolidaysScreen());
+                        },
+                        child: const rowTile(
+                          icon: Icons.calendar_today,
+                          label: 'العطلات الأسبوعية',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 60.w),
+                        child: Divider(
+                          thickness: 1,
+                          height: 2.h,
+                          color: Colors.green,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          navigateTo(context, const PublicHolidaysScreen());
+                        },
+                        child: const rowTile(
+                          icon: Icons.calendar_today_outlined,
+                          label: 'العطلات الرسمية',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 60.w),
+                        child: Divider(
+                          thickness: 1,
+                          height: 2.h,
+                          color: Colors.green,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          await showDialog(
+                              context: context,
+                              builder: (context) => ZoomIn(
+                                    child: const exitDialog(),
+                                  ));
+                        },
+                        child: const rowTile(
+                          icon: Icons.logout,
+                          label: 'تسجيل الخروج',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 60.w),
+                        child: Divider(
+                          thickness: 1,
+                          height: 2.h,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 60.w),
-                  child: Divider(
-                    thickness: 1,
-                    height: 2.h,
-                    color: Colors.green,
-                  ),
-                ),
-
-
-                InkWell(
-                  onTap: () {
-navigateTo(context,const WeeklyHolidaysScreen());
-                  },
-                  child: const rowTile(
-                    icon: Icons.calendar_today,
-                    label: 'العطلات الأسبوعية',
-                  ),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 60.w),
-                  child: Divider(
-                    thickness: 1,
-                    height: 2.h,
-                    color: Colors.green,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    navigateTo(context,const PublicHolidaysScreen());
-                  },
-                  child: const rowTile(
-                    icon: Icons.calendar_today_outlined,
-                    label: 'العطلات الرسمية',
-                  ),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 60.w),
-                  child: Divider(
-                    thickness: 1,
-                    height: 2.h,
-                    color: Colors.green,
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-
-                    await showDialog(
-                        context: context,
-                        builder: (context) => ZoomIn(
-                          child: const exitDialog(),
-                        ));
-                  },
-                  child: const rowTile(
-                    icon: Icons.logout,
-                    label: 'تسجيل الخروج',
-                  ),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 60.w),
-                  child: Divider(
-                    thickness: 1,
-                    height: 2.h,
-                    color: Colors.green,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );
@@ -159,15 +154,15 @@ class rowTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 10, top: 16,bottom: 16),
+      padding: const EdgeInsets.only(right: 10, top: 16, bottom: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
-            label,textAlign: TextAlign.end,
+            label,
+            textAlign: TextAlign.end,
             style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: setResponsiveFontSize(30)),
+                color: Colors.grey[700], fontSize: setResponsiveFontSize(30)),
           ),
           SizedBox(
             width: 80.w,

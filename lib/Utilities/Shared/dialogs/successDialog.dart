@@ -7,26 +7,25 @@ import 'package:lottie/lottie.dart';
 class invitationSendDialog extends StatelessWidget {
   final String text;
   const invitationSendDialog({
-    Key key,  this.text,
+    Key key,
+    this.text,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius:
-        BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.circular(20.0),
       ),
       child: Container(
         height: 500.h,
         width: 400.w,
         child: Column(
-          crossAxisAlignment:
-          CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Stack(
               children: [
-            /*    Container(
+                /*    Container(
                   alignment:
                   Alignment.topCenter,
                   height: 400.h,
@@ -38,30 +37,25 @@ class invitationSendDialog extends StatelessWidget {
                 ),*/
                 Positioned(
                     child: Container(
-                      width: 400.w,
-                      height: 300.h,
-                      child: Lottie.asset(
-                          'assets/lotties/success.json',
-                          repeat: false),
-                    )),
+                  width: 400.w,
+                  height: 300.h,
+                  child: Lottie.asset('assets/lotties/success.json',
+                      repeat: false),
+                )),
               ],
             ),
             SizedBox(
               height: 40.h,
             ),
             Padding(
-                padding: const EdgeInsets
-                    .symmetric(
-                    horizontal: 20),
-                child: AutoSizeText(text
-                  ,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  text,
                   style: TextStyle(
                       fontSize: setResponsiveFontSize(30),
                       color: Colors.green,
-                      fontWeight:
-                      FontWeight.bold),
-                  textAlign:
-                  TextAlign.center,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 )),
           ],
         ),

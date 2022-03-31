@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:intl/intl.dart';
 import '../../../Data/Models/admin/publicHolidaysModel.dart';
 import '../../../Utilities/connectivityStatus.dart';
 import '../../../ViewModel/admin/vm/publicHolidaysProv.dart';
@@ -226,7 +227,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                                                   Directionality(
                                                     textDirection:
                                                         ui.TextDirection.rtl,
-                                                    child: AutoSizeText(
+                                                    child: Text(
                                                       'هل انت متأكد من حذف العطلة ؟ ',
                                                       textAlign:
                                                           TextAlign.center,
@@ -328,6 +329,36 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
       DateTimeRange(start: DateTime(2022, 11, 5), end: DateTime(2022, 12, 24));
   DateRangePickerController dateRangePickerController =
       DateRangePickerController();
+  var fromDate;
+  var toDate;
+  String _selectedDate = '';
+  String _dateCount = '';
+  String _range = '';
+  String _rangeCount = '';
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      if (args.value is PickerDateRange) {
+        _range = '${DateFormat('yyyy-MM-dd').format(args.value.startDate)} -'
+            ' ${DateFormat('yyyy-MM-dd').format(args.value.endDate ?? args.value.startDate)}';
+
+        fromDate = DateFormat('yyyy-MM-dd')
+            .format(args.value.startDate)
+            .toString()
+            .replaceAll('/', '-');
+        toDate = DateFormat('yyyy-MM-dd')
+            .format(args.value.endDate ?? args.value.startDate)
+            .toString()
+            .replaceAll('/', '-');
+      } else if (args.value is DateTime) {
+        _selectedDate = args.value.toString();
+      } else if (args.value is List<DateTime>) {
+        _dateCount = args.value.length.toString();
+      } else {
+        _rangeCount = args.value.length.toString();
+      }
+    });
+    print('selected range $_range');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -432,7 +463,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                       SizedBox(
                         height: 40.h,
                       ),
-                      AutoSizeText(
+                      Text(
                         'العطلات الرسمية الحالية',
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -496,7 +527,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                 SizedBox(
                   height: 25.h,
                 ),
-                AutoSizeText(
+                Text(
                   title,
                   style: TextStyle(
                       color: ColorManager.primary,
@@ -548,7 +579,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                                         todayHighlightColor: Colors.green,
                                         selectionMode:
                                             DateRangePickerSelectionMode.range,
-                                        // onSelectionChanged: _onSelectionChanged,
+                                        onSelectionChanged: _onSelectionChanged,
                                         showActionButtons: true,
                                         controller: dateRangePickerController,
                                         onCancel: () {
@@ -558,25 +589,18 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                                           Navigator.pop(context);
                                         },
                                         onSubmit: (Object val) {
-                                          debugPrint(
-                                              ' ${val.toString().length}');
-                                          if (val != null &&
-                                              val.toString().length > 72) {
-                                            holidaysProv.changeDate(
-                                                val
-                                                    .toString()
-                                                    .substring(32, 43),
-                                                val
-                                                    .toString()
-                                                    .substring(67, 78));
+                                          print(
+                                              'start date $fromDate    end date $toDate');
+                                          if ((fromDate.toString().length ==
+                                                  10) &&
+                                              (toDate.toString().length ==
+                                                  10)) {
+                                            print('done');
 
-                                            debugPrint(val
-                                                .toString()
-                                                .substring(67, 78));
-                                            print(
-                                                'from is ${Provider.of<PublicHolidaysProv>(context, listen: false).startDate}');
-                                            print(
-                                                'to is ${Provider.of<PublicHolidaysProv>(context, listen: false).endDate}');
+                                            holidaysProv.changeDate(
+                                                fromDate.toString(),
+                                                toDate.toString());
+
                                             Navigator.pop(context);
                                           } else {
                                             Fluttertoast.showToast(

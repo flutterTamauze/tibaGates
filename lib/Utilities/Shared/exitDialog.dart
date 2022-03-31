@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
 import 'package:clean_app/Utilities/Shared/dialogs/loading_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';

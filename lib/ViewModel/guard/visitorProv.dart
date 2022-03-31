@@ -1,6 +1,9 @@
 import 'dart:io';
-import 'package:clean_app/api/base_client.dart';
-import 'package:clean_app/api/base_exception_handling.dart';
+import '../../Data/Models/guard/perHour.dart';
+import 'package:dartz/dartz.dart';
+
+import '../../api/base_client.dart';
+import '../../api/base_exception_handling.dart';
 
 import '../../Data/Models/guard/parked_model.dart';
 import '../../Data/Models/guard/reasons_model.dart';
@@ -25,6 +28,8 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   File idCard;
   int totalParkedCars;
   bool isVIP;
+  int militaryCount;
+  int civilCount;
   int invitationID;
   var totalPrice, militaryPrice, citizenPrice, parkPrice, qrCode, printTime;
   var logId;
@@ -187,7 +192,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       await request.send().then((response) async {
-        debugPrint('status code ${response.statusCode}');
+        debugPrint('status code is ${response.statusCode}');
         if (response.statusCode == 401) {
           responseData.message = 'unAuth';
         }
@@ -204,10 +209,10 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
           }
         });
       }).catchError((e) {
-        debugPrint(e);
+        debugPrint(e.toString());
       });
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e.toString());
     }
     notifyListeners();
     return responseData;
@@ -265,6 +270,54 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     return responseData;
   }
 
+  Future<ResponseData> checkInPerHour(
+    String userID,
+    File carImg,
+    File identityImg,
+  ) async {
+    ResponseData responseData = ResponseData();
+    debugPrint('userID in per hour $userID');
+
+    var uri = Uri.parse('$BASE_URL/api/Hours/CheckInHour');
+
+    var request = http.MultipartRequest('POST', uri);
+
+    if (carImg != null && identityImg != null) {
+      debugPrint('images not null');
+      request.files.add(
+        await http.MultipartFile.fromPath('image1', carImg.path),
+      );
+      request.files.add(
+        await http.MultipartFile.fromPath('image2', identityImg.path),
+      );
+    }
+
+    request.fields['UserId'] = userID.toString();
+    request.headers.addAll(mHeaders);
+
+    try {
+      await request.send().then((response) async {
+        response.stream.transform(utf8.decoder).listen((value) {
+          Map<String, dynamic> responseDecoded = json.decode(value);
+          debugPrint("response ${responseDecoded['response']}");
+          debugPrint('message is ${responseDecoded['message']}');
+          if (responseDecoded['message'] == 'Success') {
+            responseData.message = 'Success';
+            qrCode = responseDecoded['response']['qrCode'];
+            printTime = responseDecoded['response']['inTime'];
+            logId = responseDecoded['response']['id'];
+          }
+        });
+      }).catchError((e) {
+        debugPrint(e.toString());
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    notifyListeners();
+    return responseData;
+  }
+
   Future<dynamic> getBill(
       String typeID, String citizenCount, String militaryCount) async {
     debugPrint('type id $typeID');
@@ -310,6 +363,8 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
       if (decodedRes['message'] == 'Success') {
         qrCode = decodedRes['response']['qrCode'];
+        militaryCount = decodedRes['response']['militryCount'];
+        civilCount = decodedRes['response']['civilCount'];
         printTime = decodedRes['response']['printTime'];
         totalPrice = decodedRes['response']['total'];
         parkPrice = decodedRes['response']['price'];
@@ -341,7 +396,6 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
       debugPrint('response is $decodedRes');
 
       if (decodedRes['message'] == 'Success') {
-        debugPrint(decodedRes['response']);
         printTime = decodedRes['response']['printTime'];
         data = 'Success';
       }
@@ -349,7 +403,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
       notifyListeners();
       return data;
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -374,8 +428,33 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     }
   }
 
-  Future<dynamic> checkOut(String qrCode) async {
+  Future<dynamic> confirmPerHour(int logId, String userId) async {
     String data = '';
+
+    try {
+      var response = await BaseClient()
+          .put(BASE_URL,
+              '/api/Hours/ConfirmCheckOutHour?Id=$logId&UserId=$userId')
+          .catchError(handleError);
+      debugPrint('ConfirmCheckOutHour?I $response');
+
+      var decodedRes = jsonDecode(response);
+
+      debugPrint('response is $decodedRes');
+      if (decodedRes['message'] == 'Success') {
+        data = 'Success';
+      }
+
+      notifyListeners();
+      return data;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<dynamic> checkOut(String qrCode) async {
+    dynamic data = '';
+
     debugPrint('qrCode $qrCode');
 
     try {
@@ -383,31 +462,48 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
       var request = http.MultipartRequest('PUT', uri);
       request.fields['QrCode'] = qrCode;
       request.headers.addAll(mHeaders);
-      try {
-        await request.send().then((response) async {
-          response.stream.transform(utf8.decoder).listen((value) {
-            Map<String, dynamic> responseDecoded = json.decode(value);
 
-            debugPrint("response is ${responseDecoded['response']}");
+      await request.send().then((response) async {
+        // ignore: void_checks
+        response.stream.transform(utf8.decoder).listen((value) {
+          Map<String, dynamic> responseDecoded = json.decode(value);
 
-            debugPrint('message is $responseDecoded');
+          debugPrint('message is $responseDecoded');
 
-            if (responseDecoded['message'] == 'Success') {
+          if (responseDecoded['message'] == 'Success') {
+            debugPrint('SUCCESS YA MAN');
+
+            if (responseDecoded['response'].toString() == 'true') {
+              debugPrint('NORMAL');
+
               data = 'Success';
-            }
-          });
-        }).catchError((e) {
-          debugPrint(e);
-        });
-      } catch (e) {
-        debugPrint(e);
-      }
+            } else {
+              debugPrint('PER HOUR');
 
-      notifyListeners();
-      return data;
+              data = PerHour();
+              data.id = responseDecoded['response']['id'];
+              data.inTime = responseDecoded['response']['inTime'];
+              data.outTime = responseDecoded['response']['outTime'];
+              data.qrCode = responseDecoded['response']['qrCode'];
+              data.total =
+                  double.parse(responseDecoded['response']['total'].toString());
+              if (responseDecoded['response']['isPayed'].toString() == 'true') {
+                data.isPaid = true;
+              } else {
+                data.isPaid = false;
+              }
+            }
+          } else {
+            debugPrint('NOT SUCCESS');
+            data = responseDecoded['message'];
+          }
+        });
+      });
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e.toString());
     }
+    notifyListeners();
+    return data;
   }
 
   Future<dynamic> checkOutInvitation(String qrCode) async {
@@ -423,7 +519,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
       try {
         await request.send().then((response) async {
-          debugPrint(' status code is ${response.statusCode}');
+          debugPrint(' status code = ${response.statusCode}');
 
           response.stream.transform(utf8.decoder).listen((value) {
             Map<String, dynamic> responseDecoded = json.decode(value);

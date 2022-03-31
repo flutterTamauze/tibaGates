@@ -1,9 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:clean_app/Presentation/guard/entry_screen/entryScreen.dart';
+import '../../../Presentation/guard/entry_screen/entryScreen.dart';
 
-import 'package:clean_app/Utilities/Colors/colorManager.dart';
-import 'package:clean_app/Utilities/Constants/constants.dart';
-import 'package:clean_app/ViewModel/guard/visitorProv.dart';
+import '../../Colors/colorManager.dart';
+import '../../Constants/constants.dart';
+import '../../../ViewModel/guard/visitorProv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui' as ui;
@@ -12,78 +12,49 @@ import 'package:provider/provider.dart';
 
 import '../../../Presentation/guard/print_page2.dart';
 import '../sharedWidgets.dart';
+
 class BillDialog extends StatelessWidget {
-  final citizenValue,militaryValue,typeValue;
-  const BillDialog({Key key, this.citizenValue, this.militaryValue, this.typeValue}) : super(key: key);
+  final citizenValue, militaryValue, typeValue;
+  const BillDialog(
+      {Key key, this.citizenValue, this.militaryValue, this.typeValue})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape:
-      RoundedRectangleBorder(
-          borderRadius:
-          BorderRadius
-              .circular(
-              40)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       elevation: 16,
-      child: Container(
+      child: SizedBox(
         height: 700.h,
         width: 800.w,
         child: Column(
-          mainAxisAlignment:
-          MainAxisAlignment
-              .center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AutoSizeText(
+            Text(
               'رسوم الدخول',
               style: TextStyle(
-                  fontSize:
-                  setResponsiveFontSize(
-                      30),
-                  color: Colors
-                      .black,
-                  fontWeight:
-                  FontWeight
-                      .bold),
+                  fontSize: setResponsiveFontSize(30),
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
             Padding(
-              padding: EdgeInsets
-                  .symmetric(
-                  vertical:
-                  20.h,
-                  horizontal:
-                  60.w),
-              child:
-              Directionality(
-                textDirection: ui
-                    .TextDirection
-                    .rtl,
+              padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 60.w),
+              child: Directionality(
+                textDirection: ui.TextDirection.rtl,
                 child: Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment
-                      .spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AutoSizeText(
-                        'بارك :             ',
-                        textAlign:
-                        TextAlign
-                            .end,
+                    Text('بارك :             ',
+                        textAlign: TextAlign.end,
                         style: TextStyle(
-                            fontSize: setResponsiveFontSize(
-                                30),
-                            fontWeight:
-                            FontWeight.bold)),
-                    AutoSizeText(
+                            fontSize: setResponsiveFontSize(30),
+                            fontWeight: FontWeight.bold)),
+                    Text(
                       '${Provider.of<VisitorProv>(context, listen: true).parkPrice}',
-                      textAlign:
-                      TextAlign
-                          .start,
+                      textAlign: TextAlign.start,
                       style: TextStyle(
-                          fontSize:
-                          setResponsiveFontSize(
-                              30),
-                          color: Colors
-                              .green),
+                          fontSize: setResponsiveFontSize(30),
+                          color: Colors.green),
                     ),
                   ],
                 ),
@@ -93,58 +64,34 @@ class BillDialog extends StatelessWidget {
               height: 20.h,
             ),
             Padding(
-              padding: EdgeInsets
-                  .symmetric(
-                  horizontal:
-                  60.w),
+              padding: EdgeInsets.symmetric(horizontal: 60.w),
               child: Divider(
                 thickness: 1,
                 height: 2.h,
-                color:
-                Colors.green,
+                color: Colors.green,
               ),
             ),
             SizedBox(
               height: 20.h,
             ),
             Padding(
-              padding: EdgeInsets
-                  .symmetric(
-                  vertical:
-                  20.h,
-                  horizontal:
-                  60.w),
-              child:
-              Directionality(
-                textDirection: ui
-                    .TextDirection
-                    .rtl,
+              padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 60.w),
+              child: Directionality(
+                textDirection: ui.TextDirection.rtl,
                 child: Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment
-                      .spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AutoSizeText(
-                        'رسم دخول مدنى :             ',
-                        textAlign:
-                        TextAlign
-                            .end,
+                    Text('رسم دخول مدنى :             ',
+                        textAlign: TextAlign.end,
                         style: TextStyle(
-                            fontSize: setResponsiveFontSize(
-                                30),
-                            fontWeight:
-                            FontWeight.bold)),
-                    AutoSizeText(
+                            fontSize: setResponsiveFontSize(30),
+                            fontWeight: FontWeight.bold)),
+                    Text(
                       '${Provider.of<VisitorProv>(context, listen: true).citizenPrice}',
-                      textAlign:
-                      TextAlign
-                          .start,
+                      textAlign: TextAlign.start,
                       style: TextStyle(
-                          fontSize:
-                          setResponsiveFontSize(
-                              30),
-                          color: Colors
-                              .green),
+                          fontSize: setResponsiveFontSize(30),
+                          color: Colors.green),
                     ),
                   ],
                 ),
@@ -154,58 +101,34 @@ class BillDialog extends StatelessWidget {
               height: 20.h,
             ),
             Padding(
-              padding: EdgeInsets
-                  .symmetric(
-                  horizontal:
-                  60.w),
+              padding: EdgeInsets.symmetric(horizontal: 60.w),
               child: Divider(
                 thickness: 1,
                 height: 2.h,
-                color:
-                Colors.green,
+                color: Colors.green,
               ),
             ),
             SizedBox(
               height: 20.h,
             ),
             Padding(
-              padding: EdgeInsets
-                  .symmetric(
-                  vertical:
-                  20.h,
-                  horizontal:
-                  60.w),
-              child:
-              Directionality(
-                textDirection: ui
-                    .TextDirection
-                    .rtl,
+              padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 60.w),
+              child: Directionality(
+                textDirection: ui.TextDirection.rtl,
                 child: Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment
-                      .spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AutoSizeText(
-                        'رسم دخول عسكرى :             ',
-                        textAlign:
-                        TextAlign
-                            .end,
+                    Text('رسم دخول عسكرى :             ',
+                        textAlign: TextAlign.end,
                         style: TextStyle(
-                            fontSize: setResponsiveFontSize(
-                                30),
-                            fontWeight:
-                            FontWeight.bold)),
-                    AutoSizeText(
+                            fontSize: setResponsiveFontSize(30),
+                            fontWeight: FontWeight.bold)),
+                    Text(
                       '${Provider.of<VisitorProv>(context, listen: true).militaryPrice}',
-                      textAlign:
-                      TextAlign
-                          .start,
+                      textAlign: TextAlign.start,
                       style: TextStyle(
-                          fontSize:
-                          setResponsiveFontSize(
-                              30),
-                          color: Colors
-                              .green),
+                          fontSize: setResponsiveFontSize(30),
+                          color: Colors.green),
                     ),
                   ],
                 ),
@@ -215,54 +138,33 @@ class BillDialog extends StatelessWidget {
               height: 20.h,
             ),
             Padding(
-              padding: EdgeInsets
-                  .symmetric(
-                  horizontal:
-                  60.w),
+              padding: EdgeInsets.symmetric(horizontal: 60.w),
               child: Divider(
                 thickness: 1,
                 height: 2.h,
-                color:
-                Colors.green,
+                color: Colors.green,
               ),
             ),
             SizedBox(
               height: 20.h,
             ),
             Padding(
-              padding: EdgeInsets
-                  .symmetric(
-                  vertical:
-                  20.h,
-                  horizontal:
-                  60.w),
-              child:
-              Directionality(
-                textDirection: ui
-                    .TextDirection
-                    .rtl,
+              padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 60.w),
+              child: Directionality(
+                textDirection: ui.TextDirection.rtl,
                 child: Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment
-                      .spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AutoSizeText(
-                        'إجمالى :             ',
+                    Text('إجمالى :             ',
                         style: TextStyle(
-                            fontSize: setResponsiveFontSize(
-                                36),
-                            fontWeight:
-                            FontWeight.bold)),
-                    AutoSizeText(
+                            fontSize: setResponsiveFontSize(36),
+                            fontWeight: FontWeight.bold)),
+                    Text(
                       '${Provider.of<VisitorProv>(context, listen: true).totalPrice}',
                       style: TextStyle(
-                          fontSize:
-                          setResponsiveFontSize(
-                              36),
-                          color: Colors
-                              .red,
-                          fontWeight:
-                          FontWeight.bold),
+                          fontSize: setResponsiveFontSize(36),
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -272,66 +174,47 @@ class BillDialog extends StatelessWidget {
               height: 16.h,
             ),
             Directionality(
-              textDirection: ui
-                  .TextDirection
-                  .rtl,
+              textDirection: ui.TextDirection.rtl,
               child: Padding(
-                padding: EdgeInsets
-                    .symmetric(
-                    horizontal:
-                    60.w),
+                padding: EdgeInsets.symmetric(horizontal: 60.w),
                 child: Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment
-                      .spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RoundedButton(
                       ontap: () {
-
-                        Navigator.pop(
-                            context);
+                        Navigator.pop(context);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => PrintScreen2(
-                                  civilCount: citizenValue,
-                                  militaryCount: militaryValue ,from: 'send',
-                                  typeId: typeValue,
-                                )));
+                                      civilCount: citizenValue,
+                                      militaryCount: militaryValue,
+                                      from: 'send',
+                                      typeId: typeValue,
+                                    )));
                       },
-                      title:
-                      'إستمرار',
+                      title: 'إستمرار',
                       height: 60,
                       width: 220,
-                      buttonColor:
-                      ColorManager
-                          .primary,
-                      titleColor:
-                      ColorManager
-                          .backGroundColor,
+                      buttonColor: ColorManager.primary,
+                      titleColor: ColorManager.backGroundColor,
                     ),
                     SizedBox(
                       width: 16.w,
                     ),
                     RoundedButton(
                       ontap: () {
-                        Navigator.pop(
-                            context);
+                        Navigator.pop(context);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => EntryScreen()));
                       },
-                      title:
-                      'إلغاء',
+                      title: 'إلغاء',
                       width: 220,
                       height: 60,
-                      buttonColor:
-                      Colors
-                          .red,
-                      titleColor:
-                      ColorManager
-                          .backGroundColor,
+                      buttonColor: Colors.red,
+                      titleColor: ColorManager.backGroundColor,
                     )
                   ],
                 ),

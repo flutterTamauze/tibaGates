@@ -217,7 +217,7 @@ class _PricesScreenState extends State<PricesScreen> {
                                                   Directionality(
                                                     textDirection:
                                                         ui.TextDirection.rtl,
-                                                    child: AutoSizeText(
+                                                    child: Text(
                                                       'هل انت متأكد من حذف ${e.type} ؟ ',
                                                       textAlign:
                                                           TextAlign.center,
@@ -339,7 +339,7 @@ class _PricesScreenState extends State<PricesScreen> {
                 SizedBox(
                   height: 25.h,
                 ),
-                AutoSizeText(
+                Text(
                   'ادخل القيم الجديدة',
                   style: TextStyle(
                       color: ColorManager.primary,
@@ -517,7 +517,7 @@ class _PricesScreenState extends State<PricesScreen> {
                       SizedBox(
                         height: 40.h,
                       ),
-                      AutoSizeText(
+                      Text(
                         'قائمة الأسعار الحالية',
                         style: TextStyle(
                             color: Colors.white,

@@ -1,7 +1,13 @@
 import 'dart:developer';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:clean_app/Utilities/connectivityStatus.dart';
+import '../../Utilities/Shared/qr.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import '../../Utilities/Colors/colorManager.dart';
+import '../../Utilities/Constants/constants.dart';
+import '../../Utilities/Shared/sharedWidgets.dart';
+import '../../Utilities/connectivityStatus.dart';
 import 'package:lottie/lottie.dart';
 import 'entry_screen/entryScreen.dart';
 import 'home_screen/g_home_screen.dart';
@@ -88,44 +94,45 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   msg: 'مرحباً بك',
                   backgroundColor: Colors.green,
                   toastLength: Toast.LENGTH_LONG);
-
+              controller.dispose();
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PrintScreen2(  from: 'send',resendType: 'VIP Invitation',)));
-            }
-
-
-
-
-            else if (value == 'Success') {
+                      builder: (context) => PrintScreen2(
+                            from: 'send',
+                            resendType: 'VIP Invitation',
+                          )));
+            } else if (value == 'Success') {
               Fluttertoast.showToast(
                   msg: 'كود صحيح , مرحباً بك',
                   backgroundColor: Colors.green,
                   toastLength: Toast.LENGTH_LONG);
-
+              controller.dispose();
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => HomeScreen(screen: 'invitation',)));
+                      builder: (context) => HomeScreen(
+                            screen: 'invitation',
+                          )));
             } else {
               print('value is $value');
               Fluttertoast.showToast(
                   msg: 'كود غير صحيح',
                   backgroundColor: Colors.green,
                   toastLength: Toast.LENGTH_LONG);
-
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => EntryScreen()));
+              controller.dispose();
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => EntryScreen()));
             }
           });
         } else {
-          Provider.of<VisitorProv>(context, listen: false)
-              .checkOut(result)
-              .then((value) {
-            if (value == 'Success') {
+          /*    var res = await Provider.of<VisitorProv>(context, listen: false)
+              .checkOut(result);
+
+          res.fold((message) {
+            debugPrint('message => $message');
+
+            if (message == 'Success') {
               showDialog(
                   context: context,
                   builder: (context) {
@@ -138,9 +145,240 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                 scanned = false;
               });
             } else {
-              print('value is $value');
+              print('value is $message');
               Fluttertoast.showToast(
                       msg: 'كود غير صحيح',
+                      backgroundColor: Colors.green,
+                      toastLength: Toast.LENGTH_LONG)
+                  .then((value) {
+                Future.delayed(const Duration(seconds: 1)).whenComplete(() {
+                  scanned = false;
+                });
+              });
+            }
+          }, (perHourObj) {
+            print('in time ${perHourObj.inTime}');
+          }); */
+
+          Provider.of<VisitorProv>(context, listen: false)
+              .checkOut(result)
+              .then((value) async {
+            if (value == 'Success') {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const invitationSendDialog(
+                      text: 'تم تسجيل الخروج بنجاح',
+                    );
+                  });
+              Future.delayed(const Duration(seconds: 1)).whenComplete(() {
+                Navigator.pop(context);
+                scanned = false;
+              });
+            } else if (value is! String) {
+              print('in time ${value.inTime}');
+
+              await showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => ZoomIn(
+                        child: Dialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40)),
+                          elevation: 16,
+                          child: SizedBox(
+                            height: 800.h,
+                            width: 900.w,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(3.0),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 2.w, color: Colors.green)),
+                                  child: Qr(
+                                    data: value.qrCode ?? 'abc',
+                                    size: 270.0.w,
+                                    version: QrVersions.auto,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 20.h, horizontal: 60.w),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${value.inTime.toString().substring(0, 10)}   ${value.inTime.toString().substring(11)}',
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            fontSize: setResponsiveFontSize(28),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green),
+                                      ),
+                                      Flexible(
+                                        child: Text('وقت الدخول              ',
+                                            textAlign: TextAlign.end,
+                                            style: TextStyle(
+                                                fontSize:
+                                                    setResponsiveFontSize(30),
+                                                fontWeight: FontWeight.bold)),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 60.w),
+                                  child: Divider(
+                                    thickness: 1,
+                                    height: 2.h,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 20.h, horizontal: 60.w),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${value.outTime.toString().substring(0, 10)}   ${value.outTime.toString().substring(11)}',
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            fontSize: setResponsiveFontSize(28),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green),
+                                      ),
+                                      Flexible(
+                                        child: Text('وقت الخروج              ',
+                                            textAlign: TextAlign.end,
+                                            style: TextStyle(
+                                                fontSize:
+                                                    setResponsiveFontSize(30),
+                                                fontWeight: FontWeight.bold)),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 60.w),
+                                  child: Divider(
+                                    thickness: 1,
+                                    height: 2.h,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 20.h, horizontal: 60.w),
+                                  child: Directionality(
+                                    textDirection: ui.TextDirection.rtl,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('الإجمالى :             ',
+                                            textAlign: TextAlign.end,
+                                            style: TextStyle(
+                                                fontSize:
+                                                    setResponsiveFontSize(30),
+                                                fontWeight: FontWeight.bold)),
+                                        Text(
+                                          '${value.total}',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  setResponsiveFontSize(30),
+                                              color: Colors.green),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 16.h,
+                                ),
+                                Directionality(
+                                  textDirection: ui.TextDirection.rtl,
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 60.w),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        RoundedButton(
+                                          ontap: () {
+                                            controller.dispose();
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PrintScreen2(
+                                                          perHourObj: value,
+                                                          from: 'send',
+                                                          logId: value.id,
+                                                        )));
+                                          },
+                                          title: 'إستمرار',
+                                          height: 60,
+                                          width: 220,
+                                          buttonColor: ColorManager.primary,
+                                          titleColor:
+                                              ColorManager.backGroundColor,
+                                        ),
+                                        SizedBox(
+                                          width: 16.w,
+                                        ),
+                                        RoundedButton(
+                                          ontap: () {
+                                            Navigator.pop(context);
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        EntryScreen()));
+                                          },
+                                          title: 'إلغاء',
+                                          width: 220,
+                                          height: 60,
+                                          buttonColor: Colors.red,
+                                          titleColor:
+                                              ColorManager.backGroundColor,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ));
+            } else {
+              print('value is $value');
+              Fluttertoast.showToast(
+                      msg: value,
                       backgroundColor: Colors.green,
                       toastLength: Toast.LENGTH_LONG)
                   .then((value) {
@@ -160,9 +398,11 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
-
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: () {
         print(result?.code);
@@ -172,8 +412,10 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
           backgroundColor: Colors.green,
           title: InkWell(
               onTap: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (BuildContext context) => EntryScreen()));
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => EntryScreen()));
               },
               child: const Icon(
                 Icons.arrow_back,
@@ -182,23 +424,25 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
         ),
         body: connectionStatus == ConnectivityStatus.Offline
             ? Center(
-            child: SizedBox(
-              height: 400.h,
-              width: 400.w,
-              child: Lottie.asset('assets/lotties/noInternet.json'),
-            ))
+                child: SizedBox(
+                height: 400.h,
+                width: 400.w,
+                child: Lottie.asset('assets/lotties/noInternet.json'),
+              ))
             : WillPopScope(
-          onWillPop: () {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (BuildContext context) => EntryScreen()));
-            throw '';
-          },
-          child: Column(
-            children: <Widget>[
-              Expanded(child: _buildQrView(context)),
-            ],
-          ),
-        ),
+                onWillPop: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => EntryScreen()));
+                  throw '';
+                },
+                child: Column(
+                  children: <Widget>[
+                    Expanded(child: _buildQrView(context)),
+                  ],
+                ),
+              ),
       ),
     );
   }

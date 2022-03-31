@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Data/Models/admin/a_homeBio_model.dart';
 import 'a_reports_screen.dart';
 import 'admin_bottomNav.dart';
@@ -32,6 +34,22 @@ class ABioHomeState extends State {
   List<HomeBioModel> parksTypes;
   String token;
   String role;
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(const Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    setState(() {
+      setState(() {
+        listener =
+            Provider.of<AdminHomeProv>(context, listen: false).getBioData();
+      });
+    });
+    _refreshController.refreshCompleted();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -96,322 +114,340 @@ class ABioHomeState extends State {
                         fit: BoxFit.fill),
                   ),
                   height: height,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 60.h,
-                      ),
-                      ZoomIn(
-                        child: SizedBox(
-                          height: (height * 0.17),
-                          width: (width * 0.28),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                  color: ColorManager.primary, width: 2.w),
-                              image: const DecorationImage(
-                                  image: AssetImage(
-                                      'assets/images/tipasplash.png')),
-                              shape: BoxShape.circle,
+                  child: SmartRefresher(
+                    onRefresh: _onRefresh,
+                    controller: _refreshController,
+                    enablePullDown: true,
+                    header: const WaterDropMaterialHeader(
+                      color: Colors.white,
+                      backgroundColor: Colors.green,
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 60.h,
+                        ),
+                        ZoomIn(
+                          child: SizedBox(
+                            height: (height * 0.17),
+                            width: (width * 0.28),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: ColorManager.primary, width: 2.w),
+                                image: const DecorationImage(
+                                    image: AssetImage(
+                                        'assets/images/tipasplash.png')),
+                                shape: BoxShape.circle,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-/*                      Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 100.w, top: 100.h),
-                        child: SizedBox(
-                          height: 100.h,
-                          width: 200.w,
-                          child: PieChart(
-                            PieChartData(
-                                borderData: FlBorderData(
-                                  show: false,
-                                ),
-                                sectionsSpace: 0,
-                                centerSpaceRadius: 60,
-                                sections: showingSections(context)),
+                        /*                      Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 100.w, top: 100.h),
+                          child: SizedBox(
+                            height: 100.h,
+                            width: 200.w,
+                            child: PieChart(
+                              PieChartData(
+                                  borderData: FlBorderData(
+                                    show: false,
+                                  ),
+                                  sectionsSpace: 0,
+                                  centerSpaceRadius: 60,
+                                  sections: showingSections(context)),
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 100.w, top: 100.h),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  height: 30.h,
-                                  width: 30.w,
-                                  color: Colors.green,
-                                ),
-                                SizedBox(
-                                  width: 25.w,
-                                ),
-                                SizedBox(
-                                  width: 100.w,
-                                  child: Text(
-                                    'ق.م',
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                        fontSize: setResponsiveFontSize(20),
-                                        fontWeight: FontManager.bold),
+                        Padding(
+                          padding: EdgeInsets.only(right: 100.w, top: 100.h),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 30.h,
+                                    width: 30.w,
+                                    color: Colors.green,
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 25.h,
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  height: 30.h,
-                                  width: 30.w,
-                                  color: Colors.orange,
-                                ),
-                                SizedBox(
-                                  width: 25.w,
-                                ),
-                                SizedBox(
-                                  width: 100.w,
-                                  child: Text(
-                                    'عضو دار',
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                        fontSize: setResponsiveFontSize(20),
-                                        fontWeight: FontManager.bold),
+                                  SizedBox(
+                                    width: 25.w,
                                   ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 25.h,
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  height: 30.h,
-                                  width: 30.w,
-                                  color: Colors.red[600],
-                                ),
-                                SizedBox(
-                                  width: 25.w,
-                                ),
-                                SizedBox(
-                                  width: 100.w,
-                                  child: Text(
-                                    'مدنى',
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                        fontSize: setResponsiveFontSize(20),
-                                        fontWeight: FontManager.bold),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 25.h,
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  height: 30.h,
-                                  width: 30.w,
-                                  color: Colors.purple[600],
-                                ),
-                                SizedBox(
-                                  width: 25.w,
-                                ),
-                                SizedBox(
-                                  width: 100.w,
-                                  child: Text(
-                                    'أنشطة',
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                        fontSize: setResponsiveFontSize(20),
-                                        fontWeight: FontManager.bold),
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  )*/
-                      SizedBox(
-                        height: 40.h,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12.w),
-                        child: SizedBox(
-                          height: 520.h,
-                          child: GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    childAspectRatio: MediaQuery.of(context)
-                                            .size
-                                            .width /
-                                        (MediaQuery.of(context).size.height /
-                                            2.5),
-                                    crossAxisSpacing:
-                                        Platform.isIOS ? 5.w : 8.w,
-                                    mainAxisSpacing:
-                                        Platform.isIOS ? 7.w : 10.w,
-                                    crossAxisCount: 3),
-                            itemBuilder: (context, index) {
-                              return ClipRRect(
-                                borderRadius: BorderRadius.circular(25),
-                                child: Card(
-                                  elevation: 6,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 16, right: 16, top: 12),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Icon(
-                                              Icons.directions_car_sharp,
-                                              size: 28,
-                                            ),
-                                            SizedBox(
-                                              width: 6.w,
-                                            ),
-                                            Text(parksTypes[index].type,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.green,
-                                                    fontSize:
-                                                        setResponsiveFontSize(
-                                                            22))),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 20.h,
-                                      ),
-                                      Text(parksTypes[index].count.toString(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.red,
-                                              fontSize:
-                                                  setResponsiveFontSize(30))),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                            itemCount: parksTypes.length,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30.h,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Card(
-                          elevation: 6,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      'إجمالى عدد السيارات',
+                                  SizedBox(
+                                    width: 100.w,
+                                    child: Text(
+                                      'ق.م',
+                                      textAlign: TextAlign.end,
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: setResponsiveFontSize(22)),
+                                          fontSize: setResponsiveFontSize(20),
+                                          fontWeight: FontManager.bold),
                                     ),
-                                    SizedBox(
-                                      height: 12.h,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 25.h,
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 30.h,
+                                    width: 30.w,
+                                    color: Colors.orange,
+                                  ),
+                                  SizedBox(
+                                    width: 25.w,
+                                  ),
+                                  SizedBox(
+                                    width: 100.w,
+                                    child: Text(
+                                      'عضو دار',
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                          fontSize: setResponsiveFontSize(20),
+                                          fontWeight: FontManager.bold),
                                     ),
-                                    Text(
-                                        Provider.of<AdminHomeProv>(context,
-                                                listen: false)
-                                            .carsCount
-                                            .toString(),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: setResponsiveFontSize(26),
-                                            color: Colors.red)),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    Text('إجمالى الفواتير',
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 25.h,
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 30.h,
+                                    width: 30.w,
+                                    color: Colors.red[600],
+                                  ),
+                                  SizedBox(
+                                    width: 25.w,
+                                  ),
+                                  SizedBox(
+                                    width: 100.w,
+                                    child: Text(
+                                      'مدنى',
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                          fontSize: setResponsiveFontSize(20),
+                                          fontWeight: FontManager.bold),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 25.h,
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 30.h,
+                                    width: 30.w,
+                                    color: Colors.purple[600],
+                                  ),
+                                  SizedBox(
+                                    width: 25.w,
+                                  ),
+                                  SizedBox(
+                                    width: 100.w,
+                                    child: Text(
+                                      'أنشطة',
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                          fontSize: setResponsiveFontSize(20),
+                                          fontWeight: FontManager.bold),
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    )*/
+                        SizedBox(
+                          height: 40.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          child: SizedBox(
+                            height: 520.h,
+                            child: GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      childAspectRatio:
+                                          MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              (MediaQuery
+                                                          .of(context)
+                                                      .size
+                                                      .height /
+                                                  2.5),
+                                      crossAxisSpacing:
+                                          Platform.isIOS ? 5.w : 8.w,
+                                      mainAxisSpacing:
+                                          Platform.isIOS ? 7.w : 10.w,
+                                      crossAxisCount: 3),
+                              itemBuilder: (context, index) {
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(25),
+                                  child: Card(
+                                    elevation: 6,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 16, right: 16, top: 12),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Icon(
+                                                Icons.directions_car_sharp,
+                                                size: 28,
+                                              ),
+                                              SizedBox(
+                                                width: 6.w,
+                                              ),
+                                              Text(parksTypes[index].type,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.green,
+                                                      fontSize:
+                                                          setResponsiveFontSize(
+                                                              22))),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                        Text(parksTypes[index].count.toString(),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.red,
+                                                fontSize:
+                                                    setResponsiveFontSize(30))),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemCount: parksTypes.length,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Card(
+                            elevation: 6,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        'إجمالى عدد السيارات',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize:
-                                                setResponsiveFontSize(22))),
-                                    SizedBox(
-                                      height: 12.h,
-                                    ),
-                                    Text(
-                                        Provider.of<AdminHomeProv>(context,
-                                                listen: false)
-                                            .totalBalance
-                                            .toString(),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: setResponsiveFontSize(26),
-                                            color: Colors.red)),
-                                  ],
-                                ),
-                              ],
+                                                setResponsiveFontSize(22)),
+                                      ),
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      Text(
+                                          Provider.of<AdminHomeProv>(context,
+                                                  listen: false)
+                                              .carsCount
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize:
+                                                  setResponsiveFontSize(26),
+                                              color: Colors.red)),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text('إجمالى الفواتير',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize:
+                                                  setResponsiveFontSize(22))),
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      Text(
+                                          Provider.of<AdminHomeProv>(context,
+                                                  listen: false)
+                                              .totalBalance
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize:
+                                                  setResponsiveFontSize(26),
+                                              color: Colors.red)),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 60.h,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          navigateTo(
-                              context,
-                              BottomNav(
-                                comingIndex: 2,
-                              ));
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 210.w),
-                          child: Row(
-                            children: [
-                              RotatedBox(
-                                  quarterTurns: 2,
-                                  child: SizedBox(
-                                      height: 80.h,
-                                      //  width: 400.w,
-
-                                      child: Lottie.asset(
-                                          'assets/lotties/arrow.json'))),
-                              Text('الإنتقال إلى التقارير ',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: setResponsiveFontSize(26)))
-                            ],
-                          ),
+                        SizedBox(
+                          height: 60.h,
                         ),
-                      )
-                    ],
+                        InkWell(
+                          onTap: () {
+                            navigateTo(
+                                context,
+                                BottomNav(
+                                  comingIndex: 2,
+                                ));
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 210.w),
+                            child: Row(
+                              children: [
+                                RotatedBox(
+                                    quarterTurns: 2,
+                                    child: SizedBox(
+                                        height: 80.h,
+                                        //  width: 400.w,
+
+                                        child: Lottie.asset(
+                                            'assets/lotties/arrow.json'))),
+                                Text('الإنتقال إلى التقارير ',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: setResponsiveFontSize(26)))
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 );
               }

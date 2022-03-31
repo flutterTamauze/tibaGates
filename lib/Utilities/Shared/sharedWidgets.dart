@@ -9,7 +9,13 @@ class RoundedButton extends StatelessWidget {
   final Function ontap;
   final double width;
   final double height;
-  RoundedButton({this.buttonColor, this.title, this.titleColor, this.ontap, this.width, this.height});
+  RoundedButton(
+      {this.buttonColor,
+      this.title,
+      this.titleColor,
+      this.ontap,
+      this.width,
+      this.height});
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -23,9 +29,10 @@ class RoundedButton extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20), color: buttonColor),
         child: Center(
-          child: AutoSizeText(
+          child: Text(
             title,
-            style: boldStyle.copyWith(color: titleColor,fontSize: setResponsiveFontSize(24)),
+            style: boldStyle.copyWith(
+                color: titleColor, fontSize: setResponsiveFontSize(24)),
           ),
         ),
       ),

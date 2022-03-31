@@ -1,3 +1,5 @@
+import 'package:auto_size_text/auto_size_text.dart';
+
 import '../../../Utilities/connectivityStatus.dart';
 
 import '../../../ViewModel/admin/a_homeBioProv.dart';
@@ -46,6 +48,36 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     final String formatted = formatter.format(now);
     date = formatted;
+  }
+
+  String _selectedDate = '';
+  String _dateCount = '';
+  String _range = '';
+  String _rangeCount = '';
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      if (args.value is PickerDateRange) {
+        _range = '${DateFormat('yyyy-MM-dd').format(args.value.startDate)} -'
+            ' ${DateFormat('yyyy-MM-dd').format(args.value.endDate ?? args.value.startDate)}';
+
+        fromDate = DateFormat('yyyy-MM-dd')
+            .format(args.value.startDate)
+            .toString()
+            .replaceAll('/', '-');
+        toDate = DateFormat('yyyy-MM-dd')
+            .format(args.value.endDate ?? args.value.startDate)
+            .toString()
+            .replaceAll('/', '-');
+      } else if (args.value is DateTime) {
+        _selectedDate = args.value.toString();
+      } else if (args.value is List<DateTime>) {
+        _dateCount = args.value.length.toString();
+      } else {
+        _rangeCount = args.value.length.toString();
+      }
+    });
+    print('selected range $_range');
   }
 
   @override
@@ -440,6 +472,14 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                       color: Colors.green,
                                       fontWeight: FontWeight.bold),
                                 ),
+                                Text(
+                                  '- ${Provider.of<AReportsProv>(context, listen: true).summaryModel.carsCount}   ',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: setResponsiveFontSize(30),
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.bold),
+                                ),
                                 if ((Provider.of<AReportsProv>(context,
                                                     listen: true)
                                                 .summaryModel
@@ -506,76 +546,72 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                     showDialog(
                                       context: context,
                                       builder: (dialogContext) {
-                                        return Dialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                          ),
-                                          child: SizedBox(
-                                            height: 430.h,
-                                            width: double.infinity,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                SfDateRangePicker(
-                                                  view:
-                                                      DateRangePickerView.month,
-                                                  enablePastDates: true,
-                                                  rangeSelectionColor:
-                                                      Colors.green,
-                                                  todayHighlightColor:
-                                                      Colors.green,
-                                                  selectionMode:
-                                                      DateRangePickerSelectionMode
-                                                          .range,
-                                                  // onSelectionChanged: _onSelectionChanged,
-                                                  showActionButtons: true,
-                                                  controller:
-                                                      dateRangePickerController,
-                                                  onCancel: () {
-                                                    dateRangePickerController
-                                                        .selectedDates = null;
-                                                    Navigator.pop(context);
-                                                  },
-                                                  onSubmit: (Object val) {
-                                                    debugPrint(
-                                                        ' ${val.toString().length}');
-                                                    if (val != null &&
-                                                        val.toString().length >
-                                                            72) {
-                                                      setState(() {
-                                                        fromDate = val
-                                                            .toString()
-                                                            .substring(32, 43);
-                                                        toDate = val
-                                                            .toString()
-                                                            .substring(67, 78);
-                                                        loadReport = false;
-                                                      });
-
-                                                      debugPrint(val
-                                                          .toString()
-                                                          .substring(67, 78));
-                                                      print(
-                                                          'from is $fromDate');
-                                                      print('to is $toDate');
-                                                      Navigator.pop(context);
-                                                    } else {
-                                                      Fluttertoast.showToast(
-                                                          msg:
-                                                              'اختر الفترة اولا',
-                                                          backgroundColor:
-                                                              Colors.green,
-                                                          toastLength: Toast
-                                                              .LENGTH_LONG);
-                                                    }
-                                                  },
-                                                ),
-                                              ],
+                                        return StatefulBuilder(
+                                            builder: (context, stState) {
+                                          return Dialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
                                             ),
-                                          ),
-                                        );
+                                            child: SizedBox(
+                                              height: 430.h,
+                                              width: double.infinity,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  SfDateRangePicker(
+                                                    view: DateRangePickerView
+                                                        .month,
+                                                    enablePastDates: true,
+                                                    rangeSelectionColor:
+                                                        Colors.green,
+                                                    todayHighlightColor:
+                                                        Colors.green,
+                                                    selectionMode:
+                                                        DateRangePickerSelectionMode
+                                                            .range,
+                                                    onSelectionChanged:
+                                                        _onSelectionChanged,
+                                                    showActionButtons: true,
+                                                    controller:
+                                                        dateRangePickerController,
+                                                    onCancel: () {
+                                                      dateRangePickerController
+                                                          .selectedDates = null;
+                                                      Navigator.pop(context);
+                                                    },
+                                                    onSubmit: (Object val) {
+                                                      print(
+                                                          'start date $fromDate    end date $toDate');
+                                                      if ((fromDate
+                                                                  .toString()
+                                                                  .length ==
+                                                              10) &&
+                                                          (toDate
+                                                                  .toString()
+                                                                  .length ==
+                                                              10)) {
+                                                        setState(() {
+                                                          loadReport = false;
+                                                        });
+                                                        Navigator.pop(context);
+                                                      } else {
+                                                        Fluttertoast.showToast(
+                                                            msg:
+                                                                'اختر الفترة اولا',
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                            toastLength: Toast
+                                                                .LENGTH_LONG);
+                                                      }
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        });
                                       },
                                     );
                                   },
@@ -626,6 +662,16 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                 ),
                                 width: 350.w,
                               ),
+                              /*     SfDateRangePicker(
+                                onSelectionChanged: _onSelectionChanged,
+                                selectionMode:
+                                    DateRangePickerSelectionMode.range,
+                                initialSelectedRange: PickerDateRange(
+                                    DateTime.now()
+                                        .subtract(const Duration(days: 4)),
+                                    DateTime.now()
+                                        .add(const Duration(days: 3))),
+                              ), */
                               Provider.of<AdminHomeProv>(context, listen: true)
                                       .parkTypes
                                       .isNotEmpty
@@ -669,7 +715,7 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                               loadReport = false;
                                               selectedType = value;
 
-                                              print(
+                                              debugPrint(
                                                   'selected invitation type is $selectedType');
                                             });
                                           },
@@ -705,85 +751,90 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                       SizedBox(
                         height: 40.h,
                       ),
-                      OutlinedButton(
-                        onPressed: () {
-                          if (fromDate == null || toDate == null) {
-                            Fluttertoast.showToast(
-                                msg: 'اختر الفترة اولا',
-                                backgroundColor: Colors.green,
-                                toastLength: Toast.LENGTH_LONG);
-                            return;
-                          }
+                      loadReport == false
+                          ? OutlinedButton(
+                              onPressed: () {
+                                if (fromDate == null || toDate == null) {
+                                  Fluttertoast.showToast(
+                                      msg: 'اختر الفترة اولا',
+                                      backgroundColor: Colors.green,
+                                      toastLength: Toast.LENGTH_LONG);
+                                  return;
+                                }
 
-                          showLoaderDialog(context, 'جارى تحميل التقرير');
+                                showLoaderDialog(context, 'جارى تحميل التقرير');
 
-                          print(
-                              'selectedType   ${selectedType ?? Provider.of<AdminHomeProv>(context, listen: false).parkTypes[0]}    from  $fromDate     to $toDate');
+                                debugPrint(
+                                    'selectedType   ${selectedType ?? Provider.of<AdminHomeProv>(context, listen: false).parkTypes[0]}    from  $fromDate     to $toDate');
 
-                          Provider.of<AReportsProv>(context, listen: false)
-                              .getDailyReport(fromDate, toDate, selectedType)
-                              .then((value) {
-                            if (value == 'Success') {
-                              if (Provider.of<AReportsProv>(context,
-                                      listen: false)
-                                  .reportsList
-                                  .isNotEmpty) {
-                                setState(() {
-                                  loadReport = true;
+                                Provider.of<AReportsProv>(context,
+                                        listen: false)
+                                    .getDailyReport(
+                                        fromDate, toDate, selectedType)
+                                    .then((value) {
+                                  if (value == 'Success') {
+                                    if (Provider.of<AReportsProv>(context,
+                                            listen: false)
+                                        .reportsList
+                                        .isNotEmpty) {
+                                      setState(() {
+                                        loadReport = true;
+                                      });
+                                      Navigator.pop(context);
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg: 'لا توجد تقارير فى هذا اليوم',
+                                          backgroundColor: Colors.green,
+                                          toastLength: Toast.LENGTH_LONG);
+                                      Navigator.pop(context);
+                                      setState(() {
+                                        loadReport = false;
+                                      });
+                                    }
+                                  }
                                 });
-                                Navigator.pop(context);
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: 'لا توجد تقارير فى هذا اليوم',
-                                    backgroundColor: Colors.green,
-                                    toastLength: Toast.LENGTH_LONG);
-                                Navigator.pop(context);
-                                setState(() {
-                                  loadReport = false;
-                                });
-                              }
-                            }
-                          });
-                        },
-                        child: SizedBox(
-                          height: 45.h,
-                          width: 200.w,
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.description_outlined,
-                                color: Colors.black,
-                                size: 30,
+                              },
+                              child: SizedBox(
+                                height: 45.h,
+                                width: 200.w,
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.description_outlined,
+                                      color: Colors.black,
+                                      size: 30,
+                                    ),
+                                    const VerticalDivider(
+                                      thickness: 3,
+                                      color: Colors.green,
+                                      endIndent: 2,
+                                      indent: 4,
+                                    ),
+                                    Text(
+                                      'عرض التقرير',
+                                      style: TextStyle(
+                                          fontSize: setResponsiveFontSize(24),
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              const VerticalDivider(
-                                thickness: 3,
-                                color: Colors.green,
-                                endIndent: 2,
-                                indent: 4,
-                              ),
-                              Text(
-                                'عرض التقرير',
-                                style: TextStyle(
-                                    fontSize: setResponsiveFontSize(24),
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                        style: ButtonStyle(
-                            side: MaterialStateProperty.all(
-                                BorderSide(color: Colors.green, width: 3.w)),
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
-                            padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(
-                                    vertical: 20.h, horizontal: 20.w)),
-                            shape: MaterialStateProperty.all(
-                                const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(15))))),
-                      ),
+                              style: ButtonStyle(
+                                  side: MaterialStateProperty.all(BorderSide(
+                                      color: Colors.green, width: 3.w)),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.white),
+                                  padding: MaterialStateProperty.all(
+                                      EdgeInsets.symmetric(
+                                          vertical: 20.h, horizontal: 20.w)),
+                                  shape: MaterialStateProperty.all(
+                                      const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15))))),
+                            )
+                          : Container(),
                       loadReport == true ? const Spacer() : Container(),
 /*                loadReport == true
                     ? const Align(

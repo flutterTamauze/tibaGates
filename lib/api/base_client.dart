@@ -19,7 +19,7 @@ class BaseClient {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${prefs.getString('token')}'
       }).timeout(const Duration(seconds: TIME_OUT_DURATION));
-      print('status code is ${response.statusCode}');
+      log('status code is ${response.statusCode}');
       return _processResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection', uri.toString());
@@ -30,7 +30,7 @@ class BaseClient {
   }
 
   // POST
-  Future<dynamic> post(String baseUrl, String api, [dynamic payloadObj]) async {
+  Future<dynamic> post(String baseUrl, String api, [payloadObj]) async {
     var uri = Uri.parse(baseUrl + api);
     try {
       var response =
@@ -47,10 +47,10 @@ class BaseClient {
     }
   }
 
-
   // PUT
-  Future<dynamic> put(String baseUrl, String api, dynamic payloadObj) async {
+  Future<dynamic> put(String baseUrl, String api, [payloadObj]) async {
     var uri = Uri.parse(baseUrl + api);
+
     debugPrint('payload obj $payloadObj');
     try {
       var response =

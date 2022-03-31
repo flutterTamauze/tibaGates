@@ -28,7 +28,7 @@ class ConfirmPrinted extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AutoSizeText(
+            Text(
               'تمت الطباعة ؟',
               style: TextStyle(
                   fontSize: setResponsiveFontSize(30),

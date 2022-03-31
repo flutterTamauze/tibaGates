@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:animate_do/animate_do.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import '../../main.dart';
 import '../manager/m_add_invitation.dart';
 import '../../Utilities/connectivityStatus.dart';

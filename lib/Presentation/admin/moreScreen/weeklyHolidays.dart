@@ -205,7 +205,7 @@ class _WeeklyHolidaysScreenState extends State<WeeklyHolidaysScreen> {
                     SizedBox(
                       height: 40.h,
                     ),
-                    AutoSizeText(
+                    Text(
                       'قائمة الأجازات الحالية',
                       style: TextStyle(
                           color: Colors.white,
