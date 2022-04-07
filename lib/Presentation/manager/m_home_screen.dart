@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import '../../Utilities/responsive.dart';
 import '../../Utilities/connectivityStatus.dart';
 import 'package:lottie/lottie.dart';
 import '../../Data/Models/manager/invitation_model.dart';
@@ -268,13 +269,13 @@ class _MHomeScreenState extends State<MHomeScreen> {
                                           Radius.circular(8.0))),
                                 ),
                               ),
-                              width: 80.w,
+                              width: isTab(context) ? 80.w : 100.w,
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(12.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: SizedBox(
                                 height: 60.h,
-                                width: 210.w,
+                                width: isTab(context) ? 210.w : 215.w,
                                 child: TextField(
                                   onChanged: (value) {
                                     /*        setState(() {
@@ -300,17 +301,20 @@ class _MHomeScreenState extends State<MHomeScreen> {
                                           color: Colors.green,
                                         ),
                                       ),
-                                      hintStyle: const TextStyle(
+                                      hintStyle: TextStyle(
                                           color: Colors.black,
-                                          fontFamily: 'Almarai')),
+                                          fontFamily: 'Almarai',
+                                          fontSize: isTab(context)
+                                              ? setResponsiveFontSize(24)
+                                              : setResponsiveFontSize(22))),
                                 ),
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(12.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: SizedBox(
                                 height: 60.h,
-                                width: 210.w,
+                                width: isTab(context) ? 210.w : 215.w,
                                 child: TextField(
                                   onChanged: (value) {
                                     setState(() {
@@ -336,65 +340,71 @@ class _MHomeScreenState extends State<MHomeScreen> {
                                           color: Colors.green,
                                         ),
                                       ),
-                                      hintStyle: const TextStyle(
+                                      hintStyle: TextStyle(
                                           color: Colors.black,
-                                          fontFamily: 'Almarai')),
+                                          fontFamily: 'Almarai',
+                                          fontSize: isTab(context)
+                                              ? setResponsiveFontSize(24)
+                                              : setResponsiveFontSize(22))),
                                 ),
                               ),
                             ),
                             Provider.of<ManagerProv>(context, listen: true)
                                     .invitationTypes
                                     .isNotEmpty
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                            color: Colors.green, width: 1.w)),
-                                    width: 180.w,
-                                    height: 70.h,
-                                    child: DropdownButtonHideUnderline(
-                                        child: ButtonTheme(
-                                      alignedDropdown: true,
-                                      child: DropdownButton(
-                                        elevation: 2,
-                                        isExpanded: true,
-                                        items: managerProv.invitationTypes
-                                            .map((String x) {
-                                          return DropdownMenuItem<String>(
-                                              value: x,
-                                              child: Center(
-                                                child: Text(
-                                                  x,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          setResponsiveFontSize(
-                                                              20),
-                                                      color: Colors.green,
-                                                      fontFamily: 'Almarai'),
-                                                ),
-                                              ));
-                                        }).toList(),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            //filterInvitations(value);
-                                            invitationTypeId = managerProv
-                                                .invitationObjects[managerProv
-                                                    .invitationTypes
-                                                    .indexOf(value)]
-                                                .id;
-                                            selectedInvitationType = value;
+                                ? Flexible(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: Colors.green, width: 1.w)),
+                                      width: isTab(context) ? 180.w : 250.w,
+                                      height: 70.h,
+                                      child: DropdownButtonHideUnderline(
+                                          child: ButtonTheme(
+                                        alignedDropdown: true,
+                                        child: DropdownButton(
+                                          elevation: 2,
+                                          isExpanded: true,
+                                          items: managerProv.invitationTypes
+                                              .map((String x) {
+                                            return DropdownMenuItem<String>(
+                                                value: x,
+                                                child: Center(
+                                                  child: Text(
+                                                    x,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            setResponsiveFontSize(
+                                                                20),
+                                                        color: Colors.green,
+                                                        fontFamily: 'Almarai'),
+                                                  ),
+                                                ));
+                                          }).toList(),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              // filterInvitations(value);
+                                              invitationTypeId = managerProv
+                                                  .invitationObjects[managerProv
+                                                      .invitationTypes
+                                                      .indexOf(value)]
+                                                  .id;
+                                              selectedInvitationType = value;
 
-                                            print(
-                                                'selected invitation type is $selectedInvitationType');
-                                            print(
-                                                'selected invitation type id is $invitationTypeId');
-                                          });
-                                        },
-                                        value: selectedInvitationType ??
-                                            managerProv.invitationTypes[0],
-                                      ),
-                                    )),
+                                              print(
+                                                  'selected invitation type is $selectedInvitationType');
+                                              print(
+                                                  'selected invitation type id is $invitationTypeId');
+                                            });
+                                          },
+                                          value: selectedInvitationType ??
+                                              managerProv.invitationTypes[0],
+                                        ),
+                                      )),
+                                    ),
                                   )
                                 : Container()
                           ],

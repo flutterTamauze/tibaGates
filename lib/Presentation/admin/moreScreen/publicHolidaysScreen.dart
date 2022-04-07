@@ -1,25 +1,20 @@
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+import '../../../Utilities/responsive.dart';
 import 'package:intl/intl.dart';
 import '../../../Data/Models/admin/publicHolidaysModel.dart';
 import '../../../Utilities/connectivityStatus.dart';
 import '../../../ViewModel/admin/vm/publicHolidaysProv.dart';
 import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import '../../../Data/Models/admin/prices.dart';
 import '../admin_bottomNav.dart';
-import '../../login_screen/Widgets/memberDisplay.dart';
 import '../../../Utilities/Colors/colorManager.dart';
 import '../../../Utilities/Constants/constants.dart';
 import '../../../Utilities/Fonts/fontsManager.dart';
 import '../../../Utilities/Shared/dialogs/loading_dialog.dart';
 import '../../../Utilities/Shared/sharedWidgets.dart';
 import '../../../Utilities/Shared/textField.dart';
-import '../../../ViewModel/admin/reports/admin_reportsProv.dart';
-import '../../../ViewModel/guard/authProv.dart';
-import '../../../ViewModel/admin/more/pricesProv.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,6 +53,10 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
         child: Directionality(
           textDirection: ui.TextDirection.rtl,
           child: DataTable(
+              dataRowHeight: 70.h,
+              dividerThickness: 3.w,
+              showBottomBorder: true,
+              columnSpacing: isTab(context) ? 30.0 : 15,
               columns: <DataColumn>[
                 DataColumn(
                   label: Text(
@@ -443,37 +442,6 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                       SizedBox(
                         height: 30.h,
                       ),
-                      ZoomIn(
-                        child: SizedBox(
-                          height: (height * 0.17),
-                          width: (width * 0.32),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                  color: ColorManager.primary, width: 2.w),
-                              image: const DecorationImage(
-                                  image: AssetImage(
-                                      'assets/images/tipasplash.png')),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 40.h,
-                      ),
-                      Text(
-                        'العطلات الرسمية الحالية',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: setResponsiveFontSize(33)),
-                      ),
-                      SizedBox(
-                        height: 60.h,
-                      ),
                       FutureBuilder(
                           future: publicHolidaysListener,
                           builder: (BuildContext context,
@@ -495,7 +463,87 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                                   Provider.of<PublicHolidaysProv>(context,
                                           listen: true)
                                       .holidaysList;
-                              return Center(child: bodyData());
+                              return Center(
+                                  child: publicHolidaysList.isNotEmpty
+                                      ? Column(
+                                          children: [
+                                            ZoomIn(
+                                              child: SizedBox(
+                                                height: (height * 0.17),
+                                                width: (width * 0.32),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    border: Border.all(
+                                                        color: ColorManager
+                                                            .primary,
+                                                        width: 2.w),
+                                                    image: const DecorationImage(
+                                                        image: AssetImage(
+                                                            'assets/images/tipasplash.png')),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 40.h,
+                                            ),
+                                            Text(
+                                              'العطلات الرسمية الحالية',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize:
+                                                      setResponsiveFontSize(
+                                                          33)),
+                                            ),
+                                            SizedBox(
+                                              height: 60.h,
+                                            ),
+                                            bodyData(),
+                                          ],
+                                        )
+                                      : Column(
+                                          children: [
+                                            ZoomIn(
+                                              child: SizedBox(
+                                                height: (height * 0.17),
+                                                width: (width * 0.32),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    border: Border.all(
+                                                        color: ColorManager
+                                                            .primary,
+                                                        width: 2.w),
+                                                    image: const DecorationImage(
+                                                        image: AssetImage(
+                                                            'assets/images/tipasplash.png')),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 100.h,
+                                            ),
+                                            Lottie.asset(
+                                                'assets/lotties/emptyCalender.json'),
+                                            SizedBox(
+                                              height: 40.h,
+                                            ),
+                                            Text(
+                                              'لا توجد عطلات رسمية ',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                      setResponsiveFontSize(
+                                                          46)),
+                                            ),
+                                          ],
+                                        ));
                             }
                             return Container();
                           }),
@@ -664,7 +712,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(8.0))),
                     ),
                   ),
-                  width: 530.w,
+                  width: isTab(context) ? 530.w : 505.w,
                 ),
                 SizedBox(
                   height: 20.h,

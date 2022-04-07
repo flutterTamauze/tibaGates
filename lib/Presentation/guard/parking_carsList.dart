@@ -213,10 +213,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                       setResponsiveFontSize(28),
                                                   fontWeight: FontManager.bold,
                                                   color: Colors.red,
-                                                  fontFamily:
-                                                      GoogleFonts.getFont(
-                                                              'Redressed')
-                                                          .fontFamily))
+                                                  ))
                                         ],
                                       ),
                                     ),

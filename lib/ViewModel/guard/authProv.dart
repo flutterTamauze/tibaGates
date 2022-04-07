@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthProv with ChangeNotifier , BaseExceptionHandling{
+class AuthProv with ChangeNotifier, BaseExceptionHandling {
   var userId;
 
   String guardName;
@@ -27,7 +27,7 @@ class AuthProv with ChangeNotifier , BaseExceptionHandling{
 
   void changeLoadingState(bool newValue) {
     loadingState = newValue;
-    print('loading becomes $loadingState');
+    debugPrint('loading becomes $loadingState');
     notifyListeners();
   }
 
@@ -41,11 +41,11 @@ class AuthProv with ChangeNotifier , BaseExceptionHandling{
           )
           .catchError(handleError);
 
-      print('response is $response');
+      debugPrint('response is $response');
 
       var decodedRes = jsonDecode(response);
 
-      print('response is $decodedRes');
+      debugPrint('response is $decodedRes');
 
       if (decodedRes['message'] == 'success') {
         data = 'Success';
@@ -56,9 +56,10 @@ class AuthProv with ChangeNotifier , BaseExceptionHandling{
       notifyListeners();
       return data;
     } catch (e) {
-      print('ex is ${e}');
+      debugPrint('ex is $e');
     }
   }
+
 
   Future<dynamic> login(String username, String password, File guardImage,
       String tabAddress) async {
@@ -67,9 +68,6 @@ class AuthProv with ChangeNotifier , BaseExceptionHandling{
     Map<String, String> headers = {'Content-Type': 'application/json'};
     var uri = Uri.parse('$BASE_URL/api/user/LogIn');
 
-
-
-
     var request = http.MultipartRequest('POST', uri);
     request.files.add(
       await http.MultipartFile.fromPath('file', guardImage.path),
@@ -77,19 +75,23 @@ class AuthProv with ChangeNotifier , BaseExceptionHandling{
     request.fields['Password'] = password;
     request.fields['UserName'] = username;
     request.fields['PhoneMac'] = tabAddress;
+    request.fields['PhoneMac'] = tabAddress;
 
     request.headers.addAll(headers);
     try {
       await request.send().then((response) async {
-        print('status code ${response.statusCode}');
+        changeLoadingState(false);
+        debugPrint('status code ${response.statusCode}');
 
-        response.stream.transform(utf8.decoder).listen((value) async {
-          Map<String, dynamic> responseDecoded = json.decode(value);
+         response.stream.transform(utf8.decoder).listen((value) async {
+          Map<String, dynamic> responseDecoded =  json.decode(value);
 
-          print("response is ${responseDecoded['response']}");
-          print('message is ${responseDecoded['message']}');
+          debugPrint("response is ${ responseDecoded['response']}");
+          debugPrint('message is ${ responseDecoded['message']}');
 
           if (responseDecoded['message'] == 'Success') {
+            debugPrint('success case');
+            data = 'Success';
             var userJson = responseDecoded['response']['user'];
 
             userRole = responseDecoded['response']['roles'][0];
@@ -100,10 +102,9 @@ class AuthProv with ChangeNotifier , BaseExceptionHandling{
             if (parkTypes.isEmpty) {
               parkTypes.add('الكل');
               reasonsJsonObj.map((e) => parkTypes.add(e)).toList();
-              print(parkTypes.length);
+              debugPrint(parkTypes.length.toString());
             }
 
-            data = 'Success';
             isLogged = true;
             userId = userJson['id'];
             token = userJson['token'];
@@ -123,14 +124,17 @@ class AuthProv with ChangeNotifier , BaseExceptionHandling{
               'failure during signning in') {
             data = 'Incorrect Password';
           } else {
-            data = responseDecoded['message'];
+            debugPrint('else case');
+            data =  responseDecoded['message'];
           }
+
         });
       });
     } catch (e) {
-      print('error $e');
+      debugPrint('error $e');
     }
     notifyListeners();
+    print('data is $data');
     return data;
   }
 }

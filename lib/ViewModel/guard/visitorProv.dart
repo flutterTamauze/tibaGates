@@ -1,4 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
+import '../../Data/Models/guard/memberChip_model.dart';
+
 import '../../Data/Models/guard/perHour.dart';
 import 'package:dartz/dartz.dart';
 
@@ -24,8 +27,10 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   List<File> images = [];
   List<ReasonModel> reasonsObjects = [];
   List<String> reasons = [];
+  MemberShipModel memberShipModel;
   File rokhsa;
   File idCard;
+
   int totalParkedCars;
   bool isVIP;
   int militaryCount;
@@ -111,7 +116,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
         notifyListeners();
       }
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -162,27 +167,28 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     }
   }
 
-  Future<ResponseData> checkIn(
-      File carImg,
-      File identityImg,
-      String userID,
-      int typeID,
-      int citizenCount,
-      int militaryCount,
-      BuildContext context) async {
+  Future<ResponseData> checkIn(File carImg, File identityImg, String userID,
+      int typeID, int citizenCount, int militaryCount, BuildContext context,
+      [String image1, String image2]) async {
     ResponseData responseData = ResponseData();
     debugPrint('userID $userID');
 
     var uri = Uri.parse('$BASE_URL/api/gate/CheckIn');
 
     var request = http.MultipartRequest('POST', uri);
-    request.files.add(
-      await http.MultipartFile.fromPath('file', carImg.path),
-    );
-    request.files.add(
-      await http.MultipartFile.fromPath('file1', identityImg.path),
-    );
 
+    if (carImg != null && identityImg != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath('file', carImg.path),
+      );
+      request.files.add(
+        await http.MultipartFile.fromPath('file1', identityImg.path),
+      );
+    }
+    if (image1 != null && image2 != null) {
+      request.fields['image1'] = image1;
+      request.fields['image2'] = image2;
+    }
     request.fields['UserID'] = userID.toString();
     request.fields['TypeID'] = typeID.toString();
     request.fields['militryCount'] = militaryCount.toString();
@@ -546,6 +552,99 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
       return data;
     } catch (e) {
       debugPrint(e);
+    }
+  }
+
+  Future<dynamic> checkInMemberShip(String qrCode) async {
+    String data = '';
+    debugPrint('qrCode $qrCode');
+
+    try {
+      Uri uri = Uri.parse('$BASE_URL/api/MemberShip/ScanMemberQR');
+      http.MultipartRequest request = http.MultipartRequest('POST', uri);
+      debugPrint('1');
+      request.fields['QrCode'] = qrCode;
+      request.headers.addAll(mHeaders);
+      debugPrint('2');
+      try {
+        await request.send().then((response) async {
+          log('شاشاشاش $response');
+          response.stream.transform(utf8.decoder).listen((value) {
+            log('vvv $value');
+            Map<String, dynamic> responseDecoded = json.decode(value);
+
+            debugPrint('response is $responseDecoded');
+
+            if (responseDecoded['message'] == 'Success') {
+              data = 'Success';
+              memberShipModel = MemberShipModel();
+              memberShipModel.carImagePath = responseDecoded['image1'] != null
+                  ? "$BASE_URL${responseDecoded["image1"].toString().replaceAll("\\", "/")}"
+                  : 'first time';
+              memberShipModel.identityImagePath = responseDecoded['image2'] !=
+                      null
+                  ? "$BASE_URL${responseDecoded["image2"].toString().replaceAll("\\", "/")}"
+                  : 'first time';
+              memberShipModel.id = responseDecoded['response']['id'];
+              memberShipModel.ownerTypeId =
+                  responseDecoded['response']['ownerTypeId'];
+            }
+          });
+        }).catchError((e) {
+          debugPrint(e.toString());
+        });
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+
+      notifyListeners();
+      return data;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<dynamic> updateMemberShipImages(
+      int id, File carImage, File identityImage) async {
+    String data = '';
+
+    try {
+      Uri uri = Uri.parse('$BASE_URL/api/MemberShip/UpdateImage');
+      http.MultipartRequest request = http.MultipartRequest('POST', uri);
+      request.files.add(
+        await http.MultipartFile.fromPath('file', carImage.path),
+      );
+      request.files.add(
+        await http.MultipartFile.fromPath('file1', identityImage.path),
+      );
+      request.fields['Id'] = id.toString();
+
+      request.headers.addAll(mHeaders);
+
+      try {
+        await request.send().then((response) async {
+          response.stream.transform(utf8.decoder).listen((value) {
+            Map<String, dynamic> responseDecoded = json.decode(value);
+            debugPrint('response is ${responseDecoded['response']}');
+            if (responseDecoded['message'] == 'Success') {
+              data = 'Success';
+              memberShipModel.carImagePath =
+                  responseDecoded['response']['image1'];
+              memberShipModel.identityImagePath =
+                  responseDecoded['response']['image2'];
+            }
+          });
+        }).catchError((e) {
+          debugPrint(e.toString());
+        });
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+
+      notifyListeners();
+      return data;
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

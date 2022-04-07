@@ -1,24 +1,18 @@
 import 'dart:io';
 import 'package:animate_do/animate_do.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+import '../../../Utilities/responsive.dart';
 import '../../../Data/Models/admin/weeklyHolidays.dart';
 import '../../../Utilities/connectivityStatus.dart';
 import '../../../ViewModel/admin/more/holidaysProv.dart';
 import 'package:lottie/lottie.dart';
-import '../../../Data/Models/admin/prices.dart';
 import '../admin_bottomNav.dart';
 import '../../../Utilities/Colors/colorManager.dart';
 import '../../../Utilities/Constants/constants.dart';
 import '../../../Utilities/Fonts/fontsManager.dart';
 import '../../../Utilities/Shared/dialogs/loading_dialog.dart';
-import '../../../Utilities/Shared/sharedWidgets.dart';
-import '../../../Utilities/Shared/textField.dart';
-import '../../../ViewModel/guard/authProv.dart';
-import '../../../ViewModel/admin/more/pricesProv.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:ui' as ui;
 import 'package:provider/provider.dart';
 
@@ -49,14 +43,17 @@ class _WeeklyHolidaysScreenState extends State<WeeklyHolidaysScreen> {
         child: Directionality(
           textDirection: ui.TextDirection.rtl,
           child: Padding(
-            padding: const EdgeInsets.all(50.0),
+            padding: EdgeInsets.only(
+                left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
             child: DataTable(
                 columns: <DataColumn>[
                   DataColumn(
                     label: Text(
                       'اليوم',
                       style: TextStyle(
-                          fontSize: setResponsiveFontSize(24),
+                          fontSize: isTab(context)
+                              ? setResponsiveFontSize(24)
+                              : setResponsiveFontSize(28),
                           color: Colors.black,
                           fontWeight: FontManager.bold),
                     ),
@@ -66,7 +63,9 @@ class _WeeklyHolidaysScreenState extends State<WeeklyHolidaysScreen> {
                     label: Text(
                       'الحالة',
                       style: TextStyle(
-                          fontSize: setResponsiveFontSize(24),
+                          fontSize: isTab(context)
+                              ? setResponsiveFontSize(24)
+                              : setResponsiveFontSize(28),
                           color: Colors.black,
                           fontWeight: FontManager.bold),
                     ),
@@ -76,7 +75,9 @@ class _WeeklyHolidaysScreenState extends State<WeeklyHolidaysScreen> {
                     label: Text(
                       'تغيير',
                       style: TextStyle(
-                          fontSize: setResponsiveFontSize(24),
+                          fontSize: isTab(context)
+                              ? setResponsiveFontSize(24)
+                              : setResponsiveFontSize(28),
                           color: Colors.black,
                           fontWeight: FontManager.bold),
                     ),
@@ -90,7 +91,9 @@ class _WeeklyHolidaysScreenState extends State<WeeklyHolidaysScreen> {
                           DataCell(
                             Text(e.day,
                                 style: TextStyle(
-                                    fontSize: setResponsiveFontSize(18),
+                                    fontSize: isTab(context)
+                                        ? setResponsiveFontSize(18)
+                                        : setResponsiveFontSize(22),
                                     color: Colors.black,
                                     fontWeight: FontManager.bold)),
                             showEditIcon: false,
@@ -102,7 +105,9 @@ class _WeeklyHolidaysScreenState extends State<WeeklyHolidaysScreen> {
                                     ? 'أجازة'
                                     : 'عمل',
                                 style: TextStyle(
-                                    fontSize: setResponsiveFontSize(22),
+                                    fontSize: isTab(context)
+                                        ? setResponsiveFontSize(22)
+                                        : setResponsiveFontSize(24),
                                     color: e.isHoliday.toString() == 'true'
                                         ? Colors.red
                                         : Colors.green,
@@ -235,7 +240,11 @@ class _WeeklyHolidaysScreenState extends State<WeeklyHolidaysScreen> {
                             holidaysList =
                                 Provider.of<HolidaysProv>(context, listen: true)
                                     .holidaysObjects;
-                            return Center(child: bodyData());
+                            return Center(
+                                child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: bodyData(),
+                            ));
                           }
                           return Container();
                         }),

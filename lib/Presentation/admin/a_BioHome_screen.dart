@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import '../../Utilities/responsive.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Data/Models/admin/a_homeBio_model.dart';
 import 'a_reports_screen.dart';
@@ -53,6 +54,7 @@ class ABioHomeState extends State {
   @override
   void initState() {
     super.initState();
+
     listener = Provider.of<AdminHomeProv>(context, listen: false).getBioData();
     token = prefs.getString('token');
     role = prefs.getString('role');
@@ -76,10 +78,10 @@ class ABioHomeState extends State {
 
   @override
   Widget build(BuildContext context) {
-    var connectionStatus = Provider.of<ConnectivityStatus>(context);
-
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
+    ConnectivityStatus connectionStatus =
+        Provider.of<ConnectivityStatus>(context);
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return connectionStatus == ConnectivityStatus.Offline
         ? Center(
             child: SizedBox(
@@ -144,152 +146,26 @@ class ABioHomeState extends State {
                             ),
                           ),
                         ),
-                        /*                      Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 100.w, top: 100.h),
-                          child: SizedBox(
-                            height: 100.h,
-                            width: 200.w,
-                            child: PieChart(
-                              PieChartData(
-                                  borderData: FlBorderData(
-                                    show: false,
-                                  ),
-                                  sectionsSpace: 0,
-                                  centerSpaceRadius: 60,
-                                  sections: showingSections(context)),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(right: 100.w, top: 100.h),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 30.h,
-                                    width: 30.w,
-                                    color: Colors.green,
-                                  ),
-                                  SizedBox(
-                                    width: 25.w,
-                                  ),
-                                  SizedBox(
-                                    width: 100.w,
-                                    child: Text(
-                                      'ق.م',
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                          fontSize: setResponsiveFontSize(20),
-                                          fontWeight: FontManager.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 25.h,
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 30.h,
-                                    width: 30.w,
-                                    color: Colors.orange,
-                                  ),
-                                  SizedBox(
-                                    width: 25.w,
-                                  ),
-                                  SizedBox(
-                                    width: 100.w,
-                                    child: Text(
-                                      'عضو دار',
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                          fontSize: setResponsiveFontSize(20),
-                                          fontWeight: FontManager.bold),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 25.h,
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 30.h,
-                                    width: 30.w,
-                                    color: Colors.red[600],
-                                  ),
-                                  SizedBox(
-                                    width: 25.w,
-                                  ),
-                                  SizedBox(
-                                    width: 100.w,
-                                    child: Text(
-                                      'مدنى',
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                          fontSize: setResponsiveFontSize(20),
-                                          fontWeight: FontManager.bold),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 25.h,
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 30.h,
-                                    width: 30.w,
-                                    color: Colors.purple[600],
-                                  ),
-                                  SizedBox(
-                                    width: 25.w,
-                                  ),
-                                  SizedBox(
-                                    width: 100.w,
-                                    child: Text(
-                                      'أنشطة',
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                          fontSize: setResponsiveFontSize(20),
-                                          fontWeight: FontManager.bold),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    )*/
                         SizedBox(
                           height: 40.h,
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 12.w),
                           child: SizedBox(
-                            height: 520.h,
+                            height: isTab(context) ? 520.h : 560.h,
                             child: GridView.builder(
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
-                                      childAspectRatio:
-                                          MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              (MediaQuery
-                                                          .of(context)
-                                                      .size
-                                                      .height /
-                                                  2.5),
-                                      crossAxisSpacing:
-                                          Platform.isIOS ? 5.w : 8.w,
+                                      childAspectRatio: MediaQuery.of(context)
+                                              .size
+                                              .width /
+                                          (MediaQuery.of(context).size.height /
+                                              2.5),
+                                      crossAxisSpacing: Platform.isIOS
+                                          ? 5.w
+                                          : isTab(context)
+                                              ? 8.w
+                                              : 1.w,
                                       mainAxisSpacing:
                                           Platform.isIOS ? 7.w : 10.w,
                                       crossAxisCount: 3),
@@ -306,8 +182,10 @@ class ABioHomeState extends State {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 16, right: 16, top: 12),
+                                          padding: EdgeInsets.only(
+                                              left: 10.w,
+                                              right: 10.w,
+                                              top: 12.h),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -319,21 +197,30 @@ class ABioHomeState extends State {
                                               SizedBox(
                                                 width: 6.w,
                                               ),
-                                              Text(parksTypes[index].type,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.green,
-                                                      fontSize:
-                                                          setResponsiveFontSize(
-                                                              22))),
+                                              SizedBox(
+                                                width: isTab(context)
+                                                    ? 160.w
+                                                    : 145.w,
+                                                child: AutoSizeText(
+                                                    parksTypes[index].type,
+                                                    maxLines: 2,
+                                                    textAlign: TextAlign.end,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.green,
+                                                        fontSize:
+                                                            setResponsiveFontSize(
+                                                                22))),
+                                              ),
                                             ],
                                           ),
                                         ),
                                         SizedBox(
                                           height: 20.h,
                                         ),
-                                        Text(parksTypes[index].count.toString(),
+                                        AutoSizeText(
+                                            parksTypes[index].count.toString(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.red,
@@ -349,7 +236,7 @@ class ABioHomeState extends State {
                           ),
                         ),
                         SizedBox(
-                          height: 30.h,
+                          height: isTab(context) ? 30.h : 15.h,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -366,7 +253,7 @@ class ABioHomeState extends State {
                                 children: [
                                   Column(
                                     children: [
-                                      Text(
+                                      AutoSizeText(
                                         'إجمالى عدد السيارات',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
@@ -376,7 +263,7 @@ class ABioHomeState extends State {
                                       SizedBox(
                                         height: 12.h,
                                       ),
-                                      Text(
+                                      AutoSizeText(
                                           Provider.of<AdminHomeProv>(context,
                                                   listen: false)
                                               .carsCount

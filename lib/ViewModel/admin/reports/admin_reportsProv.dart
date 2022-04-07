@@ -12,6 +12,45 @@ class AReportsProv with ChangeNotifier, BaseExceptionHandling {
   List<ReportsItemModel> reportsList = [];
   SummaryModel summaryModel = SummaryModel();
 
+
+
+
+  Future<dynamic> deleteBill(int billId, String userId) async {
+    String data = '';
+    debugPrint('bill id $billId   userId $userId');
+    try {
+      var response = await BaseClient()
+          .delete(BASE_URL, '/api/gate/cancel?logId=$billId&UserID=$userId')
+          .catchError(handleError);
+
+      var decodedRes = jsonDecode(response);
+
+      debugPrint('response is $decodedRes');
+      debugPrint('message is ${decodedRes['message']}');
+
+      if (decodedRes['message'] == 'Success') {
+        data = 'success';
+
+        reportsList.removeWhere((element) => element.id == billId);
+      }
+
+      notifyListeners();
+      return data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
   Future<String> getDailyReport(String startDate, String endDate,
       [String parkType, int pageNumber = 0]) async {
     String message = '';

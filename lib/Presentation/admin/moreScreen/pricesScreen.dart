@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+import '../../../Utilities/responsive.dart';
 import '../../../Data/Models/admin/prices.dart';
 import '../admin_bottomNav.dart';
-import '../../login_screen/Widgets/memberDisplay.dart';
 import '../../../Utilities/Colors/colorManager.dart';
 import '../../../Utilities/Constants/constants.dart';
 import '../../../Utilities/Fonts/fontsManager.dart';
@@ -12,7 +11,6 @@ import '../../../Utilities/Shared/dialogs/loading_dialog.dart';
 import '../../../Utilities/Shared/sharedWidgets.dart';
 import '../../../Utilities/Shared/textField.dart';
 import '../../../Utilities/connectivityStatus.dart';
-import '../../../ViewModel/admin/reports/admin_reportsProv.dart';
 import '../../../ViewModel/guard/authProv.dart';
 import '../../../ViewModel/admin/more/pricesProv.dart';
 import 'package:flutter/cupertino.dart';
@@ -61,7 +59,9 @@ class _PricesScreenState extends State<PricesScreen> {
                   label: Text(
                     'النوع',
                     style: TextStyle(
-                        fontSize: setResponsiveFontSize(20),
+                        fontSize: isTab(context)
+                            ? setResponsiveFontSize(24)
+                            : setResponsiveFontSize(26),
                         fontWeight: FontManager.bold),
                   ),
                   numeric: false,
@@ -70,17 +70,23 @@ class _PricesScreenState extends State<PricesScreen> {
                   label: Text(
                     'الأسعار',
                     style: TextStyle(
-                        fontSize: setResponsiveFontSize(20),
+                        fontSize: isTab(context)
+                            ? setResponsiveFontSize(24)
+                            : setResponsiveFontSize(26),
                         fontWeight: FontManager.bold),
                   ),
                   numeric: false,
                 ),
                 DataColumn(
-                  label: Text(
-                    'الأسعار فى الأجازات',
-                    style: TextStyle(
-                        fontSize: setResponsiveFontSize(20),
-                        fontWeight: FontManager.bold),
+                  label: Flexible(
+                    child: Text(
+                      'أسعار الأجازات',
+                      style: TextStyle(
+                          fontSize: isTab(context)
+                              ? setResponsiveFontSize(24)
+                              : setResponsiveFontSize(26),
+                          fontWeight: FontManager.bold),
+                    ),
                   ),
                   numeric: false,
                 ),
@@ -419,10 +425,11 @@ class _PricesScreenState extends State<PricesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    ConnectivityStatus connectionStatus =
+        Provider.of<ConnectivityStatus>(context);
 
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         floatingActionButton: ZoomIn(
@@ -547,7 +554,11 @@ class _PricesScreenState extends State<PricesScreen> {
                               pricesList =
                                   Provider.of<PricesProv>(context, listen: true)
                                       .pricesObjects;
-                              return Center(child: bodyData());
+                              return Padding(
+                                padding:
+                                    EdgeInsets.all(isTab(context) ? 4.0 : 0),
+                                child: Center(child: bodyData()),
+                              );
                             }
                             return Container();
                           }),

@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import '../../Utilities/Shared/qr.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../Utilities/Colors/colorManager.dart';
@@ -33,7 +32,7 @@ class QrCodeScreen extends StatefulWidget {
 
 class _QrCodeScreenState extends State<QrCodeScreen> {
   var result;
-  var ifScanned = false;
+  bool ifScanned = false;
   QRViewController controller;
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -98,7 +97,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PrintScreen2(
+                      builder: (context) => const PrintScreen2(
                             from: 'send',
                             resendType: 'VIP Invitation',
                           )));
@@ -111,7 +110,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => HomeScreen(
+                      builder: (context) => const HomeScreen(
                             screen: 'invitation',
                           )));
             } else {
@@ -121,6 +120,34 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   backgroundColor: Colors.green,
                   toastLength: Toast.LENGTH_LONG);
               controller.dispose();
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const EntryScreen()));
+            }
+          });
+        } else if (widget.screen == 'memberShip') {
+          log('memberShip');
+          Provider.of<VisitorProv>(context, listen: false)
+              .checkInMemberShip(result)
+              .then((value) async {
+            log('value is $value');
+            if (value == 'Success') {
+              controller.dispose();
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomeScreen(
+                            screen: 'memberShip',
+                            memberShipModel:
+                                Provider.of<VisitorProv>(context, listen: false)
+                                    .memberShipModel,
+                          )));
+            } else {
+              print('value is $value');
+              Fluttertoast.showToast(
+                  msg: 'كود غير صحيح',
+                  backgroundColor: Colors.green,
+                  toastLength: Toast.LENGTH_LONG);
+              // controller.dispose();
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => EntryScreen()));
             }
@@ -175,7 +202,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                 Navigator.pop(context);
                 scanned = false;
               });
-            } else if (value is! String) {
+            } else if (value is! String && value != null) {
               print('in time ${value.inTime}');
 
               await showDialog(
@@ -337,6 +364,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                                         PrintScreen2(
                                                           perHourObj: value,
                                                           from: 'send',
+                                                          resendType: 'perHour',
                                                           logId: value.id,
                                                         )));
                                           },

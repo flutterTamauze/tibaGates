@@ -1,6 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
+import '../../../Utilities/responsive.dart';
 
+import '../../../Utilities/Colors/colorManager.dart';
+import '../../../Utilities/Shared/sharedWidgets.dart';
+import '../../../ViewModel/guard/authProv.dart';
+import 'package:flutter/material.dart';
 import '../../../Utilities/connectivityStatus.dart';
 import '../../../ViewModel/admin/a_homeBioProv.dart';
 import '../../../ViewModel/admin/reports/admin_reportsProv.dart';
@@ -10,15 +14,12 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-
 import '../admin_bottomNav.dart';
 import '../../../Utilities/Constants/constants.dart';
 import '../../../Utilities/Fonts/fontsManager.dart';
 import '../../../Utilities/Shared/dialogs/loading_dialog.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
@@ -31,18 +32,19 @@ class DailyReportsScreen extends StatefulWidget {
 
 class _DailyReportsScreenState extends State<DailyReportsScreen> {
   int invitationTypeId;
-  final startDateController = TextEditingController();
-  var selectedType;
+  final TextEditingController startDateController = TextEditingController();
+  String selectedType;
   String date;
   bool loadReport = false;
   int pageNumber = 1;
   int maxPages;
+
   @override
   void initState() {
     super.initState();
-    final DateTime now = DateTime.now();
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    final String formatted = formatter.format(now);
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat('yyyy-MM-dd');
+    String formatted = formatter.format(now);
     date = formatted;
   }
 
@@ -58,6 +60,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
               dataRowHeight: 70.h,
               dividerThickness: 3.w,
               showBottomBorder: true,
+              columnSpacing: isTab(context) ? 30.0 : 15,
               headingRowColor:
                   MaterialStateProperty.all<Color>(Colors.blueGrey),
               headingTextStyle: const TextStyle(
@@ -84,7 +87,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                         fontWeight: FontManager.bold),
                   ),
                   numeric: false,
-                  tooltip: 'To display first id of the ReportRecord',
+                  tooltip: '',
                 ),
                 DataColumn(
                   label: Text(
@@ -94,7 +97,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                         fontWeight: FontManager.bold),
                   ),
                   numeric: false,
-                  tooltip: 'To display first id of the ReportRecord',
+                  tooltip: '',
                 ),
                 DataColumn(
                   label: Text(
@@ -104,7 +107,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                         fontWeight: FontManager.bold),
                   ),
                   numeric: false,
-                  tooltip: 'To display first id of the ReportRecord',
+                  tooltip: '',
                 ),
                 DataColumn(
                   label: Text(
@@ -114,7 +117,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                         fontWeight: FontManager.bold),
                   ),
                   numeric: false,
-                  tooltip: 'To display first id of the ReportRecord',
+                  tooltip: '',
                 ),
                 DataColumn(
                   label: Text(
@@ -124,7 +127,19 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                         fontWeight: FontManager.bold),
                   ),
                   numeric: false,
-                  tooltip: 'To display first id of the ReportRecord',
+                  tooltip: '',
+                ),
+                const DataColumn(
+                  label: Text(
+                    '',
+                  ),
+                  numeric: false,
+                ),
+                const DataColumn(
+                  label: Text(
+                    '',
+                  ),
+                  numeric: false,
                 ),
               ],
               rows: Provider.of<AReportsProv>(context, listen: false)
@@ -144,7 +159,9 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                           placeholder: false,
                         ),
                         DataCell(
-                          Text(ReportRecord.type),
+                          Text(ReportRecord.type,
+                              style: TextStyle(
+                                  fontSize: setResponsiveFontSize(20))),
                           showEditIcon: false,
                           placeholder: false,
                         ),
@@ -167,18 +184,254 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                         DataCell(
                           Directionality(
                               textDirection: ui.TextDirection.ltr,
-                              child: Text(ReportRecord.inDateTime.toString(),
-                                  style: TextStyle(color: Colors.green))),
+                              child: SizedBox(
+                                width: 70.w,
+                                child: Text(ReportRecord.inDateTime.toString(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.green,
+                                        fontSize: setResponsiveFontSize(22))),
+                              )),
                           showEditIcon: false,
                           placeholder: false,
                         ),
                         DataCell(
                           Directionality(
                               textDirection: ui.TextDirection.ltr,
-                              child: Text(
-                                ReportRecord.outDateTime.toString(),
-                                style: TextStyle(color: Colors.red),
+                              child: SizedBox(
+                                width: 70.w,
+                                child: Text(
+                                  ReportRecord.outDateTime.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: setResponsiveFontSize(22)),
+                                ),
                               )),
+                          showEditIcon: false,
+                          placeholder: false,
+                        ),
+                        DataCell(
+                          InkWell(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(40)),
+                                      elevation: 16,
+                                      child: SizedBox(
+                                          height: 320.h,
+                                          width: 600.w,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: <Widget>[
+                                              SizedBox(
+                                                height: 25.h,
+                                              ),
+                                              Directionality(
+                                                textDirection:
+                                                    ui.TextDirection.rtl,
+                                                child: Text(
+                                                  'هل انت متأكد من حذف تلك الفاتورة ؟ ',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize:
+                                                          setResponsiveFontSize(
+                                                              28)),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 20.h,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 60.w),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    RoundedButton(
+                                                      height: 55,
+                                                      width: 220,
+                                                      ontap: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      title: 'لا',
+                                                      buttonColor: Colors.grey,
+                                                      titleColor: ColorManager
+                                                          .backGroundColor,
+                                                    ),
+                                                    RoundedButton(
+                                                      height: 55,
+                                                      width: 220,
+                                                      ontap: () {
+                                                        showLoaderDialog(
+                                                            context,
+                                                            'جارى الحذف');
+
+                                                        Provider.of<AReportsProv>(
+                                                                context,
+                                                                listen: false)
+                                                            .deleteBill(
+                                                                ReportRecord.id,
+                                                                Provider.of<AuthProv>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .userId)
+                                                            .then((value) {
+                                                          if (value ==
+                                                              'success') {
+                                                            Navigator.pop(
+                                                                context);
+                                                            Navigator.pop(
+                                                                context);
+                                                          }
+                                                        });
+                                                      },
+                                                      title: 'حذف',
+                                                      buttonColor:
+                                                          Colors.redAccent,
+                                                      titleColor: ColorManager
+                                                          .backGroundColor,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10.h,
+                                              ),
+                                            ],
+                                          )),
+                                    );
+                                  });
+                            },
+                            child: Icon(
+                              Icons.delete,
+                              size: isTab(context) ? 30 : 20,
+                              color: Colors.red,
+                            ),
+                          ),
+                          showEditIcon: false,
+                          placeholder: false,
+                        ),
+                        DataCell(
+                          InkWell(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
+                                      elevation: 16,
+                                      child: SizedBox(
+                                          height: 300.h,
+                                          width: isTab(context) ? 900.w : 700.w,
+                                          child: ReportRecord.type
+                                                  .toLowerCase()
+                                                  .contains('vip')
+                                              ? SizedBox(
+                                                  child: Image.asset(
+                                                      'assets/images/vip.png'),
+                                                )
+                                              : Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    InkWell(
+                                                      child: Image.network(
+                                                        ReportRecord.image1,
+                                                        width: isTab(context)
+                                                            ? 340.w
+                                                            : 300.w,
+                                                        height: isTab(context)
+                                                            ? 250.h
+                                                            : 250.h,
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      onTap: () {
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return Dialog(
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            40)),
+                                                                elevation: 16,
+                                                                child: SizedBox(
+                                                                  height: 400.h,
+                                                                  width: 600.w,
+                                                                  child: Image
+                                                                      .network(
+                                                                    ReportRecord
+                                                                        .image1,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            });
+                                                      },
+                                                    ),
+                                                    InkWell(
+                                                      child: Image.network(
+                                                        ReportRecord.image2,
+                                                        width: isTab(context)
+                                                            ? 340.w
+                                                            : 300.w,
+                                                        height: isTab(context)
+                                                            ? 250.h
+                                                            : 250.h,
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      onTap: () {
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return Dialog(
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            40)),
+                                                                elevation: 16,
+                                                                child: SizedBox(
+                                                                  height: 400.h,
+                                                                  width: 600.w,
+                                                                  child: Image
+                                                                      .network(
+                                                                    ReportRecord
+                                                                        .image2,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            });
+                                                      },
+                                                    )
+                                                  ],
+                                                )),
+                                    );
+                                  });
+                            },
+                            child: Icon(
+                              Icons.info_outlined,
+                              size: isTab(context) ? 30 : 20,
+                              color: Colors.grey,
+                            ),
+                          ),
                           showEditIcon: false,
                           placeholder: false,
                         ),
@@ -412,7 +665,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                               children: [
                                 pageNumber > 1
                                     ? InkWell(
-                                        child: Icon(Icons.arrow_back_ios),
+                                        child: const Icon(Icons.arrow_back_ios),
                                         onTap: () {
                                           showLoaderDialog(
                                               context, 'جارى تحميل التقرير');
@@ -507,7 +760,8 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                           }
                                         });
                                       },
-                                      child: Icon(Icons.arrow_forward_ios)),
+                                      child:
+                                          const Icon(Icons.arrow_forward_ios)),
                               ],
                             ),
                           ))
@@ -563,9 +817,11 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
+                                          AutoSizeText(
                                             date ?? '',
-                                            style: TextStyle(fontSize: 20),
+                                            style: TextStyle(
+                                                fontSize:
+                                                    setResponsiveFontSize(24)),
                                           ),
                                           const Icon(
                                             Icons.calendar_today,
@@ -627,13 +883,13 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                             return DropdownMenuItem<String>(
                                                 value: x,
                                                 child: Center(
-                                                  child: Text(
+                                                  child: AutoSizeText(
                                                     x,
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                         fontSize:
                                                             setResponsiveFontSize(
-                                                                20),
+                                                                22),
                                                         color: Colors.black,
                                                         fontFamily: 'Almarai'),
                                                   ),
@@ -641,12 +897,10 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                           }).toList(),
                                           onChanged: (value) {
                                             setState(() {
-                                              //filterInvitations(value);
                                               loadReport = false;
-
                                               selectedType = value;
 
-                                              print(
+                                              debugPrint(
                                                   'selected invitation type is $selectedType');
                                             });
                                           },
@@ -686,11 +940,10 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                           ? OutlinedButton(
                               onPressed: () {
                                 if (date == null) {
-                                  final DateTime now = DateTime.now();
-                                  final DateFormat formatter =
+                                  DateTime now = DateTime.now();
+                                  DateFormat formatter =
                                       DateFormat('yyyy-MM-dd');
-                                  final String formatted =
-                                      formatter.format(now);
+                                  String formatted = formatter.format(now);
                                   date = formatted;
                                 }
                                 showLoaderDialog(context, 'جارى تحميل التقرير');
@@ -726,7 +979,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                               },
                               child: SizedBox(
                                 height: 45.h,
-                                width: 200.w,
+                                width: isTab(context) ? 200.w : 250.w,
                                 child: Row(
                                   children: [
                                     const Icon(
@@ -740,7 +993,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                       endIndent: 2,
                                       indent: 4,
                                     ),
-                                    Text(
+                                    AutoSizeText(
                                       'عرض التقرير',
                                       style: TextStyle(
                                           fontSize: setResponsiveFontSize(24),
@@ -766,143 +1019,6 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                             )
                           : Container(),
                       loadReport == true ? const Spacer() : Container(),
-                      /*   loadReport == true
-                    ? const Align(
-                        child: Divider(
-                        thickness: 2,
-                        color: Colors.green,
-                      ))
-                    : Container(),*/
-/*
-                loadReport == true
-                    ? Expanded(
-                        child: ListView.builder(
-                          itemCount: 1,
-                          scrollDirection: Axis.horizontal,
-                          //  shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: SizedBox(
-                                height: 50.h,
-                                child: Row(
-                                  children: [
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'الإجمالى',
-                                      value:
-                                          reportProv.summaryModel.total.toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'أجمالى بالغرامات',
-                                      value: reportProv.summaryModel.total_Fines
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'أجمالى مدنيين',
-                                      value: reportProv.summaryModel.civilPrice
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'أجمالى ق.م',
-                                      value: reportProv.summaryModel.militryPrice
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'أجمالى باركينج',
-                                      value: reportProv.summaryModel.parkPrice
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'مدنيين',
-                                      value: reportProv.summaryModel.civilCount
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'ق.م',
-                                      value: reportProv.summaryModel.militryCount
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'سيارات الأنشطة',
-                                      value: reportProv
-                                          .summaryModel.activityCarCount
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'سيارات المدنيين',
-                                      value: reportProv.summaryModel.citizenCarCount
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'سيارات الجيش',
-                                      value: reportProv.summaryModel.militryCarCount
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'سيارات الأعضاء',
-                                      value: reportProv.summaryModel.memberCarCount
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'عدد السيارات',
-                                      value: reportProv.summaryModel.carsCount
-                                          .toString(),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    : Container()
-*/
                     ],
                   ),
                 ],
@@ -913,7 +1029,8 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
 }
 
 class summaryItem extends StatelessWidget {
-  String title, value;
+  String title;
+  String value;
 
   summaryItem({Key key, @required this.reportProv, this.value, this.title})
       : super(key: key);
@@ -926,13 +1043,15 @@ class summaryItem extends StatelessWidget {
       children: [
         Text(
           value,
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+          style:
+              const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
         ),
         SizedBox(
           width: 8.w,
         ),
         Text(title,
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.black)),
       ],
     );
   }

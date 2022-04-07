@@ -29,7 +29,7 @@ class ManagerProv with ChangeNotifier, BaseExceptionHandling {
   };
 
   Future<dynamic> addInvitation(String visitorName, String visitorDescription,
-      String managerId, int invitationTypeID, String date) async {
+      String managerId, int invitationTypeID, String fromDate, String toDate) async {
     String data = '';
 
     try {
@@ -39,7 +39,8 @@ class ManagerProv with ChangeNotifier, BaseExceptionHandling {
         'Description': visitorDescription,
         'GardUserId': managerId,
         'InvitationTypeID': invitationTypeID,
-        'date': date,
+        'creationdate': fromDate,
+        'expirydate': toDate,
       }).catchError(handleError);
 
       print('response $response');

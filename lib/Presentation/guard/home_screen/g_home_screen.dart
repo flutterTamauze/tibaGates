@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
+import '../../../Data/Models/guard/memberChip_model.dart';
 import '../../../ViewModel/guard/authProv.dart';
 import '../../../Utilities/Colors/colorManager.dart';
 import '../../../Utilities/Constants/constants.dart';
@@ -32,9 +33,11 @@ List<CameraDescription> cameras = [];
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/Home';
   final screen;
+  final MemberShipModel memberShipModel;
   final CameraDescription camera;
 
-  const HomeScreen({Key key, this.screen, this.camera}) : super(key: key);
+  const HomeScreen({Key key, this.screen, this.camera, this.memberShipModel})
+      : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -56,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       widget.camera,
       ResolutionPreset.medium,
     );
-
+    //debugPrint('ownerType id = ${widget.memberShipModel.ownerTypeId}');
     typesListener =
         Provider.of<VisitorProv>(context, listen: false).getVisitorTypes();
     Provider.of<VisitorProv>(context, listen: false).rokhsa = null;
@@ -158,172 +161,175 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   padding: EdgeInsets.symmetric(vertical: 20.h),
                                   child: Column(
                                     children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 60.w, vertical: 20.h),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            FutureBuilder(
-                                                future: typesListener,
-                                                builder: (BuildContext context,
-                                                    AsyncSnapshot<dynamic>
-                                                        snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.waiting) {
-                                                    return Center(
-                                                      child: Platform.isIOS
-                                                          ? const CupertinoActivityIndicator()
-                                                          : const Center(
-                                                              child:
-                                                                  CircularProgressIndicator(
-                                                                backgroundColor:
-                                                                    Colors
-                                                                        .green,
-                                                              ),
-                                                            ),
-                                                    );
-                                                  } else if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.done) {
-                                                    visitorTypeId ??= Provider
-                                                            .of<VisitorProv>(
-                                                                context,
-                                                                listen: false)
-                                                        .visitorObjects[0]
-                                                        .id;
-
-                                                    print(
-                                                        'type id $visitorTypeId');
-                                                    return widget.screen !=
-                                                            'invitation'
-                                                        ? Container(
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10),
-                                                                border: Border.all(
-                                                                    color: Colors
-                                                                        .green,
-                                                                    width:
-                                                                        1.w)),
-                                                            width: 250.w,
-                                                            height: 70.h,
-                                                            child:
-                                                                DropdownButtonHideUnderline(
+                                      widget.memberShipModel == null
+                                          ? Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 60.w,
+                                                  vertical: 20.h),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  FutureBuilder(
+                                                      future: typesListener,
+                                                      builder: (BuildContext
+                                                              context,
+                                                          AsyncSnapshot<dynamic>
+                                                              snapshot) {
+                                                        if (snapshot
+                                                                .connectionState ==
+                                                            ConnectionState
+                                                                .waiting) {
+                                                          return Center(
+                                                            child: Platform
+                                                                    .isIOS
+                                                                ? const CupertinoActivityIndicator()
+                                                                : const Center(
                                                                     child:
-                                                                        ButtonTheme(
-                                                              alignedDropdown:
-                                                                  true,
-                                                              child:
-                                                                  DropdownButton(
-                                                                elevation: 2,
-                                                                isExpanded:
-                                                                    true,
-                                                                items: Provider.of<
-                                                                            VisitorProv>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .visitorTypes
-                                                                    .map((String
-                                                                        x) {
-                                                                  return DropdownMenuItem<
-                                                                          String>(
-                                                                      value: x,
-                                                                      child:
-                                                                          Center(
-                                                                        child:
-                                                                            Text(
-                                                                          x,
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                          style: TextStyle(
-                                                                              fontSize: setResponsiveFontSize(25),
-                                                                              color: Colors.green,
-                                                                              fontFamily: 'Almarai'),
-                                                                        ),
-                                                                      ));
-                                                                }).toList(),
-                                                                onChanged:
-                                                                    (value) {
-                                                                  setState(() {
-                                                                    visitorTypeId = Provider.of<VisitorProv>(
-                                                                            context,
-                                                                            listen:
-                                                                                false)
-                                                                        .visitorObjects[Provider.of<VisitorProv>(context,
-                                                                                listen: false)
-                                                                            .visitorTypes
-                                                                            .indexOf(value)]
-                                                                        .id;
+                                                                        CircularProgressIndicator(
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .green,
+                                                                    ),
+                                                                  ),
+                                                          );
+                                                        } else if (snapshot
+                                                                .connectionState ==
+                                                            ConnectionState
+                                                                .done) {
+                                                          visitorTypeId ??=
+                                                              Provider.of<VisitorProv>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .visitorObjects[
+                                                                      0]
+                                                                  .id;
 
-                                                                    selectedVisitorType =
-                                                                        value;
+                                                          print(
+                                                              'type id $visitorTypeId');
+                                                          return widget
+                                                                      .screen !=
+                                                                  'invitation'
+                                                              ? Container(
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10),
+                                                                      border: Border.all(
+                                                                          color: Colors
+                                                                              .green,
+                                                                          width:
+                                                                              1.w)),
+                                                                  width: 250.w,
+                                                                  height: 70.h,
+                                                                  child:
+                                                                      DropdownButtonHideUnderline(
+                                                                          child:
+                                                                              ButtonTheme(
+                                                                    alignedDropdown:
+                                                                        true,
+                                                                    child:
+                                                                        DropdownButton(
+                                                                      elevation:
+                                                                          2,
+                                                                      isExpanded:
+                                                                          true,
+                                                                      items: Provider.of<VisitorProv>(
+                                                                              context,
+                                                                              listen:
+                                                                                  false)
+                                                                          .visitorTypes
+                                                                          .map((String
+                                                                              x) {
+                                                                        return DropdownMenuItem<
+                                                                                String>(
+                                                                            value:
+                                                                                x,
+                                                                            child:
+                                                                                Center(
+                                                                              child: Text(
+                                                                                x,
+                                                                                textAlign: TextAlign.center,
+                                                                                style: TextStyle(fontSize: setResponsiveFontSize(25), color: Colors.green, fontFamily: 'Almarai'),
+                                                                              ),
+                                                                            ));
+                                                                      }).toList(),
+                                                                      onChanged:
+                                                                          (value) {
+                                                                        setState(
+                                                                            () {
+                                                                          visitorTypeId = Provider.of<VisitorProv>(context, listen: false)
+                                                                              .visitorObjects[Provider.of<VisitorProv>(context, listen: false).visitorTypes.indexOf(value)]
+                                                                              .id;
 
-                                                                    if (selectedVisitorType ==
-                                                                        'المحاسبه بالساعه') {
-                                                                      isPerHour =
-                                                                          true;
-                                                                    } else {
-                                                                      isPerHour =
-                                                                          false;
-                                                                    }
+                                                                          selectedVisitorType =
+                                                                              value;
 
-                                                                    print(
-                                                                        'selected visitor type is $selectedVisitorType');
-                                                                    print(
-                                                                        'selected visitor type id is $visitorTypeId');
-                                                                  });
-                                                                },
-                                                                value: selectedVisitorType ??
-                                                                    Provider.of<VisitorProv>(
-                                                                            context,
-                                                                            listen:
-                                                                                false)
-                                                                        .visitorTypes[0],
-                                                              ),
-                                                            )),
-                                                          )
-                                                        : Text('دعوة',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    setResponsiveFontSize(
-                                                                        28),
-                                                                color: Colors
-                                                                    .green,
-                                                                fontWeight:
-                                                                    FontManager
-                                                                        .bold));
-                                                  }
-                                                  return Container();
-                                                }),
-                                            Text(
-                                              ' : نوع الزائر',
-                                              textAlign: TextAlign.end,
-                                              style: TextStyle(
-                                                  fontSize:
-                                                      setResponsiveFontSize(28),
-                                                  fontWeight: FontManager.bold),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 60.w,
-                                        ),
-                                        child: Divider(
-                                          thickness: 1,
-                                          height: 2.h,
-                                          color: Colors.green,
-                                        ),
-                                      ),
+                                                                          if (selectedVisitorType ==
+                                                                              'المحاسبه بالساعه') {
+                                                                            isPerHour =
+                                                                                true;
+                                                                          } else {
+                                                                            isPerHour =
+                                                                                false;
+                                                                          }
+
+                                                                          print(
+                                                                              'selected visitor type is $selectedVisitorType');
+                                                                          print(
+                                                                              'selected visitor type id is $visitorTypeId');
+                                                                        });
+                                                                      },
+                                                                      value: selectedVisitorType ??
+                                                                          Provider.of<VisitorProv>(context, listen: false)
+                                                                              .visitorTypes[0],
+                                                                    ),
+                                                                  )),
+                                                                )
+                                                              : Text('دعوة',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          setResponsiveFontSize(
+                                                                              28),
+                                                                      color: Colors
+                                                                          .green,
+                                                                      fontWeight:
+                                                                          FontManager
+                                                                              .bold));
+                                                        }
+                                                        return Container();
+                                                      }),
+                                                  Text(
+                                                    ' : نوع الزائر',
+                                                    textAlign: TextAlign.end,
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            setResponsiveFontSize(
+                                                                28),
+                                                        fontWeight:
+                                                            FontManager.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : Container(),
+                                      widget.memberShipModel == null
+                                          ? Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 60.w,
+                                              ),
+                                              child: Divider(
+                                                thickness: 1,
+                                                height: 2.h,
+                                                color: Colors.green,
+                                              ),
+                                            )
+                                          : Container(),
                                       (widget.screen != 'invitation' &&
-                                              isPerHour == false)
+                                              isPerHour == false &&
+                                              widget.memberShipModel == null)
                                           ? Padding(
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 60.w,
@@ -410,7 +416,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                             )
                                           : Container(),
                                       (widget.screen != 'invitation' &&
-                                              isPerHour == false)
+                                              isPerHour == false &&
+                                              widget.memberShipModel == null)
                                           ? Padding(
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 60.w),
@@ -548,6 +555,51 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                             ],
                                                           )),
                                                     )
+                                                  /*  : Provider.of<VisitorProv>(
+                                                                  context,
+                                                                  listen: true)
+                                                              .memberShipModel
+                                                              .carImagePath !=
+                                                          null
+                                                      ? Stack(
+                                                          children: [
+                                                            Image.network(
+                                                              Provider.of<VisitorProv>(
+                                                                      context,
+                                                                      listen:
+                                                                          true)
+                                                                  .memberShipModel
+                                                                  .carImagePath,
+                                                              width: 300.w,
+                                                              height: 150.h,
+                                                              fit: BoxFit.fill,
+                                                            ),
+                                                            Positioned(
+                                                              left: 4.w,
+                                                              top: 4.w,
+                                                              child: InkWell(
+                                                                onTap: () {
+                                                                  print(
+                                                                      'deleted');
+                                                                  Provider.of<VisitorProv>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .memberShipModel
+                                                                      .carImagePath = null;
+                                                                },
+                                                                child: Icon(
+                                                                  FontAwesomeIcons
+                                                                      .solidWindowClose,
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      500],
+                                                                  size: 35,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ) */
                                                   : Container(),
                                             ],
                                           ),
@@ -692,6 +744,51 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                             ],
                                                           )),
                                                     )
+                                                  /*   : Provider.of<VisitorProv>(
+                                                                  context,
+                                                                  listen: true)
+                                                              .memberShipModel
+                                                              .identityImagePath !=
+                                                          null
+                                                      ? Stack(
+                                                          children: [
+                                                            Image.network(
+                                                              Provider.of<VisitorProv>(
+                                                                      context,
+                                                                      listen:
+                                                                          true)
+                                                                  .memberShipModel
+                                                                  .identityImagePath,
+                                                              width: 300.w,
+                                                              height: 150.h,
+                                                              fit: BoxFit.fill,
+                                                            ),
+                                                            Positioned(
+                                                              left: 4.w,
+                                                              top: 4.w,
+                                                              child: InkWell(
+                                                                onTap: () {
+                                                                  print(
+                                                                      'deleted');
+                                                                  Provider.of<VisitorProv>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .memberShipModel
+                                                                      .identityImagePath = null;
+                                                                },
+                                                                child: Icon(
+                                                                  FontAwesomeIcons
+                                                                      .solidWindowClose,
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      500],
+                                                                  size: 35,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ) */
                                                   : Container(),
                                             ],
                                           ),
@@ -729,8 +826,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                   from: 'send',
                                                                 )))
                                                     : isPerHour == true
-                                                        ? Provider.of<
-                                                                    VisitorProv>(
+                                                        ? Provider.of<VisitorProv>(
                                                                 context,
                                                                 listen: false)
                                                             .checkInPerHour(
@@ -770,36 +866,78 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                           )));
                                                             }
                                                           })
-                                                        : Provider.of<
-                                                                    VisitorProv>(
-                                                                context,
-                                                                listen: false)
-                                                            .getBill(
-                                                                visitorTypeId
-                                                                    .toString(),
-                                                                _citizensValue
-                                                                    .toString(),
-                                                                _militaryValue
-                                                                    .toString())
-                                                            .then((value) {
-                                                            print(
-                                                                'value is $value');
-                                                            Navigator.pop(
-                                                                context);
-                                                            showDialog(
-                                                                context:
+                                                        : widget.memberShipModel !=
+                                                                null
+                                                            ? Provider.of<VisitorProv>(context, listen: false)
+                                                                .updateMemberShipImages(
+                                                                    widget
+                                                                        .memberShipModel
+                                                                        .id,
+                                                                    Provider.of<VisitorProv>(context, listen: false)
+                                                                        .rokhsa,
+                                                                    Provider.of<VisitorProv>(context, listen: false)
+                                                                        .idCard)
+                                                                .then((value) {
+                                                                if (value ==
+                                                                    'Success') {
+                                                                  Provider.of<VisitorProv>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .getBill(
+                                                                          widget
+                                                                              .memberShipModel
+                                                                              .ownerTypeId
+                                                                              .toString(),
+                                                                          '0',
+                                                                          '0')
+                                                                      .then(
+                                                                          (value) {
+                                                                    print(
+                                                                        'value is $value');
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (context) {
+                                                                          return BillDialog(
+                                                                              typeValue: widget.memberShipModel,
+                                                                              citizenValue: 0,
+                                                                              militaryValue: 0);
+                                                                        });
+                                                                  });
+                                                                }
+                                                              })
+                                                            : Provider.of<VisitorProv>(
                                                                     context,
-                                                                builder:
-                                                                    (context) {
-                                                                  return BillDialog(
-                                                                      typeValue:
-                                                                          visitorTypeId,
-                                                                      citizenValue:
-                                                                          _citizensValue,
-                                                                      militaryValue:
-                                                                          _militaryValue);
-                                                                });
-                                                          });
+                                                                    listen:
+                                                                        false)
+                                                                .getBill(
+                                                                    visitorTypeId
+                                                                        .toString(),
+                                                                    _citizensValue.toString(),
+                                                                    _militaryValue.toString())
+                                                                .then((value) {
+                                                                print(
+                                                                    'value is $value');
+                                                                Navigator.pop(
+                                                                    context);
+                                                                showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (context) {
+                                                                      return BillDialog(
+                                                                          typeValue:
+                                                                              visitorTypeId,
+                                                                          citizenValue:
+                                                                              _citizensValue,
+                                                                          militaryValue:
+                                                                              _militaryValue);
+                                                                    });
+                                                              });
                                               },
                                               title: 'إستمرار',
                                               buttonColor: ColorManager.primary,

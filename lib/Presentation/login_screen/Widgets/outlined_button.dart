@@ -21,13 +21,13 @@ class OutlineButtonFb1 extends StatelessWidget {
       onPressed: onPressed,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Text(
-          "Sign Out",
+          'Sign Out',
           style: TextStyle(
               fontSize: setResponsiveFontSize(30),
               fontWeight: FontWeight.bold,
               color: primaryColor,
               letterSpacing: 2,
-              fontFamily: GoogleFonts.getFont('Staatliches').fontFamily),
+              ),
         ),
         const Icon(
           Icons.exit_to_app,

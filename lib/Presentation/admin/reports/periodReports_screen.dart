@@ -1,4 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import '../../../Utilities/Colors/colorManager.dart';
+import '../../../Utilities/Shared/sharedWidgets.dart';
+import '../../../Utilities/responsive.dart';
+import '../../../ViewModel/guard/authProv.dart';
 
 import '../../../Utilities/connectivityStatus.dart';
 
@@ -33,20 +37,20 @@ class PeriodReportsScreen extends StatefulWidget {
 
 class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
   int invitationTypeId;
-  final startDateController = TextEditingController();
-  var selectedType;
+  final TextEditingController startDateController = TextEditingController();
+  String selectedType;
   String date;
   bool loadReport = false;
-  var fromDate;
-  var toDate;
+  String fromDate;
+  String toDate;
   String dateFromString;
 
   @override
   void initState() {
     super.initState();
-    final DateTime now = DateTime.now();
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    final String formatted = formatter.format(now);
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat('yyyy-MM-dd');
+    String formatted = formatter.format(now);
     date = formatted;
   }
 
@@ -89,6 +93,14 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
         child: Directionality(
           textDirection: ui.TextDirection.rtl,
           child: DataTable(
+              dataRowHeight: 70.h,
+              dividerThickness: 3.w,
+              showBottomBorder: true,
+              columnSpacing: isTab(context) ? 30.0 : 20,
+              headingRowColor:
+                  MaterialStateProperty.all<Color>(Colors.blueGrey),
+              headingTextStyle: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.white),
               columns: <DataColumn>[
                 DataColumn(
                   label: Text(
@@ -150,6 +162,18 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                   numeric: false,
                   tooltip: 'To display first id of the ReportRecord',
                 ),
+                const DataColumn(
+                  label: Text(
+                    '',
+                  ),
+                  numeric: false,
+                ),
+                const DataColumn(
+                  label: Text(
+                    '',
+                  ),
+                  numeric: false,
+                ),
               ],
               rows: Provider.of<AReportsProv>(context, listen: false)
                   .reportsList
@@ -159,6 +183,7 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                         DataCell(
                           Text(
                             ReportRecord.id.toString(),
+                            textAlign: TextAlign.center,
                             style: const TextStyle(
                                 color: Colors.red, fontWeight: FontWeight.bold),
                           ),
@@ -166,27 +191,284 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                           placeholder: false,
                         ),
                         DataCell(
-                          Text(ReportRecord.type),
+                          Text(
+                            ReportRecord.type,
+                            textAlign: TextAlign.center,
+                            style:
+                                TextStyle(fontSize: setResponsiveFontSize(20)),
+                          ),
                           showEditIcon: false,
                           placeholder: false,
                         ),
                         DataCell(
-                          Text(ReportRecord.civilCount.toString()),
+                          Text(ReportRecord.civilCount.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: setResponsiveFontSize(26))),
                           showEditIcon: false,
                           placeholder: false,
                         ),
                         DataCell(
-                          Text(ReportRecord.militryCount.toString()),
+                          Text(ReportRecord.militryCount.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: setResponsiveFontSize(26))),
                           showEditIcon: false,
                           placeholder: false,
                         ),
                         DataCell(
-                          Text(ReportRecord.inDateTime.toString()),
+                          Directionality(
+                              textDirection: ui.TextDirection.ltr,
+                              child: SizedBox(
+                                width: 70.w,
+                                child: Text(ReportRecord.inDateTime.toString(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.green,
+                                        fontSize: setResponsiveFontSize(22))),
+                              )),
                           showEditIcon: false,
                           placeholder: false,
                         ),
                         DataCell(
-                          Text(ReportRecord.outDateTime.toString()),
+                          Directionality(
+                              textDirection: ui.TextDirection.ltr,
+                              child: SizedBox(
+                                width: 70.w,
+                                child: Text(
+                                  ReportRecord.outDateTime.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: setResponsiveFontSize(22)),
+                                ),
+                              )),
+                          showEditIcon: false,
+                          placeholder: false,
+                        ),
+                        DataCell(
+                          InkWell(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(40)),
+                                      elevation: 16,
+                                      child: SizedBox(
+                                          height: 320.h,
+                                          width: 600.w,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: <Widget>[
+                                              SizedBox(
+                                                height: 25.h,
+                                              ),
+                                              Directionality(
+                                                textDirection:
+                                                    ui.TextDirection.rtl,
+                                                child: Text(
+                                                  'هل انت متأكد من حذف تلك الفاتورة ؟ ',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize:
+                                                          setResponsiveFontSize(
+                                                              28)),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 20.h,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 60.w),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    RoundedButton(
+                                                      height: 55,
+                                                      width: 220,
+                                                      ontap: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      title: 'لا',
+                                                      buttonColor: Colors.grey,
+                                                      titleColor: ColorManager
+                                                          .backGroundColor,
+                                                    ),
+                                                    RoundedButton(
+                                                      height: 55,
+                                                      width: 220,
+                                                      ontap: () {
+                                                        showLoaderDialog(
+                                                            context,
+                                                            'جارى الحذف');
+
+                                                        Provider.of<AReportsProv>(
+                                                                context,
+                                                                listen: false)
+                                                            .deleteBill(
+                                                                ReportRecord.id,
+                                                                Provider.of<AuthProv>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .userId)
+                                                            .then((value) {
+                                                          if (value ==
+                                                              'success') {
+                                                            Navigator.pop(
+                                                                context);
+                                                            Navigator.pop(
+                                                                context);
+                                                          }
+                                                        });
+                                                      },
+                                                      title: 'حذف',
+                                                      buttonColor:
+                                                          Colors.redAccent,
+                                                      titleColor: ColorManager
+                                                          .backGroundColor,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10.h,
+                                              ),
+                                            ],
+                                          )),
+                                    );
+                                  });
+                            },
+                            child: Icon(
+                              Icons.delete,
+                              size: isTab(context) ? 30 : 20,
+                              color: Colors.red,
+                            ),
+                          ),
+                          showEditIcon: false,
+                          placeholder: false,
+                        ),
+                        DataCell(
+                          InkWell(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
+                                      elevation: 16,
+                                      child: SizedBox(
+                                          height: 300.h,
+                                          width: isTab(context) ? 900.w : 700.w,
+                                          child: ReportRecord.type
+                                                  .toLowerCase()
+                                                  .contains('vip')
+                                              ? SizedBox(
+                                                  child: Image.asset(
+                                                      'assets/images/vip.png'),
+                                                )
+                                              : Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    InkWell(
+                                                      child: Image.network(
+                                                        ReportRecord.image1,
+                                                        width: isTab(context)
+                                                            ? 340.w
+                                                            : 300.w,
+                                                        height: isTab(context)
+                                                            ? 250.h
+                                                            : 250.h,
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      onTap: () {
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return Dialog(
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            40)),
+                                                                elevation: 16,
+                                                                child: SizedBox(
+                                                                  height: 400.h,
+                                                                  width: 600.w,
+                                                                  child: Image
+                                                                      .network(
+                                                                    ReportRecord
+                                                                        .image1,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            });
+                                                      },
+                                                    ),
+                                                    InkWell(
+                                                      child: Image.network(
+                                                        ReportRecord.image2,
+                                                        width: isTab(context)
+                                                            ? 340.w
+                                                            : 300.w,
+                                                        height: isTab(context)
+                                                            ? 250.h
+                                                            : 250.h,
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      onTap: () {
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return Dialog(
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            40)),
+                                                                elevation: 16,
+                                                                child: SizedBox(
+                                                                  height: 400.h,
+                                                                  width: 600.w,
+                                                                  child: Image
+                                                                      .network(
+                                                                    ReportRecord
+                                                                        .image2,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            });
+                                                      },
+                                                    )
+                                                  ],
+                                                )),
+                                    );
+                                  });
+                            },
+                            child: Icon(
+                              Icons.info_outlined,
+                              size: isTab(context) ? 30 : 20,
+                              color: Colors.grey,
+                            ),
+                          ),
                           showEditIcon: false,
                           placeholder: false,
                         ),
@@ -204,6 +486,7 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
 
   int pageNumber = 1;
   int maxPages;
+
   @override
   Widget build(BuildContext context) {
     var reportProv = Provider.of<AReportsProv>(context, listen: false);
@@ -522,7 +805,8 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                           }
                                         });
                                       },
-                                      child: Icon(Icons.arrow_forward_ios)),
+                                      child:
+                                          const Icon(Icons.arrow_forward_ios)),
                               ],
                             ),
                           ))
@@ -618,15 +902,21 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                   decoration: InputDecoration(
                                     suffixIcon: Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 16),
+                                          horizontal: 12),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text((fromDate == null &&
-                                                  toDate == null)
-                                              ? 'اختر الفترة'
-                                              : 'من $fromDate  إلى $toDate'),
+                                          AutoSizeText(
+                                            (fromDate == null && toDate == null)
+                                                ? 'اختر الفترة'
+                                                : '$fromDate / $toDate',
+                                            style: TextStyle(
+                                                fontSize: isTab(context)
+                                                    ? setResponsiveFontSize(22)
+                                                    : setResponsiveFontSize(
+                                                        16)),
+                                          ),
                                           const Icon(
                                             Icons.calendar_today,
                                             color: Colors.green,
@@ -660,18 +950,8 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                             Radius.circular(8.0))),
                                   ),
                                 ),
-                                width: 350.w,
+                                width: isTab(context) ? 350.w : 370.w,
                               ),
-                              /*     SfDateRangePicker(
-                                onSelectionChanged: _onSelectionChanged,
-                                selectionMode:
-                                    DateRangePickerSelectionMode.range,
-                                initialSelectedRange: PickerDateRange(
-                                    DateTime.now()
-                                        .subtract(const Duration(days: 4)),
-                                    DateTime.now()
-                                        .add(const Duration(days: 3))),
-                              ), */
                               Provider.of<AdminHomeProv>(context, listen: true)
                                       .parkTypes
                                       .isNotEmpty
@@ -680,8 +960,9 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           border: Border.all(
-                                              color: Colors.green, width: 1.w)),
-                                      width: 350.w,
+                                              color: Colors.green,
+                                              width: 1.5.w)),
+                                      width: isTab(context) ? 350.w : 370.w,
                                       height: 80.h,
                                       child: DropdownButtonHideUnderline(
                                           child: ButtonTheme(
@@ -697,7 +978,7 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                             return DropdownMenuItem<String>(
                                                 value: x,
                                                 child: Center(
-                                                  child: Text(
+                                                  child: AutoSizeText(
                                                     x,
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
@@ -796,7 +1077,7 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                               },
                               child: SizedBox(
                                 height: 45.h,
-                                width: 200.w,
+                                width: isTab(context) ? 200.w : 250.w,
                                 child: Row(
                                   children: [
                                     const Icon(
@@ -810,7 +1091,7 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                       endIndent: 2,
                                       indent: 4,
                                     ),
-                                    Text(
+                                    AutoSizeText(
                                       'عرض التقرير',
                                       style: TextStyle(
                                           fontSize: setResponsiveFontSize(24),
@@ -836,143 +1117,6 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                             )
                           : Container(),
                       loadReport == true ? const Spacer() : Container(),
-/*                loadReport == true
-                    ? const Align(
-                        child: Divider(
-                        thickness: 2,
-                        color: Colors.green,
-                      ))
-                    : Container()*/
-/*
-                loadReport == true
-                    ? Expanded(
-                        child: ListView.builder(
-                          itemCount: 1,
-                          scrollDirection: Axis.horizontal,
-                          //  shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: SizedBox(
-                                height: 50.h,
-                                child: Row(
-                                  children: [
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'الإجمالى',
-                                      value:
-                                          reportProv.summaryModel.total.toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'أجمالى بالغرامات',
-                                      value: reportProv.summaryModel.total_Fines
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'أجمالى مدنيين',
-                                      value: reportProv.summaryModel.civilPrice
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'أجمالى ق.م',
-                                      value: reportProv.summaryModel.militryPrice
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'أجمالى باركينج',
-                                      value: reportProv.summaryModel.parkPrice
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'مدنيين',
-                                      value: reportProv.summaryModel.civilCount
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'ق.م',
-                                      value: reportProv.summaryModel.militryCount
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'سيارات الأنشطة',
-                                      value: reportProv
-                                          .summaryModel.activityCarCount
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'سيارات المدنيين',
-                                      value: reportProv.summaryModel.citizenCarCount
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'سيارات الجيش',
-                                      value: reportProv.summaryModel.militryCarCount
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'سيارات الأعضاء',
-                                      value: reportProv.summaryModel.memberCarCount
-                                          .toString(),
-                                    ),
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    summaryItem(
-                                      reportProv: reportProv,
-                                      title: 'عدد السيارات',
-                                      value: reportProv.summaryModel.carsCount
-                                          .toString(),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    : Container()
-*/
                     ],
                   ),
                 ],
@@ -980,14 +1124,4 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
             ),
     );
   }
-
-  Future pickDateRange() async {
-    showDateRangePicker(
-        context: context, firstDate: DateTime(1900), lastDate: DateTime(2100));
-  }
-
-/*  void _onSelectionChanged(
-      DateRangePickerSelectionChangedArgs dateRangePickerSelectionChangedArgs) {
-    print('range is    ${dateRangePickerSelectionChangedArgs.value}');
-  }*/
 }

@@ -258,10 +258,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     authProv.changeLoadingState(true);
 
     print('_platformVersion  =   $_udid');
-/*    Fluttertoast.showToast(
-        msg: 'MAC ADDRESS IS $_udid',
-        backgroundColor: Colors.green,
-        toastLength: Toast.LENGTH_LONG);*/
+
     if (_udid == 'Unknown' || _udid == null) {
       Fluttertoast.showToast(
           msg: 'حدث خطأ ما برجاء المحاولة لاحقاً',
@@ -272,10 +269,10 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
       return;
     }
     print('****');
-    authProv
+     authProv
         .login(_memberShipController.text, _passwordController.text, img, _udid)
         .then((value) async {
-      authProv.changeLoadingState(false);
+      //authProv.changeLoadingState(false);
 
       print('value => $value');
       if (value == 'Success') {

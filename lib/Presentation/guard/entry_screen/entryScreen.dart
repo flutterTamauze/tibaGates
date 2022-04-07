@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../Utilities/connectivityStatus.dart';
 import 'package:lottie/lottie.dart';
 import '../../login_screen/Widgets/outlined_button.dart';
@@ -74,9 +75,10 @@ class _EntryScreenState extends State<EntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    ConnectivityStatus connectionStatus =
+        Provider.of<ConnectivityStatus>(context);
 
     return WillPopScope(
       onWillPop: () {
@@ -153,12 +155,10 @@ class _EntryScreenState extends State<EntryScreen> {
                                     Text(
                                         '${Provider.of<AuthProv>(context, listen: true).balance ?? '0'} ',
                                         style: TextStyle(
-                                            fontSize: setResponsiveFontSize(28),
-                                            fontWeight: FontManager.bold,
-                                            color: Colors.red,
-                                            fontFamily:
-                                                GoogleFonts.getFont('Redressed')
-                                                    .fontFamily)),
+                                          fontSize: setResponsiveFontSize(28),
+                                          fontWeight: FontManager.bold,
+                                          color: Colors.red,
+                                        )),
                                     Text(
                                       Provider.of<AuthProv>(context,
                                                   listen: true)
@@ -214,7 +214,7 @@ class _EntryScreenState extends State<EntryScreen> {
                               width: 50.w,
                               child: const Center(
                                 child: Icon(
-                                  Icons.card_giftcard,
+                                  Icons.qr_code,
                                   color: Colors.orange,
                                   size: 36,
                                 ),
@@ -223,6 +223,46 @@ class _EntryScreenState extends State<EntryScreen> {
                             style: ButtonStyle(
                                 side: MaterialStateProperty.all(BorderSide(
                                     color: Colors.orange, width: 1.4.w)),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                        vertical: 20.h, horizontal: 20.w)),
+                                shape: MaterialStateProperty.all(
+                                    const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20))))),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => const QrCodeScreen(
+                                            screen: 'memberShip',
+                                          )),
+                                  (Route<dynamic> route) => false);
+                            },
+                            child: SizedBox(
+                              height: 45.h,
+                              width: 50.w,
+                              child: const Center(
+                                child: Icon(
+                                  FontAwesomeIcons.futbol,
+                                  color: Colors.pink,
+                                  size: 36,
+                                ),
+                              ),
+                            ),
+                            style: ButtonStyle(
+                                side: MaterialStateProperty.all(BorderSide(
+                                    color: Colors.pink, width: 1.4.w)),
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.white),
@@ -259,7 +299,7 @@ class _EntryScreenState extends State<EntryScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: 100.h,
+                          height: 80.h,
                         ),
                         Card(
                           elevation: 6,
@@ -309,7 +349,7 @@ class _EntryScreenState extends State<EntryScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: 220.h,
+                          height: 150.h,
                         ),
                         FadeInUp(
                             child: OutlineButtonFb1(

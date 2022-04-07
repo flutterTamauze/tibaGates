@@ -1,5 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import '../admin/admin_bottomNav.dart';
+import '../../Utilities/responsive.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../main.dart';
 import '../admin/a_invitations_screen.dart';
 import 'm_share_qr.dart';
@@ -33,15 +38,51 @@ class MAddInvitation extends StatefulWidget {
 class _MAddInvitationState extends State<MAddInvitation> {
   TextEditingController visitorNameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  final startDateController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  final TextEditingController startDateController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String date;
+  String fromDate;
+  String toDate;
+  String dateFromString;
+  String _range = '';
+
+  DateRangePickerController dateRangePickerController =
+      DateRangePickerController();
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      if (args.value is PickerDateRange) {
+        _range = '${DateFormat('yyyy-MM-dd').format(args.value.startDate)} -'
+            ' ${DateFormat('yyyy-MM-dd').format(args.value.endDate ?? args.value.startDate)}';
+
+        fromDate = DateFormat('yyyy-MM-dd')
+            .format(args.value.startDate)
+            .toString()
+            .replaceAll('/', '-');
+        toDate = DateFormat('yyyy-MM-dd')
+            .format(args.value.endDate ?? args.value.startDate)
+            .toString()
+            .replaceAll('/', '-');
+      }
+    });
+    print('selected range $_range');
+  }
+
+  @override
+  void initState() {
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat('yyyy-MM-dd');
+    String formatted = formatter.format(now);
+    date = formatted;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    ConnectivityStatus connectionStatus =
+        Provider.of<ConnectivityStatus>(context);
 
     return WillPopScope(
       onWillPop: () {
@@ -49,8 +90,9 @@ class _MAddInvitationState extends State<MAddInvitation> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      const AInvitationScreen()));
+                  builder: (BuildContext context) => BottomNav(
+                        comingIndex: 1,
+                      )));
         } else {
           Navigator.pushReplacement(
               context,
@@ -278,7 +320,7 @@ class _MAddInvitationState extends State<MAddInvitation> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        SizedBox(
+                                        /*      SizedBox(
                                           width: 300.w,
                                           child: TextFormField(
                                             autovalidateMode:
@@ -358,6 +400,163 @@ class _MAddInvitationState extends State<MAddInvitation> {
                                                                   8.0))),
                                             ),
                                           ),
+                                        )*/
+
+                                        SizedBox(
+                                          child: TextFormField(
+                                            autovalidateMode:
+                                                AutovalidateMode.always,
+                                            controller: startDateController,
+                                            keyboardType:
+                                                TextInputType.datetime,
+                                            readOnly: true,
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (dialogContext) {
+                                                  return StatefulBuilder(
+                                                      builder:
+                                                          (context, stState) {
+                                                    return Dialog(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                      ),
+                                                      child: SizedBox(
+                                                        height: 430.h,
+                                                        width: double.infinity,
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            SfDateRangePicker(
+                                                              view:
+                                                                  DateRangePickerView
+                                                                      .month,
+                                                              enablePastDates:
+                                                                  true,
+                                                              rangeSelectionColor:
+                                                                  Colors.green,
+                                                              todayHighlightColor:
+                                                                  Colors.green,
+                                                              selectionMode:
+                                                                  DateRangePickerSelectionMode
+                                                                      .range,
+                                                              onSelectionChanged:
+                                                                  _onSelectionChanged,
+                                                              showActionButtons:
+                                                                  true,
+                                                              controller:
+                                                                  dateRangePickerController,
+                                                              onCancel: () {
+                                                                dateRangePickerController
+                                                                        .selectedDates =
+                                                                    null;
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              onSubmit:
+                                                                  (Object val) {
+                                                                print(
+                                                                    'start date $fromDate    end date $toDate');
+                                                                if ((fromDate
+                                                                            .toString()
+                                                                            .length ==
+                                                                        10) &&
+                                                                    (toDate
+                                                                            .toString()
+                                                                            .length ==
+                                                                        10)) {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                } else {
+                                                                  Fluttertoast.showToast(
+                                                                      msg:
+                                                                          'اختر الفترة اولا',
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .green,
+                                                                      toastLength:
+                                                                          Toast
+                                                                              .LENGTH_LONG);
+                                                                }
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  });
+                                                },
+                                              );
+                                            },
+                                            decoration: InputDecoration(
+                                              suffixIcon: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      (fromDate == null &&
+                                                              toDate == null)
+                                                          ? 'اختر الفترة'
+                                                          : '$fromDate / $toDate',
+                                                      style: TextStyle(
+                                                          fontSize:
+                                                              setResponsiveFontSize(
+                                                                  16)),
+                                                    ),
+                                                    const Icon(
+                                                      Icons.calendar_today,
+                                                      color: Colors.green,
+                                                      size: 24,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              hintText: '',
+                                              hintStyle: TextStyle(
+                                                  //    color: darkBlueColor,
+                                                  fontFamily: 'Open Sans',
+                                                  fontSize:
+                                                      setResponsiveFontSize(16),
+                                                  fontWeight: FontWeight.w600),
+                                              alignLabelWithHint: true,
+                                              focusedBorder:
+                                                  const OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.green,
+                                                          width: 1.0),
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  8.0))),
+                                              border: const OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.green,
+                                                    width: 1.0),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8.0)),
+                                              ),
+                                              enabledBorder:
+                                                  const OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.green,
+                                                          width: 1.0),
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  8.0))),
+                                            ),
+                                          ),
+                                          width: 300.w,
                                         ),
                                         Text(
                                           'تاريخ الدعوة',
@@ -384,7 +583,7 @@ class _MAddInvitationState extends State<MAddInvitation> {
                               } else {
                                 showLoaderDialog(context, 'Loading...');
                                 debugPrint(
-                                    'visitor name ${visitorNameController.text}  description ${descriptionController.text}  managerId ${Provider.of<AuthProv>(context, listen: false).userId}  invitationTypeID ${widget.invitationTypeId} date $date ');
+                                    'visitor name ${visitorNameController.text}  description ${descriptionController.text}  managerId ${Provider.of<AuthProv>(context, listen: false).userId}  invitationTypeID ${widget.invitationTypeId} from $fromDate   to $toDate ');
                                 Provider.of<ManagerProv>(context, listen: false)
                                     .addInvitation(
                                         visitorNameController.text,
@@ -393,7 +592,8 @@ class _MAddInvitationState extends State<MAddInvitation> {
                                                 listen: false)
                                             .userId,
                                         widget.invitationTypeId,
-                                        date)
+                                        fromDate,
+                                        toDate)
                                     .then((value) {
                                   debugPrint('value is $value');
                                   if (value == 'Success') {
@@ -404,6 +604,11 @@ class _MAddInvitationState extends State<MAddInvitation> {
                                                 role: prefs.getString('role'))),
                                         (Route<dynamic> route) => false);
                                   } else {
+                                    Fluttertoast.showToast(
+                                        msg: 'حدث خطأ ما برجاء المحاولة لاحقاً',
+                                        backgroundColor: Colors.green,
+                                        toastLength: Toast.LENGTH_LONG);
+                                    Navigator.pop(context);
                                     debugPrint('حدث خطا ما');
                                   }
                                 });
