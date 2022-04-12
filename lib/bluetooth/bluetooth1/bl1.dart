@@ -5,7 +5,7 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'connection.dart';
 import 'led.dart';
 
-class MyApp extends StatelessWidget {
+class MyBluetooth extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

@@ -23,6 +23,7 @@ import 'ViewModel/admin/reports/admin_reportsProv.dart';
 import 'ViewModel/admin/more/holidaysProv.dart';
 import 'ViewModel/manager/managerProv.dart';
 import 'ViewModel/admin/more/pricesProv.dart';
+import 'bluetooth/bluetooth1/bl1.dart';
 
 SharedPreferences prefs;
 GetIt getIt = GetIt.instance;

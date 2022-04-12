@@ -44,6 +44,16 @@ class _EntryScreenState extends State<EntryScreen> {
   @override
   void initState() {
     super.initState();
+
+    if (Provider.of<VisitorProv>(context, listen: false).memberShipModel !=
+        null) {
+
+      Provider.of<VisitorProv>(context, listen: false)
+          .memberShipModel
+           = null;
+
+
+    }
     token = prefs.getString('token');
     print(token);
     Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {

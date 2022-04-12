@@ -64,6 +64,16 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     notifyListeners();
   }
 
+  void deleteCarPath() {
+    memberShipModel.carImagePath = null;
+    notifyListeners();
+  }
+
+  void deleteIdPath() {
+    memberShipModel.identityImagePath = null;
+    notifyListeners();
+  }
+
   void addImageToItem(File image) {
     images.add(image);
     notifyListeners();
@@ -353,7 +363,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
       notifyListeners();
       return data;
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -562,15 +572,11 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     try {
       Uri uri = Uri.parse('$BASE_URL/api/MemberShip/ScanMemberQR');
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
-      debugPrint('1');
       request.fields['QrCode'] = qrCode;
       request.headers.addAll(mHeaders);
-      debugPrint('2');
       try {
         await request.send().then((response) async {
-          log('شاشاشاش $response');
           response.stream.transform(utf8.decoder).listen((value) {
-            log('vvv $value');
             Map<String, dynamic> responseDecoded = json.decode(value);
 
             debugPrint('response is $responseDecoded');
@@ -578,17 +584,20 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
             if (responseDecoded['message'] == 'Success') {
               data = 'Success';
               memberShipModel = MemberShipModel();
-              memberShipModel.carImagePath = responseDecoded['image1'] != null
-                  ? "$BASE_URL${responseDecoded["image1"].toString().replaceAll("\\", "/")}"
-                  : 'first time';
-              memberShipModel.identityImagePath = responseDecoded['image2'] !=
-                      null
-                  ? "$BASE_URL${responseDecoded["image2"].toString().replaceAll("\\", "/")}"
-                  : 'first time';
+              memberShipModel.carImagePath =
+                  responseDecoded['response']['image1'] != null
+                      ? responseDecoded['response']['image1'].toString()
+                      : 'first time';
+
+              memberShipModel.identityImagePath =
+                  responseDecoded['response']['image2'] != null
+                      ? responseDecoded['response']['image2'].toString()
+                      : 'first time';
               memberShipModel.id = responseDecoded['response']['id'];
               memberShipModel.ownerTypeId =
                   responseDecoded['response']['ownerTypeId'];
             }
+            debugPrint('image one is ${memberShipModel.carImagePath}');
           });
         }).catchError((e) {
           debugPrint(e.toString());
@@ -611,6 +620,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     try {
       Uri uri = Uri.parse('$BASE_URL/api/MemberShip/UpdateImage');
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
+
       request.files.add(
         await http.MultipartFile.fromPath('file', carImage.path),
       );

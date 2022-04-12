@@ -269,11 +269,9 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
       return;
     }
     print('****');
-     authProv
+    authProv
         .login(_memberShipController.text, _passwordController.text, img, _udid)
         .then((value) async {
-      //authProv.changeLoadingState(false);
-
       print('value => $value');
       if (value == 'Success') {
         print('caching data');
@@ -305,6 +303,11 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
       } else if (value == 'Incorrect Password') {
         Fluttertoast.showToast(
             msg: 'كلمة المرور غير صحيحة ',
+            backgroundColor: Colors.green,
+            toastLength: Toast.LENGTH_LONG);
+      }else if (value == 'This User Is Active In Another Device') {
+        Fluttertoast.showToast(
+            msg: 'This User Is Active In Another Device',
             backgroundColor: Colors.green,
             toastLength: Toast.LENGTH_LONG);
       } else if (value == 'you need to be at same network with local host') {

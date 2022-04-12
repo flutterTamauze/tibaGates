@@ -76,8 +76,8 @@ class _PrintScreen2State extends State<PrintScreen2> {
   void initState() {
     super.initState();
 
-    debugPrint(
-        'widget.resendType  ${Provider.of<VisitorProv>(context, listen: false).memberShipModel.identityImagePath}');
+    /* debugPrint(
+        'widget.resendType  ${Provider.of<VisitorProv>(context, listen: false).memberShipModel.identityImagePath}');*/
     debugPrint(
         'mac address is ${Provider.of<AuthProv>(context, listen: false).printerAddress}');
     WidgetsBinding.instance.addPostFrameCallback((_) => initBluetooth());
@@ -97,6 +97,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
         config['gap'] = 2;
 
         base64Image = base64Encode(_imageFile);
+
         list.add(LineText(
           type: LineText.TYPE_IMAGE,
           x: 10,
@@ -142,11 +143,14 @@ class _PrintScreen2State extends State<PrintScreen2> {
           });
           break;
         case BluetoothPrint.DISCONNECTED:
-          setState(() {
-            print('*** dis_connected');
+          if (mounted) {
+            setState(() {
+              print('*** dis_connected');
 
-            _connected = false;
-          });
+              _connected = false;
+            });
+          }
+
           break;
         default:
           print('state is else $isConnected');
@@ -1577,34 +1581,17 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                               } else {
                                                                 visitorProv
                                                                     .checkIn(
-                                                                        visitorProv.memberShipModel !=
-                                                                                null
-                                                                            ? null
-                                                                            : visitorProv
-                                                                                .rokhsa,
-                                                                        visitorProv.memberShipModel !=
-                                                                                null
-                                                                            ? null
-                                                                            : visitorProv
-                                                                                .idCard,
-                                                                        authProv
-                                                                            .userId,
-                                                                        Provider.of<VisitorProv>(context, listen: false)
-                                                                                .memberShipModel
-                                                                                .ownerTypeId ??
-                                                                            widget
-                                                                                .typeId,
-                                                                        widget
-                                                                            .civilCount,
-                                                                        widget
-                                                                            .militaryCount,
+                                                                        visitorProv.memberShipModel != null ? null : visitorProv.rokhsa,
+                                                                        visitorProv.memberShipModel != null ? null : visitorProv.idCard,
+                                                                        authProv.userId,
+                                                                        Provider.of<VisitorProv>(context, listen: false).memberShipModel != null
+                                                                            ? Provider.of<VisitorProv>(context, listen: false).memberShipModel.ownerTypeId
+                                                                            : widget.typeId,
+                                                                        widget.civilCount,
+                                                                        widget.militaryCount,
                                                                         context,
-                                                                        Provider.of<VisitorProv>(context, listen: false)
-                                                                            .memberShipModel
-                                                                            .carImagePath,
-                                                                        Provider.of<VisitorProv>(context, listen: false)
-                                                                            .memberShipModel
-                                                                            .identityImagePath)
+                                                                    visitorProv.memberShipModel != null ?  Provider.of<VisitorProv>(context, listen: false).memberShipModel.carImagePath: null ,
+                                                                    visitorProv.memberShipModel != null ? Provider.of<VisitorProv>(context, listen: false).memberShipModel.identityImagePath:   null  )
                                                                     .then(
                                                                         (value) async {
                                                                   if (value

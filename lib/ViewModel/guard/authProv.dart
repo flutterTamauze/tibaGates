@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:clean_app/api/base_client.dart';
-import 'package:clean_app/api/base_exception_handling.dart';
+import '../../api/base_client.dart';
+import '../../api/base_exception_handling.dart';
 
 import '../../Utilities/Constants/constants.dart';
 import '../../api/sharedPrefs.dart';
@@ -60,7 +60,6 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     }
   }
 
-
   Future<dynamic> login(String username, String password, File guardImage,
       String tabAddress) async {
     parkTypes = [];
@@ -83,7 +82,7 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
         changeLoadingState(false);
         debugPrint('status code ${response.statusCode}');
 
-         response.stream.transform(utf8.decoder).listen((value) async {
+        response.stream.transform(utf8.decoder).listen((value) async {
           Map<String, dynamic> responseDecoded =  json.decode(value);
 
           debugPrint("response is ${ responseDecoded['response']}");
@@ -97,7 +96,7 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
             userRole = responseDecoded['response']['roles'][0];
 
             var reasonsJsonObj =
-                responseDecoded['response']['parkTypes'] as List;
+            responseDecoded['response']['parkTypes'] as List;
 
             if (parkTypes.isEmpty) {
               parkTypes.add('الكل');
@@ -114,7 +113,7 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
               balance = double.parse(userJson['balance'].toString());
               printerAddress = userJson['printerMac'];
               lostTicketPrice = double.parse(responseDecoded['response']
-                      ['printReasons'][0]['price']
+              ['printReasons'][0]['price']
                   .toString());
               gateName = userJson['gateName'];
             }
@@ -138,3 +137,5 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     return data;
   }
 }
+
+

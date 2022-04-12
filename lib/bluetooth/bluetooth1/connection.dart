@@ -70,6 +70,8 @@ class _SelectBondedDevicePage extends State<SelectBondedDevicePage> {
             )
             .toList();
       });
+      print('devices length ${devices.length}');
+
     });
   }
 
@@ -120,7 +122,9 @@ class _SelectBondedDevicePage extends State<SelectBondedDevicePage> {
             // rssi: _device.rssi,
             // enabled: _device.availability == _DeviceAvailability.yes,
             onTap: () {
-              widget.onCahtPage(_device.device);
+              print(' length ${devices.length}');
+
+                 widget.onCahtPage(_device.device);
             },
           ),
         )
