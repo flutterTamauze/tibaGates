@@ -1,9 +1,13 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
 import 'package:clean_app/Utilities/responsive.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -829,13 +833,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                             SizedBox(
                                               height: 20.h,
                                             ),
-                                            ((visitorProv.idCard != null &&
+                                            /*    ((visitorProv.idCard != null &&
                                                     visitorProv.rokhsa != null))
-                                                ? RoundedButton(
-                                                    width: 220,
-                                                    height: 60,
-                                                    ontap: () async {
-                                                      /*     if (visitorProv.memberShipModel != null) {
+                                                ?*/
+                                            RoundedButton(
+                                              width: 220,
+                                              height: 60,
+                                              ontap: () async {
+                                                /*     if (visitorProv.memberShipModel != null) {
                                                   print('member ship model is not null');
 
                                                   if (visitorProv.memberShipModel.identityImagePath.contains('first time') &&
@@ -854,21 +859,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                   print('dd');
                                                 }
 */
-                                                      showLoaderDialog(context,
-                                                          'Loading...');
+                                                showLoaderDialog(
+                                                    context, 'Loading...');
 
-                                                      if (widget.screen ==
-                                                          'invitation') {
-                                                        debugPrint(
-                                                            'INVITATION CASE');
-                                                        invitationCase();
-                                                      } else if (isPerHour ==
-                                                          true) {
-                                                        debugPrint(
-                                                            'PER HOUR CASE');
-                                                        perHourCase();
-                                                      }
-                                                      /*else if (defVisitorProv
+                                                if (widget.screen ==
+                                                    'invitation') {
+                                                  debugPrint('INVITATION CASE');
+                                                  invitationCase();
+                                                } else if (isPerHour == true) {
+                                                  debugPrint('PER HOUR CASE');
+                                                  perHourCase();
+                                                }
+                                                /*else if (defVisitorProv
                                                                   .memberShipModel !=
                                                               null &&
                                                           defVisitorProv
@@ -897,36 +899,33 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                             'MEMBERSHIP IMAGES NOT NULL CASE');
                                                         membershipImagesNonNullCase();
                                                       } */
-                                                      else {
-                                                        defVisitorProv
-                                                            .getBill(
-                                                                visitorTypeId
-                                                                    .toString(),
-                                                                _citizensValue
-                                                                    .toString(),
-                                                                _militaryValue
-                                                                    .toString())
-                                                            .then((value) {
-                                                          print(
-                                                              'value is $value');
-                                                          Navigator.pop(
-                                                              context);
-                                                          showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (context) {
-                                                                return BillDialog(
-                                                                    typeValue:
-                                                                        visitorTypeId,
-                                                                    citizenValue:
-                                                                        _citizensValue,
-                                                                    militaryValue:
-                                                                        _militaryValue);
-                                                              });
+                                                else {
+                                                  defVisitorProv
+                                                      .getBill(
+                                                          visitorTypeId
+                                                              .toString(),
+                                                          _citizensValue
+                                                              .toString(),
+                                                          _militaryValue
+                                                              .toString())
+                                                      .then((value) {
+                                                    print('value is $value');
+                                                    Navigator.pop(context);
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return BillDialog(
+                                                              typeValue:
+                                                                  visitorTypeId,
+                                                              citizenValue:
+                                                                  _citizensValue,
+                                                              militaryValue:
+                                                                  _militaryValue);
                                                         });
-                                                      }
+                                                  });
+                                                }
 
-                                                      /*
+                                                /*
 
                                                 widget.screen == 'invitation'
                                                     ? Navigator.push(
@@ -1058,14 +1057,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                               militaryValue: _militaryValue);
                                                                         });
                                                                   });*/
-                                                    },
-                                                    title: 'إستمرار',
-                                                    buttonColor:
-                                                        ColorManager.primary,
-                                                    titleColor: ColorManager
-                                                        .backGroundColor,
-                                                  )
-                                                : Container(),
+                                              },
+                                              title: 'إستمرار',
+                                              buttonColor: ColorManager.primary,
+                                              titleColor:
+                                                  ColorManager.backGroundColor,
+                                            )
+                                            // : Container(),
                                           ],
                                         ),
                                       ),
@@ -1076,7 +1074,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                             ),
                           ),
                         )
-
                       : Container(
                           height: height,
                           width: width,
@@ -1098,9 +1095,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                     height: 20.h,
                                   ),
 
-
-
-                               /*
+                                  /*
 
                                   Stack(
                                     children: [
@@ -1145,55 +1140,59 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
                                      */
 
-                                     ZoomIn(
-                                    child: Stack(
-                                      children: [
-                                        SizedBox(
-                                          height: (height * 0.15),
-                                          width: (width * 0.32),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              border: Border.all(
-                                                  color: ColorManager.primary,
-                                                  width: 2.w),
-                                              image: DecorationImage(
-                                                  image: visitorProv
-                                                              .memberShipModel
-                                                              .memberProfilePath ==
-                                                          'empty'
-                                                      ? const AssetImage(
-                                                          'assets/images/avatar.png')
-                                                      : NetworkImage(
-                                                      visitorProv
-                                                          .memberShipModel
-                                                          .memberProfilePath
-
-                                                    /*image??visitorProv
-                                                          .memberShipModel
-                                                          .memberProfilePath*/)),
-                                              shape: BoxShape.circle,
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          child: InkWell(
-                                            onTap: getImage,
-                                            child: const CircleAvatar(
-                                              radius: 17,
-                                              backgroundColor: Colors.green,
-                                              child: Icon(
-                                                Icons.edit,
+                                  Consumer<VisitorProv>(
+                                      builder: (context, message, child) {
+                                    return ZoomIn(
+                                      child: Stack(
+                                        children: [
+                                          SizedBox(
+                                            height: (height * 0.15),
+                                            width: (width * 0.32),
+                                            child: Container(
+                                              decoration: BoxDecoration(
                                                 color: Colors.white,
+                                                border: Border.all(
+                                                    color: ColorManager.primary,
+                                                    width: 2.w),
+                                                image: DecorationImage(
+                                                    image: message
+                                                                .memberShipModel
+                                                                .memberProfilePath ==
+                                                            'empty'
+                                                        ? const AssetImage(
+                                                            'assets/images/avatar.png')
+                                                        : NetworkImage(
+                                                        message
+                                                                .memberShipModel
+                                                                .memberProfilePath+"?v=${Random().nextInt(1000)}",
+
+                                                            /*image??visitorProv
+                                                          .memberShipModel
+                                                          .memberProfilePath*/
+                                                            )),
+                                                shape: BoxShape.circle,
                                               ),
                                             ),
                                           ),
-                                          bottom: 25.h,
-                                          left: 180.w,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                          Positioned(
+                                            child: InkWell(
+                                              onTap: getImage,
+                                              child: const CircleAvatar(
+                                                radius: 17,
+                                                backgroundColor: Colors.green,
+                                                child: Icon(
+                                                  Icons.edit,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                            bottom: 25.h,
+                                            left: 180.w,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }),
                                   SizedBox(
                                     height: 12.h,
                                   ),
@@ -1231,7 +1230,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                         child: Column(
                                           children: [
                                             defVisitorProv.memberShipModel
-                                                    .memberShipSports!=null
+                                                        .memberShipSports !=
+                                                    null
                                                 ? Align(
                                                     alignment:
                                                         Alignment.topRight,
@@ -1275,106 +1275,98 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                     3
                                                                 ? 350.h
                                                                 : 170.h,
-                                                            child: GridView
-                                                                .builder(
-                                                              gridDelegate:
-                                                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                                                      childAspectRatio: MediaQuery.of(context)
-                                                                              .size
-                                                                              .width /
-                                                                          (MediaQuery.of(context).size.height /
-                                                                              2.5),
-                                                                      crossAxisSpacing: Platform
-                                                                              .isIOS
-                                                                          ? 5.w
-                                                                          : isTab(
-                                                                                  context)
-                                                                              ? 2
-                                                                                  .w
-                                                                              : 1
-                                                                                  .w,
-                                                                      mainAxisSpacing: Platform
-                                                                              .isIOS
-                                                                          ? 7.w
-                                                                          : 10
-                                                                              .w,
-                                                                      crossAxisCount:
-                                                                          3),
-                                                              itemBuilder:
-                                                                  (context,
-                                                                      index) {
-                                                                return Card(
-                                                                  elevation: 6,
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            25.0),
-                                                                  ),
-                                                                  child:
-                                                                      ClipRRect(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            25),
+                                                            child:
+                                                                Directionality(
+                                                              textDirection: ui
+                                                                  .TextDirection
+                                                                  .rtl,
+                                                              child: GridView
+                                                                  .builder(
+                                                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                                    childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 2.5),
+                                                                    crossAxisSpacing: Platform.isIOS
+                                                                        ? 5.w
+                                                                        : isTab(context)
+                                                                            ? 2.w
+                                                                            : 1.w,
+                                                                    mainAxisSpacing: Platform.isIOS ? 7.w : 10.w,
+                                                                    crossAxisCount: 3),
+                                                                itemBuilder:
+                                                                    (context,
+                                                                        index) {
+                                                                  return Card(
+                                                                    elevation:
+                                                                        6,
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              25.0),
+                                                                    ),
                                                                     child:
-                                                                        Container(
-                                                                      decoration:
-                                                                          const BoxDecoration(
-                                                                        image:
-                                                                            DecorationImage(
-                                                                          image:
-                                                                              AssetImage('assets/images/sportbg2.jpg'),
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        ),
-                                                                      ),
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              25),
                                                                       child:
-                                                                          Padding(
-                                                                        padding: EdgeInsets.only(
-                                                                            left:
-                                                                                10.w,
-                                                                            right: 10.w,
-                                                                            top: 10.h),
+                                                                          Container(
+                                                                        decoration:
+                                                                            const BoxDecoration(
+                                                                          image:
+                                                                              DecorationImage(
+                                                                            image:
+                                                                                AssetImage('assets/images/sportbg2.jpg'),
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          ),
+                                                                        ),
                                                                         child:
-                                                                            Column(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.spaceEvenly,
-                                                                          children: [
-                                                                            AutoSizeText(
-                                                                              defVisitorProv.memberShipModel.memberShipSports[index].sportName,
-                                                                              textAlign: TextAlign.center,
-                                                                              style: TextStyle(fontSize: setResponsiveFontSize(24), color: Colors.white),
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width: 20.w,
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width: isTab(context) ? 160.w : 145.w,
-                                                                              child: AutoSizeText(
-                                                                                  ''
-                                                                                  'ينتهى الإشتراك فى ',
-                                                                                  maxLines: 2,
-                                                                                  textAlign: TextAlign.end,
-                                                                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: setResponsiveFontSize(16))),
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width: 20.w,
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width: isTab(context) ? 160.w : 145.w,
-                                                                              child: AutoSizeText(defVisitorProv.memberShipModel.memberShipSports[index].sportExpireDate, maxLines: 2, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red, fontSize: setResponsiveFontSize(22))),
-                                                                            ),
-                                                                          ],
+                                                                            Padding(
+                                                                          padding: EdgeInsets.only(
+                                                                              left: 10.w,
+                                                                              right: 10.w,
+                                                                              top: 10.h),
+                                                                          child:
+                                                                              Column(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceEvenly,
+                                                                            children: [
+                                                                              AutoSizeText(
+                                                                                defVisitorProv.memberShipModel.memberShipSports[index].sportName,
+                                                                                textAlign: TextAlign.center,
+                                                                                style: TextStyle(fontSize: setResponsiveFontSize(24), color: Colors.white),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: 20.w,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: isTab(context) ? 160.w : 145.w,
+                                                                                child: AutoSizeText(
+                                                                                    ''
+                                                                                    'ينتهى الإشتراك فى ',
+                                                                                    maxLines: 2,
+                                                                                    textAlign: TextAlign.end,
+                                                                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: setResponsiveFontSize(16))),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: 20.w,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: isTab(context) ? 160.w : 145.w,
+                                                                                child: AutoSizeText(defVisitorProv.memberShipModel.memberShipSports[index].sportExpireDate, maxLines: 2, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red, fontSize: setResponsiveFontSize(22))),
+                                                                              ),
+                                                                            ],
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                  ),
-                                                                );
-                                                              },
-                                                              itemCount: defVisitorProv
-                                                                  .memberShipModel
-                                                                  .memberShipSports
-                                                                  .length,
+                                                                  );
+                                                                },
+                                                                itemCount: defVisitorProv
+                                                                    .memberShipModel
+                                                                    .memberShipSports
+                                                                    .length,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
@@ -1560,7 +1552,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                             SizedBox(
                                               height: 20.h,
                                             ),
-                                            Provider.of<VisitorProv>(context, listen: true).memberShipModel.identityImagePath != 'empty'?                            Padding(
+                                            Padding(
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 60.w),
                                               child: Directionality(
@@ -1615,7 +1607,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                     SizedBox(
                                                       width: 16.w,
                                                     ),
-                                                    Provider.of<VisitorProv>(context, listen: true).memberShipModel.identityImagePath != 'empty'
+                                                    Provider.of<VisitorProv>(
+                                                                    context,
+                                                                    listen:
+                                                                        true)
+                                                                .memberShipModel
+                                                                .identityImagePath !=
+                                                            'empty'
                                                         ? Padding(
                                                             padding:
                                                                 const EdgeInsets
@@ -1696,7 +1694,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                   ],
                                                 ),
                                               ),
-                                            ):Container(),
+                                            ),
                                             SizedBox(
                                               height: 20.h,
                                             ),
@@ -1711,68 +1709,54 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         .contains(
                                                         'first time')))*/
 
-                                            (!visitorProv.memberShipModel
+                                            /*  (!visitorProv.memberShipModel
                                                         .identityImagePath
                                                         .contains('empty') &&
                                                     !visitorProv.memberShipModel
                                                         .carImagePath
                                                         .contains('empty'))
-                                                ? RoundedButton(
-                                                    width: 220,
-                                                    height: 60,
-                                                    ontap: () async {
-                                                      if( defVisitorProv.memberShipModel.memberShipSports==null){
-                                                        navigateTo(context, EntryScreen());
-                                                        return;
-                                                      }
+                                                ?*/
+                                            RoundedButton(
+                                              width: 220,
+                                              height: 60,
+                                              ontap: () async {
+                                                if (defVisitorProv
+                                                        .memberShipModel
+                                                        .memberShipSports ==
+                                                    null) {
+                                                  navigateTo(
+                                                      context, EntryScreen());
+                                                  return;
+                                                }
 
+                                                showLoaderDialog(
+                                                    context, 'Loading...');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                      showLoaderDialog(context,
-                                                          'Loading...');
-
-                                                      Provider.of<VisitorProv>(
-                                                              context,
-                                                              listen: false)
-                                                          .getBill(
-                                                              widget
-                                                                  .memberShipModel
-                                                                  .ownerTypeId
-                                                                  .toString(),
-                                                              '0',
-                                                              '0')
-                                                          .then((value) {
-                                                        debugPrint(
-                                                            'value is $value');
-                                                        Navigator.pop(context);
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return BillDialog(
-                                                                  typeValue: widget
-                                                                      .memberShipModel
-                                                                      .ownerTypeId,
-                                                                  citizenValue:
-                                                                      0,
-                                                                  militaryValue:
-                                                                      0);
-                                                            });
+                                                Provider.of<VisitorProv>(
+                                                        context,
+                                                        listen: false)
+                                                    .getBill(
+                                                        widget.memberShipModel
+                                                            .ownerTypeId
+                                                            .toString(),
+                                                        '0',
+                                                        '0')
+                                                    .then((value) {
+                                                  debugPrint('value is $value');
+                                                  Navigator.pop(context);
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return BillDialog(
+                                                            typeValue: widget
+                                                                .memberShipModel
+                                                                .ownerTypeId,
+                                                            citizenValue: 0,
+                                                            militaryValue: 0);
                                                       });
+                                                });
 
-                                                      /*   if (defVisitorProv
+                                                /*   if (defVisitorProv
                                                     .memberShipModel !=
                                                     null &&
                                                     defVisitorProv
@@ -1828,15 +1812,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         });
                                                   });
                                                 }*/
-                                                    },
-                                                    title:  defVisitorProv.memberShipModel.memberShipSports!=null?
-                                              'إستمرار' : 'عودة',
-                                                    buttonColor:
-                                                        ColorManager.primary,
-                                                    titleColor: ColorManager
-                                                        .backGroundColor,
-                                                  )
-                                                : Container(),
+                                              },
+                                              title: defVisitorProv
+                                                          .memberShipModel
+                                                          .memberShipSports !=
+                                                      null
+                                                  ? 'إستمرار'
+                                                  : 'عودة',
+                                              buttonColor: ColorManager.primary,
+                                              titleColor:
+                                                  ColorManager.backGroundColor,
+                                            )
+                                            //  : Container(),
                                           ],
                                         ),
                                       ),
@@ -1850,30 +1837,47 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-String image;
+  String image;
   Future getImage() async {
-    imageCache.clear();
-    print('aaaa');
+    //imageCache.clear();
     File pickedImage =
-        (await ImagePicker.pickImage(source: ImageSource.gallery));  print('bbbb');
+        (await ImagePicker.pickImage(source: ImageSource.gallery));
     if (pickedImage != null) {
       print('profile path is ${pickedImage.path}');
       showLoaderDialog(context, 'جارى رفع الصورة');
-      print('cccc');
       await Provider.of<VisitorProv>(context, listen: false)
           .updateMemberShipImages(
               widget.memberShipModel.id, null, null, pickedImage, 'profile')
-          .then((value) {
+          .then((value) async {
         if (value == 'Success') {
 
-          setState(() {
-            image=Provider.of<VisitorProv>(context, listen: false).memberShipModel.memberProfilePath;
-            print('=prof image is $image' );
-          });
+
+          image = Provider.of<VisitorProv>(context, listen: false)
+            .memberShipModel
+            .memberProfilePath;
+
+
+        (await NetworkAssetBundle(Uri.parse(image)).load(image))
+                .buffer
+                .asUint8List();
+
+
+
+
+
+
+
+
+
+
+
+            print('=prof image is $image');
+
           Fluttertoast.showToast(
               msg: 'تم التعديل',
               backgroundColor: Colors.green,
               toastLength: Toast.LENGTH_LONG);
+
         }
       });
 

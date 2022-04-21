@@ -1579,6 +1579,17 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                   await printScreenShot();
                                                                 }
                                                               } else {
+
+                                                                String path1;
+                                                                String path2;
+
+                                                                if(visitorProv.memberShipModel != null){
+                                                                  if(Provider.of<VisitorProv>(context, listen: false).memberShipModel.carImagePath.contains('empty')){
+                                                                    Provider.of<VisitorProv>(context, listen: false).memberShipModel.carImagePath=null;
+                                                                  } else if(Provider.of<VisitorProv>(context, listen: false).memberShipModel.identityImagePath.contains('empty')){
+                                                                    Provider.of<VisitorProv>(context, listen: false).memberShipModel.identityImagePath=null;
+                                                                  }
+                                                                }
                                                                 visitorProv
                                                                     .checkIn(
                                                                         visitorProv.memberShipModel != null ? null : visitorProv.rokhsa,

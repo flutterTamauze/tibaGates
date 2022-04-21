@@ -399,7 +399,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                                         Container(
                                                                                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.green, width: 1.w)),
                                                                                           width: 300.w,
-                                                                                          height: 70.h,
+                                                                                          height: 80.h,
                                                                                           child: DropdownButtonHideUnderline(
                                                                                               child: ButtonTheme(
                                                                                             alignedDropdown: true,

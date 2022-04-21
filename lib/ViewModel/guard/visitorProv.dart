@@ -77,6 +77,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     notifyListeners();
   }
 
+
   void deleteCarPath() {
     memberShipModel.carImagePath = null;
     notifyListeners();
@@ -578,6 +579,9 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     }
   }
 
+
+
+
   Future<dynamic> checkInMemberShip(String qrCode) async {
     String data = '';
     debugPrint('qrCode $qrCode');
@@ -665,6 +669,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
             Map<String, dynamic> responseDecoded = json.decode(value);
             debugPrint('response is ${responseDecoded['response']}');
             if (responseDecoded['message'] == 'Success') {
+           //   imageCache.clear();
               data = 'Success';
               if (imageType == 'carId') {
                 memberShipModel.carImagePath = BASE_URL +
