@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
+import 'DiscoveryPage.dart';
 import 'connection.dart';
 import 'led.dart';
 
@@ -9,18 +10,17 @@ class MyBluetooth extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: FutureBuilder(
+    return Scaffold(
+
+
+      body: FutureBuilder(
         future: FlutterBluetoothSerial.instance.requestEnable(),
         builder: (context, future) {
-          if (future.connectionState == ConnectionState.waiting) {
-            return Scaffold(
-              body: const SizedBox(
+          if (future.connectionState == ConnectionState.waiting ||
+              future.connectionState == ConnectionState.none) {
+            print('none || waiting');
+            return const Scaffold(
+              body: SizedBox(
                 height: double.infinity,
                 child: Center(
                   child: Icon(
@@ -31,9 +31,11 @@ class MyBluetooth extends StatelessWidget {
                 ),
               ),
             );
-          } else {
-            return Home();
+          } else if(future.connectionState == ConnectionState.done){
+            print('go to home');
+            return DiscoveryPage();
           }
+          return Container();
         },
         // child: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
@@ -41,15 +43,67 @@ class MyBluetooth extends StatelessWidget {
   }
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  discoverDevices() async {
+    final BluetoothDevice selectedDevice = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return DiscoveryPage();
+        },
+      ),
+    );
+    if (selectedDevice != null) {
+      print('Discovery -> selected ' + selectedDevice.address);
+    } else {
+      print('Discovery -> no device selected');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {
+      if (mounted) {
+        discoverDevices();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
+    /*  appBar: AppBar(
         title: const Text('Connection'),
-      ),
-      body: SelectBondedDevicePage(
+      ),*/
+      body: /*ListTile(
+        title: ElevatedButton(
+            child: const Text('Explore discovered devices'),
+            onPressed: () async {
+              final BluetoothDevice selectedDevice =
+                  await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return DiscoveryPage();
+                  },
+                ),
+              );
+
+              if (selectedDevice != null) {
+                print('Discovery -> selected ' + selectedDevice.address);
+              } else {
+                print('Discovery -> no device selected');
+              }
+            }),
+      )*/
+          Container(),
+
+/*      SelectBondedDevicePage(
         onCahtPage: (device1) {
           BluetoothDevice device = device1;
           Navigator.push(
@@ -61,7 +115,22 @@ class Home extends StatelessWidget {
             ),
           );
         },
-      ),
+      )*/
     ));
   }
 }
+/*
+* final BluetoothDevice selectedDevice =
+                  await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return DiscoveryPage();
+                  },
+                ),
+              );
+
+              if (selectedDevice != null) {
+                print('Discovery -> selected ' + selectedDevice.address);
+              } else {
+                print('Discovery -> no device selected');
+              }*/

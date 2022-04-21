@@ -124,7 +124,9 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   MaterialPageRoute(builder: (context) => const EntryScreen()));
             }
           });
-        } else if (widget.screen == 'memberShip') {
+        }
+
+        else if (widget.screen == 'memberShip') {
           log('memberShip');
           Provider.of<VisitorProv>(context, listen: false)
               .checkInMemberShip(result)

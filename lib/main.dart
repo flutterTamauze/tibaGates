@@ -23,6 +23,7 @@ import 'ViewModel/admin/reports/admin_reportsProv.dart';
 import 'ViewModel/admin/more/holidaysProv.dart';
 import 'ViewModel/manager/managerProv.dart';
 import 'ViewModel/admin/more/pricesProv.dart';
+import 'bluetooth/bluetooth1/DiscoveryPage.dart';
 import 'bluetooth/bluetooth1/bl1.dart';
 
 SharedPreferences prefs;
@@ -52,8 +53,8 @@ Future<void> main() async {
       ),
     );
   };
-  bool isInRelease = true;
 
+  bool isInRelease = true;
   assert(() {
     isInRelease = false;
     return true;
@@ -62,6 +63,7 @@ Future<void> main() async {
   if (isInRelease) {
     debugPrint = (String message, {int wrapWidth}) {};
   }
+
   prefs = await SharedPreferences.getInstance();
   InitLocator locator = InitLocator();
 
@@ -122,7 +124,13 @@ class MyApp extends StatelessWidget {
                       return GetMaterialApp(
                         title: 'Tiba Rose',
                         debugShowCheckedModeBanner: false,
-                        home: SplashScreen(),
+                        home:
+                        SplashScreen()
+
+                        //MyBluetooth()
+                         // DiscoveryPage()
+
+                        ,
                         theme: ThemeData(fontFamily: 'Almarai'),
                         onGenerateRoute: routes.onGenerateRoute,
                       );

@@ -30,7 +30,10 @@ dependencies:
   expandable: ^5.0.1
   share: ^2.0.1
   share_plus: ^2.1.4
+  image_picker:
   fl_chart: 0.36.4
+  transparent_image: ^1.0.0
+
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter

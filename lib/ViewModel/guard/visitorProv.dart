@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:camera/camera.dart';
+
 import '../../Data/Models/guard/memberChip_model.dart';
 
 import '../../Data/Models/guard/perHour.dart';
@@ -51,6 +53,17 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
   void addRokhsa(File image) {
     rokhsa = image;
+    notifyListeners();
+  }
+
+  void addCarIdPath(String image) {
+    memberShipModel.carImagePath = image;
+    notifyListeners();
+  }
+
+
+  void addPersonIdPath(String image) {
+    memberShipModel.identityImagePath = image;
     notifyListeners();
   }
 
@@ -581,10 +594,13 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
             debugPrint('response is $responseDecoded');
 
-            if (responseDecoded['message'] == 'Success') {
+            if (responseDecoded['message'] == 'Valid' ||
+                responseDecoded['message'] == 'NotValid') {
               data = 'Success';
-              memberShipModel = MemberShipModel();
-              memberShipModel.carImagePath =
+              memberShipModel =
+                  MemberShipModel.fromJson(responseDecoded['response']);
+
+              /*    memberShipModel.carImagePath =
                   responseDecoded['response']['image1'] != null
                       ? responseDecoded['response']['image1'].toString()
                       : 'first time';
@@ -593,11 +609,12 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
                   responseDecoded['response']['image2'] != null
                       ? responseDecoded['response']['image2'].toString()
                       : 'first time';
+
+
               memberShipModel.id = responseDecoded['response']['id'];
               memberShipModel.ownerTypeId =
-                  responseDecoded['response']['ownerTypeId'];
+                  responseDecoded['response']['ownerTypeId'];*/
             }
-            debugPrint('image one is ${memberShipModel.carImagePath}');
           });
         }).catchError((e) {
           debugPrint(e.toString());
@@ -614,19 +631,30 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   }
 
   Future<dynamic> updateMemberShipImages(
-      int id, File carImage, File identityImage) async {
+      [int id,
+      File carImage,
+      File identityImage,
+      File profile,
+      String imageType]) async {
     String data = '';
-
     try {
       Uri uri = Uri.parse('$BASE_URL/api/MemberShip/UpdateImage');
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
 
-      request.files.add(
-        await http.MultipartFile.fromPath('file', carImage.path),
-      );
-      request.files.add(
-        await http.MultipartFile.fromPath('file1', identityImage.path),
-      );
+      if (imageType == 'carId') {
+        request.files.add(
+          await http.MultipartFile.fromPath('file', carImage.path),
+        );
+      } else if (imageType == 'personId') {
+        request.files.add(
+          await http.MultipartFile.fromPath('file1', identityImage.path),
+        );
+      } else if (imageType == 'profile') {
+        request.files.add(
+          await http.MultipartFile.fromPath('profile', profile.path),
+        );
+      }
+
       request.fields['Id'] = id.toString();
 
       request.headers.addAll(mHeaders);
@@ -638,10 +666,17 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
             debugPrint('response is ${responseDecoded['response']}');
             if (responseDecoded['message'] == 'Success') {
               data = 'Success';
-              memberShipModel.carImagePath =
-                  responseDecoded['response']['image1'];
-              memberShipModel.identityImagePath =
-                  responseDecoded['response']['image2'];
+              if (imageType == 'carId') {
+                memberShipModel.carImagePath = BASE_URL +
+                    responseDecoded['response']['image1'].replaceAll("\\", "/");
+              } else if (imageType == 'personId') {
+                memberShipModel.identityImagePath = BASE_URL +
+                    responseDecoded['response']['image2'].replaceAll("\\", "/");
+              } else if (imageType == 'profile') {
+                memberShipModel.memberProfilePath = BASE_URL +
+                    responseDecoded['response']['profileImage']
+                        .replaceAll("\\", "/");
+              }
             }
           });
         }).catchError((e) {

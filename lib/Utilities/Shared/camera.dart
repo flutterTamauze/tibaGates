@@ -14,16 +14,20 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import 'dialogs/bill_dialog.dart';
+
 class CameraPicker extends StatefulWidget {
   final CameraDescription camera;
   final String dropdownValue;
   final String instruction;
+  final String type;
+  final int membershipId;
 
-  CameraPicker({
+  const CameraPicker({
     Key key,
     this.camera,
     this.dropdownValue,
-    this.instruction,
+    this.instruction, this.type, this.membershipId,
   }) : super(key: key);
 
   @override
@@ -92,8 +96,7 @@ class TakePictureScreenState extends State<CameraPicker>
                 // If the Future is complete, display the preview.
                 return Center(
                     child:
-                        //height: MediaQuery.of(context).size.height,
-                        //width: MediaQuery.of(context).size.width,
+
                         CameraPreview(
                   _controller,
                 ));
@@ -101,8 +104,8 @@ class TakePictureScreenState extends State<CameraPicker>
                 // Otherwise, display a loading indicator.
                 return Center(
                     child: Platform.isIOS
-                        ? CupertinoActivityIndicator()
-                        : CircularProgressIndicator());
+                        ? const CupertinoActivityIndicator()
+                        : const CircularProgressIndicator());
               }
             },
           ),
@@ -113,7 +116,7 @@ class TakePictureScreenState extends State<CameraPicker>
               child: Container(
                 height: 80.h,
                 width: 80.w,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     shape: BoxShape.circle, color: Colors.green),
                 child: InkWell(onTap: ()async{
                   // Take the Picture in a try / catch block. If anything goes wrong,
@@ -137,12 +140,6 @@ class TakePictureScreenState extends State<CameraPicker>
                     // If the picture was taken, display it on a new screen.
                     File img = File(path);
 
-                    /*               widget.instruction == '1'
-                        ? Provider.of<VisitorProv>(context, listen: false)
-                            .addRokhsa(img)
-                        : Provider.of<VisitorProv>(context, listen: false)
-                            .addIdCard(img);*/
-
                     print(img.lengthSync());
 
                     String newPath = join(
@@ -158,19 +155,52 @@ class TakePictureScreenState extends State<CameraPicker>
                     print('=====Compressed==========');
                     print(newPath);
 
-                    widget.instruction == '1'
-                        ? Provider.of<VisitorProv>(context, listen: false)
-                        .addRokhsa(compressedFile)
-                        : Provider.of<VisitorProv>(context, listen: false)
-                        .addIdCard(compressedFile);
-                    Navigator.pop(context);
+                    if(widget.type=='membership'){
+                      imageCache.clear();
+                      if(widget.instruction=='carId'){
+
+                      await  Provider.of<VisitorProv>(context, listen: false)
+                            .updateMemberShipImages(
+                            widget.membershipId,
+                            compressedFile,null,null,'carId')
+                            .then((value) {
+                          if (value == 'Success') {
+
+                            print('success ya man');
+                            Navigator.pop(context);
+
+                          }
+                        });
+                      }else  if(widget.instruction=='personId'){
+                        await  Provider.of<VisitorProv>(context, listen: false)
+                            .updateMemberShipImages(
+                            widget.membershipId,null,
+                            compressedFile,null,'personId')
+                            .then((value) {
+                          if (value == 'Success') {
+
+                            Navigator.pop(context);
+
+                          }
+                        });
+                      }
+                    }else{
+                      widget.instruction == 'carId'
+                          ? Provider.of<VisitorProv>(context, listen: false)
+                          .addRokhsa(compressedFile)
+                          : Provider.of<VisitorProv>(context, listen: false)
+                          .addIdCard(compressedFile);
+                      Navigator.pop(context);
+                    }
+
+
 
                     _controller.dispose();
                   } catch (e) {
                     print(e);
                   }
                 }
-                  ,child: Icon(
+                  ,child: const Icon(
                     Icons.camera_alt,
                     size: 40,
                     color: Colors.white,
@@ -182,7 +212,7 @@ class TakePictureScreenState extends State<CameraPicker>
             top: 4.0.h,
             child: SafeArea(
               child: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.chevron_left,
                   size: 50,
                 ),
