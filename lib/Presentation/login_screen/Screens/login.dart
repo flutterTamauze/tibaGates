@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:camera/camera.dart';
+import 'package:clean_app/Presentation/game/game_home.dart';
 
 import '../../admin/a_invitations_screen.dart';
 import '../../admin/admin_bottomNav.dart';
@@ -254,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   }
 
   login(File img) async {
-    var authProv = Provider.of<AuthProv>(context, listen: false);
+    AuthProv authProv = Provider.of<AuthProv>(context, listen: false);
     authProv.changeLoadingState(true);
 
     print('_platformVersion  =   $_udid');
@@ -268,7 +269,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
 
       return;
     }
-    print('****');
+
     authProv
         .login(_memberShipController.text, _passwordController.text, img, _udid)
         .then((value) async {
@@ -291,38 +292,30 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                         comingIndex: 3,
                       )));
           return;
+        } else if (authProv.userRole == 'GameGuard') {
+          print('GameGuard');
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => GameHome()));
+          return;
         }
 
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => EntryScreen()));
       } else if (value == 'Incorrect User') {
-        Fluttertoast.showToast(
-            msg: 'بيانات غير صحيحة',
-            backgroundColor: Colors.green,
-            toastLength: Toast.LENGTH_LONG);
+        showToast('بيانات غير صحيحة');
       } else if (value == 'Incorrect Password') {
-        Fluttertoast.showToast(
-            msg: 'كلمة المرور غير صحيحة ',
-            backgroundColor: Colors.green,
-            toastLength: Toast.LENGTH_LONG);
-      }else if (value == 'This User Is Active In Another Device') {
-        Fluttertoast.showToast(
-            msg: 'This User Is Active In Another Device',
-            backgroundColor: Colors.green,
-            toastLength: Toast.LENGTH_LONG);
+        showToast('كلمة المرور غير صحيحة ');
+      } else if (value == 'This User Is Active In Another Device') {
+        showToast('This User Is Active In Another Device');
       } else if (value == 'you need to be at same network with local host') {
-        Fluttertoast.showToast(
-            msg: value,
-            backgroundColor: Colors.green,
-            toastLength: Toast.LENGTH_LONG);
+        showToast(value);
       } else {
-        Fluttertoast.showToast(
-            msg: value,
-            backgroundColor: Colors.green,
-            toastLength: Toast.LENGTH_LONG);
+        showToast(value);
       }
     });
   }
+
+
 
   Future<void> cachingData() async {
     await prefs.setString('guardId', authProv.userId);

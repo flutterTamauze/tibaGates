@@ -6,6 +6,8 @@ import 'dart:ui' as ui;
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
+import 'package:clean_app/Presentation/admin/a_BioHome_screen.dart';
+import 'package:clean_app/Presentation/admin/admin_bottomNav.dart';
 import 'package:clean_app/Utilities/responsive.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -23,6 +25,7 @@ import '../../../Utilities/Shared/sharedWidgets.dart';
 import '../../../Utilities/connectivityStatus.dart';
 import '../../../ViewModel/guard/visitorProv.dart';
 import 'package:lottie/lottie.dart';
+import '../../../main.dart';
 import '../print_page2.dart';
 import '../entry_screen/entryScreen.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,7 +44,7 @@ List<CameraDescription> cameras = [];
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/Home';
-  final screen;
+  final String screen;
   final MemberShipModel memberShipModel;
   final CameraDescription camera;
 
@@ -78,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Future<File> testCompressAndGetFile({File file, String targetPath}) async {
-    var result = await FlutterImageCompress.compressAndGetFile(
+    File result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       targetPath,
       quality: 30,
@@ -104,8 +107,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     var authProv = Provider.of<AuthProv>(context, listen: false);
     return WillPopScope(
       onWillPop: () {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const EntryScreen()));
+        prefs.getString('role') != 'Admin'
+            ? Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const EntryScreen()))
+            : Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => BottomNav(comingIndex: 3,)));
       },
       child: Scaffold(
         body: connectionStatus == ConnectivityStatus.Offline
@@ -1162,22 +1168,22 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         ? const AssetImage(
                                                             'assets/images/avatar.png')
                                                         : NetworkImage(
-                                                        message
-                                                                .memberShipModel
-                                                                .memberProfilePath+"?v=${Random().nextInt(1000)}",
+                                                            message.memberShipModel
+                                                                    .memberProfilePath +
+                                                                "?v=${Random().nextInt(1000)}",
 
                                                             /*image??visitorProv
                                                           .memberShipModel
                                                           .memberProfilePath*/
-                                                            )),
+                                                          )),
                                                 shape: BoxShape.circle,
                                               ),
                                             ),
                                           ),
                                           Positioned(
-                                            child: InkWell(
-                                              onTap: getImage,
-                                              child: const CircleAvatar(
+                                            child: const InkWell(
+                                              //    onTap: getImage,
+                                              child: CircleAvatar(
                                                 radius: 17,
                                                 backgroundColor: Colors.green,
                                                 child: Icon(
@@ -1716,47 +1722,52 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         .carImagePath
                                                         .contains('empty'))
                                                 ?*/
-                                            RoundedButton(
-                                              width: 220,
-                                              height: 60,
-                                              ontap: () async {
-                                                if (defVisitorProv
-                                                        .memberShipModel
-                                                        .memberShipSports ==
-                                                    null) {
-                                                  navigateTo(
-                                                      context, EntryScreen());
-                                                  return;
-                                                }
+                                            prefs.getString('role') != 'Admin'
+                                                ? RoundedButton(
+                                                    width: 220,
+                                                    height: 60,
+                                                    ontap: () async {
+                                                      if (defVisitorProv
+                                                              .memberShipModel
+                                                              .memberShipSports ==
+                                                          null) {
+                                                        navigateTo(context,
+                                                            EntryScreen());
+                                                        return;
+                                                      }
 
-                                                showLoaderDialog(
-                                                    context, 'Loading...');
+                                                      showLoaderDialog(context,
+                                                          'Loading...');
 
-                                                Provider.of<VisitorProv>(
-                                                        context,
-                                                        listen: false)
-                                                    .getBill(
-                                                        widget.memberShipModel
-                                                            .ownerTypeId
-                                                            .toString(),
-                                                        '0',
-                                                        '0')
-                                                    .then((value) {
-                                                  debugPrint('value is $value');
-                                                  Navigator.pop(context);
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return BillDialog(
-                                                            typeValue: widget
-                                                                .memberShipModel
-                                                                .ownerTypeId,
-                                                            citizenValue: 0,
-                                                            militaryValue: 0);
+                                                      Provider.of<VisitorProv>(
+                                                              context,
+                                                              listen: false)
+                                                          .getBill(
+                                                              widget
+                                                                  .memberShipModel
+                                                                  .ownerTypeId
+                                                                  .toString(),
+                                                              '0',
+                                                              '0')
+                                                          .then((value) {
+                                                        debugPrint(
+                                                            'value is $value');
+                                                        Navigator.pop(context);
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return BillDialog(
+                                                                  typeValue: widget
+                                                                      .memberShipModel
+                                                                      .ownerTypeId,
+                                                                  citizenValue:
+                                                                      0,
+                                                                  militaryValue:
+                                                                      0);
+                                                            });
                                                       });
-                                                });
 
-                                                /*   if (defVisitorProv
+                                                      /*   if (defVisitorProv
                                                     .memberShipModel !=
                                                     null &&
                                                     defVisitorProv
@@ -1812,17 +1823,32 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         });
                                                   });
                                                 }*/
-                                              },
-                                              title: defVisitorProv
-                                                          .memberShipModel
-                                                          .memberShipSports !=
-                                                      null
-                                                  ? 'إستمرار'
-                                                  : 'عودة',
-                                              buttonColor: ColorManager.primary,
-                                              titleColor:
-                                                  ColorManager.backGroundColor,
-                                            )
+                                                    },
+                                                    title: defVisitorProv
+                                                                .memberShipModel
+                                                                .memberShipSports !=
+                                                            null
+                                                        ? 'إستمرار'
+                                                        : 'عودة',
+                                                    buttonColor:
+                                                        ColorManager.primary,
+                                                    titleColor: ColorManager
+                                                        .backGroundColor,
+                                                  )
+                                                : RoundedButton(
+                                                    width: 220,
+                                                    height: 60,
+                                                    ontap: () async {
+                                                      navigateTo(
+                                                          context, BottomNav(comingIndex: 3,));
+                                                    },
+                                                    title: 'عودة',
+                                                    buttonColor:
+                                                        ColorManager.primary,
+                                                    titleColor: ColorManager
+                                                        .backGroundColor,
+                                                  )
+
                                             //  : Container(),
                                           ],
                                         ),
@@ -1838,6 +1864,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   String image;
+
   Future getImage() async {
     //imageCache.clear();
     File pickedImage =
@@ -1850,34 +1877,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               widget.memberShipModel.id, null, null, pickedImage, 'profile')
           .then((value) async {
         if (value == 'Success') {
-
-
           image = Provider.of<VisitorProv>(context, listen: false)
-            .memberShipModel
-            .memberProfilePath;
+              .memberShipModel
+              .memberProfilePath;
 
+          (await NetworkAssetBundle(Uri.parse(image)).load(image))
+              .buffer
+              .asUint8List();
 
-        (await NetworkAssetBundle(Uri.parse(image)).load(image))
-                .buffer
-                .asUint8List();
-
-
-
-
-
-
-
-
-
-
-
-            print('=prof image is $image');
+          print('=prof image is $image');
 
           Fluttertoast.showToast(
               msg: 'تم التعديل',
               backgroundColor: Colors.green,
               toastLength: Toast.LENGTH_LONG);
-
         }
       });
 

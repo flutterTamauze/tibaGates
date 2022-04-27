@@ -2,6 +2,7 @@ import 'package:clean_app/ViewModel/admin/a_homeBioProv.dart';
 import 'package:clean_app/ViewModel/admin/adminProv.dart';
 import 'package:clean_app/ViewModel/admin/vm/publicHolidaysProv.dart';
 import 'package:clean_app/ViewModel/admin/reports/admin_reportsProv.dart';
+import 'package:clean_app/ViewModel/game/gameProv.dart';
 import 'package:clean_app/ViewModel/guard/authProv.dart';
 import 'package:clean_app/ViewModel/guard/visitorProv.dart';
 import 'package:clean_app/ViewModel/admin/more/holidaysProv.dart';
@@ -31,6 +32,7 @@ class InitLocator {
     locator.registerLazySingleton(() => PricesProv());
     locator.registerLazySingleton(() => HolidaysProv());
     locator.registerLazySingleton(() => PublicHolidaysProv());
+    locator.registerLazySingleton(() => GameProv());
 
 
     //Network

@@ -264,7 +264,7 @@ class _EntryScreenState extends State<EntryScreen> {
                               width: 50.w,
                               child: const Center(
                                 child: Icon(
-                                  FontAwesomeIcons.futbol,
+                                  Icons.sports_handball,
                                   color: Colors.pink,
                                   size: 36,
                                 ),

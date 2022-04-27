@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:clean_app/Presentation/guard/scanner.dart';
 import '../../Utilities/responsive.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Data/Models/admin/a_homeBio_model.dart';
@@ -106,234 +107,275 @@ class ABioHomeState extends State {
                 parksTypes = Provider.of<AdminHomeProv>(context, listen: false)
                     .parkingList;
 
-                return Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    image: DecorationImage(
-                        image: AssetImage(
-                          'assets/images/bg1.jpeg',
+                return SafeArea(
+                  child: Scaffold(
+                    body: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        image: DecorationImage(
+                            image: AssetImage(
+                              'assets/images/bg1.jpeg',
+                            ),
+                            fit: BoxFit.fill),
+                      ),
+                      height: height,
+                      child: SmartRefresher(
+                        onRefresh: _onRefresh,
+                        controller: _refreshController,
+                        enablePullDown: true,
+                        header: const WaterDropMaterialHeader(
+                          color: Colors.white,
+                          backgroundColor: Colors.green,
                         ),
-                        fit: BoxFit.fill),
-                  ),
-                  height: height,
-                  child: SmartRefresher(
-                    onRefresh: _onRefresh,
-                    controller: _refreshController,
-                    enablePullDown: true,
-                    header: const WaterDropMaterialHeader(
-                      color: Colors.white,
-                      backgroundColor: Colors.green,
-                    ),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 60.h,
-                        ),
-                        ZoomIn(
-                          child: SizedBox(
-                            height: (height * 0.17),
-                            width: (width * 0.28),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(
-                                    color: ColorManager.primary, width: 2.w),
-                                image: const DecorationImage(
-                                    image: AssetImage(
-                                        'assets/images/tipasplash.png')),
-                                shape: BoxShape.circle,
+                        child: Column(
+                          children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 12,left: 8),
+                                  child: Align(
+                              alignment: Alignment.topLeft,
+                              child: OutlinedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) =>  const QrCodeScreen(
+                                              screen: 'memberShip'
+                                            )),
+                                            (Route<dynamic> route) => false);
+                                  },
+                                  child: SizedBox(
+                                    height: 45.h,
+                                    width: 50.w,
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.sports_handball,
+                                        color: Colors.pink,
+                                        size: 36,
+                                      ),
+                                    ),
+                                  ),
+                                  style: ButtonStyle(
+                                      side: MaterialStateProperty.all(BorderSide(
+                                          color: Colors.pink, width: 1.4.w)),
+                                      backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.white),
+                                      padding: MaterialStateProperty.all(
+                                          EdgeInsets.symmetric(
+                                              vertical: 20.h, horizontal: 20.w)),
+                                      shape: MaterialStateProperty.all(
+                                          const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20))))),
                               ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 40.h,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w),
-                          child: SizedBox(
-                            height: isTab(context) ? 520.h : 560.h,
-                            child: GridView.builder(
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      childAspectRatio: MediaQuery.of(context)
-                                              .size
-                                              .width /
-                                          (MediaQuery.of(context).size.height /
-                                              2.5),
-                                      crossAxisSpacing: Platform.isIOS
-                                          ? 5.w
-                                          : isTab(context)
-                                              ? 8.w
-                                              : 1.w,
-                                      mainAxisSpacing:
-                                          Platform.isIOS ? 7.w : 10.w,
-                                      crossAxisCount: 3),
-                              itemBuilder: (context, index) {
-                                return ClipRRect(
-                                  borderRadius: BorderRadius.circular(25),
-                                  child: Card(
-                                    elevation: 6,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 10.w,
-                                              right: 10.w,
-                                              top: 12.h),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Icon(
-                                                Icons.directions_car_sharp,
-                                                size: 28,
-                                              ),
-                                              SizedBox(
-                                                width: 6.w,
-                                              ),
-                                              SizedBox(
-                                                width: isTab(context)
-                                                    ? 160.w
-                                                    : 145.w,
-                                                child: AutoSizeText(
-                                                    parksTypes[index].type,
-                                                    maxLines: 2,
-                                                    textAlign: TextAlign.end,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.green,
-                                                        fontSize:
-                                                            setResponsiveFontSize(
-                                                                22))),
-                                              ),
-                                            ],
-                                          ),
+                                ),
+                            ZoomIn(
+                              child: SizedBox(
+                                height: (height * 0.17),
+                                width: (width * 0.28),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: ColorManager.primary, width: 2.w),
+                                    image: const DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/tipasplash.png')),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 40.h,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              child: SizedBox(
+                                height: isTab(context) ? 520.h : 560.h,
+                                child: GridView.builder(
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          childAspectRatio: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              (MediaQuery.of(context).size.height /
+                                                  2.5),
+                                          crossAxisSpacing: Platform.isIOS
+                                              ? 5.w
+                                              : isTab(context)
+                                                  ? 8.w
+                                                  : 1.w,
+                                          mainAxisSpacing:
+                                              Platform.isIOS ? 7.w : 10.w,
+                                          crossAxisCount: 3),
+                                  itemBuilder: (context, index) {
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.circular(25),
+                                      child: Card(
+                                        elevation: 6,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20.0),
                                         ),
-                                        SizedBox(
-                                          height: 20.h,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 10.w,
+                                                  right: 10.w,
+                                                  top: 12.h),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  const Icon(
+                                                    Icons.directions_car_sharp,
+                                                    size: 28,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 6.w,
+                                                  ),
+                                                  SizedBox(
+                                                    width: isTab(context)
+                                                        ? 160.w
+                                                        : 145.w,
+                                                    child: AutoSizeText(
+                                                        parksTypes[index].type,
+                                                        maxLines: 2,
+                                                        textAlign: TextAlign.end,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.green,
+                                                            fontSize:
+                                                                setResponsiveFontSize(
+                                                                    22))),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 20.h,
+                                            ),
+                                            AutoSizeText(
+                                                parksTypes[index].count.toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.red,
+                                                    fontSize:
+                                                        setResponsiveFontSize(30))),
+                                          ],
                                         ),
-                                        AutoSizeText(
-                                            parksTypes[index].count.toString(),
+                                      ),
+                                    );
+                                  },
+                                  itemCount: parksTypes.length,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: isTab(context) ? 30.h : 15.h,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: Card(
+                                elevation: 6,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          AutoSizeText(
+                                            'إجمالى عدد السيارات',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.red,
                                                 fontSize:
-                                                    setResponsiveFontSize(30))),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                              itemCount: parksTypes.length,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: isTab(context) ? 30.h : 15.h,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Card(
-                            elevation: 6,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Column(
-                                    children: [
-                                      AutoSizeText(
-                                        'إجمالى عدد السيارات',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize:
-                                                setResponsiveFontSize(22)),
+                                                    setResponsiveFontSize(22)),
+                                          ),
+                                          SizedBox(
+                                            height: 12.h,
+                                          ),
+                                          AutoSizeText(
+                                              Provider.of<AdminHomeProv>(context,
+                                                      listen: false)
+                                                  .carsCount
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize:
+                                                      setResponsiveFontSize(26),
+                                                  color: Colors.red)),
+                                        ],
                                       ),
-                                      SizedBox(
-                                        height: 12.h,
+                                      Column(
+                                        children: [
+                                          Text('إجمالى الفواتير',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize:
+                                                      setResponsiveFontSize(22))),
+                                          SizedBox(
+                                            height: 12.h,
+                                          ),
+                                          Text(
+                                              Provider.of<AdminHomeProv>(context,
+                                                      listen: false)
+                                                  .totalBalance
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize:
+                                                      setResponsiveFontSize(26),
+                                                  color: Colors.red)),
+                                        ],
                                       ),
-                                      AutoSizeText(
-                                          Provider.of<AdminHomeProv>(context,
-                                                  listen: false)
-                                              .carsCount
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize:
-                                                  setResponsiveFontSize(26),
-                                              color: Colors.red)),
                                     ],
                                   ),
-                                  Column(
-                                    children: [
-                                      Text('إجمالى الفواتير',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize:
-                                                  setResponsiveFontSize(22))),
-                                      SizedBox(
-                                        height: 12.h,
-                                      ),
-                                      Text(
-                                          Provider.of<AdminHomeProv>(context,
-                                                  listen: false)
-                                              .totalBalance
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize:
-                                                  setResponsiveFontSize(26),
-                                              color: Colors.red)),
-                                    ],
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 60.h,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            navigateTo(
-                                context,
-                                BottomNav(
-                                  comingIndex: 2,
-                                ));
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 210.w),
-                            child: Row(
-                              children: [
-                                RotatedBox(
-                                    quarterTurns: 2,
-                                    child: SizedBox(
-                                        height: 80.h,
-                                        //  width: 400.w,
-
-                                        child: Lottie.asset(
-                                            'assets/lotties/arrow.json'))),
-                                Text('الإنتقال إلى التقارير ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: setResponsiveFontSize(26)))
-                              ],
+                            SizedBox(
+                              height: 10.h,
                             ),
-                          ),
-                        )
-                      ],
+                            InkWell(
+                              onTap: () {
+                                navigateTo(
+                                    context,
+                                    BottomNav(
+                                      comingIndex: 2,
+                                    ));
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 210.w),
+                                child: Row(
+                                  children: [
+                                    RotatedBox(
+                                        quarterTurns: 2,
+                                        child: SizedBox(
+                                            height: 80.h,
+                                            //  width: 400.w,
+
+                                            child: Lottie.asset(
+                                                'assets/lotties/arrow.json'))),
+                                    Text('الإنتقال إلى التقارير ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: setResponsiveFontSize(26)))
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 );

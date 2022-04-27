@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import '../Colors/colorManager.dart';
@@ -7,9 +8,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 //const String BASE_URL = 'https://tibarose.tibarosehotel.com';
 //const String BASE_URL = 'http://192.168.2.51:8007';
-//const String BASE_URL = 'http://10.0.0.51:8007';
+const String BASE_URL = 'http://10.0.0.51:8007';
 //const String BASE_URL = 'http://10.0.0.242/GATE';
-const String BASE_URL = 'http://10.0.0.242/PARKING';
+//const String BASE_URL = 'http://10.0.0.242/PARKING';
 
 const kTextFieldDecorationWhite = InputDecoration(
   isDense: true,
@@ -42,7 +43,7 @@ TextStyle boldStyle = TextStyle(
 TextStyle extraBoldStyle = TextStyle(
     fontWeight: FontManager.extraBold, fontSize: setResponsiveFontSize(20));
 
-setResponsiveFontSize(size) {
+double setResponsiveFontSize(double size) {
   return ScreenUtil().setSp(size);
 }
 
@@ -55,7 +56,7 @@ class DateUtil {
   }
 }
 
-var logger = Logger(
+Logger logger = Logger(
   printer: PrettyPrinter(
       methodCount: 2,
       // number of method calls to be displayed
@@ -76,6 +77,11 @@ void navigateTo(context, widget) => Navigator.push(
         builder: (context) => widget,
       ),
     );
+
+void showToast(String message) => Fluttertoast.showToast(
+    msg: message,
+    backgroundColor: Colors.green,
+    toastLength: Toast.LENGTH_LONG);
 
 final ktextFieldDecoration = InputDecoration(
   errorStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),

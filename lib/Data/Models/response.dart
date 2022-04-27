@@ -1,4 +1,4 @@
-import 'package:clean_app/ViewModel/manager/managerProv.dart';
+import '../../ViewModel/manager/managerProv.dart';
 import 'package:dartz/dartz.dart';
 
 class ResponseData {
@@ -10,10 +10,11 @@ class ResponseData {
 
 class Response {
   Either<Failure, dynamic> data;
-  Response(dynamic response) {
-    if (response is Failure)
+  Response(response) {
+    if (response is Failure) {
       data = Left(response);
-    else
+    } else {
       data = Right(response);
+    }
   }
 }

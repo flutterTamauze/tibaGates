@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:clean_app/Presentation/game/game_home.dart';
+import 'package:clean_app/Presentation/game/memberInfo.dart';
 import '../../Utilities/Shared/qr.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../Utilities/Colors/colorManager.dart';
@@ -152,6 +154,29 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
               // controller.dispose();
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => EntryScreen()));
+            }
+          });
+        }  else if (widget.screen == 'sports') {
+          log('sports');
+          Provider.of<VisitorProv>(context, listen: false)
+              .checkInMemberShip(result)
+              .then((value) async {
+            log('value is $value');
+            if (value == 'Success') {
+              controller.dispose();
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MemberInformation()));
+            } else {
+              print('value is $value');
+              Fluttertoast.showToast(
+                  msg: 'كود غير صحيح',
+                  backgroundColor: Colors.green,
+                  toastLength: Toast.LENGTH_LONG);
+              // controller.dispose();
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const GameHome()));
             }
           });
         } else {
@@ -442,10 +467,18 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
           backgroundColor: Colors.green,
           title: InkWell(
               onTap: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => EntryScreen()));
+                if(widget.screen=='sports'){
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => GameHome()));
+                }else{
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => EntryScreen()));
+                }
+
               },
               child: const Icon(
                 Icons.arrow_back,
@@ -461,11 +494,17 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
               ))
             : WillPopScope(
                 onWillPop: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => EntryScreen()));
-                  throw '';
+                  if(widget.screen=='sports'){
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => GameHome()));
+                  }else{
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => EntryScreen()));
+                  }
                 },
                 child: Column(
                   children: <Widget>[

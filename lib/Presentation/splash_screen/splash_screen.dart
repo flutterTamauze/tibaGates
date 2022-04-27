@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:camera/camera.dart';
+import 'package:clean_app/Presentation/game/game_home.dart';
 import '../admin/a_invitations_screen.dart';
 import '../admin/admin_bottomNav.dart';
 import '../login_screen/Screens/login.dart';
@@ -40,6 +41,10 @@ class _SplashScreenState extends State<SplashScreen> {
         debugPrint('role is manager');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MHomeScreen()));
+      }if (role == 'GameGuard') {
+        debugPrint('role is GameGuard');
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => GameHome()));
       } else if (role == 'Admin') {
         debugPrint('role is admin');
         Navigator.pushReplacement(
