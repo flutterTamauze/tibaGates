@@ -130,7 +130,7 @@ class ABioHomeState extends State {
                         child: Column(
                           children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 12,left: 8),
+                                  padding:  EdgeInsets.only(top: 12.h,left: 8.w),
                                   child: Align(
                               alignment: Alignment.topLeft,
                               child: OutlinedButton(
@@ -187,7 +187,7 @@ class ABioHomeState extends State {
                               ),
                             ),
                             SizedBox(
-                              height: 40.h,
+                              height: isTab(context)? 40.h:10.h,
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 12.w),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:clean_app/Utilities/responsive.dart';
 import '../../Utilities/Shared/dialogs/loading_dialog.dart';
 import '../../Utilities/connectivityStatus.dart';
 import 'package:lottie/lottie.dart';
@@ -148,7 +149,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                     child: SizedBox(
                                       height: 60.h,
                                       width: MediaQuery.of(context).size.width -
-                                          400.w,
+                                          (isTab(context) ? 400.w : 410.w),
                                       child: TextField(
                                         controller: searchController,
                                         onChanged: (value) {
@@ -156,7 +157,6 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                             searchText = value;
                                           });
                                           debugPrint('filter');
-                                          //    filterServices(value);
                                           Provider.of<VisitorProv>(context,
                                                   listen: false)
                                               .searchParking(
@@ -203,17 +203,17 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                             color: Colors.blue,
                                             size: 36,
                                           ),
-                                          Text(
+                                          AutoSizeText(
                                               Provider.of<VisitorProv>(context,
                                                       listen: true)
                                                   .totalParkedCars
                                                   .toString(),
                                               style: TextStyle(
-                                                  fontSize:
-                                                      setResponsiveFontSize(28),
-                                                  fontWeight: FontManager.bold,
-                                                  color: Colors.red,
-                                                  ))
+                                                fontSize:
+                                                    setResponsiveFontSize(28),
+                                                fontWeight: FontManager.bold,
+                                                color: Colors.red,
+                                              ))
                                         ],
                                       ),
                                     ),
@@ -325,7 +325,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                       vertical: 15),
                                                   child: Column(
                                                     children: [
-                                                      Text(
+                                                      AutoSizeText(
                                                         'G-${parkedList[index].logId}',
                                                         style: TextStyle(
                                                             fontSize:
@@ -398,7 +398,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                                       children: [
                                                                                         Container(
                                                                                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.green, width: 1.w)),
-                                                                                          width: 300.w,
+                                                                                          width: 270.w,
                                                                                           height: 80.h,
                                                                                           child: DropdownButtonHideUnderline(
                                                                                               child: ButtonTheme(
@@ -428,7 +428,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                                             ),
                                                                                           )),
                                                                                         ),
-                                                                                        Text(
+                                                                                        AutoSizeText(
                                                                                           ' سبب إعادة الطباعة',
                                                                                           style: TextStyle(fontSize: setResponsiveFontSize(26)),
                                                                                         ),
@@ -441,7 +441,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                                   ),
                                                                                   RoundedButton(
                                                                                     height: 65.h,
-                                                                                    width: 270.w,
+                                                                                    width: 300.w,
                                                                                     title: 'تأكيد',
                                                                                     titleColor: Colors.white,
                                                                                     buttonColor: Colors.green,
@@ -505,6 +505,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                 shape: MaterialStateProperty.all(
                                                                     const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))))),
                                                           ),
+
                                                           !(parkedList[index]
                                                                   .carImage
                                                                   .contains(
@@ -516,7 +517,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                             index]
                                                                         .carImage,
                                                                     width:
-                                                                        300.w,
+                                                                        isTab(context) ?300.w:270.w,
                                                                     height:
                                                                         170.h,
                                                                     fit: BoxFit
@@ -592,7 +593,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                             index]
                                                                         .identityImage,
                                                                     width:
-                                                                        300.w,
+                                                                    isTab(context) ?300.w:270.w,
                                                                     height:
                                                                         170.h,
                                                                     fit: BoxFit
@@ -620,7 +621,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                           SizedBox(
                                             height: 400.h,
                                           ),
-                                          Text(
+                                          AutoSizeText(
                                             'لا توجد فواتير معلقة',
                                             style: TextStyle(
                                                 fontSize:
@@ -663,7 +664,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                 },
                                               )
                                             : Container(),
-                                        Text(
+                                        AutoSizeText(
                                           '$pageNumber   ',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(

@@ -13,14 +13,14 @@ class OutlineButtonFb1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const primaryColor = Colors.red;
+    const MaterialColor primaryColor = Colors.red;
 
     const double borderRadius = 20;
 
     return OutlinedButton(
       onPressed: onPressed,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text(
+        AutoSizeText(
           'Sign Out',
           style: TextStyle(
               fontSize: setResponsiveFontSize(30),
@@ -41,9 +41,9 @@ class OutlineButtonFb1 extends StatelessWidget {
           backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
           padding: MaterialStateProperty.all(
               EdgeInsets.symmetric(vertical: 20.h, horizontal: 50.w)),
-          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+          shape: MaterialStateProperty.all(const RoundedRectangleBorder(
               borderRadius:
-                  const BorderRadius.all(Radius.circular(borderRadius))))),
+                  BorderRadius.all(Radius.circular(borderRadius))))),
     );
   }
 }

@@ -307,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                     ),
                                                                   )),
                                                                 )
-                                                              : Text('دعوة',
+                                                              : AutoSizeText('دعوة',
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           setResponsiveFontSize(
@@ -320,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         }
                                                         return Container();
                                                       }),
-                                                  Text(
+                                                  AutoSizeText(
                                                     ' : نوع الزائر',
                                                     textAlign: TextAlign.end,
                                                     style: TextStyle(
@@ -348,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                 ? Padding(
                                                     padding:
                                                         EdgeInsets.symmetric(
-                                                            horizontal: 60.w,
+                                                            horizontal:isTab(context) ?60.w:40.w,
                                                             vertical: 20.h),
                                                     child: Row(
                                                       mainAxisAlignment:
@@ -357,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                       children: [
                                                         Row(
                                                           children: [
-                                                            Text(
+                                                            AutoSizeText(
                                                               'عسكرى',
                                                               style: TextStyle(
                                                                   fontSize:
@@ -386,7 +386,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                       _militaryValue =
                                                                           value),
                                                             ),
-                                                            Text(
+                                                            AutoSizeText(
                                                               'مدنى',
                                                               style: TextStyle(
                                                                   fontSize:
@@ -417,7 +417,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                             ),
                                                           ],
                                                         ),
-                                                        Text(
+                                                        AutoSizeText(
                                                           ' : المرافقين',
                                                           textAlign:
                                                               TextAlign.end,
@@ -457,7 +457,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                     ui.TextDirection.rtl,
                                                 child: Row(
                                                   children: [
-                                                    Text(
+                                                    AutoSizeText(
                                                       'رخصة السيارة      ',
                                                       textAlign: TextAlign.end,
                                                       style: TextStyle(
@@ -658,7 +658,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                     ui.TextDirection.rtl,
                                                 child: Row(
                                                   children: [
-                                                    Text(
+                                                    AutoSizeText(
                                                       'تحقيق الشخصية',
                                                       textAlign: TextAlign.end,
                                                       style: TextStyle(
@@ -757,7 +757,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                       child:
                                                                           InkWell(
                                                                         onTap:
-                                                                            () {
+                                                                             () {
                                                                           print(
                                                                               'deleted');
                                                                           Provider.of<VisitorProv>(context, listen: false)
@@ -1248,10 +1248,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                       children: [
                                                         Padding(
                                                           padding:
-                                                              const EdgeInsets
+                                                               EdgeInsets
                                                                       .only(
-                                                                  right: 12),
-                                                          child: Text(
+                                                                  right: 12.w),
+                                                          child: AutoSizeText(
                                                             'قائمة إشتراكاتى',
                                                             textAlign:
                                                                 TextAlign.end,
@@ -1269,10 +1269,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         ),
                                                         Padding(
                                                           padding:
-                                                              const EdgeInsets
+                                                               EdgeInsets
                                                                       .symmetric(
                                                                   horizontal:
-                                                                      12),
+                                                                      12.w),
                                                           child: SizedBox(
                                                             height: defVisitorProv
                                                                         .memberShipModel
@@ -1379,7 +1379,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                       ],
                                                     ),
                                                   )
-                                                : Text(
+                                                : AutoSizeText(
                                                     'لا توجد إشتراكات حالية لهذا العضو ولا يمكنه الدخول',
                                                     textAlign: TextAlign.end,
                                                     style: TextStyle(
@@ -1412,7 +1412,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                     ui.TextDirection.rtl,
                                                 child: Row(
                                                   children: [
-                                                    Text(
+                                                    AutoSizeText(
                                                       'رخصة السيارة      ',
                                                       textAlign: TextAlign.end,
                                                       style: TextStyle(
@@ -1485,8 +1485,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                             loadingBuilder: (BuildContext context,
                                                                                 Widget child,
                                                                                 ImageChunkEvent loadingProgress) {
-                                                                              if (loadingProgress == null)
+                                                                              if (loadingProgress == null) {
                                                                                 return child;
+                                                                              }
                                                                               return Center(
                                                                                 child: CircularProgressIndicator(
                                                                                   value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes : null,
@@ -1566,7 +1567,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                     ui.TextDirection.rtl,
                                                 child: Row(
                                                   children: [
-                                                    Text(
+                                                    AutoSizeText(
                                                       'تحقيق الشخصية',
                                                       textAlign: TextAlign.end,
                                                       style: TextStyle(
@@ -1677,8 +1678,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                       ImageChunkEvent
                                                                           loadingProgress) {
                                                                     if (loadingProgress ==
-                                                                        null)
+                                                                        null) {
                                                                       return child;
+                                                                    }
                                                                     return Center(
                                                                       child:
                                                                           CircularProgressIndicator(

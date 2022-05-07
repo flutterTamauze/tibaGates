@@ -51,8 +51,6 @@ class _EntryScreenState extends State<EntryScreen> {
       Provider.of<VisitorProv>(context, listen: false)
           .memberShipModel
            = null;
-
-
     }
     token = prefs.getString('token');
     print(token);
@@ -76,7 +74,6 @@ class _EntryScreenState extends State<EntryScreen> {
         prefs.getString('gateName');
     Provider.of<AuthProv>(context, listen: false).token =
         prefs.getString('token');
-
     Provider.of<AuthProv>(context, listen: false).userId =
         prefs.getString('guardId');
     Provider.of<AuthProv>(context, listen: false).parkTypes =
@@ -162,14 +159,14 @@ class _EntryScreenState extends State<EntryScreen> {
                                 height: 45.h,
                                 child: Row(
                                   children: [
-                                    Text(
+                                    AutoSizeText(
                                         '${Provider.of<AuthProv>(context, listen: true).balance ?? '0'} ',
                                         style: TextStyle(
                                           fontSize: setResponsiveFontSize(28),
                                           fontWeight: FontManager.bold,
                                           color: Colors.red,
                                         )),
-                                    Text(
+                                    AutoSizeText(
                                       Provider.of<AuthProv>(context,
                                                   listen: true)
                                               .guardName ??
@@ -179,7 +176,7 @@ class _EntryScreenState extends State<EntryScreen> {
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black),
                                     ),
-                                    Text(
+                                    AutoSizeText(
                                       ' إجمالى فواتير',
                                       style: TextStyle(
                                         fontSize: setResponsiveFontSize(22),

@@ -30,7 +30,7 @@ class RoundedButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(20), color: buttonColor),
         child: Center(
           child: Text(
-            title,
+            title,textAlign: TextAlign.center,
             style: boldStyle.copyWith(
                 color: titleColor, fontSize: setResponsiveFontSize(24)),
           ),
