@@ -52,7 +52,6 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   bool isLoggedIn;
   Future<void> _initializeControllerFuture;
   var authProv;
-  String _platformVersion;
 
   String _udid = 'Unknown';
 
@@ -71,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
       udid = 'Failed to get UDID.';
     }
 
+    // ignore: always_put_control_body_on_new_line
     if (!mounted) return;
 
     setState(() {
@@ -281,7 +281,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         if (authProv.userRole == 'Manager') {
           print('manager');
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => MHomeScreen()));
+              context, MaterialPageRoute(builder: (context) => const MHomeScreen()));
           return;
         } else if (authProv.userRole == 'Admin') {
           print('admin');
@@ -295,12 +295,12 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         } else if (authProv.userRole == 'GameGuard') {
           print('GameGuard');
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => GameHome()));
+              context, MaterialPageRoute(builder: (context) => const GameHome()));
           return;
         }
 
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => EntryScreen()));
+            context, MaterialPageRoute(builder: (context) => const EntryScreen()));
       } else if (value == 'Incorrect User') {
         showToast('بيانات غير صحيحة');
       } else if (value == 'Incorrect Password') {

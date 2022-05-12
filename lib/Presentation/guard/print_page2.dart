@@ -222,8 +222,8 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                   child: Column(
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 12, vertical: 12),
+                                        padding:  EdgeInsets.symmetric(
+                                            horizontal: 12.w, vertical: 12.h),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -232,8 +232,8 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                               children: [
                                                 Padding(
                                                   padding:
-                                                      const EdgeInsets.only(
-                                                          left: 15, right: 8),
+                                                       EdgeInsets.only(
+                                                          left: 15.w, right: 8.w),
                                                   child: SizedBox(
                                                     height: (height * 0.18),
                                                     width: (width * 0.34),
@@ -1320,7 +1320,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                           await bluetoothPrint
                                                                               .connect(_device)
                                                                               .then((value) {
-                                                                            Future.delayed(Duration(seconds: 6)).whenComplete(() async {
+                                                                            Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
                                                                               // take screenshot
                                                                               await printScreenShot();
                                                                             });
@@ -1569,19 +1569,14 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                       });
                                                                     });
                                                                   } else {
-                                                                    print(
-                                                                        'device is null 1');
+                                                                    print('device is null 1');
                                                                   }
                                                                 } else {
-                                                                  print(
-                                                                      'printer is connected asln');
+                                                                  print('printer is connected asln');
                                                                   // we will take screenshot
                                                                   await printScreenShot();
                                                                 }
                                                               } else {
-
-                                                                String path1;
-                                                                String path2;
 
                                                                 if(visitorProv.memberShipModel != null){
                                                                   if(Provider.of<VisitorProv>(context, listen: false).memberShipModel.carImagePath.contains('empty')){

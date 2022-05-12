@@ -19,9 +19,9 @@ class AReportsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    ConnectivityStatus connectionStatus = Provider.of<ConnectivityStatus>(context);
 
     return SafeArea(
       child: Scaffold(

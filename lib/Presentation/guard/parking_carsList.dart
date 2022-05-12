@@ -697,7 +697,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                   });
                                                 });
                                               },
-                                              child: Icon(
+                                              child: const Icon(
                                                   Icons.arrow_forward_ios)),
                                       ],
                                     )

@@ -1,3 +1,4 @@
+import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class DropdownWidget extends StatefulWidget {
@@ -34,7 +35,7 @@ class _DropdownState extends State<DropdownWidget> {
         child: Text(
           item,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: setResponsiveFontSize(16),
           ),
         ),
       ));
@@ -43,9 +44,9 @@ class _DropdownState extends State<DropdownWidget> {
 
   @override
   void didUpdateWidget(DropdownWidget oldWidget) {
-    if (this.currentItem != widget.currentItem) {
+    if (currentItem != widget.currentItem) {
       setState(() {
-        this.currentItem = widget.currentItem;
+        currentItem = widget.currentItem;
       });
     }
     super.didUpdateWidget(oldWidget);

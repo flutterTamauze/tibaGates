@@ -133,7 +133,7 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
       debugPrint('error $e');
     }
     notifyListeners();
-    print('data is $data');
+    debugPrint('data is $data');
     return data;
   }
 }

@@ -1,20 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-import 'package:clean_app/Data/Models/manager/invitationType_model.dart';
-import 'package:clean_app/Data/Models/manager/invitation_model.dart';
-import 'package:clean_app/api/app_exceptions.dart';
-import 'package:clean_app/api/base_client.dart';
-import 'package:clean_app/api/base_exception_handling.dart';
-
+import '../../Data/Models/manager/invitationType_model.dart';
+import '../../Data/Models/manager/invitation_model.dart';
+import '../../api/base_client.dart';
+import '../../api/base_exception_handling.dart';
 import '../../Utilities/Constants/constants.dart';
-import '../../api/sharedPrefs.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../main.dart';
 
 class ManagerProv with ChangeNotifier, BaseExceptionHandling {

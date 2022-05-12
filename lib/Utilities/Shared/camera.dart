@@ -247,3 +247,4 @@ class TakePictureScreenState extends State<CameraPicker>
 
 
 }
+

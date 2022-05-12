@@ -32,7 +32,6 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   MemberShipModel memberShipModel;
   File rokhsa;
   File idCard;
-
   int totalParkedCars;
   bool isVIP;
   int militaryCount;

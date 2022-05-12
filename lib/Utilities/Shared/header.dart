@@ -1,4 +1,4 @@
-import 'package:clean_app/Utilities/Colors/colorManager.dart';
+import '../Colors/colorManager.dart';
 import 'package:flutter/material.dart';
 
 class HeaderWidget extends StatefulWidget {
@@ -25,106 +25,104 @@ class _HeaderWidgetState extends State<HeaderWidget> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
-    return Container(
-      child: Stack(
-        children: [
-          ClipPath(
-            child: Container(
-              decoration: new BoxDecoration(
-                gradient: new LinearGradient(
-                    colors: [
-                      ColorManager.primary.withOpacity(0.4),
-                      ColorManager.accentColor.withOpacity(0.9),
-                    ],
-                    begin: const FractionalOffset(0.0, 0.0),
-                    end: const FractionalOffset(2.0, 0.0),
-                    stops: [0.0, 1.0],
-                    tileMode: TileMode.clamp),
-              ),
+    return Stack(
+      children: [
+        ClipPath(
+          child: Container(
+            decoration: new BoxDecoration(
+              gradient: new LinearGradient(
+                  colors: [
+                    ColorManager.primary.withOpacity(0.4),
+                    ColorManager.accentColor.withOpacity(0.9),
+                  ],
+                  begin: const FractionalOffset(0.0, 0.0),
+                  end: const FractionalOffset(2.0, 0.0),
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp),
             ),
-            clipper: new ShapeClipper([
-              Offset(width / 5, _height),
-              Offset(width / 10 * 5, _height - 60),
-              Offset(width / 5 * 4, _height + 20),
-              Offset(width, _height - 18)
-            ]),
           ),
-          ClipPath(
-            child: Container(
-              decoration: new BoxDecoration(
-                gradient: new LinearGradient(
-                    colors: [
-                      ColorManager.primary.withOpacity(0.4),
-                      ColorManager.accentColor.withOpacity(0.4),
-                    ],
-                    begin: const FractionalOffset(0.0, 0.0),
-                    end: const FractionalOffset(1.0, 0.0),
-                    stops: [0.0, 1.0],
-                    tileMode: TileMode.clamp),
-              ),
+          clipper: new ShapeClipper([
+            Offset(width / 5, _height),
+            Offset(width / 10 * 5, _height - 60),
+            Offset(width / 5 * 4, _height + 20),
+            Offset(width, _height - 18)
+          ]),
+        ),
+        ClipPath(
+          child: Container(
+            decoration: new BoxDecoration(
+              gradient: new LinearGradient(
+                  colors: [
+                    ColorManager.primary.withOpacity(0.4),
+                    ColorManager.accentColor.withOpacity(0.4),
+                  ],
+                  begin: const FractionalOffset(0.0, 0.0),
+                  end: const FractionalOffset(1.0, 0.0),
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp),
             ),
-            clipper: new ShapeClipper([
-              Offset(width / 3, _height + 20),
-              Offset(width / 10 * 8, _height - 60),
-              Offset(width / 5 * 4, _height - 60),
-              Offset(width, _height - 20)
-            ]),
           ),
-          ClipPath(
-            child: Container(
-              decoration: new BoxDecoration(
-                gradient: new LinearGradient(
-                    colors: [
-                      ColorManager.primary,
-                      ColorManager.accentColor.withOpacity(0.8),
-                    ],
-                    begin: const FractionalOffset(0.0, 0.0),
-                    end: const FractionalOffset(1.0, 0.0),
-                    stops: [0.0, 1.0],
-                    tileMode: TileMode.clamp),
-              ),
+          clipper: new ShapeClipper([
+            Offset(width / 3, _height + 20),
+            Offset(width / 10 * 8, _height - 60),
+            Offset(width / 5 * 4, _height - 60),
+            Offset(width, _height - 20)
+          ]),
+        ),
+        ClipPath(
+          child: Container(
+            decoration: new BoxDecoration(
+              gradient: new LinearGradient(
+                  colors: [
+                    ColorManager.primary,
+                    ColorManager.accentColor.withOpacity(0.8),
+                  ],
+                  begin: const FractionalOffset(0.0, 0.0),
+                  end: const FractionalOffset(1.0, 0.0),
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp),
             ),
-            clipper: new ShapeClipper([
-              Offset(width / 5, _height),
-              Offset(width / 2, _height - 40),
-              Offset(width / 5 * 4, _height - 80),
-              Offset(width, _height - 20)
-            ]),
           ),
-          Visibility(
-            visible: _showIcon,
-            child: Container(
-              height: _height - 40,
-              child: Center(
-                child: Container(
-                  margin: EdgeInsets.all(20),
-                  padding: EdgeInsets.only(
-                    left: 5.0,
-                    top: 20.0,
-                    right: 5.0,
-                    bottom: 20.0,
+          clipper: new ShapeClipper([
+            Offset(width / 5, _height),
+            Offset(width / 2, _height - 40),
+            Offset(width / 5 * 4, _height - 80),
+            Offset(width, _height - 20)
+          ]),
+        ),
+        Visibility(
+          visible: _showIcon,
+          child: Container(
+            height: _height - 40,
+            child: Center(
+              child: Container(
+                margin: EdgeInsets.all(20),
+                padding: EdgeInsets.only(
+                  left: 5.0,
+                  top: 20.0,
+                  right: 5.0,
+                  bottom: 20.0,
+                ),
+                decoration: BoxDecoration(
+                  // borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(100),
+                    topRight: Radius.circular(100),
+                    bottomLeft: Radius.circular(60),
+                    bottomRight: Radius.circular(60),
                   ),
-                  decoration: BoxDecoration(
-                    // borderRadius: BorderRadius.circular(20),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(100),
-                      topRight: Radius.circular(100),
-                      bottomLeft: Radius.circular(60),
-                      bottomRight: Radius.circular(60),
-                    ),
-                    border: Border.all(width: 5, color: Colors.white),
-                  ),
-                  child: Icon(
-                    _icon,
-                    color: Colors.white,
-                    size: 40.0,
-                  ),
+                  border: Border.all(width: 5, color: Colors.white),
+                ),
+                child: Icon(
+                  _icon,
+                  color: Colors.white,
+                  size: 40.0,
                 ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

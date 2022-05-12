@@ -57,7 +57,7 @@ class _GameHomeState extends State<GameHome> {
             color: Colors.white,
             textColor: Colors.green,
             shape: RoundedRectangleBorder(
-                side:  const BorderSide(color: Colors.green, width: 2),
+                side:   BorderSide(color: Colors.green, width: 2.w),
                 borderRadius: BorderRadius.circular(15)),
             onPressed: () {
               Navigator.of(context).pushAndRemoveUntil(
