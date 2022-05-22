@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:clean_app/Utilities/responsive.dart';
 import '../../Utilities/Shared/dialogs/loading_dialog.dart';
 import '../../Utilities/connectivityStatus.dart';
 import 'package:lottie/lottie.dart';
@@ -11,6 +10,7 @@ import '../../Data/Models/guard/parked_model.dart';
 import '../../Utilities/Constants/constants.dart';
 import '../../Utilities/Fonts/fontsManager.dart';
 import '../../Utilities/Shared/sharedWidgets.dart';
+import '../../Utilities/responsive.dart';
 import '../../ViewModel/guard/authProv.dart';
 import '../../ViewModel/guard/visitorProv.dart';
 import 'package:flutter/cupertino.dart';

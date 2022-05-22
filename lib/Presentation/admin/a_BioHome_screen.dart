@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:clean_app/Presentation/guard/scanner.dart';
 import '../../Utilities/responsive.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Data/Models/admin/a_homeBio_model.dart';
+import '../guard/scanner.dart';
 import 'a_reports_screen.dart';
 import 'admin_bottomNav.dart';
 import '../../Utilities/Colors/colorManager.dart';
@@ -15,7 +15,6 @@ import '../../Utilities/connectivityStatus.dart';
 import '../../ViewModel/admin/a_homeBioProv.dart';
 import '../../ViewModel/admin/adminProv.dart';
 import '../../ViewModel/guard/authProv.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -384,7 +383,7 @@ class ABioHomeState extends State {
             });
   }
 
-  List<PieChartSectionData> showingSections(BuildContext context) {
+/*  List<PieChartSectionData> showingSections(BuildContext context) {
     // final ratio = Provider.of<UserData>(context, listen: false).superCompaniesChartModel;
 
     return List.generate(4, (i) {
@@ -430,7 +429,7 @@ class ABioHomeState extends State {
           return PieChartSectionData(
             color: Colors.purple[600],
             value:
-                12 /*double.parse(ratio.totalExternalMissionRatio.toString())*/,
+                12 *//*double.parse(ratio.totalExternalMissionRatio.toString())*//*,
             title: 12.toStringAsFixed(0) + ' %',
             radius: radius,
             titleStyle: TextStyle(
@@ -442,5 +441,5 @@ class ABioHomeState extends State {
           throw Error();
       }
     });
-  }
+  }*/
 }

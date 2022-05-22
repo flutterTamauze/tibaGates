@@ -67,7 +67,7 @@ Future<void> main() async {
 
   prefs = await SharedPreferences.getInstance();
   InitLocator locator = InitLocator();
-
+HttpOverrides.global=MyHttpOverrides();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   locator.intalizeLocator();
@@ -142,5 +142,11 @@ class MyApp extends StatelessWidget {
         );
       },
     );
+  }
+}
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext context){
+    return super.createHttpClient(context)..badCertificateCallback=(X509Certificate cert,String host,int port)=>true;
   }
 }

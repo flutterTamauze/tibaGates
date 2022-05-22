@@ -34,6 +34,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   File idCard;
   int totalParkedCars;
   bool isVIP;
+  int ownerId;
   int militaryCount;
   int civilCount;
   int invitationID;
@@ -163,11 +164,11 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       var response =
-          await BaseClient().get(BASE_URL, endPoint).catchError(handleError);
+      await BaseClient().get(BASE_URL, endPoint).catchError(handleError);
 
       var parkJsonObj = jsonDecode(response)['response']['parkedDTO'] as List;
       var reasonsJsonObj =
-          jsonDecode(response)['response']['reasonDTO'] as List;
+      jsonDecode(response)['response']['reasonDTO'] as List;
       totalParkedCars = jsonDecode(response)['response']['count'];
       debugPrint('all parked cars $totalParkedCars');
       debugPrint('parking response  $parkJsonObj');
@@ -196,6 +197,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     }
   }
 
+
   Future<ResponseData> checkIn(File carImg, File identityImg, String userID,
       int typeID, int citizenCount, int militaryCount, BuildContext context,
       [String image1, String image2]) async {
@@ -218,6 +220,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
       request.fields['image1'] = image1;
       request.fields['image2'] = image2;
     }
+
     request.fields['UserID'] = userID.toString();
     request.fields['TypeID'] = typeID.toString();
     request.fields['militryCount'] = militaryCount.toString();
@@ -254,12 +257,12 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   }
 
   Future<ResponseData> checkInInvitation(
-    String userID,
-    int invitationID,
-    BuildContext context, [
-    File carImg,
-    File identityImg,
-  ]) async {
+      String userID,
+      int invitationID,
+      BuildContext context, [
+        File carImg,
+        File identityImg,
+      ]) async {
     ResponseData responseData = ResponseData();
     debugPrint('userID $userID');
 
@@ -306,10 +309,10 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   }
 
   Future<ResponseData> checkInPerHour(
-    String userID,
-    File carImg,
-    File identityImg,
-  ) async {
+      String userID,
+      File carImg,
+      File identityImg,
+      ) async {
     ResponseData responseData = ResponseData();
     debugPrint('userID in per hour $userID');
 
@@ -423,7 +426,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     try {
       var response = await BaseClient()
           .post(BASE_URL,
-              '/api/gate/print?UserID=$userId&LogID=$logId&ReasonID=$reasonId')
+          '/api/gate/print?UserID=$userId&LogID=$logId&ReasonID=$reasonId')
           .catchError(handleError);
 
       var decodedRes = jsonDecode(response);
@@ -469,7 +472,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     try {
       var response = await BaseClient()
           .put(BASE_URL,
-              '/api/Hours/ConfirmCheckOutHour?Id=$logId&UserId=$userId')
+          '/api/Hours/ConfirmCheckOutHour?Id=$logId&UserId=$userId')
           .catchError(handleError);
       debugPrint('ConfirmCheckOutHour?I $response');
 
@@ -561,13 +564,14 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
             debugPrint("response ${responseDecoded['response']}");
             invitationID = responseDecoded['response']['id'];
             isVIP = responseDecoded['response']['isVIP'];
+            ownerId = responseDecoded['response']['ownerId'];
 
             debugPrint('message is $responseDecoded');
 
             if (isVIP) {
               data = 'vip';
             } else if (responseDecoded['message'] == 'Success') {
-              data = 'Success';
+              data = 'not vip';
             }
           });
         }).catchError((e) {
@@ -638,10 +642,10 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
   Future<dynamic> updateMemberShipImages(
       [int id,
-      File carImage,
-      File identityImage,
-      File profile,
-      String imageType]) async {
+        File carImage,
+        File identityImage,
+        File profile,
+        String imageType]) async {
     String data = '';
     try {
       Uri uri = Uri.parse('$BASE_URL/api/MemberShip/UpdateImage');

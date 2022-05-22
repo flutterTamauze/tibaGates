@@ -2,10 +2,11 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Presentation/game/game_home.dart';
 
+import '../../../main.dart';
 import '../../admin/a_invitations_screen.dart';
 import '../../admin/admin_bottomNav.dart';
+import '../../game/game_home.dart';
 import '../../guard/entry_screen/entryScreen.dart';
 import '../../manager/m_home_screen.dart';
 import '../../../Utilities/Colors/colorManager.dart';
@@ -15,7 +16,6 @@ import '../../../ViewModel/guard/authProv.dart';
 import '../../../ViewModel/manager/managerProv.dart';
 import 'package:flutter_udid/flutter_udid.dart';
 
-import '../../../../main.dart';
 import '../Widgets/memberDisplay.dart';
 
 import 'package:flutter/services.dart';
@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                       height: 20.h,
                     ),
                     Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: BorderedText(
                           strokeWidth: 4.0.w,
                           strokeColor: Colors.black,
@@ -146,9 +146,16 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                       height: 36.h,
                     ),
                     Center(
+
+
+
+
+
+
+
                       child: SizedBox(
                         width: 500.w,
-                        height: 400.h,
+                        height:   455.h,
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
@@ -157,12 +164,12 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                           child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(25.0),
+                                padding:  EdgeInsets.only(top: 25.h,left: 25.w,right: 25.w,bottom: 25.h),
                                 child: Form(
                                   key: _forgetFormKey,
                                   child: Column(
                                     children: <Widget>[
-                                      Text(
+                                      AutoSizeText(
                                         'قم بتسجيل الدخول',
                                         style: TextStyle(
                                             color: ColorManager.primary,

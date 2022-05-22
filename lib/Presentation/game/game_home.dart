@@ -1,10 +1,12 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:clean_app/Presentation/guard/scanner.dart';
-import 'package:clean_app/Utilities/Constants/constants.dart';
-import 'package:clean_app/Utilities/Shared/exitDialog.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../Utilities/Constants/constants.dart';
+import '../../Utilities/Shared/exitDialog.dart';
+import '../guard/scanner.dart';
 
 class GameHome extends StatefulWidget {
   const GameHome({Key key}) : super(key: key);

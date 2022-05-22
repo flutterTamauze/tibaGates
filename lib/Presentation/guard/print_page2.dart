@@ -44,15 +44,15 @@ class PrintScreen2 extends StatefulWidget {
 
   const PrintScreen2(
       {Key key,
-      this.typeId,
-      this.militaryCount,
-      this.civilCount,
-      this.from,
-      this.logId,
-      this.reasonId,
-      this.reasonPrice,
-      this.resendType,
-      this.perHourObj})
+        this.typeId,
+        this.militaryCount,
+        this.civilCount,
+        this.from,
+        this.logId,
+        this.reasonId,
+        this.reasonPrice,
+        this.resendType,
+        this.perHourObj})
       : super(key: key);
 
   @override
@@ -179,7 +179,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
     var visitorProv = Provider.of<VisitorProv>(context, listen: false);
     var authProv = Provider.of<AuthProv>(context, listen: false);
     ConnectivityStatus connectionStatus =
-        Provider.of<ConnectivityStatus>(context);
+    Provider.of<ConnectivityStatus>(context);
     return WillPopScope(
       onWillPop: () {
         if (widget.from == 'resend' ||
@@ -199,1559 +199,1557 @@ class _PrintScreen2State extends State<PrintScreen2> {
         ),
         body: connectionStatus == ConnectivityStatus.Offline
             ? Center(
-                child: SizedBox(
-                height: 400.h,
-                width: 400.w,
-                child: Lottie.asset('assets/lotties/noInternet.json'),
-              ))
+            child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
             : RefreshIndicator(
-                onRefresh: () => bluetoothPrint.startScan(
-                    timeout: const Duration(seconds: 4)),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Screenshot(
-                        controller: screenshotController,
-                        child: (widget.resendType == 'perHour' ||
-                                widget.resendType == 'المحاسبه بالساعه')
-                            ? Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Container(
-                                  color: Colors.white,
-                                  child: Column(
+          onRefresh: () => bluetoothPrint.startScan(
+              timeout: const Duration(seconds: 4)),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Screenshot(
+                  controller: screenshotController,
+                  child: (widget.resendType == 'perHour' ||
+                      widget.resendType == 'المحاسبه بالساعه')
+                      ? Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding:  EdgeInsets.symmetric(
+                                horizontal: 12.w, vertical: 12.h),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                      EdgeInsets.only(
+                                          left: 15.w, right: 8.w),
+                                      child: SizedBox(
+                                        height: (height * 0.18),
+                                        width: (width * 0.34),
+                                        child: Container(
+                                          decoration:
+                                          const BoxDecoration(
+                                            color: Colors.white,
+                                            image: DecorationImage(
+                                                image: AssetImage(
+                                                    'assets/images/tipasplash.png')),
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                        'دار الدفاع الجوى - التجمع الخامس',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize:
+                                            setResponsiveFontSize(
+                                                26),
+                                            fontWeight:
+                                            FontManager.bold)),
+                                    SizedBox(
+                                      height: 20.h,
+                                    ),
+                                    Provider.of<VisitorProv>(
+                                        context,
+                                        listen: true)
+                                        .printTime !=
+                                        null
+                                        ? Text(
+                                      'Date : ${Provider.of<VisitorProv>(context, listen: true).printTime}',
+                                      textAlign:
+                                      TextAlign.start,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize:
+                                          setResponsiveFontSize(
+                                              26),
+                                          fontWeight:
+                                          FontManager
+                                              .bold),
+                                    )
+                                        : Container(),
+                                    SizedBox(
+                                      height: 12.h,
+                                    ),
+                                    Text(
+                                      'Guard Name : ${Provider.of<AuthProv>(context, listen: true).guardName}',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize:
+                                          setResponsiveFontSize(
+                                              26),
+                                          fontWeight:
+                                          FontManager.bold),
+                                    ),
+                                    SizedBox(
+                                      height: 12.h,
+                                    ),
+                                    Text(
+                                      'Gate : ${Provider.of<AuthProv>(context, listen: true).gateName}',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize:
+                                          setResponsiveFontSize(
+                                              26),
+                                          fontWeight:
+                                          FontManager.bold),
+                                    ),
+                                  ],
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                ),
+                                Column(
+                                  children: [
+                                    Padding(
+                                        padding:
+                                        const EdgeInsets.all(
+                                            12.0),
+                                        child: Padding(
+                                          padding:
+                                          const EdgeInsets.only(
+                                              left: 15,
+                                              right: 15),
+                                          child: SizedBox(
+                                            height: (height * 0.13),
+                                            width: (width * 0.3),
+                                            child: Container(
+                                              decoration:
+                                              const BoxDecoration(
+                                                color: Colors.white,
+                                                image: DecorationImage(
+                                                    image: AssetImage(
+                                                        'assets/images/hourlyParking.PNG')),
+                                                shape:
+                                                BoxShape.circle,
+                                              ),
+                                            ),
+                                          ),
+                                        )),
+                                    Container(
+                                      padding:
+                                      const EdgeInsets.all(3.0),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 2.w,
+                                              color: Colors.green)),
+                                      child: Qr(
+                                        data: widget.perHourObj !=
+                                            null
+                                            ? widget
+                                            .perHourObj.qrCode
+                                            : Provider.of<VisitorProv>(
+                                            context,
+                                            listen:
+                                            false)
+                                            .qrCode ??
+                                            'default',
+                                        size: 270.0.w,
+                                        version: QrVersions.auto,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 8.h,
+                                    ),
+                                    Text(
+                                      'G-${widget.perHourObj != null ? widget.perHourObj.id : Provider.of<VisitorProv>(context, listen: true).logId}',
+                                      style: TextStyle(
+                                          fontSize:
+                                          setResponsiveFontSize(
+                                              36),
+                                          fontWeight:
+                                          FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Divider(
+                              color: Colors.black,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Column(
+                                children: [
+                                  widget.perHourObj != null
+                                      ? Column(
                                     children: [
                                       Padding(
-                                        padding:  EdgeInsets.symmetric(
-                                            horizontal: 12.w, vertical: 12.h),
+                                        padding: EdgeInsets
+                                            .symmetric(
+                                            vertical:
+                                            10.h,
+                                            horizontal:
+                                            20.w),
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment
+                                              .spaceBetween,
                                           children: [
-                                            Column(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                       EdgeInsets.only(
-                                                          left: 15.w, right: 8.w),
-                                                  child: SizedBox(
-                                                    height: (height * 0.18),
-                                                    width: (width * 0.34),
-                                                    child: Container(
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                        color: Colors.white,
-                                                        image: DecorationImage(
-                                                            image: AssetImage(
-                                                                'assets/images/tipasplash.png')),
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Text(
-                                                    'دار الدفاع الجوى - التجمع الخامس',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize:
-                                                            setResponsiveFontSize(
-                                                                26),
-                                                        fontWeight:
-                                                            FontManager.bold)),
-                                                SizedBox(
-                                                  height: 20.h,
-                                                ),
-                                                Provider.of<VisitorProv>(
-                                                                context,
-                                                                listen: true)
-                                                            .printTime !=
-                                                        null
-                                                    ? Text(
-                                                        'Date : ${Provider.of<VisitorProv>(context, listen: true).printTime}',
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize:
-                                                                setResponsiveFontSize(
-                                                                    26),
-                                                            fontWeight:
-                                                                FontManager
-                                                                    .bold),
-                                                      )
-                                                    : Container(),
-                                                SizedBox(
-                                                  height: 12.h,
-                                                ),
-                                                Text(
-                                                  'Guard Name : ${Provider.of<AuthProv>(context, listen: true).guardName}',
-                                                  textAlign: TextAlign.start,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize:
-                                                          setResponsiveFontSize(
-                                                              26),
-                                                      fontWeight:
-                                                          FontManager.bold),
-                                                ),
-                                                SizedBox(
-                                                  height: 12.h,
-                                                ),
-                                                Text(
-                                                  'Gate : ${Provider.of<AuthProv>(context, listen: true).gateName}',
-                                                  textAlign: TextAlign.start,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize:
-                                                          setResponsiveFontSize(
-                                                              26),
-                                                      fontWeight:
-                                                          FontManager.bold),
-                                                ),
-                                              ],
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                            Text(
+                                              '${widget.perHourObj.inTime.toString().substring(0, 10)}   ${widget.perHourObj.inTime.toString().substring(11)}',
+                                              textAlign:
+                                              TextAlign
+                                                  .start,
+                                              style: TextStyle(
+                                                  fontSize:
+                                                  setResponsiveFontSize(
+                                                      28),
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .bold,
+                                                  color: Colors
+                                                      .black),
                                             ),
-                                            Column(
-                                              children: [
-                                                Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            12.0),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 15,
-                                                              right: 15),
-                                                      child: SizedBox(
-                                                        height: (height * 0.13),
-                                                        width: (width * 0.3),
-                                                        child: Container(
-                                                          decoration:
-                                                              const BoxDecoration(
-                                                            color: Colors.white,
-                                                            image: DecorationImage(
-                                                                image: AssetImage(
-                                                                    'assets/images/hourlyParking.PNG')),
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    )),
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(3.0),
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          width: 2.w,
-                                                          color: Colors.green)),
-                                                  child: Qr(
-                                                    data: widget.perHourObj !=
-                                                            null
-                                                        ? widget
-                                                            .perHourObj.qrCode
-                                                        : Provider.of<VisitorProv>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .qrCode ??
-                                                            'default',
-                                                    size: 270.0.w,
-                                                    version: QrVersions.auto,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 8.h,
-                                                ),
-                                                Text(
-                                                  'G-${widget.perHourObj != null ? widget.perHourObj.id : Provider.of<VisitorProv>(context, listen: true).logId}',
+                                            Flexible(
+                                              child: Text(
+                                                  'وقت الدخول              ',
+                                                  textAlign:
+                                                  TextAlign
+                                                      .end,
                                                   style: TextStyle(
                                                       fontSize:
-                                                          setResponsiveFontSize(
-                                                              36),
+                                                      setResponsiveFontSize(
+                                                          26),
                                                       fontWeight:
-                                                          FontWeight.bold),
-                                                )
-                                              ],
+                                                      FontWeight.bold)),
                                             ),
                                           ],
                                         ),
                                       ),
-                                      const Padding(
-                                        padding: EdgeInsets.all(8.0),
+                                      SizedBox(
+                                        height: 10.h,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets
+                                            .symmetric(
+                                            horizontal:
+                                            20.w),
                                         child: Divider(
+                                          thickness: 1,
+                                          height: 2.h,
                                           color: Colors.black,
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Align(
-                                          alignment: Alignment.bottomLeft,
-                                          child: Column(
-                                            children: [
-                                              widget.perHourObj != null
-                                                  ? Column(
-                                                      children: [
-                                                        Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical:
-                                                                      10.h,
-                                                                  horizontal:
-                                                                      20.w),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Text(
-                                                                '${widget.perHourObj.inTime.toString().substring(0, 10)}   ${widget.perHourObj.inTime.toString().substring(11)}',
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .start,
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        setResponsiveFontSize(
-                                                                            28),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .black),
-                                                              ),
-                                                              Flexible(
-                                                                child: Text(
-                                                                    'وقت الدخول              ',
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .end,
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            setResponsiveFontSize(
-                                                                                26),
-                                                                        fontWeight:
-                                                                            FontWeight.bold)),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 10.h,
-                                                        ),
-                                                        Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      20.w),
-                                                          child: Divider(
-                                                            thickness: 1,
-                                                            height: 2.h,
-                                                            color: Colors.black,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 10.h,
-                                                        ),
-                                                        Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical:
-                                                                      10.h,
-                                                                  horizontal:
-                                                                      20.w),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Text(
-                                                                '${widget.perHourObj.outTime.toString().substring(0, 10)}   ${widget.perHourObj.outTime.toString().substring(11)}',
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .start,
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        setResponsiveFontSize(
-                                                                            28),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .black),
-                                                              ),
-                                                              Flexible(
-                                                                child: Text(
-                                                                    'وقت الخروج              ',
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .end,
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            setResponsiveFontSize(
-                                                                                26),
-                                                                        fontWeight:
-                                                                            FontWeight.bold)),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 10.h,
-                                                        ),
-                                                        Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      20.w),
-                                                          child: Divider(
-                                                            thickness: 1,
-                                                            height: 2.h,
-                                                            color: Colors.black,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 10.h,
-                                                        ),
-                                                        Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical:
-                                                                      10.h,
-                                                                  horizontal:
-                                                                      20.w),
-                                                          child: Directionality(
-                                                            textDirection: ui
-                                                                .TextDirection
-                                                                .rtl,
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Text(
-                                                                    'الإجمالى :             ',
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .end,
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            setResponsiveFontSize(
-                                                                                28),
-                                                                        fontWeight:
-                                                                            FontWeight.bold)),
-                                                                Text(
-                                                                  '${widget.perHourObj.total}',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .start,
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          setResponsiveFontSize(
-                                                                              30),
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .black),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 12.h)
-                                                      ],
-                                                    )
-                                                  : Container(),
-                                              widget.perHourObj == null
-                                                  ? Container(
-                                                      decoration:
-                                                          DottedDecoration(
-                                                        shape: Shape.box,
-                                                        color: Colors.black,
-                                                        strokeWidth: 2.w,
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                10), //remove this to get plane rectange
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                top: 12,
-                                                                bottom: 12,
-                                                                left: 4,
-                                                                right: 4),
-                                                        child: Center(
-                                                          child:
-                                                              Column(children: [
-                                                            Text(
-                                                              'برجاء الإحتفاظ بالفاتورة لتقديمها عند المغادرة',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  height: 2.h,
-                                                                  fontSize:
-                                                                      setResponsiveFontSize(
-                                                                          28),
-                                                                  fontWeight:
-                                                                      FontManager
-                                                                          .bold),
-                                                            ),
-                                                            Text(
-                                                              ' غرامة فقد التذكرة ${Provider.of<AuthProv>(context, listen: false).lostTicketPrice.toString() ?? 0} جنيه',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  height: 2.h,
-                                                                  fontSize:
-                                                                      setResponsiveFontSize(
-                                                                          28),
-                                                                  fontWeight:
-                                                                      FontManager
-                                                                          .bold),
-                                                            ),
-                                                          ]),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : Container(),
-                                              SizedBox(
-                                                height: 10.h,
-                                              ),
-                                              Center(
-                                                child: Text(
-                                                  'It\'s our pleasure to serve you \n                  يسعدنا خدمتك',
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      height: 2.h,
-                                                      fontSize:
-                                                          setResponsiveFontSize(
-                                                              28),
-                                                      fontWeight:
-                                                          FontManager.bold),
-                                                ),
-                                              ),
-                                            ],
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                          ),
-                                        ),
+                                      SizedBox(
+                                        height: 10.h,
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Container(
-                                  color: Colors.white,
-                                  child: Column(
-                                    children: [
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 12, vertical: 12),
+                                        padding: EdgeInsets
+                                            .symmetric(
+                                            vertical:
+                                            10.h,
+                                            horizontal:
+                                            20.w),
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment
+                                              .spaceBetween,
                                           children: [
-                                            Column(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 15, right: 8),
-                                                  child: SizedBox(
-                                                    height: (height * 0.18),
-                                                    width: (width * 0.34),
-                                                    child: Container(
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                        color: Colors.white,
-                                                        image: DecorationImage(
-                                                            image: AssetImage(
-                                                                'assets/images/tipasplash.png')),
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Text(
-                                                    'دار الدفاع الجوى - التجمع الخامس',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize:
-                                                            setResponsiveFontSize(
-                                                                26),
-                                                        fontWeight:
-                                                            FontManager.bold)),
-                                                SizedBox(
-                                                  height: 20.h,
-                                                ),
-                                                Provider.of<VisitorProv>(
-                                                                context,
-                                                                listen: true)
-                                                            .printTime !=
-                                                        null
-                                                    ? Text(
-                                                        'Date : ${Provider.of<VisitorProv>(context, listen: true).printTime}',
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize:
-                                                                setResponsiveFontSize(
-                                                                    26),
-                                                            fontWeight:
-                                                                FontManager
-                                                                    .bold),
-                                                      )
-                                                    : Container(),
-                                                SizedBox(
-                                                  height: 12.h,
-                                                ),
-                                                Text(
-                                                  'Guard Name : ${Provider.of<AuthProv>(context, listen: true).guardName}',
-                                                  textAlign: TextAlign.start,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize:
-                                                          setResponsiveFontSize(
-                                                              26),
-                                                      fontWeight:
-                                                          FontManager.bold),
-                                                ),
-                                                SizedBox(
-                                                  height: 12.h,
-                                                ),
-                                                Text(
-                                                  'Gate : ${Provider.of<AuthProv>(context, listen: true).gateName}',
-                                                  textAlign: TextAlign.start,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize:
-                                                          setResponsiveFontSize(
-                                                              26),
-                                                      fontWeight:
-                                                          FontManager.bold),
-                                                ),
-                                              ],
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                            Text(
+                                              '${widget.perHourObj.outTime.toString().substring(0, 10)}   ${widget.perHourObj.outTime.toString().substring(11)}',
+                                              textAlign:
+                                              TextAlign
+                                                  .start,
+                                              style: TextStyle(
+                                                  fontSize:
+                                                  setResponsiveFontSize(
+                                                      28),
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .bold,
+                                                  color: Colors
+                                                      .black),
                                             ),
-                                            Column(
-                                              children: [
-                                                widget.resendType ==
-                                                        'VIP Invitation'
-                                                    ? Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(12.0),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 15,
-                                                                  right: 15),
-                                                          child: SizedBox(
-                                                            height:
-                                                                (height * 0.13),
-                                                            width:
-                                                                (width * 0.3),
-                                                            child: Container(
-                                                              decoration:
-                                                                  const BoxDecoration(
-                                                                color: Colors
-                                                                    .white,
-                                                                image: DecorationImage(
-                                                                    image: AssetImage(
-                                                                        'assets/images/vip.png')),
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ))
-                                                    : Container(),
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(3.0),
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          width: 2.w,
-                                                          color: Colors.green)),
-                                                  child: Qr(
-                                                    data:
-                                                        Provider.of<VisitorProv>(
-                                                                    context,
-                                                                    listen:
-                                                                        true)
-                                                                .qrCode ??
-                                                            'abc',
-                                                    size: 270.0.w,
-                                                    version: QrVersions.auto,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 8.h,
-                                                ),
-                                                Provider.of<VisitorProv>(
-                                                                context,
-                                                                listen: true)
-                                                            .logId !=
-                                                        null
-                                                    ? Column(
-                                                        children: [
-                                                          Text(
-                                                            'G-${Provider.of<VisitorProv>(context, listen: true).logId}',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    setResponsiveFontSize(
-                                                                        36),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ],
-                                                      )
-                                                    : Container()
-                                              ],
+                                            Flexible(
+                                              child: Text(
+                                                  'وقت الخروج              ',
+                                                  textAlign:
+                                                  TextAlign
+                                                      .end,
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                      setResponsiveFontSize(
+                                                          26),
+                                                      fontWeight:
+                                                      FontWeight.bold)),
                                             ),
                                           ],
                                         ),
                                       ),
-                                      const Padding(
-                                        padding: EdgeInsets.all(8.0),
+                                      SizedBox(
+                                        height: 10.h,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets
+                                            .symmetric(
+                                            horizontal:
+                                            20.w),
                                         child: Divider(
+                                          thickness: 1,
+                                          height: 2.h,
                                           color: Colors.black,
                                         ),
                                       ),
+                                      SizedBox(
+                                        height: 10.h,
+                                      ),
                                       Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Align(
-                                          alignment: Alignment.bottomLeft,
-                                          child: Column(
+                                        padding: EdgeInsets
+                                            .symmetric(
+                                            vertical:
+                                            10.h,
+                                            horizontal:
+                                            20.w),
+                                        child: Directionality(
+                                          textDirection: ui
+                                              .TextDirection
+                                              .rtl,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
                                             children: [
-                                              (widget.resendType !=
-                                                          ('VIP Invitation') &&
-                                                      widget.resendType !=
-                                                          ('Normal'))
-                                                  ? Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        RichText(
-                                                          text: TextSpan(
-                                                            text:
-                                                                'Park Fee  :  ',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize:
-                                                                    setResponsiveFontSize(
-                                                                        30),
-                                                                fontWeight:
-                                                                    FontManager
-                                                                        .bold),
-                                                            children: <
-                                                                TextSpan>[
-                                                              TextSpan(
-                                                                  text: visitorProv
-                                                                      .parkPrice
-                                                                      .toString(),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        setResponsiveFontSize(
-                                                                            32),
-                                                                  )),
-                                                              TextSpan(
-                                                                  text: ' LE',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    letterSpacing:
-                                                                        1.5,
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        setResponsiveFontSize(
-                                                                            24),
-                                                                  )),
-                                                            ],
-                                                          ),
-                                                        ),
-
-                                                        SizedBox(
-                                                          height: 12.h,
-                                                        ),
-                                                        visitorProv.citizenPrice !=
-                                                                0
-                                                            ? RichText(
-                                                                text: TextSpan(
-                                                                  text:
-                                                                      'Civilian Entry Fee  :  ',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          setResponsiveFontSize(
-                                                                              30),
-                                                                      fontWeight:
-                                                                          FontManager
-                                                                              .bold),
-                                                                  children: <
-                                                                      TextSpan>[
-                                                                    TextSpan(
-                                                                        text: visitorProv
-                                                                            .citizenPrice
-                                                                            .toString(),
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                          color:
-                                                                              Colors.black,
-                                                                          fontSize:
-                                                                              setResponsiveFontSize(32),
-                                                                        )),
-                                                                    TextSpan(
-                                                                        text:
-                                                                            ' LE',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                          letterSpacing:
-                                                                              1.5,
-                                                                          color:
-                                                                              Colors.black,
-                                                                          fontSize:
-                                                                              setResponsiveFontSize(24),
-                                                                        )),
-                                                                  ],
-                                                                ),
-                                                              )
-                                                            : Container(),
-                                                        SizedBox(
-                                                          height: 12.h,
-                                                        ),
-                                                        visitorProv.militaryPrice !=
-                                                                0
-                                                            ? RichText(
-                                                                text: TextSpan(
-                                                                  text:
-                                                                      'Military Entry Fee :  ',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          setResponsiveFontSize(
-                                                                              30),
-                                                                      fontWeight:
-                                                                          FontManager
-                                                                              .bold),
-                                                                  children: <
-                                                                      TextSpan>[
-                                                                    TextSpan(
-                                                                        text: visitorProv
-                                                                            .militaryPrice
-                                                                            .toString(),
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                          color:
-                                                                              Colors.black,
-                                                                          fontSize:
-                                                                              setResponsiveFontSize(32),
-                                                                        )),
-                                                                    TextSpan(
-                                                                        text:
-                                                                            ' LE',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                          letterSpacing:
-                                                                              1.5,
-                                                                          color:
-                                                                              Colors.black,
-                                                                          fontSize:
-                                                                              setResponsiveFontSize(24),
-                                                                        )),
-                                                                  ],
-                                                                ),
-                                                              )
-                                                            : Container(),
-                                                        SizedBox(
-                                                          height: 12.h,
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 250.w),
-                                                          child: Container(
-                                                            decoration: DottedDecoration(
-                                                                shape:
-                                                                    Shape.line,
-                                                                linePosition:
-                                                                    LinePosition
-                                                                        .bottom,
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        ),
-                                                        //  Divider(thickness: 2,),
-                                                        SizedBox(
-                                                          height: 12.h,
-                                                        ),
-                                                        RichText(
-                                                          text: TextSpan(
-                                                            text: 'Total : ',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize:
-                                                                    setResponsiveFontSize(
-                                                                        30),
-                                                                fontWeight:
-                                                                    FontManager
-                                                                        .bold),
-                                                            children: <
-                                                                TextSpan>[
-                                                              TextSpan(
-                                                                  text: visitorProv
-                                                                      .totalPrice
-                                                                      .toString(),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        setResponsiveFontSize(
-                                                                            32),
-                                                                  )),
-                                                              TextSpan(
-                                                                  text: ' LE',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .black,
-                                                                    letterSpacing:
-                                                                        1.5,
-                                                                    fontSize:
-                                                                        setResponsiveFontSize(
-                                                                            24),
-                                                                  )),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 20.h,
-                                                        ),
-                                                        const Divider(
-                                                          height: 2,
-                                                          thickness: 2,
-                                                          color: Colors.black,
-                                                        ),
-                                                        SizedBox(
-                                                          height: 30.h,
-                                                        ),
-                                                      ],
-                                                    )
-                                                  : Container(),
-                                              Container(
-                                                decoration: DottedDecoration(
-                                                  shape: Shape.box,
-                                                  color: Colors.black,
-                                                  strokeWidth: 2.w,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10), //remove this to get plane rectange
-                                                ),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 12,
-                                                          bottom: 12,
-                                                          left: 4,
-                                                          right: 4),
-                                                  child: Center(
-                                                    child: Column(
-                                                      children: [
-                                                        Text(
-                                                          'برجاء الإحتفاظ بالفاتورة لتقديمها عند المغادرة',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              height: 2.h,
-                                                              fontSize:
-                                                                  setResponsiveFontSize(
-                                                                      28),
-                                                              fontWeight:
-                                                                  FontManager
-                                                                      .bold),
-                                                        ),
-                                                        (widget.resendType !=
-                                                                    ('VIP Invitation') &&
-                                                                widget.resendType !=
-                                                                    ('Normal'))
-                                                            ? Text(
-                                                                ' غرامة فقد التذكرة ${Provider.of<AuthProv>(context, listen: false).lostTicketPrice.toString() ?? 0} جنيه',
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    height: 2.h,
-                                                                    fontSize:
-                                                                        setResponsiveFontSize(
-                                                                            28),
-                                                                    fontWeight:
-                                                                        FontManager
-                                                                            .bold),
-                                                              )
-                                                            : Container(),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 20.h,
-                                              ),
-                                              Center(
-                                                child: Text(
-                                                  'It\'s our pleasure to serve you \n                  يسعدنا خدمتك',
+                                              Text(
+                                                  'الإجمالى :             ',
+                                                  textAlign:
+                                                  TextAlign
+                                                      .end,
                                                   style: TextStyle(
-                                                      color: Colors.black,
-                                                      height: 2.h,
                                                       fontSize:
-                                                          setResponsiveFontSize(
-                                                              28),
+                                                      setResponsiveFontSize(
+                                                          28),
                                                       fontWeight:
-                                                          FontManager.bold),
-                                                ),
+                                                      FontWeight.bold)),
+                                              Text(
+                                                '${widget.perHourObj.total}',
+                                                textAlign:
+                                                TextAlign
+                                                    .start,
+                                                style: TextStyle(
+                                                    fontSize:
+                                                    setResponsiveFontSize(
+                                                        30),
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .bold,
+                                                    color: Colors
+                                                        .black),
                                               ),
                                             ],
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
                                           ),
                                         ),
                                       ),
+                                      SizedBox(height: 12.h)
                                     ],
+                                  )
+                                      : Container(),
+                                  widget.perHourObj == null
+                                      ? Container(
+                                    decoration:
+                                    DottedDecoration(
+                                      shape: Shape.box,
+                                      color: Colors.black,
+                                      strokeWidth: 2.w,
+                                      borderRadius:
+                                      BorderRadius.circular(
+                                          10), //remove this to get plane rectange
+                                    ),
+                                    child: Padding(
+                                      padding:
+                                      const EdgeInsets
+                                          .only(
+                                          top: 12,
+                                          bottom: 12,
+                                          left: 4,
+                                          right: 4),
+                                      child: Center(
+                                        child:
+                                        Column(children: [
+                                          Text(
+                                            'برجاء الإحتفاظ بالفاتورة لتقديمها عند المغادرة',
+                                            textAlign:
+                                            TextAlign
+                                                .center,
+                                            style: TextStyle(
+                                                color: Colors
+                                                    .black,
+                                                height: 2.h,
+                                                fontSize:
+                                                setResponsiveFontSize(
+                                                    28),
+                                                fontWeight:
+                                                FontManager
+                                                    .bold),
+                                          ),
+                                          Text(
+                                            ' غرامة فقد التذكرة ${Provider.of<AuthProv>(context, listen: false).lostTicketPrice.toString() ?? 0} جنيه',
+                                            textAlign:
+                                            TextAlign
+                                                .center,
+                                            style: TextStyle(
+                                                color: Colors
+                                                    .black,
+                                                height: 2.h,
+                                                fontSize:
+                                                setResponsiveFontSize(
+                                                    28),
+                                                fontWeight:
+                                                FontManager
+                                                    .bold),
+                                          ),
+                                        ]),
+                                      ),
+                                    ),
+                                  )
+                                      : Container(),
+                                  SizedBox(
+                                    height: 10.h,
                                   ),
-                                ),
+                                  Center(
+                                    child: Text(
+                                      'It\'s our pleasure to serve you \n                  يسعدنا خدمتك',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          height: 2.h,
+                                          fontSize:
+                                          setResponsiveFontSize(
+                                              28),
+                                          fontWeight:
+                                          FontManager.bold),
+                                    ),
+                                  ),
+                                ],
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                               ),
+                            ),
+                          ),
+                        ],
                       ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: StreamBuilder<List<BluetoothDevice>>(
-                            stream: bluetoothPrint.scanResults,
-                            initialData: const [],
-                            builder: (c, snapshot) {
-                              print('snapshot = ${snapshot.data.length}');
+                    ),
+                  )
+                      : Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 12),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.only(
+                                          left: 15, right: 8),
+                                      child: SizedBox(
+                                        height: (height * 0.18),
+                                        width: (width * 0.34),
+                                        child: Container(
+                                          decoration:
+                                          const BoxDecoration(
+                                            color: Colors.white,
+                                            image: DecorationImage(
+                                                image: AssetImage(
+                                                    'assets/images/tipasplash.png')),
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                        'دار الدفاع الجوى - التجمع الخامس',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize:
+                                            setResponsiveFontSize(
+                                                26),
+                                            fontWeight:
+                                            FontManager.bold)),
+                                    SizedBox(
+                                      height: 20.h,
+                                    ),
+                                    Provider.of<VisitorProv>(
+                                        context,
+                                        listen: true)
+                                        .printTime !=
+                                        null
+                                        ? Text(
+                                      'Date : ${Provider.of<VisitorProv>(context, listen: true).printTime}',
+                                      textAlign:
+                                      TextAlign.start,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize:
+                                          setResponsiveFontSize(
+                                              26),
+                                          fontWeight:
+                                          FontManager
+                                              .bold),
+                                    )
+                                        : Container(),
+                                    SizedBox(
+                                      height: 12.h,
+                                    ),
+                                    Text(
+                                      'Guard Name : ${Provider.of<AuthProv>(context, listen: true).guardName}',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize:
+                                          setResponsiveFontSize(
+                                              26),
+                                          fontWeight:
+                                          FontManager.bold),
+                                    ),
+                                    SizedBox(
+                                      height: 12.h,
+                                    ),
+                                    Text(
+                                      'Gate : ${Provider.of<AuthProv>(context, listen: true).gateName}',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize:
+                                          setResponsiveFontSize(
+                                              26),
+                                          fontWeight:
+                                          FontManager.bold),
+                                    ),
+                                  ],
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                ),
+                                Column(
+                                  children: [
+                                    widget.resendType ==
+                                        'VIP Invitation'
+                                        ? Padding(
+                                        padding:
+                                        const EdgeInsets
+                                            .all(12.0),
+                                        child: Padding(
+                                          padding:
+                                          const EdgeInsets
+                                              .only(
+                                              left: 15,
+                                              right: 15),
+                                          child: SizedBox(
+                                            height:
+                                            (height * 0.13),
+                                            width:
+                                            (width * 0.3),
+                                            child: Container(
+                                              decoration:
+                                              const BoxDecoration(
+                                                color: Colors
+                                                    .white,
+                                                image: DecorationImage(
+                                                    image: AssetImage(
+                                                        'assets/images/vip.png')),
+                                                shape: BoxShape
+                                                    .circle,
+                                              ),
+                                            ),
+                                          ),
+                                        ))
+                                        : Container(),
+                                    Container(
+                                      padding:
+                                      const EdgeInsets.all(3.0),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 2.w,
+                                              color: Colors.green)),
+                                      child: Qr(
+                                        data:
+                                        Provider.of<VisitorProv>(
+                                            context,
+                                            listen:
+                                            true)
+                                            .qrCode ??
+                                            'abc',
+                                        size: 270.0.w,
+                                        version: QrVersions.auto,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 8.h,
+                                    ),
+                                    Provider.of<VisitorProv>(
+                                        context,
+                                        listen: true)
+                                        .logId !=
+                                        null
+                                        ? Column(
+                                      children: [
+                                        Text(
+                                          'G-${Provider.of<VisitorProv>(context, listen: true).logId}',
+                                          style: TextStyle(
+                                              fontSize:
+                                              setResponsiveFontSize(
+                                                  36),
+                                              fontWeight:
+                                              FontWeight
+                                                  .bold),
+                                        ),
+                                      ],
+                                    )
+                                        : Container()
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Divider(
+                              color: Colors.black,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Column(
+                                children: [
+                                  (widget.resendType !=
+                                      ('VIP Invitation') &&
+                                      widget.resendType !=
+                                          ('Normal'))
+                                      ? Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment
+                                        .start,
+                                    children: [
+                                      RichText(
+                                        text: TextSpan(
+                                          text:
+                                          'Park Fee  :  ',
+                                          style: TextStyle(
+                                              color: Colors
+                                                  .black,
+                                              fontSize:
+                                              setResponsiveFontSize(
+                                                  30),
+                                              fontWeight:
+                                              FontManager
+                                                  .bold),
+                                          children: <
+                                              TextSpan>[
+                                            TextSpan(
+                                                text: visitorProv
+                                                    .parkPrice
+                                                    .toString(),
+                                                style:
+                                                TextStyle(
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .bold,
+                                                  color: Colors
+                                                      .black,
+                                                  fontSize:
+                                                  setResponsiveFontSize(
+                                                      32),
+                                                )),
+                                            TextSpan(
+                                                text: ' LE',
+                                                style:
+                                                TextStyle(
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .bold,
+                                                  letterSpacing:
+                                                  1.5,
+                                                  color: Colors
+                                                      .black,
+                                                  fontSize:
+                                                  setResponsiveFontSize(
+                                                      24),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
 
-                              return snapshot.data.isNotEmpty
-                                  ? Column(
-                                      children: snapshot.data
-                                          .map(
-                                              (d) =>
-                                                  d.address ==
-                                                          Provider.of<AuthProv>(
-                                                                  context,
-                                                                  listen: false)
-                                                              .printerAddress
-                                                      ? RoundedButton(
-                                                          height: 60,
-                                                          width: 220,
-                                                          ontap: () async {
-                                                            showLoaderDialog(
-                                                                context,
-                                                                'Loading...');
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      visitorProv.citizenPrice !=
+                                          0
+                                          ? RichText(
+                                        text: TextSpan(
+                                          text:
+                                          'Civilian Entry Fee  :  ',
+                                          style: TextStyle(
+                                              color: Colors
+                                                  .black,
+                                              fontSize:
+                                              setResponsiveFontSize(
+                                                  30),
+                                              fontWeight:
+                                              FontManager
+                                                  .bold),
+                                          children: <
+                                              TextSpan>[
+                                            TextSpan(
+                                                text: visitorProv
+                                                    .citizenPrice
+                                                    .toString(),
+                                                style:
+                                                TextStyle(
+                                                  fontWeight:
+                                                  FontWeight.bold,
+                                                  color:
+                                                  Colors.black,
+                                                  fontSize:
+                                                  setResponsiveFontSize(32),
+                                                )),
+                                            TextSpan(
+                                                text:
+                                                ' LE',
+                                                style:
+                                                TextStyle(
+                                                  fontWeight:
+                                                  FontWeight.bold,
+                                                  letterSpacing:
+                                                  1.5,
+                                                  color:
+                                                  Colors.black,
+                                                  fontSize:
+                                                  setResponsiveFontSize(24),
+                                                )),
+                                          ],
+                                        ),
+                                      )
+                                          : Container(),
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      visitorProv.militaryPrice !=
+                                          0
+                                          ? RichText(
+                                        text: TextSpan(
+                                          text:
+                                          'Military Entry Fee :  ',
+                                          style: TextStyle(
+                                              color: Colors
+                                                  .black,
+                                              fontSize:
+                                              setResponsiveFontSize(
+                                                  30),
+                                              fontWeight:
+                                              FontManager
+                                                  .bold),
+                                          children: <
+                                              TextSpan>[
+                                            TextSpan(
+                                                text: visitorProv
+                                                    .militaryPrice
+                                                    .toString(),
+                                                style:
+                                                TextStyle(
+                                                  fontWeight:
+                                                  FontWeight.bold,
+                                                  color:
+                                                  Colors.black,
+                                                  fontSize:
+                                                  setResponsiveFontSize(32),
+                                                )),
+                                            TextSpan(
+                                                text:
+                                                ' LE',
+                                                style:
+                                                TextStyle(
+                                                  fontWeight:
+                                                  FontWeight.bold,
+                                                  letterSpacing:
+                                                  1.5,
+                                                  color:
+                                                  Colors.black,
+                                                  fontSize:
+                                                  setResponsiveFontSize(24),
+                                                )),
+                                          ],
+                                        ),
+                                      )
+                                          : Container(),
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      Padding(
+                                        padding:
+                                        EdgeInsets.only(
+                                            right: 250.w),
+                                        child: Container(
+                                          decoration: DottedDecoration(
+                                              shape:
+                                              Shape.line,
+                                              linePosition:
+                                              LinePosition
+                                                  .bottom,
+                                              color: Colors
+                                                  .black),
+                                        ),
+                                      ),
+                                      //  Divider(thickness: 2,),
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      RichText(
+                                        text: TextSpan(
+                                          text: 'Total : ',
+                                          style: TextStyle(
+                                              color: Colors
+                                                  .black,
+                                              fontSize:
+                                              setResponsiveFontSize(
+                                                  30),
+                                              fontWeight:
+                                              FontManager
+                                                  .bold),
+                                          children: <
+                                              TextSpan>[
+                                            TextSpan(
+                                                text: visitorProv
+                                                    .totalPrice
+                                                    .toString(),
+                                                style:
+                                                TextStyle(
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .bold,
+                                                  color: Colors
+                                                      .black,
+                                                  fontSize:
+                                                  setResponsiveFontSize(
+                                                      32),
+                                                )),
+                                            TextSpan(
+                                                text: ' LE',
+                                                style:
+                                                TextStyle(
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .bold,
+                                                  color: Colors
+                                                      .black,
+                                                  letterSpacing:
+                                                  1.5,
+                                                  fontSize:
+                                                  setResponsiveFontSize(
+                                                      24),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 20.h,
+                                      ),
+                                      const Divider(
+                                        height: 2,
+                                        thickness: 2,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        height: 30.h,
+                                      ),
+                                    ],
+                                  )
+                                      : Container(),
+                                  Container(
+                                    decoration: DottedDecoration(
+                                      shape: Shape.box,
+                                      color: Colors.black,
+                                      strokeWidth: 2.w,
+                                      borderRadius:
+                                      BorderRadius.circular(
+                                          10), //remove this to get plane rectange
+                                    ),
+                                    child: Padding(
+                                      padding:
+                                      const EdgeInsets.only(
+                                          top: 12,
+                                          bottom: 12,
+                                          left: 4,
+                                          right: 4),
+                                      child: Center(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'برجاء الإحتفاظ بالفاتورة لتقديمها عند المغادرة',
+                                              textAlign:
+                                              TextAlign.center,
+                                              style: TextStyle(
+                                                  color:
+                                                  Colors.black,
+                                                  height: 2.h,
+                                                  fontSize:
+                                                  setResponsiveFontSize(
+                                                      28),
+                                                  fontWeight:
+                                                  FontManager
+                                                      .bold),
+                                            ),
+                                            (widget.resendType !=
+                                                ('VIP Invitation') &&
+                                                widget.resendType !=
+                                                    ('Normal'))
+                                                ? Text(
+                                              ' غرامة فقد التذكرة ${Provider.of<AuthProv>(context, listen: false).lostTicketPrice.toString() ?? 0} جنيه',
+                                              textAlign:
+                                              TextAlign
+                                                  .center,
+                                              style: TextStyle(
+                                                  color: Colors
+                                                      .black,
+                                                  height: 2.h,
+                                                  fontSize:
+                                                  setResponsiveFontSize(
+                                                      28),
+                                                  fontWeight:
+                                                  FontManager
+                                                      .bold),
+                                            )
+                                                : Container(),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      'It\'s our pleasure to serve you \n                  يسعدنا خدمتك',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          height: 2.h,
+                                          fontSize:
+                                          setResponsiveFontSize(
+                                              28),
+                                          fontWeight:
+                                          FontManager.bold),
+                                    ),
+                                  ),
+                                ],
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: StreamBuilder<List<BluetoothDevice>>(
+                      stream: bluetoothPrint.scanResults,
+                      initialData: const [],
+                      builder: (c, snapshot) {
+                        print('snapshot = ${snapshot.data.length}');
 
-                                                            SharedPreferences
-                                                                prefs =
-                                                                await SharedPreferences
-                                                                    .getInstance();
-                                                            /**
+                        return snapshot.data.isNotEmpty
+                            ? Column(
+                          children: snapshot.data
+                              .map(
+                                  (d) =>
+                              d.address ==
+                                  Provider.of<AuthProv>(
+                                      context,
+                                      listen: false)
+                                      .printerAddress
+                                  ? RoundedButton(
+                                height: 60,
+                                width: 220,
+                                ontap: () async {
+                                  showLoaderDialog(
+                                      context,
+                                      'Loading...');
+
+                                  SharedPreferences
+                                  prefs =
+                                  await SharedPreferences
+                                      .getInstance();
+                                  /**
                                    *
                                    *                                                              ?*********** CHECKOUT PER HOUR CASE ************
                                    */
 
-                                                            if (widget
-                                                                    .perHourObj !=
-                                                                null) {
-                                                              print('perHour');
+                                  if (widget
+                                      .perHourObj !=
+                                      null) {
+                                    print('perHour');
 
-                                                              print(
-                                                                  'userId ${authProv.userId}  logId ${widget.perHourObj.id}');
-                                                              setState(() {
-                                                                _device = d;
-                                                              });
+                                    print(
+                                        'userId ${authProv.userId}  logId ${widget.perHourObj.id}');
+                                    setState(() {
+                                      _device = d;
+                                    });
 
-                                                              visitorProv
-                                                                  .confirmPerHour(
-                                                                widget
-                                                                    .perHourObj
-                                                                    .id,
-                                                                authProv.userId,
-                                                              )
-                                                                  .then(
-                                                                      (value) async {
-                                                                print(
-                                                                    'message is $value');
-                                                                print(
-                                                                    'userId ${authProv.userId}  logId ${widget.perHourObj.id}');
-                                                                if (value ==
-                                                                    'Success') {
-                                                                  prefs.setDouble(
-                                                                      'balance',
-                                                                      authProv.balance +
-                                                                          widget
-                                                                              .perHourObj
-                                                                              .total);
-                                                                  authProv.balance =
-                                                                      prefs.getDouble(
-                                                                          'balance');
-                                                                  print(
-                                                                      'new balance is ${prefs.getDouble('balance')}');
-                                                                  // we will connect the printer
-                                                                  if (!_connected) {
-                                                                    print(
-                                                                        'printer is not connected');
+                                    visitorProv
+                                        .confirmPerHour(
+                                      widget
+                                          .perHourObj
+                                          .id,
+                                      authProv.userId,
+                                    )
+                                        .then(
+                                            (value) async {
+                                          print(
+                                              'message is $value');
+                                          print(
+                                              'userId ${authProv.userId}  logId ${widget.perHourObj.id}');
+                                          if (value ==
+                                              'Success') {
+                                            prefs.setDouble(
+                                                'balance',
+                                                authProv.balance +
+                                                    widget
+                                                        .perHourObj
+                                                        .total);
+                                            authProv.balance =
+                                                prefs.getDouble(
+                                                    'balance');
+                                            print(
+                                                'new balance is ${prefs.getDouble('balance')}');
+                                            // we will connect the printer
+                                            if (!_connected) {
+                                              print(
+                                                  'printer is not connected');
 
-                                                                    if (_device !=
-                                                                            null &&
-                                                                        _device.address !=
-                                                                            null) {
-                                                                      await bluetoothPrint
-                                                                          .connect(
-                                                                              _device)
-                                                                          .then(
-                                                                              (value) {
-                                                                        Future.delayed(const Duration(seconds: 6))
-                                                                            .whenComplete(() async {
-                                                                          // take screenshot
-                                                                          await printScreenShot();
-                                                                        });
-                                                                      });
-                                                                    } else {
-                                                                      print(
-                                                                          'device is null 1');
-                                                                    }
-                                                                  } else {
-                                                                    print(
-                                                                        'printer is connected asln');
-                                                                    // we will take screenshot
-                                                                    await printScreenShot();
-                                                                  }
-                                                                }
-                                                              });
-                                                            }
+                                              if (_device !=
+                                                  null &&
+                                                  _device.address !=
+                                                      null) {
+                                                await bluetoothPrint
+                                                    .connect(
+                                                    _device)
+                                                    .then(
+                                                        (value) {
+                                                      Future.delayed(const Duration(seconds: 6))
+                                                          .whenComplete(() async {
+                                                        // take screenshot
+                                                        await printScreenShot();
+                                                      });
+                                                    });
+                                              } else {
+                                                print(
+                                                    'device is null 1');
+                                              }
+                                            } else {
+                                              print(
+                                                  'printer is connected asln');
+                                              // we will take screenshot
+                                              await printScreenShot();
+                                            }
+                                          }
+                                        });
+                                  }
 
-                                                            /**
+                                  /**
                                    *
                                    *                                                              ?*********** RE-PRINT CASE ************
                                    */
-                                                            else if (widget
-                                                                    .from ==
-                                                                'resend') {
-                                                              if (widget.resendType ==
-                                                                      'Normal' ||
-                                                                  widget.resendType ==
-                                                                      'VIP Invitation') {
-                                                                Future.delayed(const Duration(
-                                                                        milliseconds:
-                                                                            1500))
-                                                                    .whenComplete(
-                                                                        () async {
-                                                                  setState(() {
-                                                                    _device = d;
-                                                                  });
+                                  else if (widget
+                                      .from ==
+                                      'resend') {
+                                    if (widget.resendType ==
+                                        'Normal' ||
+                                        widget.resendType ==
+                                            'VIP Invitation') {
+                                      Future.delayed(const Duration(
+                                          milliseconds:
+                                          1500))
+                                          .whenComplete(
+                                              () async {
+                                            setState(() {
+                                              _device = d;
+                                            });
 
-                                                                  visitorProv
-                                                                      .confirmPrint(
-                                                                          authProv
-                                                                              .userId,
-                                                                          visitorProv
-                                                                              .logId,
-                                                                          widget
-                                                                              .reasonId)
-                                                                      .then(
-                                                                          (value) async {
-                                                                    if (value ==
-                                                                        'Success') {
-                                                                      // we will connect the printer
-                                                                      if (!_connected) {
-                                                                        print(
-                                                                            'printer is not connected');
+                                            visitorProv
+                                                .confirmPrint(
+                                                authProv
+                                                    .userId,
+                                                visitorProv
+                                                    .logId,
+                                                widget
+                                                    .reasonId)
+                                                .then(
+                                                    (value) async {
+                                                  if (value ==
+                                                      'Success') {
+                                                    // we will connect the printer
+                                                    if (!_connected) {
+                                                      print(
+                                                          'printer is not connected');
 
-                                                                        if (_device !=
-                                                                                null &&
-                                                                            _device.address !=
-                                                                                null) {
-                                                                          await bluetoothPrint
-                                                                              .connect(_device)
-                                                                              .then((value) {
-                                                                            Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
-                                                                              // take screenshot
-                                                                              await printScreenShot();
-                                                                            });
-                                                                          });
-                                                                        } else {
-                                                                          print(
-                                                                              'device is null 1');
-                                                                        }
-                                                                      } else {
-                                                                        print(
-                                                                            'printer is connected asln');
-                                                                        // we will take screenshot
-                                                                        await printScreenShot();
-                                                                      }
-                                                                    }
-                                                                  });
-                                                                });
-                                                              } else if (widget
-                                                                      .resendType ==
-                                                                  'المحاسبه بالساعه') {
-                                                                print('aaaaa');
-                                                                Future.delayed(const Duration(
-                                                                        milliseconds:
-                                                                            1500))
-                                                                    .whenComplete(
-                                                                        () async {
-                                                                  setState(() {
-                                                                    _device = d;
-                                                                  });
+                                                      if (_device !=
+                                                          null &&
+                                                          _device.address !=
+                                                              null) {
+                                                        await bluetoothPrint
+                                                            .connect(_device)
+                                                            .then((value) {
+                                                          Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
+                                                            // take screenshot
+                                                            await printScreenShot();
+                                                          });
+                                                        });
+                                                      } else {
+                                                        print(
+                                                            'device is null 1');
+                                                      }
+                                                    } else {
+                                                      print(
+                                                          'printer is connected asln');
+                                                      // we will take screenshot
+                                                      await printScreenShot();
+                                                    }
+                                                  }
+                                                });
+                                          });
+                                    } else if (widget
+                                        .resendType ==
+                                        'المحاسبه بالساعه') {
+                                      print('aaaaa');
+                                      Future.delayed(const Duration(
+                                          milliseconds:
+                                          1500))
+                                          .whenComplete(
+                                              () async {
+                                            setState(() {
+                                              _device = d;
+                                            });
 
-                                                                  visitorProv
-                                                                      .confirmPrint(
-                                                                          authProv
-                                                                              .userId,
-                                                                          visitorProv
-                                                                              .logId,
-                                                                          widget
-                                                                              .reasonId)
-                                                                      .then(
-                                                                          (value) async {
-                                                                    if (value ==
-                                                                        'Success') {
-                                                                      prefs.setDouble(
-                                                                          'balance',
-                                                                          authProv.balance +
-                                                                              widget.reasonPrice);
-                                                                      authProv.balance =
-                                                                          prefs.getDouble(
-                                                                              'balance');
-                                                                      print(
-                                                                          'new balance in resend is ${authProv.balance}');
+                                            visitorProv
+                                                .confirmPrint(
+                                                authProv
+                                                    .userId,
+                                                visitorProv
+                                                    .logId,
+                                                widget
+                                                    .reasonId)
+                                                .then(
+                                                    (value) async {
+                                                  if (value ==
+                                                      'Success') {
+                                                    prefs.setDouble(
+                                                        'balance',
+                                                        authProv.balance +
+                                                            widget.reasonPrice);
+                                                    authProv.balance =
+                                                        prefs.getDouble(
+                                                            'balance');
+                                                    print(
+                                                        'new balance in resend is ${authProv.balance}');
 
-                                                                      // we will connect the printer
-                                                                      if (!_connected) {
-                                                                        print(
-                                                                            'printer is not connected');
+                                                    // we will connect the printer
+                                                    if (!_connected) {
+                                                      print(
+                                                          'printer is not connected');
 
-                                                                        if (_device !=
-                                                                                null &&
-                                                                            _device.address !=
-                                                                                null) {
-                                                                          await bluetoothPrint
-                                                                              .connect(_device)
-                                                                              .then((value) {
-                                                                            Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
-                                                                              // take screenshot
-                                                                              await printScreenShot();
-                                                                            });
-                                                                          });
-                                                                        } else {
-                                                                          print(
-                                                                              'device is null 1');
-                                                                        }
-                                                                      } else {
-                                                                        print(
-                                                                            'printer is connected asln');
-                                                                        // we will take screenshot
-                                                                        await printScreenShot();
-                                                                      }
-                                                                    }
-                                                                  });
-                                                                });
-                                                              } else {
-                                                                Future.delayed(const Duration(
-                                                                        milliseconds:
-                                                                            1500))
-                                                                    .whenComplete(
-                                                                        () async {
-                                                                  setState(() {
-                                                                    _device = d;
-                                                                  });
-                                                                  visitorProv
-                                                                      .confirmPrint(
-                                                                          authProv
-                                                                              .userId,
-                                                                          visitorProv
-                                                                              .logId,
-                                                                          widget
-                                                                              .reasonId)
-                                                                      .then(
-                                                                          (value) async {
-                                                                    if (value ==
-                                                                        'Success') {
-                                                                      // we will update balance
+                                                      if (_device !=
+                                                          null &&
+                                                          _device.address !=
+                                                              null) {
+                                                        await bluetoothPrint
+                                                            .connect(_device)
+                                                            .then((value) {
+                                                          Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
+                                                            // take screenshot
+                                                            await printScreenShot();
+                                                          });
+                                                        });
+                                                      } else {
+                                                        print(
+                                                            'device is null 1');
+                                                      }
+                                                    } else {
+                                                      print(
+                                                          'printer is connected asln');
+                                                      // we will take screenshot
+                                                      await printScreenShot();
+                                                    }
+                                                  }
+                                                });
+                                          });
+                                    } else {
+                                      Future.delayed(const Duration(
+                                          milliseconds:
+                                          1500))
+                                          .whenComplete(
+                                              () async {
+                                            setState(() {
+                                              _device = d;
+                                            });
+                                            visitorProv
+                                                .confirmPrint(
+                                                authProv
+                                                    .userId,
+                                                visitorProv
+                                                    .logId,
+                                                widget
+                                                    .reasonId)
+                                                .then(
+                                                    (value) async {
+                                                  if (value ==
+                                                      'Success') {
+                                                    // we will update balance
 
-                                                                      prefs.setDouble(
-                                                                          'balance',
-                                                                          authProv.balance +
-                                                                              widget.reasonPrice);
-                                                                      authProv.balance =
-                                                                          prefs.getDouble(
-                                                                              'balance');
-                                                                      print(
-                                                                          'new balance in resend is ${authProv.balance}');
+                                                    prefs.setDouble(
+                                                        'balance',
+                                                        authProv.balance +
+                                                            widget.reasonPrice);
+                                                    authProv.balance =
+                                                        prefs.getDouble(
+                                                            'balance');
+                                                    print(
+                                                        'new balance in resend is ${authProv.balance}');
 
-                                                                      // we will connect the printer
-                                                                      if (!_connected) {
-                                                                        print(
-                                                                            'printer is not connected');
+                                                    // we will connect the printer
+                                                    if (!_connected) {
+                                                      print(
+                                                          'printer is not connected');
 
-                                                                        if (_device !=
-                                                                                null &&
-                                                                            _device.address !=
-                                                                                null) {
-                                                                          await bluetoothPrint
-                                                                              .connect(_device)
-                                                                              .then((value) {
-                                                                            Future.delayed(Duration(seconds: 6)).whenComplete(() async {
-                                                                              // take screenshot
-                                                                              await printScreenShot();
-                                                                            });
-                                                                          });
-                                                                        } else {
-                                                                          print(
-                                                                              'device is null 2');
-                                                                        }
-                                                                      } else {
-                                                                        print(
-                                                                            'printer is connected asln');
-                                                                        // we will take screenshot
-                                                                        await printScreenShot();
-                                                                      }
-                                                                    }
-                                                                  });
-                                                                });
-                                                              }
-                                                            }
+                                                      if (_device !=
+                                                          null &&
+                                                          _device.address !=
+                                                              null) {
+                                                        await bluetoothPrint
+                                                            .connect(_device)
+                                                            .then((value) {
+                                                          Future.delayed(Duration(seconds: 6)).whenComplete(() async {
+                                                            // take screenshot
+                                                            await printScreenShot();
+                                                          });
+                                                        });
+                                                      } else {
+                                                        print(
+                                                            'device is null 2');
+                                                      }
+                                                    } else {
+                                                      print(
+                                                          'printer is connected asln');
+                                                      // we will take screenshot
+                                                      await printScreenShot();
+                                                    }
+                                                  }
+                                                });
+                                          });
+                                    }
+                                  }
 
-                                                            /**
+                                  /**
                                    *                                                              ?*********** NORMAL PRINT CASE ************
                                    */
 
-                                                            else if (widget
-                                                                    .from ==
-                                                                'send') {
-                                                              if (widget.resendType ==
-                                                                      'Normal' ||
-                                                                  widget.resendType ==
-                                                                      'VIP Invitation') {
-                                                                debugPrint(
-                                                                    'invitation');
-                                                                visitorProv
-                                                                    .checkInInvitation(
-                                                                  authProv
-                                                                      .userId,
-                                                                  visitorProv
-                                                                      .invitationID,
-                                                                  context,
-                                                                  visitorProv
-                                                                      .rokhsa,
-                                                                  visitorProv
-                                                                      .idCard,
-                                                                )
-                                                                    .then(
-                                                                        (value) async {
-                                                                  if (value
-                                                                          .message ==
-                                                                      'Success') {
-                                                                    Future.delayed(const Duration(
-                                                                            seconds:
-                                                                                1))
-                                                                        .whenComplete(
-                                                                            () async {
-                                                                      setState(
-                                                                          () {
-                                                                        _device =
-                                                                            d;
-                                                                      });
+                                  else if (widget
+                                      .from ==
+                                      'send') {
 
-                                                                      // first we will connect the printer
-                                                                      if (!_connected) {
-                                                                        print(
-                                                                            'printer is not connected in invitation');
+                                    if (widget.resendType == 'Normal' || widget.resendType == 'VIP Invitation') {
+                                      debugPrint(
+                                          'invitation');
+                                      visitorProv
+                                          .checkInInvitation(
+                                        authProv
+                                            .userId,
+                                        visitorProv
+                                            .invitationID,
+                                        context,
+                                        visitorProv
+                                            .rokhsa,
+                                        visitorProv
+                                            .idCard,
+                                      )
+                                          .then(
+                                              (value) async {
+                                            if (value
+                                                .message ==
+                                                'Success') {
+                                              Future.delayed(const Duration(
+                                                  seconds:
+                                                  1))
+                                                  .whenComplete(
+                                                      () async {
+                                                    setState(
+                                                            () {
+                                                          _device =
+                                                              d;
+                                                        });
 
-                                                                        if (_device !=
-                                                                                null &&
-                                                                            _device.address !=
-                                                                                null) {
-                                                                          await bluetoothPrint
-                                                                              .connect(_device)
-                                                                              .then((value) {
-                                                                            print('printer is connected with value $value');
-                                                                            Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
-                                                                              await printScreenShot();
-                                                                            });
-                                                                          });
-                                                                        } else {
-                                                                          print(
-                                                                              'device is null 3');
-                                                                        }
-                                                                      } else {
-                                                                        await printScreenShot();
-                                                                      }
-                                                                    });
-                                                                  }
-                                                                });
-                                                              } else if (widget
-                                                                      .resendType ==
-                                                                  'perHour') {
-                                                                print(
-                                                                    'perHour');
+                                                    // first we will connect the printer
+                                                    if (!_connected) {
+                                                      print(
+                                                          'printer is not connected in invitation');
 
-                                                                setState(() {
-                                                                  _device = d;
-                                                                });
-                                                                if (!_connected) {
-                                                                  print(
-                                                                      'printer is not connected');
-
-                                                                  if (_device !=
-                                                                          null &&
-                                                                      _device.address !=
-                                                                          null) {
-                                                                    await bluetoothPrint
-                                                                        .connect(
-                                                                            _device)
-                                                                        .then(
-                                                                            (value) {
-                                                                      Future.delayed(const Duration(
-                                                                              seconds:
-                                                                                  6))
-                                                                          .whenComplete(
-                                                                              () async {
-                                                                        // take screenshot
-                                                                        await printScreenShot();
-                                                                      });
-                                                                    });
-                                                                  } else {
-                                                                    print('device is null 1');
-                                                                  }
-                                                                } else {
-                                                                  print('printer is connected asln');
-                                                                  // we will take screenshot
-                                                                  await printScreenShot();
-                                                                }
-                                                              } else {
-
-                                                                if(visitorProv.memberShipModel != null){
-                                                                  if(Provider.of<VisitorProv>(context, listen: false).memberShipModel.carImagePath.contains('empty')){
-                                                                    Provider.of<VisitorProv>(context, listen: false).memberShipModel.carImagePath=null;
-                                                                  } else if(Provider.of<VisitorProv>(context, listen: false).memberShipModel.identityImagePath.contains('empty')){
-                                                                    Provider.of<VisitorProv>(context, listen: false).memberShipModel.identityImagePath=null;
-                                                                  }
-                                                                }
-                                                                visitorProv
-                                                                    .checkIn(
-                                                                        visitorProv.memberShipModel != null ? null : visitorProv.rokhsa,
-                                                                        visitorProv.memberShipModel != null ? null : visitorProv.idCard,
-                                                                        authProv.userId,
-                                                                        Provider.of<VisitorProv>(context, listen: false).memberShipModel != null
-                                                                            ? Provider.of<VisitorProv>(context, listen: false).memberShipModel.ownerTypeId
-                                                                            : widget.typeId,
-                                                                        widget.civilCount,
-                                                                        widget.militaryCount,
-                                                                        context,
-                                                                    visitorProv.memberShipModel != null ?  Provider.of<VisitorProv>(context, listen: false).memberShipModel.carImagePath: null ,
-                                                                    visitorProv.memberShipModel != null ? Provider.of<VisitorProv>(context, listen: false).memberShipModel.identityImagePath:   null  )
-                                                                    .then(
-                                                                        (value) async {
-                                                                  if (value
-                                                                          .message ==
-                                                                      'Success') {
-                                                                    prefs.setDouble(
-                                                                        'balance',
-                                                                        authProv.balance +
-                                                                            visitorProv.totalPrice);
-                                                                    authProv.balance =
-                                                                        prefs.getDouble(
-                                                                            'balance');
-                                                                    print(
-                                                                        'new balance is ${prefs.getDouble('balance')}');
-
-                                                                    Future.delayed(const Duration(
-                                                                            seconds:
-                                                                                1))
-                                                                        .whenComplete(
-                                                                            () async {
-                                                                      setState(
-                                                                          () {
-                                                                        _device =
-                                                                            d;
-                                                                      });
-
-                                                                      // first we will connect the printer
-                                                                      if (!_connected) {
-                                                                        print(
-                                                                            'printer is not connected');
-
-                                                                        if (_device !=
-                                                                                null &&
-                                                                            _device.address !=
-                                                                                null) {
-                                                                          await bluetoothPrint
-                                                                              .connect(_device)
-                                                                              .then((value) {
-                                                                            print('printer is connected with value $value');
-                                                                            Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
-                                                                              await printScreenShot();
-                                                                            });
-                                                                          });
-                                                                        } else {
-                                                                          print(
-                                                                              'device is null 4');
-                                                                        }
-                                                                      } else {
-                                                                        print(
-                                                                            'printer is connected 2');
-                                                                        // secondly we will print
-                                                                        await printScreenShot();
-                                                                      }
-                                                                    });
-                                                                  } else if (value
-                                                                          .message ==
-                                                                      'unAuth') {
-                                                                    cameras =
-                                                                        await availableCameras();
-                                                                    Fluttertoast.showToast(
-                                                                        msg:
-                                                                            'برجاء تسجيل الدخول من جديد',
-                                                                        backgroundColor:
-                                                                            Colors
-                                                                                .green,
-                                                                        toastLength:
-                                                                            Toast.LENGTH_LONG);
-                                                                    Navigator.pushReplacement(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (context) => LoginScreen(
-                                                                                  camera: cameras[1],
-                                                                                )));
-                                                                  }
-                                                                });
-                                                              }
-                                                            }
-                                                          },
-                                                          title: 'تأكيد',
-                                                          buttonColor:
-                                                              ColorManager
-                                                                  .primary,
-                                                          titleColor: ColorManager
-                                                              .backGroundColor,
-                                                        )
-                                                      : Container())
-                                          .toList(),
-                                    )
-                                  : ValueListenableBuilder(
-                                      valueListenable: visibleNotifier,
-                                      builder: (context, value, child) {
-                                        return value == false
-                                            ? RoundedButton(
-                                                height: 60,
-                                                width: 220,
-                                                ontap: () async {
-                                                  try {
-                                                    visibleNotifier.value =
-                                                        true;
-
-                                                    if (finishScanning ==
-                                                        true) {
-                                                      bluetoothPrint
-                                                          .startScan(
-                                                              timeout:
-                                                                  const Duration(
-                                                                      seconds:
-                                                                          4))
-                                                          .then((value) {
+                                                      if (_device !=
+                                                          null &&
+                                                          _device.address !=
+                                                              null) {
+                                                        await bluetoothPrint
+                                                            .connect(_device)
+                                                            .then((value) {
+                                                          print('printer is connected with value $value');
+                                                          Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
+                                                            await printScreenShot();
+                                                          });
+                                                        });
+                                                      } else {
                                                         print(
-                                                            'scan result is $value');
-                                                        if (snapshot
-                                                            .data.isEmpty) {
-                                                          Fluttertoast.showToast(
-                                                              msg:
-                                                                  'Make Sure to open Bluetooth and Location',
-                                                              backgroundColor:
-                                                                  Colors.green,
-                                                              toastLength: Toast
-                                                                  .LENGTH_LONG);
-                                                        }
-                                                        visibleNotifier.value =
-                                                            false;
-                                                      });
+                                                            'device is null 3');
+                                                      }
                                                     } else {
-                                                      Future.delayed(
-                                                              const Duration(
-                                                                  seconds: 2))
-                                                          .whenComplete(() {
-                                                        visibleNotifier.value =
-                                                            false;
-                                                      });
+                                                      await printScreenShot();
                                                     }
-                                                  } catch (error) {
-                                                    print('error = $error');
-                                                  }
-                                                },
-                                                title: 'Refresh',
-                                                buttonColor:
-                                                    ColorManager.primary,
-                                                titleColor: ColorManager
-                                                    .backGroundColor,
-                                              )
-                                            : const CircularProgressIndicator(
-                                                color: Colors.green,
-                                              );
-                                      },
-                                    );
-                            }),
-                      ),
-                    ],
-                  ),
+                                                  });
+                                            }
+                                          });
+                                    } else if (widget
+                                        .resendType ==
+                                        'perHour') {
+                                      print(
+                                          'perHour');
+
+                                      setState(() {
+                                        _device = d;
+                                      });
+                                      if (!_connected) {
+                                        print(
+                                            'printer is not connected');
+
+                                        if (_device !=
+                                            null &&
+                                            _device.address !=
+                                                null) {
+                                          await bluetoothPrint
+                                              .connect(
+                                              _device)
+                                              .then(
+                                                  (value) {
+                                                Future.delayed(const Duration(
+                                                    seconds:
+                                                    6))
+                                                    .whenComplete(
+                                                        () async {
+                                                      // take screenshot
+                                                      await printScreenShot();
+                                                    });
+                                              });
+                                        } else {
+                                          print('device is null 1');
+                                        }
+                                      } else {
+                                        print('printer is connected asln');
+                                        // we will take screenshot
+                                        await printScreenShot();
+                                      }
+                                    } else {
+
+                                      if(visitorProv.memberShipModel != null){
+                                        if(visitorProv.memberShipModel.carImagePath.contains('empty')){
+                                          visitorProv.memberShipModel.carImagePath=null;
+                                        } else if(visitorProv.memberShipModel.identityImagePath.contains('empty')){
+                                          visitorProv.memberShipModel.identityImagePath=null;
+                                        }
+                                      }
+                                      visitorProv
+                                          .checkIn(
+                                          visitorProv.memberShipModel != null ? null : visitorProv.rokhsa,
+                                          visitorProv.memberShipModel != null ? null : visitorProv.idCard,
+                                          authProv.userId,
+                                          Provider.of<VisitorProv>(context, listen: false).memberShipModel != null
+                                              ? Provider.of<VisitorProv>(context, listen: false).memberShipModel.ownerTypeId
+                                              : int.parse(widget.typeId),
+                                          widget.civilCount,
+                                          widget.militaryCount,
+                                          context,
+                                          visitorProv.memberShipModel != null ?  Provider.of<VisitorProv>(context, listen: false).memberShipModel.carImagePath: null ,
+                                          visitorProv.memberShipModel != null ? Provider.of<VisitorProv>(context, listen: false).memberShipModel.identityImagePath:   null  )
+                                          .then(
+                                              (value) async {
+                                            if (value
+                                                .message ==
+                                                'Success') {
+                                              prefs.setDouble(
+                                                  'balance',
+                                                  authProv.balance +
+                                                      visitorProv.totalPrice);
+                                              authProv.balance =
+                                                  prefs.getDouble(
+                                                      'balance');
+                                              print(
+                                                  'new balance is ${prefs.getDouble('balance')}');
+
+                                              Future.delayed(const Duration(
+                                                  seconds:
+                                                  1))
+                                                  .whenComplete(
+                                                      () async {
+                                                    setState(
+                                                            () {
+                                                          _device =
+                                                              d;
+                                                        });
+
+                                                    // first we will connect the printer
+                                                    if (!_connected) {
+                                                      print(
+                                                          'printer is not connected');
+
+                                                      if (_device !=
+                                                          null &&
+                                                          _device.address !=
+                                                              null) {
+                                                        await bluetoothPrint
+                                                            .connect(_device)
+                                                            .then((value) {
+                                                          print('printer is connected with value $value');
+                                                          Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
+                                                            await printScreenShot();
+                                                          });
+                                                        });
+                                                      } else {
+                                                        print(
+                                                            'device is null 4');
+                                                      }
+                                                    } else {
+                                                      print(
+                                                          'printer is connected 2');
+                                                      // secondly we will print
+                                                      await printScreenShot();
+                                                    }
+                                                  });
+                                            } else if (value
+                                                .message ==
+                                                'unAuth') {
+                                              cameras =
+                                              await availableCameras();
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                  'برجاء تسجيل الدخول من جديد',
+                                                  backgroundColor:
+                                                  Colors
+                                                      .green,
+                                                  toastLength:
+                                                  Toast.LENGTH_LONG);
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => LoginScreen(
+                                                        camera: cameras[1],
+                                                      )));
+                                            }
+                                          });
+                                    }
+                                  }
+                                },
+                                title: 'تأكيد',
+                                buttonColor:
+                                ColorManager
+                                    .primary,
+                                titleColor: ColorManager
+                                    .backGroundColor,
+                              )
+                                  : Container())
+                              .toList(),
+                        )
+                            : ValueListenableBuilder(
+                          valueListenable: visibleNotifier,
+                          builder: (context, value, child) {
+                            return value == false
+                                ? RoundedButton(
+                              height: 60,
+                              width: 220,
+                              ontap: () async {
+                                try {
+                                  visibleNotifier.value =
+                                  true;
+
+                                  if (finishScanning ==
+                                      true) {
+                                    bluetoothPrint
+                                        .startScan(
+                                        timeout:
+                                        const Duration(
+                                            seconds:
+                                            4))
+                                        .then((value) {
+                                      print(
+                                          'scan result is $value');
+                                      if (snapshot
+                                          .data.isEmpty) {
+                                        Fluttertoast.showToast(
+                                            msg:
+                                            'Make Sure to open Bluetooth and Location',
+                                            backgroundColor:
+                                            Colors.green,
+                                            toastLength: Toast
+                                                .LENGTH_LONG);
+                                      }
+                                      visibleNotifier.value =
+                                      false;
+                                    });
+                                  } else {
+                                    Future.delayed(
+                                        const Duration(
+                                            seconds: 2))
+                                        .whenComplete(() {
+                                      visibleNotifier.value =
+                                      false;
+                                    });
+                                  }
+                                } catch (error) {
+                                  print('error = $error');
+                                }
+                              },
+                              title: 'Refresh',
+                              buttonColor:
+                              ColorManager.primary,
+                              titleColor: ColorManager
+                                  .backGroundColor,
+                            )
+                                : const CircularProgressIndicator(
+                              backgroundColor: Colors.green,
+                            );
+                          },
+                        );
+                      }),
                 ),
-              ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

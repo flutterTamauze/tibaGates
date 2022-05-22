@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Utilities/Shared/dialogs/loading_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../Presentation/login_screen/Screens/login.dart';
 
@@ -10,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'dialogs/loading_dialog.dart';
 
 List<CameraDescription> cameras;
 

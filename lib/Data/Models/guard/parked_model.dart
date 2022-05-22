@@ -10,7 +10,7 @@ class ParkingCarsModel {
   ParkingCarsModel(
       {this.type,
       this.logId,
-      this.carImage,
+       this.carImage,
       this.identityImage,
       this.civilCount,
       this.militaryCount});

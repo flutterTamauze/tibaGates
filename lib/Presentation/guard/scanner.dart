@@ -1,8 +1,9 @@
 import 'dart:developer';
 
+import 'package:Tiba_Gates/Presentation/game/game_home.dart';
+import 'package:Tiba_Gates/Presentation/game/memberInfo.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:clean_app/Presentation/game/game_home.dart';
-import 'package:clean_app/Presentation/game/memberInfo.dart';
+
 import '../../Utilities/Shared/qr.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../Utilities/Colors/colorManager.dart';
@@ -49,7 +50,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   Widget _buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
+        MediaQuery.of(context).size.height < 400)
         ? 150.0
         : 350.0;
     // To ensure the Scanner view is properly sizes after rotation
@@ -100,21 +101,42 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => const PrintScreen2(
-                            from: 'send',
-                            resendType: 'VIP Invitation',
-                          )));
-            } else if (value == 'Success') {
+                        from: 'send',
+                        resendType: 'VIP Invitation',
+                      )));
+            } else if (value == 'not vip') {
               Fluttertoast.showToast(
                   msg: 'كود صحيح , مرحباً بك',
                   backgroundColor: Colors.green,
                   toastLength: Toast.LENGTH_LONG);
               controller.dispose();
-              Navigator.pushReplacement(
+
+              /*   Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                       builder: (context) => const HomeScreen(
                             screen: 'invitation',
-                          )));
+                          )));*/
+
+              Provider.of<VisitorProv>(
+                  context,
+                  listen: false)
+                  .getBill(
+                  Provider.of<VisitorProv>(context,listen: false).ownerId.toString(),
+                  '0',
+                  '0').then((value) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PrintScreen2(
+                          civilCount: 0,
+                          militaryCount: 0,
+                          from: 'send',
+                          typeId: Provider.of<VisitorProv>(context,listen: false).ownerId.toString(),
+                        )));
+              });
+
+
             } else {
               print('value is $value');
               Fluttertoast.showToast(
@@ -140,11 +162,11 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => HomeScreen(
-                            screen: 'memberShip',
-                            memberShipModel:
-                                Provider.of<VisitorProv>(context, listen: false)
-                                    .memberShipModel,
-                          )));
+                        screen: 'memberShip',
+                        memberShipModel:
+                        Provider.of<VisitorProv>(context, listen: false)
+                            .memberShipModel,
+                      )));
             } else {
               print('value is $value');
               Fluttertoast.showToast(
@@ -236,206 +258,206 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   context: context,
                   barrierDismissible: false,
                   builder: (context) => ZoomIn(
-                        child: Dialog(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40)),
-                          elevation: 16,
-                          child: SizedBox(
-                            height: 800.h,
-                            width: 900.w,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(3.0),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 2.w, color: Colors.green)),
-                                  child: Qr(
-                                    data: value.qrCode ?? 'abc',
-                                    size: 270.0.w,
-                                    version: QrVersions.auto,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20.h,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 20.h, horizontal: 60.w),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '${value.inTime.toString().substring(0, 10)}   ${value.inTime.toString().substring(11)}',
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: setResponsiveFontSize(28),
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.green),
-                                      ),
-                                      Flexible(
-                                        child: Text('وقت الدخول              ',
-                                            textAlign: TextAlign.end,
-                                            style: TextStyle(
-                                                fontSize:
-                                                    setResponsiveFontSize(30),
-                                                fontWeight: FontWeight.bold)),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20.h,
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 60.w),
-                                  child: Divider(
-                                    thickness: 1,
-                                    height: 2.h,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20.h,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 20.h, horizontal: 60.w),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '${value.outTime.toString().substring(0, 10)}   ${value.outTime.toString().substring(11)}',
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: setResponsiveFontSize(28),
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.green),
-                                      ),
-                                      Flexible(
-                                        child: Text('وقت الخروج              ',
-                                            textAlign: TextAlign.end,
-                                            style: TextStyle(
-                                                fontSize:
-                                                    setResponsiveFontSize(30),
-                                                fontWeight: FontWeight.bold)),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20.h,
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 60.w),
-                                  child: Divider(
-                                    thickness: 1,
-                                    height: 2.h,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20.h,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 20.h, horizontal: 60.w),
-                                  child: Directionality(
-                                    textDirection: ui.TextDirection.rtl,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('الإجمالى :             ',
-                                            textAlign: TextAlign.end,
-                                            style: TextStyle(
-                                                fontSize:
-                                                    setResponsiveFontSize(30),
-                                                fontWeight: FontWeight.bold)),
-                                        Text(
-                                          '${value.total}',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontSize:
-                                                  setResponsiveFontSize(30),
-                                              color: Colors.green),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 16.h,
-                                ),
-                                Directionality(
-                                  textDirection: ui.TextDirection.rtl,
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 60.w),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        RoundedButton(
-                                          ontap: () {
-                                            controller.dispose();
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        PrintScreen2(
-                                                          perHourObj: value,
-                                                          from: 'send',
-                                                          resendType: 'perHour',
-                                                          logId: value.id,
-                                                        )));
-                                          },
-                                          title: 'إستمرار',
-                                          height: 60,
-                                          width: 220,
-                                          buttonColor: ColorManager.primary,
-                                          titleColor:
-                                              ColorManager.backGroundColor,
-                                        ),
-                                        SizedBox(
-                                          width: 16.w,
-                                        ),
-                                        RoundedButton(
-                                          ontap: () {
-                                            Navigator.pop(context);
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        EntryScreen()));
-                                          },
-                                          title: 'إلغاء',
-                                          width: 220,
-                                          height: 60,
-                                          buttonColor: Colors.red,
-                                          titleColor:
-                                              ColorManager.backGroundColor,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
+                    child: Dialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40)),
+                      elevation: 16,
+                      child: SizedBox(
+                        height: 800.h,
+                        width: 900.w,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(3.0),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 2.w, color: Colors.green)),
+                              child: Qr(
+                                data: value.qrCode ?? 'abc',
+                                size: 270.0.w,
+                                version: QrVersions.auto,
+                              ),
                             ),
-                          ),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 20.h, horizontal: 60.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${value.inTime.toString().substring(0, 10)}   ${value.inTime.toString().substring(11)}',
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                        fontSize: setResponsiveFontSize(28),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green),
+                                  ),
+                                  Flexible(
+                                    child: Text('وقت الدخول              ',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            fontSize:
+                                            setResponsiveFontSize(30),
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            Padding(
+                              padding:
+                              EdgeInsets.symmetric(horizontal: 60.w),
+                              child: Divider(
+                                thickness: 1,
+                                height: 2.h,
+                                color: Colors.green,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 20.h, horizontal: 60.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${value.outTime.toString().substring(0, 10)}   ${value.outTime.toString().substring(11)}',
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                        fontSize: setResponsiveFontSize(28),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green),
+                                  ),
+                                  Flexible(
+                                    child: Text('وقت الخروج              ',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            fontSize:
+                                            setResponsiveFontSize(30),
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            Padding(
+                              padding:
+                              EdgeInsets.symmetric(horizontal: 60.w),
+                              child: Divider(
+                                thickness: 1,
+                                height: 2.h,
+                                color: Colors.green,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 20.h, horizontal: 60.w),
+                              child: Directionality(
+                                textDirection: ui.TextDirection.rtl,
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('الإجمالى :             ',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            fontSize:
+                                            setResponsiveFontSize(30),
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                      '${value.total}',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                          fontSize:
+                                          setResponsiveFontSize(30),
+                                          color: Colors.green),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 16.h,
+                            ),
+                            Directionality(
+                              textDirection: ui.TextDirection.rtl,
+                              child: Padding(
+                                padding:
+                                EdgeInsets.symmetric(horizontal: 60.w),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    RoundedButton(
+                                      ontap: () {
+                                        controller.dispose();
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PrintScreen2(
+                                                      perHourObj: value,
+                                                      from: 'send',
+                                                      resendType: 'perHour',
+                                                      logId: value.id,
+                                                    )));
+                                      },
+                                      title: 'إستمرار',
+                                      height: 60,
+                                      width: 220,
+                                      buttonColor: ColorManager.primary,
+                                      titleColor:
+                                      ColorManager.backGroundColor,
+                                    ),
+                                    SizedBox(
+                                      width: 16.w,
+                                    ),
+                                    RoundedButton(
+                                      ontap: () {
+                                        Navigator.pop(context);
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EntryScreen()));
+                                      },
+                                      title: 'إلغاء',
+                                      width: 220,
+                                      height: 60,
+                                      buttonColor: Colors.red,
+                                      titleColor:
+                                      ColorManager.backGroundColor,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                      ));
+                      ),
+                    ),
+                  ));
             } else {
               print('value is $value');
               Fluttertoast.showToast(
-                      msg: value,
-                      backgroundColor: Colors.green,
-                      toastLength: Toast.LENGTH_LONG)
+                  msg: value,
+                  backgroundColor: Colors.green,
+                  toastLength: Toast.LENGTH_LONG)
                   .then((value) {
                 Future.delayed(const Duration(seconds: 1)).whenComplete(() {
                   scanned = false;
@@ -487,31 +509,31 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
         ),
         body: connectionStatus == ConnectivityStatus.Offline
             ? Center(
-                child: SizedBox(
-                height: 400.h,
-                width: 400.w,
-                child: Lottie.asset('assets/lotties/noInternet.json'),
-              ))
+            child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
             : WillPopScope(
-                onWillPop: () {
-                  if(widget.screen=='sports'){
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => GameHome()));
-                  }else{
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => EntryScreen()));
-                  }
-                },
-                child: Column(
-                  children: <Widget>[
-                    Expanded(child: _buildQrView(context)),
-                  ],
-                ),
-              ),
+          onWillPop: () {
+            if(widget.screen=='sports'){
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => GameHome()));
+            }else{
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => EntryScreen()));
+            }
+          },
+          child: Column(
+            children: <Widget>[
+              Expanded(child: _buildQrView(context)),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:clean_app/Utilities/Colors/colorManager.dart';
-import 'package:clean_app/Utilities/Constants/constants.dart';
-import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../Utilities/Colors/colorManager.dart';
+import '../../Utilities/Constants/constants.dart';
+import '../../Utilities/Shared/sharedWidgets.dart';
 import 'DiscoveryPage.dart';
 
 class ChatPage extends StatefulWidget {

@@ -1,8 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../Constants/constants.dart';
 
 class invitationSendDialog extends StatelessWidget {
   final String text;
@@ -17,7 +18,7 @@ class invitationSendDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      child: Container(
+      child: SizedBox(
         height: 500.h,
         width: 400.w,
         child: Column(
@@ -36,7 +37,7 @@ class invitationSendDialog extends StatelessWidget {
                   ),
                 ),*/
                 Positioned(
-                    child: Container(
+                    child: SizedBox(
                   width: 400.w,
                   height: 300.h,
                   child: Lottie.asset('assets/lotties/success.json',

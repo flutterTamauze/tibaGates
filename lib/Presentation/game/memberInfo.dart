@@ -3,19 +3,20 @@ import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:clean_app/Presentation/game/game_home.dart';
-import 'package:clean_app/Utilities/Shared/choice_chip_data.dart';
-import 'package:clean_app/Utilities/Shared/choice_chips.dart';
-import 'package:clean_app/Utilities/Shared/sharedWidgets.dart';
-import 'package:clean_app/ViewModel/game/gameProv.dart';
+
 import '../../Utilities/Colors/colorManager.dart';
 import '../../Utilities/Constants/constants.dart';
 import '../../Utilities/Fonts/fontsManager.dart';
+import '../../Utilities/Shared/choice_chip_data.dart';
+import '../../Utilities/Shared/sharedWidgets.dart';
 import '../../Utilities/responsive.dart';
+import '../../ViewModel/game/gameProv.dart';
 import '../../ViewModel/guard/visitorProv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
+import 'game_home.dart';
 
 class MemberInformation extends StatefulWidget {
   const MemberInformation({Key key}) : super(key: key);

@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:Tiba_Gates/Presentation/game/game_home.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Presentation/game/game_home.dart';
 import '../admin/a_invitations_screen.dart';
 import '../admin/admin_bottomNav.dart';
 import '../login_screen/Screens/login.dart';
@@ -36,26 +37,30 @@ class _SplashScreenState extends State<SplashScreen> {
     role = prefs.getString('role');
 
     if (isLoggedIn == true) {
-      debugPrint('isLoggedIn is true');
       if (role == 'Manager') {
         debugPrint('role is manager');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MHomeScreen()));
+        return;
       }if (role == 'GameGuard') {
         debugPrint('role is GameGuard');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => GameHome()));
+        return;
       } else if (role == 'Admin') {
         debugPrint('role is admin');
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => BottomNav(
-                      comingIndex: 3,
-                    )));
+                  comingIndex: 3,
+                )));
+        return;
       } else {
+        log('geet 3nd splash else');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => EntryScreen()));
+        return;
       }
     } else {
       cameras = await availableCameras();
@@ -63,13 +68,15 @@ class _SplashScreenState extends State<SplashScreen> {
           context,
           MaterialPageRoute(
               builder: (context) => LoginScreen(
-                    camera: cameras[1],
-                  )));
+                camera: cameras[1],
+              )));
+      return;
     }
   }
 
   @override
   void initState() {
+    log('geet 3nd splash');
     checkSignInStatus();
     super.initState();
   }

@@ -1,14 +1,16 @@
-import 'package:clean_app/ViewModel/admin/a_homeBioProv.dart';
-import 'package:clean_app/ViewModel/admin/adminProv.dart';
-import 'package:clean_app/ViewModel/admin/vm/publicHolidaysProv.dart';
-import 'package:clean_app/ViewModel/admin/reports/admin_reportsProv.dart';
-import 'package:clean_app/ViewModel/game/gameProv.dart';
-import 'package:clean_app/ViewModel/guard/authProv.dart';
-import 'package:clean_app/ViewModel/guard/visitorProv.dart';
-import 'package:clean_app/ViewModel/admin/more/holidaysProv.dart';
-import 'package:clean_app/ViewModel/manager/managerProv.dart';
-import 'package:clean_app/ViewModel/admin/more/pricesProv.dart';
+
 import 'package:get_it/get_it.dart';
+
+import '../ViewModel/admin/a_homeBioProv.dart';
+import '../ViewModel/admin/adminProv.dart';
+import '../ViewModel/admin/more/holidaysProv.dart';
+import '../ViewModel/admin/more/pricesProv.dart';
+import '../ViewModel/admin/reports/admin_reportsProv.dart';
+import '../ViewModel/admin/vm/publicHolidaysProv.dart';
+import '../ViewModel/game/gameProv.dart';
+import '../ViewModel/guard/authProv.dart';
+import '../ViewModel/guard/visitorProv.dart';
+import '../ViewModel/manager/managerProv.dart';
 
 
 final instance = GetIt.instance;
