@@ -111,7 +111,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ? Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => const EntryScreen()))
             : Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => BottomNav(comingIndex: 3,)));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BottomNav(
+                          comingIndex: 3,
+                        )));
       },
       child: Scaffold(
         body: connectionStatus == ConnectivityStatus.Offline
@@ -307,7 +311,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                     ),
                                                                   )),
                                                                 )
-                                                              : AutoSizeText('دعوة',
+                                                              : AutoSizeText(
+                                                                  'دعوة',
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           setResponsiveFontSize(
@@ -348,7 +353,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                 ? Padding(
                                                     padding:
                                                         EdgeInsets.symmetric(
-                                                            horizontal:isTab(context) ?60.w:40.w,
+                                                            horizontal:
+                                                                isTab(context)
+                                                                    ? 60.w
+                                                                    : 40.w,
                                                             vertical: 20.h),
                                                     child: Row(
                                                       mainAxisAlignment:
@@ -757,7 +765,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                       child:
                                                                           InkWell(
                                                                         onTap:
-                                                                             () {
+                                                                            () {
                                                                           print(
                                                                               'deleted');
                                                                           Provider.of<VisitorProv>(context, listen: false)
@@ -1205,7 +1213,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   RichText(
                                     text: TextSpan(
                                       text: defVisitorProv
-                                          .memberShipModel.memberName,
+                                              .memberShipModel.memberName ??
+                                          'مشترك ',
                                       style: TextStyle(
                                           color: Colors.green,
                                           fontSize: setResponsiveFontSize(30),
@@ -1248,8 +1257,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                       children: [
                                                         Padding(
                                                           padding:
-                                                               EdgeInsets
-                                                                      .only(
+                                                              EdgeInsets.only(
                                                                   right: 12.w),
                                                           child: AutoSizeText(
                                                             'قائمة إشتراكاتى',
@@ -1268,9 +1276,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                           height: 26.h,
                                                         ),
                                                         Padding(
-                                                          padding:
-                                                               EdgeInsets
-                                                                      .symmetric(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
                                                                   horizontal:
                                                                       12.w),
                                                           child: SizedBox(
@@ -1842,7 +1849,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                     height: 60,
                                                     ontap: () async {
                                                       navigateTo(
-                                                          context, BottomNav(comingIndex: 3,));
+                                                          context,
+                                                          BottomNav(
+                                                            comingIndex: 3,
+                                                          ));
                                                     },
                                                     title: 'عودة',
                                                     buttonColor:

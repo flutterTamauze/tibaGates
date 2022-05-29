@@ -38,7 +38,7 @@ class MemberShipModel {
             ? 'empty'
             : "$BASE_URL${json["image2"].toString().replaceAll("\\", "/")}",
         id: json['id'],
-        memberName: json['name'],
+        memberName: json['name'] ?? 'مشترك ',
         memberShipSports: parseItems(json),
         ownerTypeId: json['ownerTypeId']);
   }
@@ -61,7 +61,11 @@ class MemberShipSportsModel {
   bool isSelected;
 
   MemberShipSportsModel(
-      {this.id, this.gameId,this.sportName, this.sportExpireDate, this.isSelected = false});
+      {this.id,
+      this.gameId,
+      this.sportName,
+      this.sportExpireDate,
+      this.isSelected = false});
 
   factory MemberShipSportsModel.fromJson(json) {
     return MemberShipSportsModel(

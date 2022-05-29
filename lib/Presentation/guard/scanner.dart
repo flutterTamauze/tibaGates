@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:Tiba_Gates/Presentation/admin/admin_bottomNav.dart';
 import 'package:Tiba_Gates/Presentation/game/game_home.dart';
 import 'package:Tiba_Gates/Presentation/game/memberInfo.dart';
 import 'package:animate_do/animate_do.dart';
@@ -150,7 +151,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
           });
         }
 
-        else if (widget.screen == 'memberShip') {
+        else if (widget.screen == 'memberShip' || widget.screen=='memberShip_admin') {
           log('memberShip');
           Provider.of<VisitorProv>(context, listen: false)
               .checkInMemberShip(result)
@@ -158,7 +159,15 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
             log('value is $value');
             if (value == 'Success') {
               controller.dispose();
-              Navigator.pushReplacement(
+
+
+              if(widget.screen=='memberShip_admin'){
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>BottomNav(comingIndex: 3,)));
+
+              }else{     Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                       builder: (context) => HomeScreen(
@@ -166,7 +175,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                         memberShipModel:
                         Provider.of<VisitorProv>(context, listen: false)
                             .memberShipModel,
-                      )));
+                      )));}
+
             } else {
               print('value is $value');
               Fluttertoast.showToast(
@@ -178,18 +188,30 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   MaterialPageRoute(builder: (context) => EntryScreen()));
             }
           });
-        }  else if (widget.screen == 'sports') {
+        }
+
+        else if (widget.screen == 'sports') {
           log('sports');
           Provider.of<VisitorProv>(context, listen: false)
               .checkInMemberShip(result)
               .then((value) async {
             log('value is $value');
             if (value == 'Success') {
+              print('heeeeh');
               controller.dispose();
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                       builder: (context) => MemberInformation()));
+            }else if (value.toString().contains('منتهية')) {
+              print('value is $value');
+              Fluttertoast.showToast(
+                  msg: value,
+                  backgroundColor: Colors.green,
+                  toastLength: Toast.LENGTH_LONG);
+              // controller.dispose();
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const GameHome()));
             } else {
               print('value is $value');
               Fluttertoast.showToast(
@@ -494,7 +516,15 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) => GameHome()));
-                }else{
+                }
+                else if(widget.screen=='memberShip_admin'){
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>BottomNav(comingIndex: 3,)));
+
+                }
+                else{
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -521,7 +551,16 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) => GameHome()));
-            }else{
+            }
+            else if(widget.screen=='memberShip_admin'){
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>BottomNav(comingIndex: 3,)));
+
+            }
+
+            else{
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(

@@ -1041,7 +1041,7 @@ class summaryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
+        AutoSizeText(
           value,
           style:
               const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
@@ -1049,7 +1049,7 @@ class summaryItem extends StatelessWidget {
         SizedBox(
           width: 8.w,
         ),
-        Text(title,
+        AutoSizeText(title,
             style: const TextStyle(
                 fontWeight: FontWeight.bold, color: Colors.black)),
       ],

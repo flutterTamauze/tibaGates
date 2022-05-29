@@ -625,6 +625,9 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
               memberShipModel.ownerTypeId =
                   responseDecoded['response']['ownerTypeId'];*/
             }
+            else if(responseDecoded['message'].toString().contains('منتهية')){
+              data=responseDecoded['message'];
+            }
           });
         }).catchError((e) {
           debugPrint(e.toString());

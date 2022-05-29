@@ -24,29 +24,32 @@ class _MemberDisplayState extends State<MemberDisplay> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      TextFormField(
-        textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.text,
-        maxLengthEnforced: true,
-        validator: (text) {
-          if (text == '') {
-            return 'مطلوب';
-          }
+      SizedBox(
+        height: 100.h,
+        child: TextFormField(
+          textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.text,
+        //  maxLengthEnforced: true,
+          validator: (text) {
+            if (text == '') {
+              return 'مطلوب';
+            }
 
-          return null;
-        },
-        controller: widget.memberShipController,
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: setResponsiveFontSize(22),
-            fontWeight: FontWeight.bold),
-        textAlign: TextAlign.right,
-        decoration: kTextFieldDecorationWhite.copyWith(
-            hintText: widget.isLogin ? 'اسم المستخدم' : '',
-            suffixIcon: Icon(
-              Icons.person,
-              color: ColorManager.primary,
-            )),
+            return null;
+          },
+          controller: widget.memberShipController,
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: setResponsiveFontSize(22),
+              fontWeight: FontWeight.bold),
+          textAlign: TextAlign.right,
+          decoration: kTextFieldDecorationWhite.copyWith(
+              hintText: widget.isLogin ? 'اسم المستخدم' : '',
+              suffixIcon: Icon(
+                Icons.person,
+                color: ColorManager.primary,
+              )),
+        ),
       ),
       SizedBox(height: 20.0.h),
       widget.isLogin
@@ -89,7 +92,7 @@ class _MemberDisplayState extends State<MemberDisplay> {
           : TextFormField(
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.phone,
-              maxLengthEnforced: true,
+             // maxLengthEnforced: true,
               maxLength: 11,
               validator: (text) {
                 RegExp regex = RegExp('^01[0-2|5]{1}[0-9]{8}\$');

@@ -336,14 +336,14 @@ class _PricesScreenState extends State<PricesScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       elevation: 16,
       child: SizedBox(
-          height: 580.h,
+          height: 585.h,
           width: 600.w,
           child: Form(
-            key: _formKey,
+            key: _formKey,  autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 25.h,
+                  height: 30.h,
                 ),
                 Text(
                   'ادخل القيم الجديدة',
@@ -500,7 +500,22 @@ class _PricesScreenState extends State<PricesScreen> {
                 },
                 child: SingleChildScrollView(
                   child: Column(
+
                     children: [
+                      InkWell(onTap: ()=>    navigateTo(
+                          context,
+                          BottomNav(
+                            comingIndex: 0,
+                          )),
+                        child: Padding(
+                          padding:  EdgeInsets.only(top: 12.h,left: 30.w),
+                          child: const Align(
+                              alignment: Alignment.topLeft,
+
+                              child: const Icon(Icons.arrow_back_ios,color: Colors.white,size: 30,)),
+                        ),
+                      ),
+
                       SizedBox(
                         height: 30.h,
                       ),

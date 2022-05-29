@@ -13,79 +13,82 @@ class TextEditField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      validator: (value) {
-        if (value
-            .isEmpty) {
-          return 'required';
+    return SizedBox(
+      height: 110.h,
+      child: TextFormField(
+        validator: (value) {
+          if (value
+              .isEmpty) {
+            return 'required';
+          }
+          return null;
         }
-        return null;
-      }
-      ,keyboardType: inputType,
+        ,keyboardType: inputType,
 
-      controller: controller,
-      cursorColor:
-      Colors.green,
-      maxLines: null,
-      decoration:
-      InputDecoration(
-        errorStyle: TextStyle(
-            fontWeight:
-            FontWeight
-                .bold,
-            fontSize:
-            setResponsiveFontSize(
-                20)),
-        focusedBorder:
-        OutlineInputBorder(
-          borderRadius:
-          BorderRadius
-              .circular(
-              10),
-          borderSide: BorderSide(
-              width: 2.w,
-              color: Colors
-                  .green),
+        controller: controller,
+        cursorColor:
+        Colors.green,
+        maxLines: null,
+        decoration:
+        InputDecoration(
+          errorStyle: TextStyle(
+              fontWeight:
+              FontWeight
+                  .bold,
+              fontSize:
+              setResponsiveFontSize(
+                  18)),
+          focusedBorder:
+          OutlineInputBorder(
+            borderRadius:
+            BorderRadius
+                .circular(
+                10),
+            borderSide: BorderSide(
+                width: 2.w,
+                color: Colors
+                    .green),
+          ),
+          disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: Colors
+                      .green,
+                  width:
+                  4.w)),
+          enabledBorder: OutlineInputBorder(
+              borderRadius:
+              BorderRadius
+                  .circular(
+                  10),
+              borderSide: BorderSide(
+                  color: Colors
+                      .green,
+                  width:
+                  0.w)),
+          border: OutlineInputBorder(
+              borderRadius:
+              BorderRadius
+                  .circular(
+                  10),
+              borderSide: BorderSide(
+                  color: Colors
+                      .green,
+                  width:
+                  0.w)),
+          hintStyle: TextStyle(
+              fontWeight:
+              FontWeight
+                  .w600,color: Colors.grey,
+              fontSize:
+              setResponsiveFontSize(
+                  26),
+              fontFamily:
+              'Almarai'),
+          hintText: hintText,
         ),
-        disabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-                color: Colors
-                    .green,
-                width:
-                4.w)),
-        enabledBorder: OutlineInputBorder(
-            borderRadius:
-            BorderRadius
-                .circular(
-                10),
-            borderSide: BorderSide(
-                color: Colors
-                    .green,
-                width:
-                0.w)),
-        border: OutlineInputBorder(
-            borderRadius:
-            BorderRadius
-                .circular(
-                10),
-            borderSide: BorderSide(
-                color: Colors
-                    .green,
-                width:
-                0.w)),
-        hintStyle: TextStyle(
-            fontWeight:
-            FontWeight
-                .w600,color: Colors.grey,
-            fontSize:
-            setResponsiveFontSize(
-                26),
-            fontFamily:
-            'Almarai'),
-        hintText: hintText,
+        textAlign:
+        TextAlign.right,
       ),
-      textAlign:
-      TextAlign.right,
     );
   }
 }

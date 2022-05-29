@@ -467,6 +467,19 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                                   child: publicHolidaysList.isNotEmpty
                                       ? Column(
                                           children: [
+                                            InkWell(onTap: ()=>    navigateTo(
+                                                context,
+                                                BottomNav(
+                                                  comingIndex: 0,
+                                                )),
+                                              child: Padding(
+                                                padding:  EdgeInsets.only(top: 12.h,left: 30.w),
+                                                child: const Align(
+                                                    alignment: Alignment.topLeft,
+
+                                                    child: Icon(Icons.arrow_back_ios,color: Colors.white,size: 30,)),
+                                              ),
+                                            ),
                                             ZoomIn(
                                               child: SizedBox(
                                                 height: (height * 0.17),
@@ -554,7 +567,6 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
       ),
     );
   }
-
   Dialog AddOrEditPublicHoliday(
       {BuildContext context,
       PublicHolidaysProv holidaysProv,
@@ -566,10 +578,11 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       elevation: 16,
       child: SizedBox(
-          height: 400.h,
+          height: 450.h,
           width: 600.w,
           child: Form(
-            key: _formKey,
+            key: _formKey,  autovalidateMode: AutovalidateMode.onUserInteraction,
+
             child: Column(
               children: <Widget>[
                 SizedBox(
@@ -614,7 +627,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 child: SizedBox(
-                                  height: 430.h,
+                                  height:Platform.isIOS?510.h: 430.h,
                                   width: double.infinity,
                                   child: Column(
                                     crossAxisAlignment:

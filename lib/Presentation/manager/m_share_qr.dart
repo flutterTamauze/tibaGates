@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:Tiba_Gates/Presentation/admin/admin_bottomNav.dart';
 import 'package:animate_do/animate_do.dart';
 import '../admin/a_invitations_screen.dart';
 import 'm_home_screen.dart';
@@ -34,14 +35,23 @@ class _MShareQrState extends State<MShareQr> {
       onWillPop: () {
         if (widget.role == 'Admin') {
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => AInvitationScreen()));
+              MaterialPageRoute(builder: (context) => BottomNav(comingIndex: 1,)));
         } else {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => MHomeScreen()));
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.white,appBar: AppBar(backgroundColor: Colors.green,
+        leading: Platform.isIOS? InkWell(
+            onTap: (){  if (widget.role == 'Admin') {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) =>BottomNav(comingIndex: 1,)));
+            } else {
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => MHomeScreen()));
+            }},
+            child: const Icon(Icons.arrow_back_ios)):Container(),),
         floatingActionButton: ZoomIn(
           child: FloatingActionButton(
             onPressed: () async {
@@ -88,6 +98,8 @@ class _MShareQrState extends State<MShareQr> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+
+
                     Screenshot(
                       controller: screenshotController,
                       child: Center(

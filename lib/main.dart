@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:auto_size_text/auto_size_text.dart';
-
 import 'Presentation/splash_screen/splash_screen.dart';
 import 'ViewModel/game/gameProv.dart';
 import 'ViewModel/guard/authProv.dart';
@@ -24,14 +22,13 @@ import 'ViewModel/admin/reports/admin_reportsProv.dart';
 import 'ViewModel/admin/more/holidaysProv.dart';
 import 'ViewModel/manager/managerProv.dart';
 import 'ViewModel/admin/more/pricesProv.dart';
-import 'bluetooth/bluetooth1/DiscoveryPage.dart';
-import 'bluetooth/bluetooth1/bl1.dart';
 
 SharedPreferences prefs;
 GetIt getIt = GetIt.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  HttpOverrides.global = MyHttpOverrides();
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return Material(
       child: Container(
@@ -67,7 +64,7 @@ Future<void> main() async {
 
   prefs = await SharedPreferences.getInstance();
   InitLocator locator = InitLocator();
-HttpOverrides.global=MyHttpOverrides();
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   locator.intalizeLocator();
@@ -112,7 +109,8 @@ class MyApp extends StatelessWidget {
             ),
             ChangeNotifierProvider(
               create: (context) => getIt<PublicHolidaysProv>(),
-            ), ChangeNotifierProvider(
+            ),
+            ChangeNotifierProvider(
               create: (context) => getIt<GameProv>(),
             ),
           ],
@@ -127,11 +125,10 @@ class MyApp extends StatelessWidget {
                       return GetMaterialApp(
                         title: 'Tiba Rose',
                         debugShowCheckedModeBanner: false,
-                        home:
-                        SplashScreen()
+                        home: SplashScreen()
 
                         //MyBluetooth()
-                         // DiscoveryPage()
+                        // DiscoveryPage()
 
                         ,
                         theme: ThemeData(fontFamily: 'Almarai'),
@@ -144,9 +141,12 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-class MyHttpOverrides extends HttpOverrides{
+
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context){
-    return super.createHttpClient(context)..badCertificateCallback=(X509Certificate cert,String host,int port)=>true;
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

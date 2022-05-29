@@ -36,7 +36,7 @@ class _MemberState extends State<MemberInformation> {
     var defVisitorProv = Provider.of<VisitorProv>(context, listen: false);
 
     return WillPopScope(
-      onWillPop: (){
+      onWillPop: () {
         navigateTo(context, GameHome());
       },
       child: Scaffold(
@@ -61,16 +61,16 @@ class _MemberState extends State<MemberInformation> {
                               border: Border.all(
                                   color: ColorManager.primary, width: 2.w),
                               image: DecorationImage(
-                                  image:
-                                      message.memberShipModel.memberProfilePath ==
-                                              'empty'
-                                          ? const AssetImage(
-                                              'assets/images/avatar.png')
-                                          : NetworkImage(
-                                              message.memberShipModel
-                                                      .memberProfilePath +
-                                                  "?v=${Random().nextInt(1000)}",
-                                            )),
+                                  image: message.memberShipModel
+                                              .memberProfilePath ==
+                                          'empty'
+                                      ? const AssetImage(
+                                          'assets/images/avatar.png')
+                                      : NetworkImage(
+                                          message.memberShipModel
+                                                  .memberProfilePath +
+                                              "?v=${Random().nextInt(1000)}",
+                                        )),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -99,7 +99,7 @@ class _MemberState extends State<MemberInformation> {
                 ),
                 RichText(
                   text: TextSpan(
-                    text: defVisitorProv.memberShipModel.memberName,
+                    text: defVisitorProv.memberShipModel.memberName ?? 'مشترك ',
                     style: TextStyle(
                         color: Colors.green,
                         fontSize: setResponsiveFontSize(30),
@@ -126,19 +126,22 @@ class _MemberState extends State<MemberInformation> {
                       padding: EdgeInsets.symmetric(vertical: 20.h),
                       child: Column(
                         children: [
-                          defVisitorProv.memberShipModel.memberShipSports != null
+                          defVisitorProv.memberShipModel.memberShipSports !=
+                                  null
                               ? Align(
                                   alignment: Alignment.topRight,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(right: 12),
+                                        padding:
+                                            const EdgeInsets.only(right: 12),
                                         child: Text(
                                           'قائمة الإشتراكات',
                                           textAlign: TextAlign.end,
                                           style: TextStyle(
-                                              fontSize: setResponsiveFontSize(28),
+                                              fontSize:
+                                                  setResponsiveFontSize(28),
                                               fontWeight: FontManager.bold),
                                         ),
                                       ),
@@ -156,9 +159,7 @@ class _MemberState extends State<MemberInformation> {
                                               : 185.h,
                                           child: Directionality(
                                             textDirection: ui.TextDirection.rtl,
-                                            child:
-                                                buildChoiceChips()
-                                            ,
+                                            child: buildChoiceChips(),
                                           ),
                                         ),
                                       ),
@@ -175,55 +176,63 @@ class _MemberState extends State<MemberInformation> {
                           SizedBox(
                             height: 30.h,
                           ),
-                          defVisitorProv.memberShipModel.memberShipSports != null?   Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 100.w),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                RoundedButton(
+                          defVisitorProv.memberShipModel.memberShipSports !=
+                                  null
+                              ? Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 100.w),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      RoundedButton(
+                                        width: 220,
+                                        height: 60,
+                                        ontap: () async {
+                                          navigateTo(context, GameHome());
+                                        },
+                                        title: 'عودة',
+                                        buttonColor: Colors.red,
+                                        titleColor:
+                                            ColorManager.backGroundColor,
+                                      ),
+                                      RoundedButton(
+                                        width: 220,
+                                        height: 60,
+                                        ontap: () async {
+                                          if (gameId != null) {
+                                            Provider.of<GameProv>(context,
+                                                    listen: false)
+                                                .submitGame(id, gameId)
+                                                .then((value) {
+                                              if (value == 'Success') {
+                                                showToast('تم التأكيد');
+                                                navigateTo(context, GameHome());
+                                              }
+                                            });
+                                          } else {
+                                            showToast(
+                                                'برجاء إختيار النشاط أولاً');
+                                          }
+                                        },
+                                        title: 'تأكيد',
+                                        buttonColor: ColorManager.primary,
+                                        titleColor:
+                                            ColorManager.backGroundColor,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : RoundedButton(
                                   width: 220,
                                   height: 60,
                                   ontap: () async {
-                                    navigateTo(context, GameHome());
+                                    navigateTo(context, const GameHome());
                                   },
                                   title: 'عودة',
                                   buttonColor: Colors.red,
                                   titleColor: ColorManager.backGroundColor,
                                 ),
-                                RoundedButton(
-                                  width: 220,
-                                  height: 60,
-                                  ontap: () async {
-                                    if(gameId!=null){
-                                      Provider.of<GameProv>(context, listen: false)
-                                          .submitGame(id,gameId).then((value) {
-                                            if(value=='Success'){
-                                              showToast('تم التأكيد');
-                                              navigateTo(context, GameHome());
-                                            }
-                                      });
-                                    }
-                                    else{
-                                      showToast('برجاء إختيار النشاط أولاً');
-                                    }
-
-                                  },
-                                  title: 'تأكيد',
-                                  buttonColor: ColorManager.primary,
-                                  titleColor: ColorManager.backGroundColor,
-                                ),
-                              ],
-                            ),
-                          ):  RoundedButton(
-                            width: 220,
-                            height: 60,
-                            ontap: () async {
-                              navigateTo(context, const GameHome());
-                            },
-                            title: 'عودة',
-                            buttonColor: Colors.red,
-                            titleColor: ColorManager.backGroundColor,
-                          ),
                         ],
                       ),
                     ),
@@ -253,8 +262,7 @@ class _MemberState extends State<MemberInformation> {
                       choiceChip.isSelected = !choiceChip.isSelected;
                     });
                     gameId = choiceChip.gameId;
-                    id=choiceChip.id;
-
+                    id = choiceChip.id;
                   },
                   selected: choiceChip.isSelected,
                   selectedColor: choiceChip.isSelected == true

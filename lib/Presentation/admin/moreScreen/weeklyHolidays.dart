@@ -187,8 +187,22 @@ class _WeeklyHolidaysScreenState extends State<WeeklyHolidaysScreen> {
                 },
                 child: Column(
                   children: [
+                    InkWell(onTap: ()=>    navigateTo(
+                        context,
+                        BottomNav(
+                          comingIndex: 0,
+                        )),
+                      child: Padding(
+                        padding:  EdgeInsets.only(top: 12.h,left: 30.w),
+                        child: const Align(
+                            alignment: Alignment.topLeft,
+
+                            child: Icon(Icons.arrow_back_ios,color: Colors.white,size: 30,)),
+                      ),
+                    ),
+
                     SizedBox(
-                      height: 30.h,
+                      height:Platform.isIOS?10.h: 30.h,
                     ),
                     ZoomIn(
                       child: SizedBox(

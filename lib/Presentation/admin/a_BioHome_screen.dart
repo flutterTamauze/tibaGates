@@ -137,18 +137,18 @@ class ABioHomeState extends State {
                                     Navigator.of(context).pushAndRemoveUntil(
                                         MaterialPageRoute(
                                             builder: (context) =>  const QrCodeScreen(
-                                              screen: 'memberShip'
+                                              screen: 'memberShip_admin',
                                             )),
                                             (Route<dynamic> route) => false);
                                   },
                                   child: SizedBox(
-                                    height: 45.h,
+                                    height: 50.h,
                                     width: 50.w,
-                                    child: const Center(
+                                    child:  Center(
                                       child: Icon(
                                         Icons.sports_handball,
                                         color: Colors.pink,
-                                        size: 36,
+                                        size: isTab(context)? 36:28,
                                       ),
                                     ),
                                   ),
@@ -275,7 +275,7 @@ class ABioHomeState extends State {
                               ),
                             ),
                             SizedBox(
-                              height: isTab(context) ? 30.h : 15.h,
+                              height: isTab(context) ? 30.h : 5.h,
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -359,7 +359,7 @@ class ABioHomeState extends State {
                                     RotatedBox(
                                         quarterTurns: 2,
                                         child: SizedBox(
-                                            height: 80.h,
+                                            height:Platform.isIOS?60.h: 80.h,
                                             //  width: 400.w,
 
                                             child: Lottie.asset(
