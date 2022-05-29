@@ -1205,7 +1205,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   RichText(
                                     text: TextSpan(
                                       text: defVisitorProv
-                                          .memberShipModel.memberName,
+                                          .memberShipModel.memberName??'مشترك',
                                       style: TextStyle(
                                           color: Colors.green,
                                           fontSize: setResponsiveFontSize(30),

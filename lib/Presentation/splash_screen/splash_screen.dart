@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:camera/camera.dart';
@@ -36,15 +37,16 @@ class _SplashScreenState extends State<SplashScreen> {
     role = prefs.getString('role');
 
     if (isLoggedIn == true) {
-      debugPrint('isLoggedIn is true');
       if (role == 'Manager') {
         debugPrint('role is manager');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MHomeScreen()));
+        return;
       }if (role == 'GameGuard') {
         debugPrint('role is GameGuard');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => GameHome()));
+        return;
       } else if (role == 'Admin') {
         debugPrint('role is admin');
         Navigator.pushReplacement(
@@ -53,9 +55,12 @@ class _SplashScreenState extends State<SplashScreen> {
                 builder: (context) => BottomNav(
                       comingIndex: 3,
                     )));
+        return;
       } else {
+        log('geet 3nd splash else');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => EntryScreen()));
+        return;
       }
     } else {
       cameras = await availableCameras();
@@ -65,11 +70,13 @@ class _SplashScreenState extends State<SplashScreen> {
               builder: (context) => LoginScreen(
                     camera: cameras[1],
                   )));
+      return;
     }
   }
 
   @override
   void initState() {
+    log('geet 3nd splash');
     checkSignInStatus();
     super.initState();
   }

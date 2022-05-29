@@ -98,7 +98,7 @@ class _MemberState extends State<MemberInformation> {
                 ),
                 RichText(
                   text: TextSpan(
-                    text: defVisitorProv.memberShipModel.memberName,
+                    text: defVisitorProv.memberShipModel.memberName??'مشترك ',
                     style: TextStyle(
                         color: Colors.green,
                         fontSize: setResponsiveFontSize(30),

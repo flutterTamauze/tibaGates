@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -79,25 +80,26 @@ class _MHomeScreenState extends State<MHomeScreen> {
   @override
   void initState() {
     super.initState();
-
+    log('geet 3nd manager');
+    invitationsListener = Provider.of<ManagerProv>(context, listen: false)
+        .getInvitations(Provider.of<AuthProv>(context, listen: false).userId);
     token = prefs.getString('token');
     role = prefs.getString('role');
-    print(token);
-    Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {
-      cachingData();
-      invitationsListener = Provider.of<ManagerProv>(context, listen: false)
-          .getInvitations(Provider.of<AuthProv>(context, listen: false).userId);
-    });
+    print('token $token');
+    cachingData();
+
+
   }
 
-  void cachingData() async {
+  void cachingData()  {
     Provider.of<AuthProv>(context, listen: false).token =
         prefs.getString('token');
     Provider.of<AuthProv>(context, listen: false).userRole =
         prefs.getString('role');
-
+    print('role ${Provider.of<AuthProv>(context, listen: false).userRole}');
     Provider.of<AuthProv>(context, listen: false).userId =
         prefs.getString('guardId');
+
   }
 
   @override
@@ -109,7 +111,6 @@ class _MHomeScreenState extends State<MHomeScreen> {
     return WillPopScope(
       onWillPop: () {
         SystemNavigator.pop();
-        throw '';
       },
       child: SafeArea(
         child: GestureDetector(
@@ -145,9 +146,8 @@ class _MHomeScreenState extends State<MHomeScreen> {
                 ],
               ),
             ),
-            floatingActionButton: managerProv.invitationObjects != null
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 22, bottom: 16),
+            floatingActionButton:Padding(
+                    padding: const EdgeInsets.only(left: 30, bottom: 16),
                     child: Align(
                       alignment: Alignment.bottomLeft,
                       child: ZoomIn(
@@ -159,17 +159,17 @@ class _MHomeScreenState extends State<MHomeScreen> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => MAddInvitation(
-                                            invitationType:
-                                                selectedInvitationType ??
+                                      builder: (context) => const MAddInvitation(
+                                            invitationType:'vip'
+                                                /*selectedInvitationType ??
                                                     managerProv
                                                         .invitationObjects[0]
-                                                        .invitationType,
-                                            invitationTypeId:
-                                                invitationTypeId ??
+                                                        .invitationType*/,
+                                            invitationTypeId:1
+                                               /* invitationTypeId ??
                                                     managerProv
                                                         .invitationObjects[0]
-                                                        .id,
+                                                        .id*/,
                                           )));
                             } else {
                               Fluttertoast.showToast(
@@ -187,7 +187,7 @@ class _MHomeScreenState extends State<MHomeScreen> {
                       ),
                     ),
                   )
-                : Container(),
+,
             body: connectionStatus == ConnectivityStatus.Offline
                 ? Center(
                     child: SizedBox(
@@ -224,7 +224,7 @@ class _MHomeScreenState extends State<MHomeScreen> {
                                       startDateController.text =
                                           DateUtil.formatDate(value).toString();
 
-                                      print(
+                                      debugPrint(
                                           'Date Time Value : ${value.toString().substring(0, 10)}\n');
                                       date = value.toString().substring(0, 10);
                                       managerProv
@@ -269,13 +269,13 @@ class _MHomeScreenState extends State<MHomeScreen> {
                                           Radius.circular(8.0))),
                                 ),
                               ),
-                              width: isTab(context) ? 80.w : 100.w,
+                              width: isTab(context) ? 80.w : 125.w,
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: SizedBox(
                                 height: 60.h,
-                                width: isTab(context) ? 210.w : 215.w,
+                                width: isTab(context) ? 210.w : 260.w,
                                 child: TextField(
                                   onChanged: (value) {
                                     /*        setState(() {
@@ -314,7 +314,7 @@ class _MHomeScreenState extends State<MHomeScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: SizedBox(
                                 height: 60.h,
-                                width: isTab(context) ? 210.w : 215.w,
+                                width: isTab(context) ? 210.w : 260.w,
                                 child: TextField(
                                   onChanged: (value) {
                                     setState(() {
@@ -349,7 +349,7 @@ class _MHomeScreenState extends State<MHomeScreen> {
                                 ),
                               ),
                             ),
-                            Provider.of<ManagerProv>(context, listen: true)
+                       /*     Provider.of<ManagerProv>(context, listen: true)
                                     .invitationTypes
                                     .isNotEmpty
                                 ? Flexible(
@@ -406,7 +406,7 @@ class _MHomeScreenState extends State<MHomeScreen> {
                                       )),
                                     ),
                                   )
-                                : Container()
+                                : Container()*/
                           ],
                         ),
                       ),

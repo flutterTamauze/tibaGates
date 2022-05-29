@@ -1476,10 +1476,8 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                             else if (widget
                                                                     .from ==
                                                                 'send') {
-                                                              if (widget.resendType ==
-                                                                      'Normal' ||
-                                                                  widget.resendType ==
-                                                                      'VIP Invitation') {
+
+                                                              if (widget.resendType == 'Normal' || widget.resendType == 'VIP Invitation') {
                                                                 debugPrint(
                                                                     'invitation');
                                                                 visitorProv
@@ -1579,10 +1577,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                               } else {
 
                                                                 if(visitorProv.memberShipModel != null){
-                                                                  if(Provider.of<VisitorProv>(context, listen: false).memberShipModel.carImagePath.contains('empty')){
-                                                                    Provider.of<VisitorProv>(context, listen: false).memberShipModel.carImagePath=null;
-                                                                  } else if(Provider.of<VisitorProv>(context, listen: false).memberShipModel.identityImagePath.contains('empty')){
-                                                                    Provider.of<VisitorProv>(context, listen: false).memberShipModel.identityImagePath=null;
+                                                                  if(visitorProv.memberShipModel.carImagePath.contains('empty')){
+                                                                    visitorProv.memberShipModel.carImagePath=null;
+                                                                  } else if(visitorProv.memberShipModel.identityImagePath.contains('empty')){
+                                                                    visitorProv.memberShipModel.identityImagePath=null;
                                                                   }
                                                                 }
                                                                 visitorProv
@@ -1592,7 +1590,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                         authProv.userId,
                                                                         Provider.of<VisitorProv>(context, listen: false).memberShipModel != null
                                                                             ? Provider.of<VisitorProv>(context, listen: false).memberShipModel.ownerTypeId
-                                                                            : widget.typeId,
+                                                                            : int.parse(widget.typeId),
                                                                         widget.civilCount,
                                                                         widget.militaryCount,
                                                                         context,

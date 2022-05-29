@@ -10,7 +10,6 @@ class InvitationTypesModel {
   };
 
   factory InvitationTypesModel.fromJson( json) {
-    print('json ${json["type"]}');
     return InvitationTypesModel(
       id: json['id'],
       invitationType: json['type'] ?? '',

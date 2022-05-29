@@ -34,6 +34,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   File idCard;
   int totalParkedCars;
   bool isVIP;
+  int ownerId;
   int militaryCount;
   int civilCount;
   int invitationID;
@@ -196,6 +197,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     }
   }
 
+
   Future<ResponseData> checkIn(File carImg, File identityImg, String userID,
       int typeID, int citizenCount, int militaryCount, BuildContext context,
       [String image1, String image2]) async {
@@ -218,6 +220,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
       request.fields['image1'] = image1;
       request.fields['image2'] = image2;
     }
+
     request.fields['UserID'] = userID.toString();
     request.fields['TypeID'] = typeID.toString();
     request.fields['militryCount'] = militaryCount.toString();
@@ -262,6 +265,8 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   ]) async {
     ResponseData responseData = ResponseData();
     debugPrint('userID $userID');
+    debugPrint('invitation id $userID');
+
 
     var uri = Uri.parse('$BASE_URL/api/invitation/CheckInInvitation');
     var request = http.MultipartRequest('POST', uri);
@@ -541,7 +546,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     return data;
   }
 
-  Future<dynamic> checkOutInvitation(String qrCode) async {
+  Future<dynamic> checkInvitationValidation(String qrCode) async {
     String data = '';
     debugPrint('qrCode $qrCode');
 
@@ -561,13 +566,14 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
             debugPrint("response ${responseDecoded['response']}");
             invitationID = responseDecoded['response']['id'];
             isVIP = responseDecoded['response']['isVIP'];
+            ownerId = responseDecoded['response']['ownerId'];
 
             debugPrint('message is $responseDecoded');
 
             if (isVIP) {
               data = 'vip';
             } else if (responseDecoded['message'] == 'Success') {
-              data = 'Success';
+              data = 'not vip';
             }
           });
         }).catchError((e) {
@@ -580,7 +586,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
       notifyListeners();
       return data;
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -598,13 +604,14 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
           response.stream.transform(utf8.decoder).listen((value) {
             Map<String, dynamic> responseDecoded = json.decode(value);
 
+
             debugPrint('response is $responseDecoded');
+
 
             if (responseDecoded['message'] == 'Valid' ||
                 responseDecoded['message'] == 'NotValid') {
               data = 'Success';
-              memberShipModel =
-                  MemberShipModel.fromJson(responseDecoded['response']);
+              memberShipModel = MemberShipModel.fromJson(responseDecoded['response']);
 
               /*    memberShipModel.carImagePath =
                   responseDecoded['response']['image1'] != null

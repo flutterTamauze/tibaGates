@@ -38,7 +38,7 @@ class MemberShipModel {
             ? 'empty'
             : "$BASE_URL${json["image2"].toString().replaceAll("\\", "/")}",
         id: json['id'],
-        memberName: json['name'],
+        memberName: json['name']??'مشترك',
         memberShipSports: parseItems(json),
         ownerTypeId: json['ownerTypeId']);
   }
