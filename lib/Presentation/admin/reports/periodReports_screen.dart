@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import '../../../Utilities/Colors/colorManager.dart';
 import '../../../Utilities/Shared/sharedWidgets.dart';
@@ -838,7 +840,7 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                                   BorderRadius.circular(20.0),
                                             ),
                                             child: SizedBox(
-                                              height: 430.h,
+                                              height:Platform.isIOS?510.h: 430.h,
                                               width: double.infinity,
                                               child: Column(
                                                 crossAxisAlignment:
@@ -1064,7 +1066,7 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                                       Navigator.pop(context);
                                     } else {
                                       Fluttertoast.showToast(
-                                          msg: 'لا توجد تقارير فى هذا اليوم',
+                                          msg: 'لا توجد تقارير فى تلك الفترة',
                                           backgroundColor: Colors.green,
                                           toastLength: Toast.LENGTH_LONG);
                                       Navigator.pop(context);

@@ -87,11 +87,9 @@ class _MHomeScreenState extends State<MHomeScreen> {
     role = prefs.getString('role');
     print('token $token');
     cachingData();
-
-
   }
 
-  void cachingData()  {
+  void cachingData() {
     Provider.of<AuthProv>(context, listen: false).token =
         prefs.getString('token');
     Provider.of<AuthProv>(context, listen: false).userRole =
@@ -99,7 +97,6 @@ class _MHomeScreenState extends State<MHomeScreen> {
     print('role ${Provider.of<AuthProv>(context, listen: false).userRole}');
     Provider.of<AuthProv>(context, listen: false).userId =
         prefs.getString('guardId');
-
   }
 
   @override
@@ -146,48 +143,49 @@ class _MHomeScreenState extends State<MHomeScreen> {
                 ],
               ),
             ),
-            floatingActionButton:Padding(
-                    padding: const EdgeInsets.only(left: 30, bottom: 16),
-                    child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: ZoomIn(
-                        child: FloatingActionButton(
-                          onPressed: () {
-                            if (Provider.of<ManagerProv>(context, listen: false)
-                                .invitationTypes
-                                .isNotEmpty) {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const MAddInvitation(
-                                            invitationType:'vip'
-                                                /*selectedInvitationType ??
+            floatingActionButton: Padding(
+              padding: const EdgeInsets.only(left: 30, bottom: 16),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: ZoomIn(
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      if (Provider.of<ManagerProv>(context, listen: false)
+                          .invitationTypes
+                          .isNotEmpty) {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MAddInvitation(
+                                      invitationType: 'vip'
+                                      /*selectedInvitationType ??
                                                     managerProv
                                                         .invitationObjects[0]
-                                                        .invitationType*/,
-                                            invitationTypeId:1
-                                               /* invitationTypeId ??
+                                                        .invitationType*/
+                                      ,
+                                      invitationTypeId: 1
+                                      /* invitationTypeId ??
                                                     managerProv
                                                         .invitationObjects[0]
-                                                        .id*/,
-                                          )));
-                            } else {
-                              Fluttertoast.showToast(
-                                  msg: 'يجب اختيار نوع الدعوة اولاً',
-                                  backgroundColor: Colors.green,
-                                  toastLength: Toast.LENGTH_LONG);
-                            }
-                          },
-                          backgroundColor: Colors.green,
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                                                        .id*/
+                                      ,
+                                    )));
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: 'يجب اختيار نوع الدعوة اولاً',
+                            backgroundColor: Colors.green,
+                            toastLength: Toast.LENGTH_LONG);
+                      }
+                    },
+                    backgroundColor: Colors.green,
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.white,
                     ),
-                  )
-,
+                  ),
+                ),
+              ),
+            ),
             body: connectionStatus == ConnectivityStatus.Offline
                 ? Center(
                     child: SizedBox(
@@ -349,7 +347,7 @@ class _MHomeScreenState extends State<MHomeScreen> {
                                 ),
                               ),
                             ),
-                       /*     Provider.of<ManagerProv>(context, listen: true)
+                            /*     Provider.of<ManagerProv>(context, listen: true)
                                     .invitationTypes
                                     .isNotEmpty
                                 ? Flexible(

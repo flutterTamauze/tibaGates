@@ -1,5 +1,4 @@
-import 'package:clean_app/Utilities/Fonts/fontsManager.dart';
-import 'package:clean_app/Utilities/connectivityStatus.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
+import '../../Utilities/connectivityStatus.dart';
 import 'a_BioHome_screen.dart';
 import 'a_reports_screen.dart';
 import 'a_invitations_screen.dart';

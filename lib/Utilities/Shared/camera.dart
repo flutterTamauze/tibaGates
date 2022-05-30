@@ -3,8 +3,7 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Presentation/guard/home_screen/g_home_screen.dart';
-import 'package:clean_app/ViewModel/guard/visitorProv.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -14,6 +13,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../../Presentation/guard/home_screen/g_home_screen.dart';
+import '../../ViewModel/guard/visitorProv.dart';
 import 'dialogs/bill_dialog.dart';
 
 class CameraPicker extends StatefulWidget {

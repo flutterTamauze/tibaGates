@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import '../admin/admin_bottomNav.dart';
@@ -117,6 +119,7 @@ class _MAddInvitationState extends State<MAddInvitation> {
                 : SingleChildScrollView(
                     child: Form(
                       key: _formKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       child: Column(
                         children: [
                           SizedBox(
@@ -320,8 +323,6 @@ class _MAddInvitationState extends State<MAddInvitation> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-
-
                                         SizedBox(
                                           child: TextFormField(
                                             autovalidateMode:
@@ -345,7 +346,9 @@ class _MAddInvitationState extends State<MAddInvitation> {
                                                                 .circular(20.0),
                                                       ),
                                                       child: SizedBox(
-                                                        height: 430.h,
+                                                        height: Platform.isIOS
+                                                            ? 510.h
+                                                            : 430.h,
                                                         width: double.infinity,
                                                         child: Column(
                                                           crossAxisAlignment:

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:animate_do/animate_do.dart';
+import '../admin/admin_bottomNav.dart';
 import '../admin/a_invitations_screen.dart';
 import 'm_home_screen.dart';
 import '../../Utilities/connectivityStatus.dart';
@@ -33,8 +34,12 @@ class _MShareQrState extends State<MShareQr> {
     return WillPopScope(
       onWillPop: () {
         if (widget.role == 'Admin') {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => AInvitationScreen()));
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BottomNav(
+                        comingIndex: 1,
+                      )));
         } else {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => MHomeScreen()));
@@ -42,6 +47,28 @@ class _MShareQrState extends State<MShareQr> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.green,
+          leading: Platform.isIOS
+              ? InkWell(
+                  onTap: () {
+                    if (widget.role == 'Admin') {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BottomNav(
+                                    comingIndex: 1,
+                                  )));
+                    } else {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MHomeScreen()));
+                    }
+                  },
+                  child: const Icon(Icons.arrow_back_ios))
+              : Container(),
+        ),
         floatingActionButton: ZoomIn(
           child: FloatingActionButton(
             onPressed: () async {

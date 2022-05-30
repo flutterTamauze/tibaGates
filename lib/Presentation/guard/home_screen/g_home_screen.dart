@@ -6,14 +6,13 @@ import 'dart:ui' as ui;
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Presentation/admin/a_BioHome_screen.dart';
-import 'package:clean_app/Presentation/admin/admin_bottomNav.dart';
-import 'package:clean_app/Utilities/responsive.dart';
+
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:transparent_image/transparent_image.dart';
 import '../../../Data/Models/guard/memberChip_model.dart';
+import '../../../Utilities/responsive.dart';
 import '../../../ViewModel/guard/authProv.dart';
 import '../../../Utilities/Colors/colorManager.dart';
 import '../../../Utilities/Constants/constants.dart';
@@ -26,6 +25,7 @@ import '../../../Utilities/connectivityStatus.dart';
 import '../../../ViewModel/guard/visitorProv.dart';
 import 'package:lottie/lottie.dart';
 import '../../../main.dart';
+import '../../admin/admin_bottomNav.dart';
 import '../print_page2.dart';
 import '../entry_screen/entryScreen.dart';
 import 'package:flutter/cupertino.dart';
@@ -111,7 +111,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ? Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => const EntryScreen()))
             : Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => BottomNav(comingIndex: 3,)));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BottomNav(
+                          comingIndex: 3,
+                        )));
       },
       child: Scaffold(
         body: connectionStatus == ConnectivityStatus.Offline
@@ -307,7 +311,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                     ),
                                                                   )),
                                                                 )
-                                                              : AutoSizeText('دعوة',
+                                                              : AutoSizeText(
+                                                                  'دعوة',
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           setResponsiveFontSize(
@@ -348,7 +353,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                 ? Padding(
                                                     padding:
                                                         EdgeInsets.symmetric(
-                                                            horizontal:isTab(context) ?60.w:40.w,
+                                                            horizontal:
+                                                                isTab(context)
+                                                                    ? 60.w
+                                                                    : 40.w,
                                                             vertical: 20.h),
                                                     child: Row(
                                                       mainAxisAlignment:
@@ -757,7 +765,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                       child:
                                                                           InkWell(
                                                                         onTap:
-                                                                             () {
+                                                                            () {
                                                                           print(
                                                                               'deleted');
                                                                           Provider.of<VisitorProv>(context, listen: false)
@@ -906,6 +914,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         membershipImagesNonNullCase();
                                                       } */
                                                 else {
+
                                                   defVisitorProv
                                                       .getBill(
                                                           visitorTypeId
@@ -1170,7 +1179,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         : NetworkImage(
                                                             message.memberShipModel
                                                                     .memberProfilePath +
-                                                                "?v=${Random().nextInt(1000)}",
+                                                                '?v=${Random().nextInt(1000)}',
 
                                                             /*image??visitorProv
                                                           .memberShipModel
@@ -1205,7 +1214,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   RichText(
                                     text: TextSpan(
                                       text: defVisitorProv
-                                          .memberShipModel.memberName??'مشترك',
+                                              .memberShipModel.memberName ??
+                                          'مشترك ',
                                       style: TextStyle(
                                           color: Colors.green,
                                           fontSize: setResponsiveFontSize(30),
@@ -1248,8 +1258,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                       children: [
                                                         Padding(
                                                           padding:
-                                                               EdgeInsets
-                                                                      .only(
+                                                              EdgeInsets.only(
                                                                   right: 12.w),
                                                           child: AutoSizeText(
                                                             'قائمة إشتراكاتى',
@@ -1268,9 +1277,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                           height: 26.h,
                                                         ),
                                                         Padding(
-                                                          padding:
-                                                               EdgeInsets
-                                                                      .symmetric(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
                                                                   horizontal:
                                                                       12.w),
                                                           child: SizedBox(
@@ -1842,7 +1850,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                     height: 60,
                                                     ontap: () async {
                                                       navigateTo(
-                                                          context, BottomNav(comingIndex: 3,));
+                                                          context,
+                                                          BottomNav(
+                                                            comingIndex: 3,
+                                                          ));
                                                     },
                                                     title: 'عودة',
                                                     buttonColor:

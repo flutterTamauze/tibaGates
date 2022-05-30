@@ -2,7 +2,7 @@ class VisitorTypesModel {
   int id;
   String visitorType;
 
-  VisitorTypesModel({this.id, this.visitorType});
+  VisitorTypesModel({ this.id, this.visitorType});
 
   Map<String, dynamic> toJson() => {
         'id': id,

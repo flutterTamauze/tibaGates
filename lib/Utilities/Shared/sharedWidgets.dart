@@ -1,7 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:clean_app/Utilities/Constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../Constants/constants.dart';
 
 class RoundedButton extends StatelessWidget {
   final Color buttonColor, titleColor;
@@ -23,13 +24,13 @@ class RoundedButton extends StatelessWidget {
         ontap();
       },
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsetsDirectional.fromSTEB(10.w, 10.h, 10.w, 10.h),
         width: width.w,
         height: height.h,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20), color: buttonColor),
         child: Center(
-          child: Text(
+          child: AutoSizeText(
             title,textAlign: TextAlign.center,
             style: boldStyle.copyWith(
                 color: titleColor, fontSize: setResponsiveFontSize(24)),

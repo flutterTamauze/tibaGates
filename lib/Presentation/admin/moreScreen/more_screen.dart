@@ -1,17 +1,17 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:clean_app/Presentation/admin/moreScreen/pricesScreen.dart';
-import 'package:clean_app/Presentation/admin/moreScreen/weeklyHolidays.dart';
-import 'package:clean_app/Utilities/Constants/constants.dart';
-import 'package:clean_app/Utilities/Shared/exitDialog.dart';
-import 'package:clean_app/Utilities/connectivityStatus.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../Utilities/Constants/constants.dart';
+import '../../../Utilities/Shared/exitDialog.dart';
+import '../../../Utilities/connectivityStatus.dart';
+import 'pricesScreen.dart';
 import 'publicHolidaysScreen.dart';
+import 'weeklyHolidays.dart';
 
 class MoreScreen extends StatefulWidget {
   @override

@@ -2,10 +2,11 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:camera/camera.dart';
-import 'package:clean_app/Presentation/game/game_home.dart';
 
+import '../../../main.dart';
 import '../../admin/a_invitations_screen.dart';
 import '../../admin/admin_bottomNav.dart';
+import '../../game/game_home.dart';
 import '../../guard/entry_screen/entryScreen.dart';
 import '../../manager/m_home_screen.dart';
 import '../../../Utilities/Colors/colorManager.dart';
@@ -15,7 +16,6 @@ import '../../../ViewModel/guard/authProv.dart';
 import '../../../ViewModel/manager/managerProv.dart';
 import 'package:flutter_udid/flutter_udid.dart';
 
-import '../../../../main.dart';
 import '../Widgets/memberDisplay.dart';
 
 import 'package:flutter/services.dart';
@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                       height: 20.h,
                     ),
                     Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: BorderedText(
                           strokeWidth: 4.0.w,
                           strokeColor: Colors.black,
@@ -148,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                     Center(
                       child: SizedBox(
                         width: 500.w,
-                        height: 400.h,
+                        height: 455.h,
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
@@ -157,12 +157,18 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                           child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(25.0),
+                                padding: EdgeInsets.only(
+                                    top: 25.h,
+                                    left: 25.w,
+                                    right: 25.w,
+                                    bottom: 25.h),
                                 child: Form(
                                   key: _forgetFormKey,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   child: Column(
                                     children: <Widget>[
-                                      Text(
+                                      AutoSizeText(
                                         'قم بتسجيل الدخول',
                                         style: TextStyle(
                                             color: ColorManager.primary,
@@ -273,18 +279,18 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     authProv
         .login(_memberShipController.text, _passwordController.text, img, _udid)
         .then((value) async {
-      print('value => $value');
+      debugPrint('value => $value');
       if (value == 'Success') {
-        print('caching data');
+        debugPrint('caching data');
         await cachingData();
-        print('role is ${authProv.userRole}');
+        debugPrint('role is ${authProv.userRole}');
         if (authProv.userRole == 'Manager') {
-          print('manager');
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => const MHomeScreen()));
+          debugPrint('manager');
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const MHomeScreen()));
           return;
         } else if (authProv.userRole == 'Admin') {
-          print('admin');
+          debugPrint('admin');
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -293,29 +299,41 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                       )));
           return;
         } else if (authProv.userRole == 'GameGuard') {
-          print('GameGuard');
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => const GameHome()));
+          debugPrint('GameGuard');
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const GameHome()));
           return;
         }
 
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const EntryScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const EntryScreen()));
       } else if (value == 'Incorrect User') {
         showToast('بيانات غير صحيحة');
       } else if (value == 'Incorrect Password') {
         showToast('كلمة المرور غير صحيحة ');
       } else if (value == 'This User Is Active In Another Device') {
         showToast('This User Is Active In Another Device');
-      } else if (value == 'you need to be at same network with local host') {
+      } else if (value.toString().toLowerCase().contains('realated')) {
+        if (_udid.toString().length > 16) {
+          // Iphone Case
+          Fluttertoast.showToast(
+              msg: 'غير مصرح لهذا المستخدم بالدخول',
+              backgroundColor: Colors.green,
+              toastLength: Toast.LENGTH_LONG);
+
+          return;
+        } else {
+          showToast(value);
+        }
+      }
+      /*else if (value == 'you need to be at same network with local host') {
         showToast(value);
-      } else {
+      } */
+      else {
         showToast(value);
       }
     });
   }
-
-
 
   Future<void> cachingData() async {
     await prefs.setString('guardId', authProv.userId);

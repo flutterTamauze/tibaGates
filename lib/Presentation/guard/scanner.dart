@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:clean_app/Presentation/game/game_home.dart';
-import 'package:clean_app/Presentation/game/memberInfo.dart';
+import '../admin/admin_bottomNav.dart';
+import '../game/game_home.dart';
+import '../game/memberInfo.dart';
+
 import '../../Utilities/Shared/qr.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../Utilities/Colors/colorManager.dart';
@@ -87,7 +89,6 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
         scanned = true;
 
         if (widget.screen == 'invitation') {
-
           Provider.of<VisitorProv>(context, listen: false)
               .checkInvitationValidation(result)
               .then((value) {
@@ -104,7 +105,17 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             from: 'send',
                             resendType: 'VIP Invitation',
                           )));
-            } else if (value == 'not vip') {
+            }
+            else  if (value == 'not valid') {
+              Fluttertoast.showToast(
+                  msg: 'كود غير صحيح',
+                  backgroundColor: Colors.green,
+                  toastLength: Toast.LENGTH_LONG);
+              controller.dispose();
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const EntryScreen()));
+            }
+            else if (value == 'not vip') {
               Fluttertoast.showToast(
                   msg: 'كود صحيح , مرحباً بك',
                   backgroundColor: Colors.green,
@@ -139,7 +150,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                   .toString(),
                             )));
               });
-            } else {
+            }
+            else {
               print('value is $value');
               Fluttertoast.showToast(
                   msg: 'كود غير صحيح',
@@ -150,23 +162,34 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   MaterialPageRoute(builder: (context) => const EntryScreen()));
             }
           });
-        } else if (widget.screen == 'memberShip') {
+        } else if (widget.screen == 'memberShip' ||
+            widget.screen == 'memberShip_admin') {
           log('memberShip');
           Provider.of<VisitorProv>(context, listen: false)
-              .checkInMemberShip(result)
+              .checkMemberShipValidation(result)
               .then((value) async {
             log('value is $value');
             if (value == 'Success') {
               controller.dispose();
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => HomeScreen(
-                            screen: 'memberShip',
-                            memberShipModel:
-                                Provider.of<VisitorProv>(context, listen: false)
-                                    .memberShipModel,
-                          )));
+
+              if (widget.screen == 'memberShip_admin') {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BottomNav(
+                              comingIndex: 3,
+                            )));
+              } else {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreen(
+                              screen: 'memberShip',
+                              memberShipModel: Provider.of<VisitorProv>(context,
+                                      listen: false)
+                                  .memberShipModel,
+                            )));
+              }
             } else {
               print('value is $value');
               Fluttertoast.showToast(
@@ -181,13 +204,23 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
         } else if (widget.screen == 'sports') {
           log('sports');
           Provider.of<VisitorProv>(context, listen: false)
-              .checkInMemberShip(result)
+              .checkMemberShipValidation(result)
               .then((value) async {
             log('value is $value');
             if (value == 'Success') {
+              print('heeeeh');
               controller.dispose();
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => MemberInformation()));
+            } else if (value.toString().contains('منتهية')) {
+              print('value is $value');
+              Fluttertoast.showToast(
+                  msg: value,
+                  backgroundColor: Colors.green,
+                  toastLength: Toast.LENGTH_LONG);
+              // controller.dispose();
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const GameHome()));
             } else {
               print('value is $value');
               Fluttertoast.showToast(
@@ -462,10 +495,6 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                 });
               });
 
-              /*  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => EntryScreen()));*/
             }
           });
         }
@@ -476,8 +505,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   @override
   Widget build(BuildContext context) {
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+
     return GestureDetector(
       onTap: () {
         print(result?.code);
@@ -492,6 +520,13 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) => GameHome()));
+                } else if (widget.screen == 'memberShip_admin') {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BottomNav(
+                                comingIndex: 3,
+                              )));
                 } else {
                   Navigator.pushReplacement(
                       context,
@@ -518,6 +553,13 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) => GameHome()));
+                  } else if (widget.screen == 'memberShip_admin') {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BottomNav(
+                                  comingIndex: 3,
+                                )));
                   } else {
                     Navigator.pushReplacement(
                         context,
