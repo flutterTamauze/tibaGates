@@ -183,6 +183,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
     ConnectivityStatus connectionStatus =
         Provider.of<ConnectivityStatus>(context);
     return WillPopScope(
+      // ignore: missing_return
       onWillPop: () {
         if (widget.from == 'resend' ||
             widget.typeId == null ||
@@ -198,8 +199,100 @@ class _PrintScreen2State extends State<PrintScreen2> {
         appBar: AppBar(
           backgroundColor: Colors.green,
           title: InkWell(
-              onTap: (){
-                if (visitorProv.memberShipModel != null) {
+              onTap: (){ /*                                                                 visitorProv
+                  .checkIn(
+                visitorProv
+                    .rokhsa,
+                visitorProv
+                    .idCard,
+                authProv
+                    .userId,
+
+                int.parse(widget
+                    .typeId.toString()),
+
+                widget
+                    .civilCount,
+                widget
+                    .militaryCount,
+                context,
+              )
+                  .then(
+                      (value) async {
+                    if (value
+                        .message ==
+                        'Success') {
+                      prefs.setDouble(
+                          'balance',
+                          authProv.balance +
+                              visitorProv.totalPrice);
+                      authProv.balance =
+                          prefs.getDouble(
+                              'balance');
+                      debugPrint(
+                          'new balance is ${prefs.getDouble('balance')}');
+*//*
+                      Future.delayed(const Duration(
+                          seconds:
+                          1))
+                          .whenComplete(
+                              () async {
+                            setState(
+                                    () {
+                                  _device =
+                                      d;
+                                });
+
+                            // first we will connect the printer
+                            if (!_connected) {
+                              debugPrint(
+                                  'printer is not connected');
+
+                              if (_device !=
+                                  null &&
+                                  _device.address !=
+                                      null) {
+                                await bluetoothPrint
+                                    .connect(_device)
+                                    .then((value) {
+                                  debugPrint('printer is connected with value $value');
+                                  Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
+                                    await printScreenShot();
+                                  });
+                                });
+                              } else {
+                                debugPrint(
+                                    'device is null 4');
+                              }
+                            } else {
+                              debugPrint(
+                                  'printer is connected 2');
+                              // secondly we will print
+                              await printScreenShot();
+                            }
+                          });*//*
+                    } else if (value
+                        .message ==
+                        'unAuth') {
+                      cameras =
+                      await availableCameras();
+                      Fluttertoast.showToast(
+                          msg:
+                          'برجاء تسجيل الدخول من جديد',
+                          backgroundColor:
+                          Colors
+                              .green,
+                          toastLength:
+                          Toast.LENGTH_LONG);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen(
+                                camera: cameras[1],
+                              )));
+                    }
+                  });*/
+            /*    if (visitorProv.memberShipModel != null) {
                   // keda hwa gy mn scan membership , hanshof lw el swr empty hn5lihom null 34an nb3thom ll database null
                   if (visitorProv.memberShipModel.carImagePath.contains('empty')) {
                     visitorProv.memberShipModel.carImagePath = null;
@@ -265,7 +358,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                   )));
                         }
                       });
-                }
+                }*/
               },
               child: const Text('Connect your printer')),
         ),
@@ -1501,7 +1594,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                           await bluetoothPrint
                                                                               .connect(_device)
                                                                               .then((value) {
-                                                                            Future.delayed(Duration(seconds: 6)).whenComplete(() async {
+                                                                            Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
                                                                               // take screenshot
                                                                               await printScreenShot();
                                                                             });
@@ -1752,16 +1845,14 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                           .userId,
 
                                                                        int.parse(widget
-                                                                          .typeId),
-
+                                                                          .typeId.toString()),
 
                                                                       widget
                                                                           .civilCount,
                                                                       widget
                                                                           .militaryCount,
                                                                       context,
-                                                                      null,
-                                                                     null)
+                                                                     )
                                                                       .then(
                                                                           (value) async {
                                                                         if (value

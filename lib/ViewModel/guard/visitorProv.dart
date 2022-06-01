@@ -199,8 +199,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
 
   Future<ResponseData> checkIn(File carImg, File identityImg, String userID,
-      int typeID, int citizenCount, int militaryCount, BuildContext context,
-      [String image1, String image2]) async {
+      int typeID, int citizenCount, int militaryCount, BuildContext context) async {
     ResponseData responseData = ResponseData();
     debugPrint('userID $userID');
 
@@ -216,10 +215,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
         await http.MultipartFile.fromPath('file1', identityImg.path),
       );
     }
-    if (image1 != null && image2 != null) {
-      request.fields['image1'] = image1;
-      request.fields['image2'] = image2;
-    }
+
 
     request.fields['UserID'] = userID.toString();
     request.fields['TypeID'] = typeID.toString();

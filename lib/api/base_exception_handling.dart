@@ -9,10 +9,10 @@ class BaseExceptionHandling {
   void handleError(error,VoidCallback) {
 
     if (error is BadRequestException) {
-      var message = error.message;
+      String message = error.message;
       DialogHelper.showErroDialog(description: message);
     } else if (error is FetchDataException) {
-      var message =    error.message;
+      String message =    error.message;
       DialogHelper.showErroDialog(description: message);
     } else if (error is ApiNotRespondingException) {
 

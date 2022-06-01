@@ -359,7 +359,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     try {
       // Ensure that the camera is initialized.
       await _initializeControllerFuture;
-      print('1');
+
       // Construct the path where the image should be saved using the
       // pattern package.
 
