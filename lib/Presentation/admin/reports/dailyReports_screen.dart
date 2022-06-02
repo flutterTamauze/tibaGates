@@ -70,7 +70,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
               columns: <DataColumn>[
                 DataColumn(
                   label: Text(
-                    'id',
+                    '#',
                     style: TextStyle(
                         fontSize: setResponsiveFontSize(24),
                         // background: Paint()..color = Colors.green,
@@ -154,7 +154,9 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
                                 fontSize: setResponsiveFontSize(24)),
-                          ),
+                          ),onLongPress: (){
+                          deleteRow(ReportRecord);
+                        },
                           showEditIcon: false,
                           placeholder: false,
                         ),
@@ -163,7 +165,9 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                               style: TextStyle(
                                   fontSize: setResponsiveFontSize(20))),
                           showEditIcon: false,
-                          placeholder: false,
+                          placeholder: false,onLongPress: (){
+                          deleteRow(ReportRecord);
+                        },
                         ),
                         DataCell(
                           Text(ReportRecord.civilCount.toString(),
@@ -171,7 +175,9 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                   fontWeight: FontWeight.bold,
                                   fontSize: setResponsiveFontSize(26))),
                           showEditIcon: false,
-                          placeholder: false,
+                          placeholder: false,onLongPress: (){
+                          deleteRow(ReportRecord);
+                        },
                         ),
                         DataCell(
                           Text(ReportRecord.militryCount.toString(),
@@ -179,7 +185,9 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                   fontWeight: FontWeight.bold,
                                   fontSize: setResponsiveFontSize(26))),
                           showEditIcon: false,
-                          placeholder: false,
+                          placeholder: false,onLongPress: (){
+                          deleteRow(ReportRecord);
+                        },
                         ),
                         DataCell(
                           Directionality(
@@ -192,7 +200,9 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                         color: Colors.green,
                                         fontSize: setResponsiveFontSize(22))),
                               )),
-                          showEditIcon: false,
+                          showEditIcon: false,onLongPress: (){
+                          deleteRow(ReportRecord);
+                        },
                           placeholder: false,
                         ),
                         DataCell(
@@ -208,121 +218,31 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                       fontSize: setResponsiveFontSize(22)),
                                 ),
                               )),
-                          showEditIcon: false,
+                          showEditIcon: false,onLongPress: (){
+                          deleteRow(ReportRecord);
+                        },
                           placeholder: false,
                         ),
                         DataCell(
                           InkWell(
                             onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(40)),
-                                      elevation: 16,
-                                      child: SizedBox(
-                                          height: 320.h,
-                                          width: 600.w,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: <Widget>[
-                                              SizedBox(
-                                                height: 25.h,
-                                              ),
-                                              Directionality(
-                                                textDirection:
-                                                    ui.TextDirection.rtl,
-                                                child: Text(
-                                                  'هل انت متأكد من حذف تلك الفاتورة ؟ ',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize:
-                                                          setResponsiveFontSize(
-                                                              28)),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 20.h,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 60.w),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    RoundedButton(
-                                                      height: 55,
-                                                      width: 220,
-                                                      ontap: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      title: 'لا',
-                                                      buttonColor: Colors.grey,
-                                                      titleColor: ColorManager
-                                                          .backGroundColor,
-                                                    ),
-                                                    RoundedButton(
-                                                      height: 55,
-                                                      width: 220,
-                                                      ontap: () {
-                                                        showLoaderDialog(
-                                                            context,
-                                                            'جارى الحذف');
-
-                                                        Provider.of<AReportsProv>(
-                                                                context,
-                                                                listen: false)
-                                                            .deleteBill(
-                                                                ReportRecord.id,
-                                                                Provider.of<AuthProv>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .userId)
-                                                            .then((value) {
-                                                          if (value ==
-                                                              'success') {
-                                                            Navigator.pop(
-                                                                context);
-                                                            Navigator.pop(
-                                                                context);
-                                                          }
-                                                        });
-                                                      },
-                                                      title: 'حذف',
-                                                      buttonColor:
-                                                          Colors.redAccent,
-                                                      titleColor: ColorManager
-                                                          .backGroundColor,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 10.h,
-                                              ),
-                                            ],
-                                          )),
-                                    );
-                                  });
+                              Fluttertoast.showToast(
+                                  msg: 'أحمد رضوان',
+                                  backgroundColor: Colors.green,
+                                  toastLength: Toast.LENGTH_LONG);
                             },
                             child: Icon(
-                              Icons.delete,
+                              Icons.person,
                               size: isTab(context) ? 30 : 20,
-                              color: Colors.red,
+                              color: Colors.orange,
                             ),
                           ),
                           showEditIcon: false,
-                          placeholder: false,
+                          placeholder: false,onLongPress: (){
+                          deleteRow(ReportRecord);
+                        },
                         ),
+
                         DataCell(
                           InkWell(
                             onTap: () {
@@ -427,7 +347,8 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                   });
                             },
                             child: Icon(
-                              Icons.info_outlined,
+                              Icons.image
+                              ,
                               size: isTab(context) ? 30 : 20,
                               color: Colors.grey,
                             ),
@@ -466,8 +387,8 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                   Icons.arrow_back_ios,
                   size: 26,
                 )),
-            const Text(
-              'تقرير عن يوم',
+            const AutoSizeText(
+              'تقرير يومى',
               style: TextStyle(fontWeight: FontWeight.bold),
             )
           ],
@@ -489,15 +410,15 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                   loadReport == true
                       ? Positioned(
                           bottom: 16.h,
-                          left: 0,
-                          right: 0,
+                          left: 35.w,
+                          right: 35.w,
                           child: SizedBox(
                             height: 60.h,
                             width: MediaQuery.of(context).size.width - 70.w,
                             child: ListView.builder(
-                              itemCount: 1,
+                              itemCount: 1,reverse: true,
+                              shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
-                              //  shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -517,7 +438,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                         ),
                                         summaryItem(
                                           reportProv: reportProv,
-                                          title: 'أجمالى بالغرامات',
+                                          title: 'إجمالى بالغرامات',
                                           value: reportProv
                                               .summaryModel.total_Fines
                                               .toString(),
@@ -537,7 +458,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                         ),
                                         summaryItem(
                                           reportProv: reportProv,
-                                          title: 'أجمالى مدنيين',
+                                          title: 'إجمالى مدنيين',
                                           value: reportProv
                                               .summaryModel.civilPrice
                                               .toString(),
@@ -547,7 +468,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                         ),
                                         summaryItem(
                                           reportProv: reportProv,
-                                          title: 'أجمالى ق.م',
+                                          title: 'إجمالى ق.م',
                                           value: reportProv
                                               .summaryModel.militryPrice
                                               .toString(),
@@ -557,7 +478,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                                         ),
                                         summaryItem(
                                           reportProv: reportProv,
-                                          title: 'أجمالى باركينج',
+                                          title: 'إجمالى باركينج',
                                           value: reportProv
                                               .summaryModel.parkPrice
                                               .toString(),
@@ -1026,6 +947,107 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
             ),
     );
   }
+  void deleteRow(var ReportRecord){
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius:
+                BorderRadius.circular(40)),
+            elevation: 16,
+            child: SizedBox(
+                height: 320.h,
+                width: 600.w,
+                child: Column(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 25.h,
+                    ),
+                    Directionality(
+                      textDirection:
+                      ui.TextDirection.rtl,
+                      child: Text(
+                        'هل انت متأكد من حذف تلك الفاتورة ؟ ',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight:
+                            FontWeight.bold,
+                            fontSize:
+                            setResponsiveFontSize(
+                                28)),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 60.w),
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment
+                            .spaceBetween,
+                        children: [
+                          RoundedButton(
+                            height: 55,
+                            width: 220,
+                            ontap: () {
+                              Navigator.pop(context);
+                            },
+                            title: 'لا',
+                            buttonColor: Colors.grey,
+                            titleColor: ColorManager
+                                .backGroundColor,
+                          ),
+                          RoundedButton(
+                            height: 55,
+                            width: 220,
+                            ontap: () {
+                              showLoaderDialog(
+                                  context,
+                                  'جارى الحذف');
+
+                              Provider.of<AReportsProv>(
+                                  context,
+                                  listen: false)
+                                  .deleteBill(
+                                  ReportRecord.id,
+                                  Provider.of<AuthProv>(
+                                      context,
+                                      listen:
+                                      false)
+                                      .userId)
+                                  .then((value) {
+                                if (value ==
+                                    'success') {
+                                  Navigator.pop(
+                                      context);
+                                  Navigator.pop(
+                                      context);
+                                }
+                              });
+                            },
+                            title: 'حذف',
+                            buttonColor:
+                            Colors.redAccent,
+                            titleColor: ColorManager
+                                .backGroundColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                  ],
+                )),
+          );
+        });
+  }
 }
 
 class summaryItem extends StatelessWidget {
@@ -1039,20 +1061,23 @@ class summaryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        AutoSizeText(
-          value,
-          style:
-              const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
-        ),
-        SizedBox(
-          width: 8.w,
-        ),
-        AutoSizeText(title,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.black)),
-      ],
+    return Padding(
+      padding:  EdgeInsets.symmetric(horizontal: 8.w),
+      child: Row(
+        children: [
+          AutoSizeText(
+            value,
+            style:
+                const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+          ),
+          SizedBox(
+            width: 8.w,
+          ),
+          AutoSizeText(title,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.black)),
+        ],
+      ),
     );
   }
 }

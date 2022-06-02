@@ -42,15 +42,6 @@ class AReportsProv with ChangeNotifier, BaseExceptionHandling {
   }
 
 
-
-
-
-
-
-
-
-
-
   Future<String> getDailyReport(String startDate, String endDate,
       [String parkType, int pageNumber = 0]) async {
     String message = '';

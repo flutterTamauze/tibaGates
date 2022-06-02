@@ -49,8 +49,7 @@ class _MShareQrState extends State<MShareQr> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.green,
-          leading: Platform.isIOS
-              ? InkWell(
+          leading:  InkWell(
                   onTap: () {
                     if (widget.role == 'Admin') {
                       Navigator.pushReplacement(
@@ -67,11 +66,12 @@ class _MShareQrState extends State<MShareQr> {
                     }
                   },
                   child: const Icon(Icons.arrow_back_ios))
-              : Container(),
+
         ),
         floatingActionButton: ZoomIn(
           child: FloatingActionButton(
             onPressed: () async {
+              print('1');
               var byteImage =
                   await screenshotController.captureFromWidget(Container(
                 height: 400.h,
@@ -90,11 +90,15 @@ class _MShareQrState extends State<MShareQr> {
                   ],
                 ),
               ));
+              print('2');
               var directory = await getApplicationDocumentsDirectory();
+              print('3');
               var image = File('${directory.path}/qr.png');
+              print('4');
               image.writeAsBytesSync(byteImage);
               const String text =
                   'تسعدنا زيارتك فى دار الدفاع الجوى بالتجمع الخامس';
+              print('5 ${image.path}');
               await Share.shareFiles([image.path], text: text);
             },
             backgroundColor: Colors.green,

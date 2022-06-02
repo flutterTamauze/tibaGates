@@ -122,6 +122,27 @@ class _MAddInvitationState extends State<MAddInvitation> {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       child: Column(
                         children: [
+                          InkWell(onTap: (){    if (widget.userRole == 'Admin') {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) => BottomNav(
+                                      comingIndex: 1,
+                                    )));
+                          } else {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) => const MHomeScreen()));
+                          }},
+                            child: Padding(
+                              padding:  EdgeInsets.only(top: 12.h,left: 30.w),
+                              child: const Align(
+                                  alignment: Alignment.topLeft,
+
+                                  child: Icon(Icons.arrow_back_ios,color: Colors.green,size: 30,)),
+                            ),
+                          ),
                           SizedBox(
                             height: 80.h,
                           ),

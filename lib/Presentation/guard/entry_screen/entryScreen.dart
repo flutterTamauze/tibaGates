@@ -202,7 +202,7 @@ class _EntryScreenState extends State<EntryScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(
+           /*             SizedBox(
                           height: 8.h,
                         ),
                         Align(
@@ -241,8 +241,8 @@ class _EntryScreenState extends State<EntryScreen> {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(20))))),
                           ),
-                        ),
-                        SizedBox(
+                        ),*/
+                     /*   SizedBox(
                           height: 8.h,
                         ),
                         Align(
@@ -281,7 +281,7 @@ class _EntryScreenState extends State<EntryScreen> {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(20))))),
                           ),
-                        ),
+                        ),*/
                         SizedBox(
                           height: 15.h,
                         ),
@@ -329,7 +329,7 @@ class _EntryScreenState extends State<EntryScreen> {
                                         (Route<dynamic> route) => false);
                                   },
                                   title: 'تسجيل دخول',
-                                  width: 220,
+                                  width: 250,
                                   height: 55,
                                   buttonColor: ColorManager.primary,
                                   titleColor: ColorManager.backGroundColor,
@@ -346,9 +346,43 @@ class _EntryScreenState extends State<EntryScreen> {
                                         (Route<dynamic> route) => false);
                                   },
                                   title: 'تسجيل خروج',
-                                  width: 220,
+                                  width: 250,
                                   height: 55,
                                   buttonColor: Colors.red,
+                                  titleColor: ColorManager.backGroundColor,
+                                ) ,   SizedBox(
+                                  height: 26.h,
+                                ),
+                                RoundedButton(
+                                  ontap: () {
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) => const QrCodeScreen(
+                                              screen: 'invitation',
+                                            )),
+                                            (Route<dynamic> route) => false);
+                                  },
+                                  title: 'دعوة/حجز إلكترونى',
+                                  width: 250,
+                                  height: 55,
+                                  buttonColor: Colors.blue,
+                                  titleColor: ColorManager.backGroundColor,
+                                )    ,SizedBox(
+                                  height: 26.h,
+                                ),
+                                RoundedButton(
+                                  ontap: () {
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) => const QrCodeScreen(
+                                              screen: 'memberShip',
+                                            )),
+                                            (Route<dynamic> route) => false);
+                                  },
+                                  title: 'أنشطة',
+                                  width: 250,
+                                  height: 55,
+                                  buttonColor: Colors.orange,
                                   titleColor: ColorManager.backGroundColor,
                                 )
                               ],

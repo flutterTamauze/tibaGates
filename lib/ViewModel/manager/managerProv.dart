@@ -34,8 +34,6 @@ class ManagerProv with ChangeNotifier, BaseExceptionHandling {
         'expirydate': toDate,
       }).catchError(handleError);
 
-      print('response $response');
-
       var decodedRes = jsonDecode(response);
 
       print('response is $decodedRes');
@@ -79,12 +77,15 @@ class ManagerProv with ChangeNotifier, BaseExceptionHandling {
     }
   }
 
+
+
   Future<dynamic> getInvitations(String userId, [String from]) async {
     String data = '';
-    print('userId $userId');
+    print('userId $userId   from $from');
     String endPoint = from == null
         ? '/api/invitation/getinvitations?UserId=$userId'
         : '/api/invitation/getinvitations?UserId=$userId&From=$from';
+    print('endpoint $endPoint');
     try {
       var response =
           await BaseClient().get(BASE_URL, endPoint).catchError(handleError);

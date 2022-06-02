@@ -94,390 +94,340 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
         elevation: 5,
         child: Directionality(
           textDirection: ui.TextDirection.rtl,
-          child: DataTable(
-              dataRowHeight: 70.h,
-              dividerThickness: 3.w,
-              showBottomBorder: true,
-              columnSpacing: isTab(context) ? 30.0 : 20,
-              headingRowColor:
-                  MaterialStateProperty.all<Color>(Colors.blueGrey),
-              headingTextStyle: const TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.white),
-              columns: <DataColumn>[
-                DataColumn(
-                  label: Text(
-                    'id',
-                    style: TextStyle(
-                        fontSize: setResponsiveFontSize(24),
-                        fontWeight: FontManager.bold),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+                dataRowHeight: 70.h,
+                dividerThickness: 3.w,
+                showBottomBorder: true,
+                columnSpacing: isTab(context) ? 30.0 : 20,
+                headingRowColor:
+                    MaterialStateProperty.all<Color>(Colors.blueGrey),
+                headingTextStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white),
+                columns:
+
+                <DataColumn>
+                [
+
+                  DataColumn(
+                    label: Text(
+                      '#',
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(24),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
                   ),
-                  numeric: false,
-                  tooltip: 'To display first id of the ReportRecord',
-                ),
-                DataColumn(
-                  label: Text(
-                    'النوع',
-                    style: TextStyle(
-                        fontSize: setResponsiveFontSize(20),
-                        fontWeight: FontManager.bold),
+                  DataColumn(
+                    label: Text(
+                      'النوع',
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(20),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
                   ),
-                  numeric: false,
-                  tooltip: 'To display first id of the ReportRecord',
-                ),
-                DataColumn(
-                  label: Text(
-                    'مدنى',
-                    style: TextStyle(
-                        fontSize: setResponsiveFontSize(20),
-                        fontWeight: FontManager.bold),
+                  DataColumn(
+                    label: Text(
+                      'مدنى',
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(20),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
                   ),
-                  numeric: false,
-                  tooltip: 'To display first id of the ReportRecord',
-                ),
-                DataColumn(
-                  label: Text(
-                    'عسكرى',
-                    style: TextStyle(
-                        fontSize: setResponsiveFontSize(20),
-                        fontWeight: FontManager.bold),
+                  DataColumn(
+                    label: Text(
+                      'عسكرى',
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(20),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
                   ),
-                  numeric: false,
-                  tooltip: 'To display first id of the ReportRecord',
-                ),
-                DataColumn(
-                  label: Text(
-                    'دخول',
-                    style: TextStyle(
-                        fontSize: setResponsiveFontSize(20),
-                        fontWeight: FontManager.bold),
+                  DataColumn(
+                    label: Text(
+                      'دخول',
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(20),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
                   ),
-                  numeric: false,
-                  tooltip: 'To display first id of the ReportRecord',
-                ),
-                DataColumn(
-                  label: Text(
-                    'خروج',
-                    style: TextStyle(
-                        fontSize: setResponsiveFontSize(20),
-                        fontWeight: FontManager.bold),
+                  DataColumn(
+                    label: Text(
+                      'خروج',
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(20),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
+                  ),    DataColumn(
+                    label: Text(
+                      'تاريخ الفاتورة',textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(20),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
                   ),
-                  numeric: false,
-                  tooltip: 'To display first id of the ReportRecord',
-                ),
-                const DataColumn(
-                  label: Text(
-                    '',
+                  const DataColumn(
+                    label: Text(
+                      '',
+                    ),
+                    numeric: false,
                   ),
-                  numeric: false,
-                ),
-                const DataColumn(
-                  label: Text(
-                    '',
+                  const DataColumn(
+                    label: Text(
+                      '',
+                    ),
+                    numeric: false,
                   ),
-                  numeric: false,
-                ),
-              ],
-              rows: Provider.of<AReportsProv>(context, listen: false)
-                  .reportsList
-                  .map(
-                    (ReportRecord) => DataRow(
-                      cells: [
-                        DataCell(
-                          Text(
-                            ReportRecord.id.toString(),
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
-                          ),
-                          showEditIcon: false,
-                          placeholder: false,
-                        ),
-                        DataCell(
-                          Text(
-                            ReportRecord.type,
-                            textAlign: TextAlign.center,
-                            style:
-                                TextStyle(fontSize: setResponsiveFontSize(20)),
-                          ),
-                          showEditIcon: false,
-                          placeholder: false,
-                        ),
-                        DataCell(
-                          Text(ReportRecord.civilCount.toString(),
-                              textAlign: TextAlign.center,
+                ],
+                rows: Provider.of<AReportsProv>(context, listen: false)
+                    .reportsList
+                    .map(
+                      (ReportRecord) =>  DataRow(
+                        cells: [
+                          DataCell(
+                            Text(
+                              ReportRecord.id.toString(),textAlign: TextAlign.start,
                               style: TextStyle(
+                                  color: Colors.red,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: setResponsiveFontSize(26))),
-                          showEditIcon: false,
-                          placeholder: false,
-                        ),
-                        DataCell(
-                          Text(ReportRecord.militryCount.toString(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: setResponsiveFontSize(26))),
-                          showEditIcon: false,
-                          placeholder: false,
-                        ),
-                        DataCell(
-                          Directionality(
-                              textDirection: ui.TextDirection.ltr,
-                              child: SizedBox(
-                                width: 70.w,
-                                child: Text(ReportRecord.inDateTime.toString(),
+                                  fontSize: setResponsiveFontSize(24)),
+                            ),onLongPress: (){
+                            deleteRow(ReportRecord);
+                          },
+                            showEditIcon: false,
+                            placeholder: false,
+                          ),
+                          DataCell(
+                            Text(ReportRecord.type,
+                                style: TextStyle(
+                                    fontSize: setResponsiveFontSize(20))),
+                            showEditIcon: false,
+                            placeholder: false,onLongPress: (){
+                            deleteRow(ReportRecord);
+                          },
+                          ),
+                          DataCell(
+                            Text(ReportRecord.civilCount.toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: setResponsiveFontSize(26))),
+                            showEditIcon: false,
+                            placeholder: false,onLongPress: (){
+                            deleteRow(ReportRecord);
+                          },
+                          ),
+                          DataCell(
+                            Text(ReportRecord.militryCount.toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: setResponsiveFontSize(26))),
+                            showEditIcon: false,
+                            placeholder: false,onLongPress: (){
+                            deleteRow(ReportRecord);
+                          },
+                          ),
+                          DataCell(
+                            Directionality(
+                                textDirection: ui.TextDirection.ltr,
+                                child: SizedBox(
+                                //  width: 70.w,
+                                  child: Text(ReportRecord.inDateTime.toString(),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: setResponsiveFontSize(22))),
+                                )),
+                            showEditIcon: false,onLongPress: (){
+                            deleteRow(ReportRecord);
+                          },
+                            placeholder: false,
+                          ),
+                          DataCell(
+                            Directionality(
+                                textDirection: ui.TextDirection.ltr,
+                                child: SizedBox(
+                                //  width: 70.w,
+                                  child: Text(
+                                    ReportRecord.outDateTime.toString(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: Colors.green,
-                                        fontSize: setResponsiveFontSize(22))),
-                              )),
-                          showEditIcon: false,
-                          placeholder: false,
-                        ),
-                        DataCell(
-                          Directionality(
-                              textDirection: ui.TextDirection.ltr,
-                              child: SizedBox(
-                                width: 70.w,
-                                child: Text(
-                                  ReportRecord.outDateTime.toString(),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: setResponsiveFontSize(22)),
-                                ),
-                              )),
-                          showEditIcon: false,
-                          placeholder: false,
-                        ),
-                        DataCell(
-                          InkWell(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(40)),
-                                      elevation: 16,
-                                      child: SizedBox(
-                                          height: 320.h,
-                                          width: 600.w,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: <Widget>[
-                                              SizedBox(
-                                                height: 25.h,
-                                              ),
-                                              Directionality(
-                                                textDirection:
-                                                    ui.TextDirection.rtl,
-                                                child: Text(
-                                                  'هل انت متأكد من حذف تلك الفاتورة ؟ ',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize:
-                                                          setResponsiveFontSize(
-                                                              28)),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 20.h,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 60.w),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    RoundedButton(
-                                                      height: 55,
-                                                      width: 220,
-                                                      ontap: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      title: 'لا',
-                                                      buttonColor: Colors.grey,
-                                                      titleColor: ColorManager
-                                                          .backGroundColor,
-                                                    ),
-                                                    RoundedButton(
-                                                      height: 55,
-                                                      width: 220,
-                                                      ontap: () {
-                                                        showLoaderDialog(
-                                                            context,
-                                                            'جارى الحذف');
+                                        color: Colors.red,
+                                        fontSize: setResponsiveFontSize(22)),
+                                  ),
+                                )),
+                            showEditIcon: false,onLongPress: (){
+                            deleteRow(ReportRecord);
+                          },
+                            placeholder: false,
+                          ),     DataCell(
+                            Directionality(
+                                textDirection: ui.TextDirection.ltr,
+                                child: SizedBox(
+                               //   width: 70.w,
+                                  child: Text(
+                                    ReportRecord.inDate.toString(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: setResponsiveFontSize(22)),
+                                  ),
+                                )),
+                            showEditIcon: false,onLongPress: (){
+                            deleteRow(ReportRecord);
+                          },
+                            placeholder: false,
+                          ),
+                          DataCell(
+                            InkWell(
+                              onTap: () {
+                                Fluttertoast.showToast(
+                                    msg: ReportRecord.userName??"اسم المستخدم غير منوفر ",
+                                    backgroundColor: Colors.green,
+                                    toastLength: Toast.LENGTH_LONG);
+                              },
+                              child: Icon(
+                                Icons.person,
+                                size: isTab(context) ? 30 : 20,
+                                color: Colors.orange,
+                              ),
+                            ),
+                            showEditIcon: false,
+                            placeholder: false,onLongPress: (){
+                            deleteRow(ReportRecord);
+                          },
+                          ),
 
-                                                        Provider.of<AReportsProv>(
-                                                                context,
-                                                                listen: false)
-                                                            .deleteBill(
-                                                                ReportRecord.id,
-                                                                Provider.of<AuthProv>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .userId)
-                                                            .then((value) {
-                                                          if (value ==
-                                                              'success') {
-                                                            Navigator.pop(
-                                                                context);
-                                                            Navigator.pop(
-                                                                context);
-                                                          }
+                          DataCell(
+                            InkWell(
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(30)),
+                                        elevation: 16,
+                                        child: SizedBox(
+                                            height: 300.h,
+                                            width: isTab(context) ? 900.w : 700.w,
+                                            child: ReportRecord.type
+                                                .toLowerCase()
+                                                .contains('vip')
+                                                ? SizedBox(
+                                              child: Image.asset(
+                                                  'assets/images/vip.png'),
+                                            )
+                                                : Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceEvenly,
+                                              children: [
+                                                InkWell(
+                                                  child: Image.network(
+                                                    ReportRecord.image1,
+                                                    width: isTab(context)
+                                                        ? 340.w
+                                                        : 300.w,
+                                                    height: isTab(context)
+                                                        ? 250.h
+                                                        : 250.h,
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                  onTap: () {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return Dialog(
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                BorderRadius.circular(
+                                                                    40)),
+                                                            elevation: 16,
+                                                            child: SizedBox(
+                                                              height: 400.h,
+                                                              width: 600.w,
+                                                              child: Image
+                                                                  .network(
+                                                                ReportRecord
+                                                                    .image1,
+                                                                fit: BoxFit
+                                                                    .fill,
+                                                              ),
+                                                            ),
+                                                          );
                                                         });
-                                                      },
-                                                      title: 'حذف',
-                                                      buttonColor:
-                                                          Colors.redAccent,
-                                                      titleColor: ColorManager
-                                                          .backGroundColor,
-                                                    ),
-                                                  ],
+                                                  },
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                height: 10.h,
-                                              ),
-                                            ],
-                                          )),
-                                    );
-                                  });
-                            },
-                            child: Icon(
-                              Icons.delete,
-                              size: isTab(context) ? 30 : 20,
-                              color: Colors.red,
-                            ),
-                          ),
-                          showEditIcon: false,
-                          placeholder: false,
-                        ),
-                        DataCell(
-                          InkWell(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30)),
-                                      elevation: 16,
-                                      child: SizedBox(
-                                          height: 300.h,
-                                          width: isTab(context) ? 900.w : 700.w,
-                                          child: ReportRecord.type
-                                                  .toLowerCase()
-                                                  .contains('vip')
-                                              ? SizedBox(
-                                                  child: Image.asset(
-                                                      'assets/images/vip.png'),
+                                                InkWell(
+                                                  child: Image.network(
+                                                    ReportRecord.image2,
+                                                    width: isTab(context)
+                                                        ? 340.w
+                                                        : 300.w,
+                                                    height: isTab(context)
+                                                        ? 250.h
+                                                        : 250.h,
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                  onTap: () {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return Dialog(
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                BorderRadius.circular(
+                                                                    40)),
+                                                            elevation: 16,
+                                                            child: SizedBox(
+                                                              height: 400.h,
+                                                              width: 600.w,
+                                                              child: Image
+                                                                  .network(
+                                                                ReportRecord
+                                                                    .image2,
+                                                                fit: BoxFit
+                                                                    .fill,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        });
+                                                  },
                                                 )
-                                              : Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    InkWell(
-                                                      child: Image.network(
-                                                        ReportRecord.image1,
-                                                        width: isTab(context)
-                                                            ? 340.w
-                                                            : 300.w,
-                                                        height: isTab(context)
-                                                            ? 250.h
-                                                            : 250.h,
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                      onTap: () {
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return Dialog(
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            40)),
-                                                                elevation: 16,
-                                                                child: SizedBox(
-                                                                  height: 400.h,
-                                                                  width: 600.w,
-                                                                  child: Image
-                                                                      .network(
-                                                                    ReportRecord
-                                                                        .image1,
-                                                                    fit: BoxFit
-                                                                        .fill,
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            });
-                                                      },
-                                                    ),
-                                                    InkWell(
-                                                      child: Image.network(
-                                                        ReportRecord.image2,
-                                                        width: isTab(context)
-                                                            ? 340.w
-                                                            : 300.w,
-                                                        height: isTab(context)
-                                                            ? 250.h
-                                                            : 250.h,
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                      onTap: () {
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return Dialog(
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            40)),
-                                                                elevation: 16,
-                                                                child: SizedBox(
-                                                                  height: 400.h,
-                                                                  width: 600.w,
-                                                                  child: Image
-                                                                      .network(
-                                                                    ReportRecord
-                                                                        .image2,
-                                                                    fit: BoxFit
-                                                                        .fill,
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            });
-                                                      },
-                                                    )
-                                                  ],
-                                                )),
-                                    );
-                                  });
-                            },
-                            child: Icon(
-                              Icons.info_outlined,
-                              size: isTab(context) ? 30 : 20,
-                              color: Colors.grey,
+                                              ],
+                                            )),
+                                      );
+                                    });
+                              },
+                              child: Icon(
+                                Icons.image
+                                ,
+                                size: isTab(context) ? 30 : 20,
+                                color: Colors.grey,
+                              ),
                             ),
+                            showEditIcon: false,
+                            placeholder: false,
                           ),
-                          showEditIcon: false,
-                          placeholder: false,
-                        ),
-                      ],
-                    ),
-                  )
-                  .toList()),
+                        ],
+                      ),
+                    )
+                    .toList()),
+          ),
         ),
       );
 
@@ -536,8 +486,8 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                   loadReport == true
                       ? Positioned(
                           bottom: 16.h,
-                          left: 0,
-                          right: 0,
+                          left: 35.w,
+                          right: 35.w,
                           child: SizedBox(
                             height: 60.h,
                             width: MediaQuery.of(context).size.width - 70.w,
@@ -1126,4 +1076,451 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
             ),
     );
   }
+  void deleteRow(var ReportRecord){
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius:
+                BorderRadius.circular(40)),
+            elevation: 16,
+            child: SizedBox(
+                height: 320.h,
+                width: 600.w,
+                child: Column(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 25.h,
+                    ),
+                    Directionality(
+                      textDirection:
+                      ui.TextDirection.rtl,
+                      child: Text(
+                        'هل انت متأكد من حذف تلك الفاتورة ؟ ',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight:
+                            FontWeight.bold,
+                            fontSize:
+                            setResponsiveFontSize(
+                                28)),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 60.w),
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment
+                            .spaceBetween,
+                        children: [
+                          RoundedButton(
+                            height: 55,
+                            width: 220,
+                            ontap: () {
+                              Navigator.pop(context);
+                            },
+                            title: 'لا',
+                            buttonColor: Colors.grey,
+                            titleColor: ColorManager
+                                .backGroundColor,
+                          ),
+                          RoundedButton(
+                            height: 55,
+                            width: 220,
+                            ontap: () {
+                              showLoaderDialog(
+                                  context,
+                                  'جارى الحذف');
+
+                              Provider.of<AReportsProv>(
+                                  context,
+                                  listen: false)
+                                  .deleteBill(
+                                  ReportRecord.id,
+                                  Provider.of<AuthProv>(
+                                      context,
+                                      listen:
+                                      false)
+                                      .userId)
+                                  .then((value) {
+                                if (value ==
+                                    'success') {
+                                  Navigator.pop(
+                                      context);
+                                  Navigator.pop(
+                                      context);
+                                }
+                              });
+                            },
+                            title: 'حذف',
+                            buttonColor:
+                            Colors.redAccent,
+                            titleColor: ColorManager
+                                .backGroundColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                  ],
+                )),
+          );
+        });
+  }
 }
+/*
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minWidth: constraints.minWidth),
+          child: Directionality(
+            textDirection: ui.TextDirection.rtl,
+            child: DataTable(
+                dataRowHeight: 70.h,
+                dividerThickness: 3.w,
+                showBottomBorder: true,
+                columnSpacing: isTab(context) ? 30.0 : 20,
+                headingRowColor:
+                MaterialStateProperty.all<Color>(Colors.blueGrey),
+                headingTextStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white),
+                columns:
+
+                <DataColumn>
+                [
+
+                  DataColumn(
+                    label: Text(
+                      '#',
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(24),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'النوع',
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(20),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'مدنى',
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(20),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'عسكرى',
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(20),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'دخول',
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(20),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'خروج',
+                      style: TextStyle(
+                          fontSize: setResponsiveFontSize(20),
+                          fontWeight: FontManager.bold),
+                    ),
+                    numeric: false,
+                    tooltip: 'To display first id of the ReportRecord',
+                  ),    DataColumn(
+                  label: Text(
+                    'تاريخ الخروج',
+                    style: TextStyle(
+                        fontSize: setResponsiveFontSize(20),
+                        fontWeight: FontManager.bold),
+                  ),
+                  numeric: false,
+                  tooltip: 'To display first id of the ReportRecord',
+                ),
+                  const DataColumn(
+                    label: Text(
+                      '',
+                    ),
+                    numeric: false,
+                  ),
+                  const DataColumn(
+                    label: Text(
+                      '',
+                    ),
+                    numeric: false,
+                  ),
+                ],
+                rows: Provider.of<AReportsProv>(context, listen: false)
+                    .reportsList
+                    .map(
+                      (ReportRecord) =>  DataRow(
+                    cells: [
+                      DataCell(
+                        Text(
+                          ReportRecord.id.toString(),
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                              fontSize: setResponsiveFontSize(24)),
+                        ),onLongPress: (){
+                        deleteRow(ReportRecord);
+                      },
+                        showEditIcon: false,
+                        placeholder: false,
+                      ),
+                      DataCell(
+                        Text(ReportRecord.type,
+                            style: TextStyle(
+                                fontSize: setResponsiveFontSize(20))),
+                        showEditIcon: false,
+                        placeholder: false,onLongPress: (){
+                        deleteRow(ReportRecord);
+                      },
+                      ),
+                      DataCell(
+                        Text(ReportRecord.civilCount.toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: setResponsiveFontSize(26))),
+                        showEditIcon: false,
+                        placeholder: false,onLongPress: (){
+                        deleteRow(ReportRecord);
+                      },
+                      ),
+                      DataCell(
+                        Text(ReportRecord.militryCount.toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: setResponsiveFontSize(26))),
+                        showEditIcon: false,
+                        placeholder: false,onLongPress: (){
+                        deleteRow(ReportRecord);
+                      },
+                      ),
+                      DataCell(
+                        Directionality(
+                            textDirection: ui.TextDirection.ltr,
+                            child: SizedBox(
+                              width: 70.w,
+                              child: Text(ReportRecord.inDateTime.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: setResponsiveFontSize(22))),
+                            )),
+                        showEditIcon: false,onLongPress: (){
+                        deleteRow(ReportRecord);
+                      },
+                        placeholder: false,
+                      ),
+                      DataCell(
+                        Directionality(
+                            textDirection: ui.TextDirection.ltr,
+                            child: SizedBox(
+                              width: 70.w,
+                              child: Text(
+                                ReportRecord.outDateTime.toString(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: setResponsiveFontSize(22)),
+                              ),
+                            )),
+                        showEditIcon: false,onLongPress: (){
+                        deleteRow(ReportRecord);
+                      },
+                        placeholder: false,
+                      ),     DataCell(
+                        Directionality(
+                            textDirection: ui.TextDirection.ltr,
+                            child: SizedBox(
+                              width: 70.w,
+                              child: Text(
+                                ReportRecord.inDate.toString(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: setResponsiveFontSize(22)),
+                              ),
+                            )),
+                        showEditIcon: false,onLongPress: (){
+                        deleteRow(ReportRecord);
+                      },
+                        placeholder: false,
+                      ),
+                      DataCell(
+                        InkWell(
+                          onTap: () {
+                            Fluttertoast.showToast(
+                                msg: 'أحمد رضوان',
+                                backgroundColor: Colors.green,
+                                toastLength: Toast.LENGTH_LONG);
+                          },
+                          child: Icon(
+                            Icons.person,
+                            size: isTab(context) ? 30 : 20,
+                            color: Colors.orange,
+                          ),
+                        ),
+                        showEditIcon: false,
+                        placeholder: false,onLongPress: (){
+                        deleteRow(ReportRecord);
+                      },
+                      ),
+
+                      DataCell(
+                        InkWell(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(30)),
+                                    elevation: 16,
+                                    child: SizedBox(
+                                        height: 300.h,
+                                        width: isTab(context) ? 900.w : 700.w,
+                                        child: ReportRecord.type
+                                            .toLowerCase()
+                                            .contains('vip')
+                                            ? SizedBox(
+                                          child: Image.asset(
+                                              'assets/images/vip.png'),
+                                        )
+                                            : Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment
+                                              .spaceEvenly,
+                                          children: [
+                                            InkWell(
+                                              child: Image.network(
+                                                ReportRecord.image1,
+                                                width: isTab(context)
+                                                    ? 340.w
+                                                    : 300.w,
+                                                height: isTab(context)
+                                                    ? 250.h
+                                                    : 250.h,
+                                                fit: BoxFit.fill,
+                                              ),
+                                              onTap: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return Dialog(
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                            BorderRadius.circular(
+                                                                40)),
+                                                        elevation: 16,
+                                                        child: SizedBox(
+                                                          height: 400.h,
+                                                          width: 600.w,
+                                                          child: Image
+                                                              .network(
+                                                            ReportRecord
+                                                                .image1,
+                                                            fit: BoxFit
+                                                                .fill,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    });
+                                              },
+                                            ),
+                                            InkWell(
+                                              child: Image.network(
+                                                ReportRecord.image2,
+                                                width: isTab(context)
+                                                    ? 340.w
+                                                    : 300.w,
+                                                height: isTab(context)
+                                                    ? 250.h
+                                                    : 250.h,
+                                                fit: BoxFit.fill,
+                                              ),
+                                              onTap: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return Dialog(
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                            BorderRadius.circular(
+                                                                40)),
+                                                        elevation: 16,
+                                                        child: SizedBox(
+                                                          height: 400.h,
+                                                          width: 600.w,
+                                                          child: Image
+                                                              .network(
+                                                            ReportRecord
+                                                                .image2,
+                                                            fit: BoxFit
+                                                                .fill,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    });
+                                              },
+                                            )
+                                          ],
+                                        )),
+                                  );
+                                });
+                          },
+                          child: Icon(
+                            Icons.image
+                            ,
+                            size: isTab(context) ? 30 : 20,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        showEditIcon: false,
+                        placeholder: false,
+                      ),
+                    ],
+                  ),
+                )
+                    .toList()),
+          ),
+        ),
+      ),
+    ),
+  );
+}*/

@@ -1,3 +1,5 @@
+// ignore_for_file: missing_return
+
 import 'dart:developer';
 
 import 'package:animate_do/animate_do.dart';
@@ -78,6 +80,20 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
     }
   }
 
+  void adminCheckInvitation(String msg) {
+    Fluttertoast.showToast(
+        msg: msg,
+        backgroundColor: Colors.green,
+        toastLength: Toast.LENGTH_LONG);
+    controller.dispose();
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => BottomNav(
+                  comingIndex: 3,
+                )));
+  }
+
   void _onQRViewCreated(QRViewController controller) {
     setState(() {
       this.controller = controller;
@@ -88,78 +104,89 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       if (!scanned) {
         scanned = true;
 
-        if (widget.screen == 'invitation') {
+        if (widget.screen == 'invitation' ||
+            widget.screen == 'invitation_admin') {
           Provider.of<VisitorProv>(context, listen: false)
               .checkInvitationValidation(result)
               .then((value) {
             if (value == 'vip') {
-              Fluttertoast.showToast(
-                  msg: 'مرحباً بك',
-                  backgroundColor: Colors.green,
-                  toastLength: Toast.LENGTH_LONG);
-              controller.dispose();
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const PrintScreen2(
-                            from: 'send',
-                            resendType: 'VIP Invitation',
-                          )));
-            }
-            else  if (value == 'not valid') {
-              Fluttertoast.showToast(
-                  msg: 'كود غير صحيح',
-                  backgroundColor: Colors.green,
-                  toastLength: Toast.LENGTH_LONG);
-              controller.dispose();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const EntryScreen()));
-            }
-            else if (value == 'not vip') {
-              Fluttertoast.showToast(
-                  msg: 'كود صحيح , مرحباً بك',
-                  backgroundColor: Colors.green,
-                  toastLength: Toast.LENGTH_LONG);
-              controller.dispose();
-
-              /*   Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const HomeScreen(
-                            screen: 'invitation',
-                          )));*/
-
-              Provider.of<VisitorProv>(context, listen: false)
-                  .getBill(
-                      Provider.of<VisitorProv>(context, listen: false)
-                          .ownerId
-                          .toString(),
-                      '0',
-                      '0')
-                  .then((value) {
-                Navigator.push(
+              if (widget.screen == 'invitation_admin') {
+                adminCheckInvitation('VIP Invitation');
+              } else {
+                Fluttertoast.showToast(
+                    msg: 'مرحباً بك',
+                    backgroundColor: Colors.green,
+                    toastLength: Toast.LENGTH_LONG);
+                controller.dispose();
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PrintScreen2(
-                              civilCount: 0,
-                              militaryCount: 0,
+                        builder: (context) => const PrintScreen2(
                               from: 'send',
-                              typeId: Provider.of<VisitorProv>(context,
-                                      listen: false)
-                                  .ownerId
-                                  .toString(),
+                              resendType: 'VIP Invitation',
                             )));
-              });
-            }
-            else {
-              print('value is $value');
-              Fluttertoast.showToast(
-                  msg: 'كود غير صحيح',
-                  backgroundColor: Colors.green,
-                  toastLength: Toast.LENGTH_LONG);
-              controller.dispose();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const EntryScreen()));
+              }
+            } else if (value == 'not valid') {
+              if (widget.screen == 'invitation_admin') {
+                adminCheckInvitation('كود غير صحيح');
+              } else {
+                Fluttertoast.showToast(
+                    msg: 'كود غير صحيح',
+                    backgroundColor: Colors.green,
+                    toastLength: Toast.LENGTH_LONG);
+                controller.dispose();
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EntryScreen()));
+              }
+            } else if (value == 'not vip') {
+              if (widget.screen == 'invitation_admin') {
+                adminCheckInvitation('كود صحيح');
+              } else {
+                Fluttertoast.showToast(
+                    msg: 'كود صحيح , مرحباً بك',
+                    backgroundColor: Colors.green,
+                    toastLength: Toast.LENGTH_LONG);
+                controller.dispose();
+
+                Provider.of<VisitorProv>(context, listen: false)
+                    .getBill(
+                        Provider.of<VisitorProv>(context, listen: false)
+                            .ownerId
+                            .toString(),
+                        '0',
+                        '0')
+                    .then((value) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PrintScreen2(
+                                civilCount: 0,
+                                militaryCount: 0,
+                                from: 'send',
+                                typeId: Provider.of<VisitorProv>(context,
+                                        listen: false)
+                                    .ownerId
+                                    .toString(),
+                              )));
+                });
+              }
+            } else {
+              if (widget.screen == 'invitation_admin') {
+                adminCheckInvitation('كود غير صحيح');
+              } else {
+                print('value is $value');
+                Fluttertoast.showToast(
+                    msg: 'كود غير صحيح',
+                    backgroundColor: Colors.green,
+                    toastLength: Toast.LENGTH_LONG);
+                controller.dispose();
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EntryScreen()));
+              }
             }
           });
         } else if (widget.screen == 'memberShip' ||
@@ -208,7 +235,6 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
               .then((value) async {
             log('value is $value');
             if (value == 'Success') {
-              print('heeeeh');
               controller.dispose();
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => MemberInformation()));
@@ -233,40 +259,6 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
             }
           });
         } else {
-          /*    var res = await Provider.of<VisitorProv>(context, listen: false)
-              .checkOut(result);
-
-          res.fold((message) {
-            debugPrint('message => $message');
-
-            if (message == 'Success') {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return const invitationSendDialog(
-                      text: 'تم تسجيل الخروج بنجاح',
-                    );
-                  });
-              Future.delayed(const Duration(seconds: 1)).whenComplete(() {
-                Navigator.pop(context);
-                scanned = false;
-              });
-            } else {
-              print('value is $message');
-              Fluttertoast.showToast(
-                      msg: 'كود غير صحيح',
-                      backgroundColor: Colors.green,
-                      toastLength: Toast.LENGTH_LONG)
-                  .then((value) {
-                Future.delayed(const Duration(seconds: 1)).whenComplete(() {
-                  scanned = false;
-                });
-              });
-            }
-          }, (perHourObj) {
-            print('in time ${perHourObj.inTime}');
-          }); */
-
           Provider.of<VisitorProv>(context, listen: false)
               .checkOut(result)
               .then((value) async {
@@ -465,7 +457,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        EntryScreen()));
+                                                        const EntryScreen()));
                                           },
                                           title: 'إلغاء',
                                           width: 220,
@@ -494,7 +486,6 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   scanned = false;
                 });
               });
-
             }
           });
         }
@@ -519,8 +510,15 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => GameHome()));
+                          builder: (BuildContext context) => const GameHome()));
                 } else if (widget.screen == 'memberShip_admin') {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BottomNav(
+                                comingIndex: 3,
+                              )));
+                } else if (widget.screen == 'invitation_admin') {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -531,7 +529,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => EntryScreen()));
+                          builder: (BuildContext context) =>
+                              const EntryScreen()));
                 }
               },
               child: const Icon(
@@ -552,8 +551,16 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (BuildContext context) => GameHome()));
+                            builder: (BuildContext context) =>
+                                const GameHome()));
                   } else if (widget.screen == 'memberShip_admin') {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BottomNav(
+                                  comingIndex: 3,
+                                )));
+                  } else if (widget.screen == 'invitation_admin') {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -564,7 +571,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (BuildContext context) => EntryScreen()));
+                            builder: (BuildContext context) =>
+                                const EntryScreen()));
                   }
                 },
                 child: Column(

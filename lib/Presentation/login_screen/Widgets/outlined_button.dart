@@ -21,20 +21,23 @@ class OutlineButtonFb1 extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        AutoSizeText(
-          'Sign Out',
+
+        const RotatedBox(
+          quarterTurns: 2,
+          child: Icon(
+            Icons.exit_to_app,
+            color: primaryColor,
+            size: 36,
+          ),
+        ), AutoSizeText(
+          'خروج مستخدم',
           style: TextStyle(
-              fontSize: setResponsiveFontSize(30),
-              fontWeight: FontWeight.bold,
-              color: primaryColor,
-              letterSpacing: 2,
-              ),
+            fontSize: setResponsiveFontSize(30),
+            fontWeight: FontWeight.bold,
+            color: primaryColor,
+            letterSpacing: 2,
+          ),
         ),
-        const Icon(
-          Icons.exit_to_app,
-          color: primaryColor,
-          size: 36,
-        )
       ]),
       style: ButtonStyle(
           side: MaterialStateProperty.all(

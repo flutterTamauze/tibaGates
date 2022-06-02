@@ -59,16 +59,7 @@ class _AInvitationScreenState extends State<AInvitationScreen> {
     _refreshController.refreshCompleted();
   }
 
-/*  void filterInvitations(value) {
-    setState(() {
-      tmpList = Provider.of<ManagerProv>(context, listen: false)
-          .invitationsList
-          .where((invitation) => invitation.invitationType == value)
-          .toList();
 
-      print('filtered list now isss ${tmpList.length}');
-    });
-  }*/
 
   @override
   void initState() {

@@ -443,7 +443,7 @@ class _PricesScreenState extends State<PricesScreen> {
                         context: context,
                         hintType: 'أضف النوع',
                         hintPrice: 'أضف السعر',
-                        hintPriceNHoliday: 'أضف السعر فالأجازات',
+                        hintPriceNHoliday: 'أضف السعر فى الأجازات',
                         saveCallback: () {
                           if (!_formKey.currentState.validate()) {
                             return;

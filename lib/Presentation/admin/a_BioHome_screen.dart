@@ -61,7 +61,6 @@ class ABioHomeState extends State {
     print(token);
     cachingData();
     print('userId = ${Provider.of<AuthProv>(context, listen: false).userId}');
-
   }
 
   void cachingData() async {
@@ -125,46 +124,104 @@ class ABioHomeState extends State {
                         ),
                         child: Column(
                           children: [
+                            Row(
+                              children: [
                                 Padding(
-                                  padding:  EdgeInsets.only(top: 12.h,left: 8.w),
+                                  padding: EdgeInsets.only(top: 12.h, left: 8.w),
                                   child: Align(
-                              alignment: Alignment.topLeft,
-                              child: OutlinedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (context) =>  const QrCodeScreen(
-                                              screen: 'memberShip_admin',
-                                            )),
-                                            (Route<dynamic> route) => false);
-                                  },
-                                  child: SizedBox(
-                                    height: 50.h,
-                                    width: 50.w,
-                                    child:  Center(
-                                      child: Icon(
-                                        Icons.sports_handball,
-                                        color: Colors.pink,
-                                        size: isTab(context)? 36:28,
+                                    alignment: Alignment.topLeft,
+                                    child: OutlinedButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const QrCodeScreen(
+                                                          screen:
+                                                              'memberShip_admin',
+                                                        )),
+                                                (Route<dynamic> route) =>
+                                                    false);
+                                      },
+                                      child: SizedBox(
+                                        height: 50.h,
+                                        width: 50.w,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.sports_handball,
+                                            color: Colors.pink,
+                                            size: isTab(context) ? 36 : 28,
+                                          ),
+                                        ),
                                       ),
+                                      style: ButtonStyle(
+                                          side: MaterialStateProperty.all(
+                                              BorderSide(
+                                                  color: Colors.pink,
+                                                  width: 1.4.w)),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.white),
+                                          padding: MaterialStateProperty.all(
+                                              EdgeInsets.symmetric(
+                                                  vertical: 20.h,
+                                                  horizontal: 20.w)),
+                                          shape: MaterialStateProperty.all(
+                                              const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.all(
+                                                      Radius.circular(20))))),
                                     ),
                                   ),
-                                  style: ButtonStyle(
-                                      side: MaterialStateProperty.all(BorderSide(
-                                          color: Colors.pink, width: 1.4.w)),
-                                      backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.white),
-                                      padding: MaterialStateProperty.all(
-                                          EdgeInsets.symmetric(
-                                              vertical: 20.h, horizontal: 20.w)),
-                                      shape: MaterialStateProperty.all(
-                                          const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20))))),
-                              ),
-                            ),
                                 ),
+                                SizedBox(
+                                  height: 8.h,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 12.h, left: 8.w),
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: OutlinedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pushAndRemoveUntil(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const QrCodeScreen(
+                                                      screen: 'invitation_admin',
+                                                    )),
+                                            (Route<dynamic> route) => false);
+                                      },
+                                      child: SizedBox(
+                                        height: 45.h,
+                                        width: 50.w,
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.qr_code,
+                                            color: Colors.orange,
+                                            size: 36,
+                                          ),
+                                        ),
+                                      ),
+                                      style: ButtonStyle(
+                                          side: MaterialStateProperty.all(
+                                              BorderSide(
+                                                  color: Colors.orange,
+                                                  width: 1.4.w)),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.white),
+                                          padding: MaterialStateProperty.all(
+                                              EdgeInsets.symmetric(
+                                                  vertical: 20.h,
+                                                  horizontal: 20.w)),
+                                          shape: MaterialStateProperty.all(
+                                              const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.all(
+                                                      Radius.circular(20))))),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                             ZoomIn(
                               child: SizedBox(
                                 height: (height * 0.17),
@@ -173,7 +230,8 @@ class ABioHomeState extends State {
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     border: Border.all(
-                                        color: ColorManager.primary, width: 2.w),
+                                        color: ColorManager.primary,
+                                        width: 2.w),
                                     image: const DecorationImage(
                                         image: AssetImage(
                                             'assets/images/tipasplash.png')),
@@ -183,7 +241,7 @@ class ABioHomeState extends State {
                               ),
                             ),
                             SizedBox(
-                              height: isTab(context)? 40.h:10.h,
+                              height: isTab(context) ? 40.h : 10.h,
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -192,11 +250,14 @@ class ABioHomeState extends State {
                                 child: GridView.builder(
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              (MediaQuery.of(context).size.height /
-                                                  2.5),
+                                          childAspectRatio:
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  (MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      2.5),
                                           crossAxisSpacing: Platform.isIOS
                                               ? 5.w
                                               : isTab(context)
@@ -211,7 +272,8 @@ class ABioHomeState extends State {
                                       child: Card(
                                         elevation: 6,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20.0),
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
                                         ),
                                         child: Column(
                                           crossAxisAlignment:
@@ -224,7 +286,8 @@ class ABioHomeState extends State {
                                                   top: 12.h),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.spaceBetween,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   const Icon(
                                                     Icons.directions_car_sharp,
@@ -240,7 +303,8 @@ class ABioHomeState extends State {
                                                     child: AutoSizeText(
                                                         parksTypes[index].type,
                                                         maxLines: 2,
-                                                        textAlign: TextAlign.end,
+                                                        textAlign:
+                                                            TextAlign.end,
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
@@ -256,12 +320,15 @@ class ABioHomeState extends State {
                                               height: 20.h,
                                             ),
                                             AutoSizeText(
-                                                parksTypes[index].count.toString(),
+                                                parksTypes[index]
+                                                    .count
+                                                    .toString(),
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.red,
                                                     fontSize:
-                                                        setResponsiveFontSize(30))),
+                                                        setResponsiveFontSize(
+                                                            30))),
                                           ],
                                         ),
                                       ),
@@ -275,7 +342,8 @@ class ABioHomeState extends State {
                               height: isTab(context) ? 30.h : 5.h,
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
                               child: Card(
                                 elevation: 6,
                                 shape: RoundedRectangleBorder(
@@ -300,7 +368,8 @@ class ABioHomeState extends State {
                                             height: 12.h,
                                           ),
                                           AutoSizeText(
-                                              Provider.of<AdminHomeProv>(context,
+                                              Provider.of<AdminHomeProv>(
+                                                      context,
                                                       listen: false)
                                                   .carsCount
                                                   .toString(),
@@ -317,12 +386,14 @@ class ABioHomeState extends State {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize:
-                                                      setResponsiveFontSize(22))),
+                                                      setResponsiveFontSize(
+                                                          22))),
                                           SizedBox(
                                             height: 12.h,
                                           ),
                                           Text(
-                                              Provider.of<AdminHomeProv>(context,
+                                              Provider.of<AdminHomeProv>(
+                                                      context,
                                                       listen: false)
                                                   .totalBalance
                                                   .toString(),
@@ -356,7 +427,8 @@ class ABioHomeState extends State {
                                     RotatedBox(
                                         quarterTurns: 2,
                                         child: SizedBox(
-                                            height:Platform.isIOS?60.h: 80.h,
+                                            height:
+                                                Platform.isIOS ? 60.h : 80.h,
                                             //  width: 400.w,
 
                                             child: Lottie.asset(
@@ -364,7 +436,8 @@ class ABioHomeState extends State {
                                     Text('الإنتقال إلى التقارير ',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: setResponsiveFontSize(26)))
+                                            fontSize:
+                                                setResponsiveFontSize(26)))
                                   ],
                                 ),
                               ),
@@ -426,7 +499,7 @@ class ABioHomeState extends State {
           return PieChartSectionData(
             color: Colors.purple[600],
             value:
-                12 *//*double.parse(ratio.totalExternalMissionRatio.toString())*//*,
+                12 */ /*double.parse(ratio.totalExternalMissionRatio.toString())*/ /*,
             title: 12.toStringAsFixed(0) + ' %',
             radius: radius,
             titleStyle: TextStyle(
