@@ -227,7 +227,7 @@ class _DailyReportsScreenState extends State<DailyReportsScreen> {
                           InkWell(
                             onTap: () {
                               Fluttertoast.showToast(
-                                  msg: 'أحمد رضوان',
+                                  msg: ReportRecord.userName,
                                   backgroundColor: Colors.green,
                                   toastLength: Toast.LENGTH_LONG);
                             },

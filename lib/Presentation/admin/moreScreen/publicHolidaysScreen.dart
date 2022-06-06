@@ -635,7 +635,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                                     children: [
                                       SfDateRangePicker(
                                         view: DateRangePickerView.month,
-                                        enablePastDates: true,
+                                        enablePastDates: false,
                                         rangeSelectionColor: Colors.green,
                                         todayHighlightColor: Colors.green,
                                         selectionMode:

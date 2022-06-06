@@ -38,6 +38,8 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   int militaryCount;
   int civilCount;
   int invitationID;
+
+  String invitationCreationDate,invitationExpireDate,invitationDescription,invitationName,invitationType;
   var totalPrice, militaryPrice, citizenPrice, parkPrice, qrCode, printTime;
   var logId;
 
@@ -617,7 +619,12 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
             else{
               invitationID = responseDecoded['response']['id'];
               isVIP = responseDecoded['response']['isVIP'];
-              ownerId = responseDecoded['response']['ownerId'];
+              ownerId = responseDecoded['response']['ownerId']??-1;
+              invitationDescription = responseDecoded['response']['description'];
+              invitationName = responseDecoded['response']['name'];
+              invitationCreationDate = responseDecoded['response']['creationDate'];
+              invitationExpireDate = responseDecoded['response']['expiryDate'];
+              invitationType = responseDecoded['response']['invitationType'];
 
               if (isVIP) {
                 data = 'vip';

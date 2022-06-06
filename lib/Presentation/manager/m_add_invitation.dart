@@ -381,7 +381,7 @@ class _MAddInvitationState extends State<MAddInvitation> {
                                                                   DateRangePickerView
                                                                       .month,
                                                               enablePastDates:
-                                                                  true,
+                                                                  false,
                                                               rangeSelectionColor:
                                                                   Colors.green,
                                                               todayHighlightColor:

@@ -148,9 +148,7 @@ class _InvitationItemState extends State<InvitationItem> {
                                     const Spacer(),
                                     Qr(
                                       version: QrVersions.auto,
-                                      data: Provider.of<ManagerProv>(context,
-                                                  listen: false)
-                                              .qrCode ??
+                                      data: widget.invitation.qrCode ??
                                           'abc',
                                       size: 250.0,
                                     ),

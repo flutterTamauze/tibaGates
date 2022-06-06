@@ -1643,8 +1643,9 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                             'Normal' ||
                                                             widget.resendType ==
                                                                 'VIP Invitation') {
-                                                          debugPrint(
-                                                              'invitation');
+
+
+                                                          debugPrint('invitation');
                                                           visitorProv
                                                               .checkInInvitation(
                                                             authProv
