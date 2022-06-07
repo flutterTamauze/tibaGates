@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:Tiba_Gates/Utilities/Shared/dialogs/exit_dialog2.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import '../../Utilities/responsive.dart';
@@ -122,13 +123,8 @@ class _MHomeScreenState extends State<MHomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
-                      onTap: () async {
-                        await showDialog(
-                            context: context,
-                            builder: (context) => ZoomIn(
-                                  child: const exitDialog(),
-                                ));
-                      },
+                      onTap: ()
+                      => showDialog<Dialog>(context: context, builder: (BuildContext context) => ZoomIn(child: DialogFb1())),
                       child: const RotatedBox(
                         quarterTurns: 2,
                         child: Icon(

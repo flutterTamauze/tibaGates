@@ -51,7 +51,7 @@ class _MemberDisplayState extends State<MemberDisplay> {
               )),
         ),
       ),
-      SizedBox(height: 20.0.h),
+      SizedBox(height: 12.0.h),
       widget.isLogin
           ? TextFormField(
               textInputAction: TextInputAction.next,

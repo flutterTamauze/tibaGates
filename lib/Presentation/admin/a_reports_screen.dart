@@ -1,3 +1,4 @@
+import 'package:Tiba_Gates/Presentation/admin/reports/searchForReport.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'reports/periodReports_screen.dart';
@@ -72,7 +73,7 @@ class AReportsScreen extends StatelessWidget {
                       SizedBox(
                         height: 20.h,
                       ),
-                      Text(
+                      AutoSizeText(
                         'التقارير',
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -86,7 +87,7 @@ class AReportsScreen extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
-                          navigateTo(context, DailyReportsScreen());
+                          navigateTo(context, const DailyReportsScreen());
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -105,7 +106,7 @@ class AReportsScreen extends StatelessWidget {
                                   ),
                                   Row(
                                     children: [
-                                      Text(
+                                      AutoSizeText(
                                         'التقرير اليومى',
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
@@ -136,7 +137,7 @@ class AReportsScreen extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
-                          navigateTo(context, PeriodReportsScreen());
+                          navigateTo(context, const PeriodReportsScreen());
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -155,7 +156,7 @@ class AReportsScreen extends StatelessWidget {
                                   ),
                                   Row(
                                     children: [
-                                      Text(
+                                      AutoSizeText(
                                         'تقرير عن فترة',
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
@@ -167,6 +168,56 @@ class AReportsScreen extends StatelessWidget {
                                       ),
                                       const Icon(
                                         FontAwesomeIcons.calendarCheck,
+                                        size: 30,
+                                        color: Colors.green,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                        ),
+                      )  , SizedBox(
+                        height: 12.h,
+                      ),
+
+                      InkWell(
+                        onTap: () {
+                          navigateTo(context, const SearchForReport());
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Card(
+                            elevation: 6,
+                            child: Padding(
+                              padding: const EdgeInsets.all(25.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Icon(
+                                    Icons.arrow_back_ios,
+                                    size: 30,
+                                    color: Colors.green,
+                                  ),
+                                  Row(
+                                    children: [
+                                      AutoSizeText(
+                                        'بحث',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            fontSize: setResponsiveFontSize(28),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        width: 22.w,
+                                      ),
+                                      const Icon(
+                                        FontAwesomeIcons.search,
                                         size: 30,
                                         color: Colors.green,
                                       )

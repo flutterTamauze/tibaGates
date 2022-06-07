@@ -1,3 +1,4 @@
+import 'package:Tiba_Gates/Utilities/Shared/dialogs/exit_dialog2.dart';
 import 'package:animate_do/animate_do.dart';
 
 import 'package:flutter/material.dart';
@@ -27,13 +28,7 @@ class _GameHomeState extends State<GameHome> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             InkWell(
-                onTap: () async {
-                  await showDialog(
-                      context: context,
-                      builder: (context) => ZoomIn(
-                        child: const exitDialog(),
-                      ));
-                },
+                onTap: () => showDialog<Dialog>(context: context, builder: (BuildContext context) => ZoomIn(child: DialogFb1())),
                 child: const RotatedBox(
                   quarterTurns: 2,
                   child: Icon(

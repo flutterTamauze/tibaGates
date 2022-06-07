@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import '../../../Data/Models/admin/a_summary_model.dart';
 import '../../../api/base_client.dart';
@@ -11,9 +12,47 @@ import 'package:flutter/material.dart';
 class AReportsProv with ChangeNotifier, BaseExceptionHandling {
   List<ReportsItemModel> reportsList = [];
   SummaryModel summaryModel = SummaryModel();
+  ReportsItemModel billModel = ReportsItemModel();
+  bool isBillFound = false;
 
 
 
+  Future<dynamic> getBillById(int logId) async {
+    String data = '';
+
+    try {
+      var response = await BaseClient()
+          .post(BASE_URL, '/api/gate/GetLogByID/$logId')
+          .catchError(handleError);
+
+      var decodedRes = jsonDecode(response);
+
+      if (decodedRes['message'] == 'Success') {
+        data = 'Success';
+        billModel = ReportsItemModel.fromJson(decodedRes['response']);
+        log(billModel.inDateTime.toString());
+      } else {
+        data = 'not found';
+      }
+
+      notifyListeners();
+      return data;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+void resetBill(){
+  isBillFound=false;
+  billModel=ReportsItemModel();
+  notifyListeners();
+}
+
+
+  void changeBillStatus(bool newValue) {
+    isBillFound = newValue;
+    notifyListeners();
+  }
 
   Future<dynamic> deleteBill(int billId, String userId) async {
     String data = '';
@@ -40,7 +79,6 @@ class AReportsProv with ChangeNotifier, BaseExceptionHandling {
       print(e);
     }
   }
-
 
   Future<String> getDailyReport(String startDate, String endDate,
       [String parkType, int pageNumber = 0]) async {

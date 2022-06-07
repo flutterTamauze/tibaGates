@@ -294,7 +294,7 @@ class _PeriodReportsScreenState extends State<PeriodReportsScreen> {
                             InkWell(
                               onTap: () {
                                 Fluttertoast.showToast(
-                                    msg: ReportRecord.userName??"اسم المستخدم غير منوفر ",
+                                    msg: ReportRecord.userName??'اسم المستخدم غير منوفر ',
                                     backgroundColor: Colors.green,
                                     toastLength: Toast.LENGTH_LONG);
                               },

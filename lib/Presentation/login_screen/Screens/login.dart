@@ -148,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                     Center(
                       child: SizedBox(
                         width: 500.w,
-                        height: 455.h,
+                        height: 415.h,
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
@@ -203,7 +203,27 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                                               Colors.green),
                                                     ),
                                             )
-                                          : RoundedButton(
+                                          :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                      RoundedButton(
                                               height: 55,
                                               width: 220,
                                               ontap: () {

@@ -1,3 +1,4 @@
+import 'package:Tiba_Gates/Utilities/Shared/dialogs/exit_dialog2.dart';
 import 'package:animate_do/animate_do.dart';
 
 import 'package:flutter/material.dart';
@@ -23,13 +24,12 @@ class _MoreScreenState extends State<MoreScreen> {
   var userType;
 
   Future<bool> _onWillPop() async {
-    return (await showDialog(
+    return await showDialog(
           context: context,
           builder: (context) => ZoomIn(
             child: const exitDialog(),
           ),
-        )) ??
-        false;
+        );
   }
 
   @override
@@ -112,13 +112,19 @@ class _MoreScreenState extends State<MoreScreen> {
                         ),
                       ),
                       InkWell(
-                        onTap: () async {
+                        onTap: // Call this in a function
+                            () => showDialog<Dialog>(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    ZoomIn(child: DialogFb1())),
+
+                        /*() async {
                           await showDialog(
                               context: context,
                               builder: (context) => ZoomIn(
                                     child: const exitDialog(),
                                   ));
-                        },
+                        },*/
                         child: const rowTile(
                           icon: Icons.logout,
                           label: 'تسجيل الخروج',
