@@ -1,6 +1,9 @@
+// ignore_for_file: missing_return
+
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'package:Tiba_Gates/Presentation/casher/casherEntry_screen.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 
 import '../admin/admin_bottomNav.dart';
@@ -47,6 +50,8 @@ class _MemberState extends State<MemberInformation> {
               BottomNav(
                 comingIndex: 3,
               ));
+        } else if (widget.screen == 'casher') {
+          navigateTo(context, const CasherEntryScreen());
         } else {
           navigateTo(context, const GameHome());
         }
@@ -234,6 +239,10 @@ class _MemberState extends State<MemberInformation> {
                                                   BottomNav(
                                                     comingIndex: 3,
                                                   ));
+                                            } else if (widget.screen ==
+                                                'casher') {
+                                              navigateTo(context,
+                                                  const CasherEntryScreen());
                                             } else {
                                               navigateTo(
                                                   context, const GameHome());
@@ -254,10 +263,16 @@ class _MemberState extends State<MemberInformation> {
                                                   .submitGame(id, gameId)
                                                   .then((value) {
                                                 if (value == 'Success') {
+                                                  print('sccss');
                                                   showToast('تم التأكيد');
-
-                                                  navigateTo(context,
-                                                      const GameHome());
+                                                  if (widget.screen ==
+                                                      'casher') {
+                                                    navigateTo(context,
+                                                        const CasherEntryScreen());
+                                                  } else {
+                                                    navigateTo(context,
+                                                        const GameHome());
+                                                  }
                                                 }
                                               });
                                             } else {
@@ -305,11 +320,10 @@ class _MemberState extends State<MemberInformation> {
 
   Widget buildChoiceChips(String rule) => rule == 'admin'
       ? ListView.builder(
-          itemCount:
-            Provider.of<VisitorProv>(context, listen: true)
-            .memberShipModel
-            .memberShipSports.length
-          ,
+          itemCount: Provider.of<VisitorProv>(context, listen: true)
+              .memberShipModel
+              .memberShipSports
+              .length,
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -320,8 +334,9 @@ class _MemberState extends State<MemberInformation> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 decoration: DottedDecoration(
-                  shape: Shape.box,strokeWidth: 1.5,
-                  borderRadius: BorderRadius.circular(10), //remove this to get plane rectange
+                  shape: Shape.box, strokeWidth: 1.5,
+                  borderRadius: BorderRadius.circular(
+                      10), //remove this to get plane rectange
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -337,11 +352,11 @@ class _MemberState extends State<MemberInformation> {
                               fontWeight: FontManager.bold),
                           children: <TextSpan>[
                             TextSpan(
-                                text:
-                                Provider.of<VisitorProv>(context, listen: true)
-                                  .memberShipModel
-                                  .memberShipSports[index].sportName
-                                ,
+                                text: Provider.of<VisitorProv>(context,
+                                        listen: true)
+                                    .memberShipModel
+                                    .memberShipSports[index]
+                                    .sportName,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.green,
@@ -362,11 +377,11 @@ class _MemberState extends State<MemberInformation> {
                               fontWeight: FontManager.bold),
                           children: <TextSpan>[
                             TextSpan(
-                                text:
-                                 Provider.of<VisitorProv>(context, listen: true)
-                                  .memberShipModel
-                                  .memberShipSports[index].sportExpireDate
-                                ,
+                                text: Provider.of<VisitorProv>(context,
+                                        listen: true)
+                                    .memberShipModel
+                                    .memberShipSports[index]
+                                    .sportExpireDate,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.green,
@@ -375,7 +390,6 @@ class _MemberState extends State<MemberInformation> {
                           ],
                         ),
                       ),
-
                     ],
                   ),
                 ),
@@ -390,7 +404,8 @@ class _MemberState extends State<MemberInformation> {
               .memberShipModel
               .memberShipSports
               .map((choiceChip) => ChoiceChip(
-                    label: Text(choiceChip.sportName), /*Padding(
+                    label: Text(choiceChip.sportName),
+                    /*Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

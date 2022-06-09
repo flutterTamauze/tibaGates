@@ -1,6 +1,10 @@
+// ignore_for_file: always_specify_types
+
 import 'dart:io';
 
+import 'Presentation/casher/casherEntry_screen.dart';
 import 'Presentation/splash_screen/splash_screen.dart';
+import 'ViewModel/casher/servicesProv.dart';
 import 'ViewModel/game/gameProv.dart';
 import 'ViewModel/guard/authProv.dart';
 import 'ViewModel/guard/visitorProv.dart';
@@ -112,6 +116,8 @@ class MyApp extends StatelessWidget {
             ),
             ChangeNotifierProvider(
               create: (context) => getIt<GameProv>(),
+            ),       ChangeNotifierProvider(
+              create: (context) => getIt<ServicesProv>(),
             ),
           ],
           child: FutureBuilder(
@@ -125,7 +131,8 @@ class MyApp extends StatelessWidget {
                       return GetMaterialApp(
                         title: 'Tiba Rose',
                         debugShowCheckedModeBanner: false,
-                        home: SplashScreen()
+                        home: const CasherEntryScreen()
+                        //SplashScreen()
 
                         //MyBluetooth()
                         // DiscoveryPage()

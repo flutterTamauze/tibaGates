@@ -1,5 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import '../../../Presentation/guard/entry_screen/entryScreen.dart';
+import '../../../Presentation/guard/entryScreen.dart';
 
 import '../../Colors/colorManager.dart';
 import '../../Constants/constants.dart';
@@ -10,7 +10,7 @@ import 'dart:ui' as ui;
 
 import 'package:provider/provider.dart';
 
-import '../../../Presentation/guard/print_page2.dart';
+import '../../../Presentation/guard/guardPrint_Screen.dart';
 import '../sharedWidgets.dart';
 
 class BillDialog extends StatelessWidget {

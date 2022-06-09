@@ -84,6 +84,14 @@ void navigateTo(context, widget) => Navigator.push(
       ),
     );
 
+
+void navigateReplacementTo(context, widget) => Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => widget,
+      ),
+    );
+
 void showToast(String message) => Fluttertoast.showToast(
     msg: message,
     backgroundColor: Colors.green,

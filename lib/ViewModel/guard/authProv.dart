@@ -65,9 +65,9 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     parkTypes = [];
     String data = '';
     Map<String, String> headers = {'Content-Type': 'application/json'};
-    var uri = Uri.parse('$BASE_URL/api/user/LogIn');
+    Uri uri = Uri.parse('$BASE_URL/api/user/LogIn');
 
-    var request = http.MultipartRequest('POST', uri);
+    http.MultipartRequest request = http.MultipartRequest('POST', uri);
     request.files.add(
       await http.MultipartFile.fromPath('file', guardImage.path),
     );
@@ -109,13 +109,14 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
             token = userJson['token'];
 
             if (userRole != 'Manager' && userRole != 'Admin') {
-              guardName = userJson['name'];
+              guardName = userJson['name']??'  -  ';
               balance = double.parse(userJson['balance'].toString());
               printerAddress = userJson['printerMac'];
               lostTicketPrice = double.parse(responseDecoded['response']
               ['printReasons'][0]['price']
                   .toString());
-              gateName = userJson['gateName'];
+             // gateName = userJson['gateName']??'  -  ';
+              gateName = responseDecoded['response']['gateName']??'  -  ';
             }
           } else if (responseDecoded['message'] == 'Incorrect User') {
             data = 'Incorrect User';

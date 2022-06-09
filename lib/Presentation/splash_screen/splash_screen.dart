@@ -1,19 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'package:Tiba_Gates/Presentation/casher/casherHome_screen.dart';
+import 'package:Tiba_Gates/Utilities/Constants/constants.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:camera/camera.dart';
 import '../game/game_home.dart';
-import '../admin/a_invitations_screen.dart';
 import '../admin/admin_bottomNav.dart';
 import '../login_screen/Screens/login.dart';
-
-import '../guard/entry_screen/entryScreen.dart';
+import '../guard/entryScreen.dart';
 import '../manager/m_home_screen.dart';
-import '../../Utilities/Routes/routesStrings.dart';
-import '../../ViewModel/guard/authProv.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<CameraDescription> cameras;
@@ -39,45 +35,46 @@ class _SplashScreenState extends State<SplashScreen> {
     if (isLoggedIn == true) {
       if (role == 'Manager') {
         debugPrint('role is manager');
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MHomeScreen()));
+        navigateReplacementTo(context, const MHomeScreen());
         return;
       }
+
       if (role == 'GameGuard') {
         debugPrint('role is GameGuard');
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => GameHome()));
+        navigateReplacementTo(context, const GameHome());
+
         return;
       } else if (role == 'Admin') {
         debugPrint('role is admin');
-        Navigator.pushReplacement(
+        navigateReplacementTo(
             context,
-            MaterialPageRoute(
-                builder: (context) => BottomNav(
-                      comingIndex: 3,
-                    )));
+            BottomNav(
+              comingIndex: 3,
+            ));
+
+        return;
+      } else if (role == 'Cashier') {
+        debugPrint('role is Cashier');
+        navigateReplacementTo(context, const CasherHomeScreen());
         return;
       } else {
-        log('geet 3nd splash else');
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => EntryScreen()));
+        navigateReplacementTo(context, const EntryScreen());
         return;
       }
     } else {
       cameras = await availableCameras();
-      Navigator.pushReplacement(
+      navigateReplacementTo(
           context,
-          MaterialPageRoute(
-              builder: (context) => LoginScreen(
-                    camera: cameras[1],
-                  )));
+          LoginScreen(
+            camera: cameras[1],
+          ));
+
       return;
     }
   }
 
   @override
   void initState() {
-    log('geet 3nd splash');
     checkSignInStatus();
     super.initState();
   }

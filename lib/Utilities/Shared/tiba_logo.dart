@@ -5,8 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class TibaLogo extends StatelessWidget {
   const TibaLogo({
     Key key,
-    @required this.height,
-    @required this.width,
+   this.height,
+ this.width,
   }) : super(key: key);
 
   final double height;

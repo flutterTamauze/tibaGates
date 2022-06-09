@@ -24,7 +24,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'entry_screen/entryScreen.dart';
+import 'entryScreen.dart';
 import '../../Utilities/Colors/colorManager.dart';
 import '../../Utilities/Constants/constants.dart';
 import '../../Utilities/Fonts/fontsManager.dart';
@@ -85,7 +85,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
     WidgetsBinding.instance.addPostFrameCallback((_) => initBluetooth());
   }
 
-  printScreenShot() {
+  void printScreenShot() {
     screenshotController.capture().then((Uint8List image) async {
       //Capture Done
       setState(() {
@@ -200,6 +200,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
           backgroundColor: Colors.green,
           title: InkWell(
               onTap: () {
+
                 /*                                                                 visitorProv
                   .checkIn(
                 visitorProv
@@ -1338,12 +1339,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                 print('mac address = ${Provider.of<AuthProv>(context, listen: false).printerAddress}');
 
 
-
-
                                                 print(d.address.toString().trim() == Provider.of<AuthProv>(context, listen: false).printerAddress.toString().trim());
-
-
-
 
 
                                                 if(d.address ==
@@ -1872,6 +1868,8 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                   if (value
                                                                       .message ==
                                                                       'Success') {
+
+
                                                                     prefs.setDouble(
                                                                         'balance',
                                                                         authProv.balance +

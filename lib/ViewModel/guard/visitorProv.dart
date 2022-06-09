@@ -39,6 +39,8 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   int civilCount;
   int invitationID;
 
+  int testPrice=5;
+
   String invitationCreationDate,invitationExpireDate,invitationDescription,invitationName,invitationType;
   var totalPrice, militaryPrice, citizenPrice, parkPrice, qrCode, printTime;
   var logId;
@@ -47,6 +49,9 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
   List<VisitorTypesModel> visitorObjects = [];
   List<String> visitorTypes = [];
+
+
+
 
   void addIdCard(File image) {
     idCard = image;

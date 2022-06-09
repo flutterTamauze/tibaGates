@@ -1,3 +1,8 @@
+// ignore_for_file: missing_return
+
+import 'package:Tiba_Gates/Presentation/casher/casherEntry_screen.dart';
+import 'package:Tiba_Gates/Presentation/casher/casherHome_screen.dart';
+import 'package:Tiba_Gates/Utilities/Shared/tiba_logo.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bordered_text/bordered_text.dart';
@@ -7,7 +12,7 @@ import '../../../main.dart';
 import '../../admin/a_invitations_screen.dart';
 import '../../admin/admin_bottomNav.dart';
 import '../../game/game_home.dart';
-import '../../guard/entry_screen/entryScreen.dart';
+import '../../guard/entryScreen.dart';
 import '../../manager/m_home_screen.dart';
 import '../../../Utilities/Colors/colorManager.dart';
 import '../../../Utilities/Constants/constants.dart';
@@ -103,24 +108,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Hero(
-                      tag: 'logo',
-                      child: SizedBox(
-                        height: (height * 0.15),
-                        width: (width * 0.32),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            image: const DecorationImage(
-                                image:
-                                    AssetImage('assets/images/tipasplash.png')),
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: ColorManager.primary, width: 2.w),
-                          ),
-                        ),
-                      ),
-                    ),
+            TibaLogo(height: height,width: width,),
                     SizedBox(
                       height: 20.h,
                     ),
@@ -205,24 +193,6 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                             )
                                           :
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                       RoundedButton(
                                               height: 55,
                                               width: 220,
@@ -283,16 +253,10 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   login(File img) async {
     AuthProv authProv = Provider.of<AuthProv>(context, listen: false);
     authProv.changeLoadingState(true);
-
     print('_platformVersion  =   $_udid');
-
     if (_udid == 'Unknown' || _udid == null) {
-      Fluttertoast.showToast(
-          msg: 'حدث خطأ ما برجاء المحاولة لاحقاً',
-          backgroundColor: Colors.green,
-          toastLength: Toast.LENGTH_LONG);
+      showToast('حدث خطأ ما برجاء المحاولة لاحقاً');
       authProv.changeLoadingState(false);
-
       return;
     }
 
@@ -306,27 +270,30 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         debugPrint('role is ${authProv.userRole}');
         if (authProv.userRole == 'Manager') {
           debugPrint('manager');
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const MHomeScreen()));
+          navigateReplacementTo(context,const MHomeScreen() );
+
           return;
         } else if (authProv.userRole == 'Admin') {
           debugPrint('admin');
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => BottomNav(
-                        comingIndex: 3,
-                      )));
+          navigateReplacementTo(context,BottomNav(
+            comingIndex: 3,
+          ) );
+
+          return;
+        } else if (authProv.userRole == 'Cashier') {
+          debugPrint('Cashier');
+
+          navigateReplacementTo(context,const CasherEntryScreen() );
+
           return;
         } else if (authProv.userRole == 'GameGuard') {
           debugPrint('GameGuard');
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const GameHome()));
+          navigateReplacementTo(context,const GameHome() );
+
           return;
         }
+        navigateReplacementTo(context,const EntryScreen() );
 
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const EntryScreen()));
       } else if (value == 'Incorrect User') {
         showToast('بيانات غير صحيحة');
       } else if (value == 'Incorrect Password') {
@@ -336,19 +303,13 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
       } else if (value.toString().toLowerCase().contains('realated')) {
         if (_udid.toString().length > 16) {
           // Iphone Case
-          Fluttertoast.showToast(
-              msg: 'غير مصرح لهذا المستخدم بالدخول',
-              backgroundColor: Colors.green,
-              toastLength: Toast.LENGTH_LONG);
-
+          showToast('غير مصرح لهذا المستخدم بالدخول');
           return;
         } else {
           showToast(value);
         }
       }
-      /*else if (value == 'you need to be at same network with local host') {
-        showToast(value);
-      } */
+
       else {
         showToast(value);
       }

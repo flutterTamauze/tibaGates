@@ -1,33 +1,29 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:Tiba_Gates/Utilities/Shared/tiba_logo.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
-
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:transparent_image/transparent_image.dart';
-import '../../../Data/Models/guard/memberChip_model.dart';
-import '../../../Utilities/responsive.dart';
-import '../../../ViewModel/guard/authProv.dart';
-import '../../../Utilities/Colors/colorManager.dart';
-import '../../../Utilities/Constants/constants.dart';
-import '../../../Utilities/Fonts/fontsManager.dart';
-import '../../../Utilities/Shared/camera.dart';
-import '../../../Utilities/Shared/dialogs/bill_dialog.dart';
-import '../../../Utilities/Shared/dialogs/loading_dialog.dart';
-import '../../../Utilities/Shared/sharedWidgets.dart';
-import '../../../Utilities/connectivityStatus.dart';
-import '../../../ViewModel/guard/visitorProv.dart';
+import '../../Data/Models/guard/memberChip_model.dart';
+import '../../Utilities/responsive.dart';
+import '../../ViewModel/guard/authProv.dart';
+import '../../Utilities/Colors/colorManager.dart';
+import '../../Utilities/Constants/constants.dart';
+import '../../Utilities/Fonts/fontsManager.dart';
+import '../../Utilities/Shared/camera.dart';
+import '../../Utilities/Shared/dialogs/bill_dialog.dart';
+import '../../Utilities/Shared/dialogs/loading_dialog.dart';
+import '../../Utilities/Shared/sharedWidgets.dart';
+import '../../Utilities/connectivityStatus.dart';
+import '../../ViewModel/guard/visitorProv.dart';
 import 'package:lottie/lottie.dart';
-import '../../../main.dart';
-import '../../admin/admin_bottomNav.dart';
-import '../print_page2.dart';
-import '../entry_screen/entryScreen.dart';
+import '../../main.dart';
+import '../admin/admin_bottomNav.dart';
+import 'guardPrint_Screen.dart';
+import 'entryScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -37,7 +33,6 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'dart:ui' as ui;
 import 'package:provider/provider.dart';
 
 List<CameraDescription> cameras = [];
@@ -64,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   String selectedVisitorType;
   Future typesListener;
   CameraController _controller;
-
+  String image;
   @override
   void initState() {
     super.initState();
@@ -106,6 +101,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     var defVisitorProv = Provider.of<VisitorProv>(context, listen: false);
     var authProv = Provider.of<AuthProv>(context, listen: false);
     return WillPopScope(
+      // ignore: missing_return
       onWillPop: () {
         prefs.getString('role') != 'Admin'
             ? Navigator.pushReplacement(context,
@@ -148,27 +144,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   SizedBox(
                                     height: 20.h,
                                   ),
-                                  Hero(
-                                    tag: 'logo',
-                                    child: ZoomIn(
-                                      child: SizedBox(
-                                        height: (height * 0.15),
-                                        width: (width * 0.32),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: ColorManager.primary,
-                                                width: 2.w),
-                                            image: const DecorationImage(
-                                                image: AssetImage(
-                                                    'assets/images/tipasplash.png')),
-                                            shape: BoxShape.circle,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                              TibaLogo(height: height,width: width,),
                                   SizedBox(
                                     height: 40.h,
                                   ),
@@ -222,15 +198,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                             ConnectionState
                                                                 .done) {
                                                           visitorTypeId ??=
-                                                              Provider.of<VisitorProv>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
+                                                              defVisitorProv
                                                                   .visitorObjects[
                                                                       0]
                                                                   .id;
 
-                                                          print(
+                                                          debugPrint(
                                                               'type id $visitorTypeId');
                                                           return widget
                                                                       .screen !=
@@ -259,10 +232,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                           2,
                                                                       isExpanded:
                                                                           true,
-                                                                      items: Provider.of<VisitorProv>(
-                                                                              context,
-                                                                              listen:
-                                                                                  false)
+                                                                      items: defVisitorProv
                                                                           .visitorTypes
                                                                           .map((String
                                                                               x) {
@@ -283,8 +253,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                           (value) {
                                                                         setState(
                                                                             () {
-                                                                          visitorTypeId = Provider.of<VisitorProv>(context, listen: false)
-                                                                              .visitorObjects[Provider.of<VisitorProv>(context, listen: false).visitorTypes.indexOf(value)]
+                                                                          visitorTypeId = defVisitorProv
+                                                                              .visitorObjects[defVisitorProv.visitorTypes.indexOf(value)]
                                                                               .id;
 
                                                                           selectedVisitorType =
@@ -299,14 +269,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                                 false;
                                                                           }
 
-                                                                          print(
+                                                                          debugPrint(
                                                                               'selected visitor type is $selectedVisitorType');
-                                                                          print(
+                                                                          debugPrint(
                                                                               'selected visitor type id is $visitorTypeId');
                                                                         });
                                                                       },
                                                                       value: selectedVisitorType ??
-                                                                          Provider.of<VisitorProv>(context, listen: false)
+                                                                          defVisitorProv
                                                                               .visitorTypes[0],
                                                                     ),
                                                                   )),
@@ -584,60 +554,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                   ],
                                                                 )),
                                                           )
-                                                        /*   : Provider.of<VisitorProv>(context,
-                                                                  listen: true)
-                                                              .memberShipModel !=
-                                                          null
-                                                      ? (Provider.of<VisitorProv>(
-                                                                          context,
-                                                                          listen:
-                                                                              true)
-                                                                      .memberShipModel
-                                                                      .carImagePath !=
-                                                                  null &&
-                                                              !Provider.of<VisitorProv>(
-                                                                      context,
-                                                                      listen:
-                                                                          true)
-                                                                  .memberShipModel
-                                                                  .carImagePath
-                                                                  .contains(
-                                                                      'first time'))
-                                                          ? Stack(
-                                                              children: [
-                                                                Image.network(
-                                                                  "$BASE_URL${Provider.of<VisitorProv>(context, listen: true).memberShipModel.carImagePath.toString().replaceAll("\\", "/")}",
-                                                                  width: 300.w,
-                                                                  height: 150.h,
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                ),
-                                                                Positioned(
-                                                                  left: 4.w,
-                                                                  top: 4.w,
-                                                                  child:
-                                                                      InkWell(
-                                                                    onTap: () {
-                                                                      print(
-                                                                          'deleted');
-                                                                      Provider.of<VisitorProv>(
-                                                                              context,
-                                                                              listen: false)
-                                                                          .deleteCarPath();
-                                                                    },
-                                                                    child: Icon(
-                                                                      FontAwesomeIcons
-                                                                          .solidWindowClose,
-                                                                      color: Colors
-                                                                              .grey[
-                                                                          500],
-                                                                      size: 35,
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            )
-                                                          : Container()*/
+
                                                         : Container(),
                                                   ],
                                                 ),
@@ -785,60 +702,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                   ],
                                                                 )),
                                                           )
-                                                        /*  : Provider.of<VisitorProv>(context,
-                                                                  listen: true)
-                                                              .memberShipModel !=
-                                                          null
-                                                      ? (Provider.of<VisitorProv>(
-                                                                          context,
-                                                                          listen:
-                                                                              true)
-                                                                      .memberShipModel
-                                                                      .identityImagePath !=
-                                                                  null &&
-                                                              !Provider.of<VisitorProv>(
-                                                                      context,
-                                                                      listen:
-                                                                          true)
-                                                                  .memberShipModel
-                                                                  .carImagePath
-                                                                  .contains(
-                                                                      'first time'))
-                                                          ? Stack(
-                                                              children: [
-                                                                Image.network(
-                                                                  "$BASE_URL${Provider.of<VisitorProv>(context, listen: true).memberShipModel.identityImagePath.toString().replaceAll("\\", "/")}",
-                                                                  width: 300.w,
-                                                                  height: 150.h,
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                ),
-                                                                Positioned(
-                                                                  left: 4.w,
-                                                                  top: 4.w,
-                                                                  child:
-                                                                      InkWell(
-                                                                    onTap: () {
-                                                                      print(
-                                                                          'deleted');
-                                                                      Provider.of<VisitorProv>(
-                                                                              context,
-                                                                              listen: false)
-                                                                          .deleteIdPath();
-                                                                    },
-                                                                    child: Icon(
-                                                                      FontAwesomeIcons
-                                                                          .solidWindowClose,
-                                                                      color: Colors
-                                                                              .grey[
-                                                                          500],
-                                                                      size: 35,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            )
-                                                          : Container()*/
+
                                                         : Container(),
                                                   ],
                                                 ),
@@ -847,32 +711,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                             SizedBox(
                                               height: 20.h,
                                             ),
-                                            /*    ((visitorProv.idCard != null &&
-                                                    visitorProv.rokhsa != null))
-                                                ?*/
                                             RoundedButton(
                                               width: 220,
                                               height: 60,
                                               ontap: () async {
-                                                /*     if (visitorProv.memberShipModel != null) {
-                                                  print('member ship model is not null');
-
-                                                  if (visitorProv.memberShipModel.identityImagePath.contains('first time') &&
-                                                      visitorProv.memberShipModel.carImagePath.contains('first time')
-                                                          ) {
-                                                    print('cc');
-                                                    Fluttertoast.showToast(
-                                                        msg:
-                                                            'برجاء إلتقاط الصور أولاً',
-                                                        backgroundColor:
-                                                            Colors.green,
-                                                        toastLength:
-                                                            Toast.LENGTH_LONG);
-                                                    return;
-                                                  }
-                                                  print('dd');
-                                                }
-*/
                                                 showLoaderDialog(
                                                     context, 'Loading...');
 
@@ -884,35 +726,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                   debugPrint('PER HOUR CASE');
                                                   perHourCase();
                                                 }
-                                                /*else if (defVisitorProv
-                                                                  .memberShipModel !=
-                                                              null &&
-                                                          defVisitorProv
-                                                                  .rokhsa !=
-                                                              null &&
-                                                          defVisitorProv
-                                                                  .idCard !=
-                                                              null &&
-                                                          defVisitorProv
-                                                              .memberShipModel
-                                                              .carImagePath
-                                                              .contains(
-                                                                  'first time')) {
-                                                        debugPrint(
-                                                            'MEMBERSHIP UPDATE IMAGES CASE');
-                                                        membershipUpdateImagesCase();
-                                                      } else if (widget
-                                                                  .memberShipModel !=
-                                                              null &&
-                                                          !defVisitorProv
-                                                              .memberShipModel
-                                                              .carImagePath
-                                                              .contains(
-                                                                  'first time')) {
-                                                        debugPrint(
-                                                            'MEMBERSHIP IMAGES NOT NULL CASE');
-                                                        membershipImagesNonNullCase();
-                                                      } */
+
                                                 else {
 
                                                   defVisitorProv
@@ -940,138 +754,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                   });
                                                 }
 
-                                                /*
 
-                                                widget.screen == 'invitation'
-                                                    ? Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                const PrintScreen2(
-                                                                  civilCount: 0,
-                                                                  militaryCount:
-                                                                      0,
-                                                                  resendType:
-                                                                      'Normal',
-                                                                  from: 'send',
-                                                                )))
-                                                    : isPerHour == true
-                                                        ? defVisitorProv
-                                                            .checkInPerHour(
-                                                            authProv.userId,
-                                                            defVisitorProv
-                                                                .rokhsa,
-                                                            defVisitorProv
-                                                                .idCard,
-                                                          )
-                                                            .then(
-                                                                (value) async {
-                                                            if (value.message ==
-                                                                'Success') {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) =>
-                                                                          const PrintScreen2(
-                                                                            civilCount:
-                                                                                0,
-                                                                            militaryCount:
-                                                                                0,
-                                                                            resendType:
-                                                                                'perHour',
-                                                                            from:
-                                                                                'send',
-                                                                          )));
-                                                            }
-                                                          })
-                                                        : (widget.memberShipModel != null &&
-                                                                Provider.of<VisitorProv>(context, listen: false).rokhsa !=
-                                                                    null &&
-                                                                Provider.of<VisitorProv>(context, listen: false).idCard !=
-                                                                    null)
-                                                            ? Provider.of<VisitorProv>(context, listen: false)
-                                                                .updateMemberShipImages(
-                                                                    widget
-                                                                        .memberShipModel
-                                                                        .id,
-                                                                    Provider.of<VisitorProv>(context, listen: false)
-                                                                        .rokhsa,
-                                                                    Provider.of<VisitorProv>(context, listen: false)
-                                                                        .idCard)
-                                                                .then((value) {
-                                                                if (value ==
-                                                                    'Success') {
-                                                                  Provider.of<VisitorProv>(
-                                                                          context,
-                                                                          listen:
-                                                                              false)
-                                                                      .getBill(
-                                                                          widget
-                                                                              .memberShipModel
-                                                                              .ownerTypeId
-                                                                              .toString(),
-                                                                          '0',
-                                                                          '0')
-                                                                      .then(
-                                                                          (value) {
-                                                                    print(
-                                                                        'value is $value');
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    showDialog(
-                                                                        context:
-                                                                            context,
-                                                                        builder:
-                                                                            (context) {
-                                                                          return BillDialog(
-                                                                              typeValue: widget.memberShipModel.ownerTypeId,
-                                                                              citizenValue: 0,
-                                                                              militaryValue: 0);
-                                                                        });
-                                                                  });
-                                                                }
-                                                              })
-                                                            : (widget.memberShipModel != null &&
-                                                                    Provider.of<VisitorProv>(context, listen: false).memberShipModel.carImagePath !=
-                                                                        null)
-                                                                ? Provider.of<VisitorProv>(context, listen: false).getBill(widget.memberShipModel.ownerTypeId.toString(), '0', '0').then(
-                                                                    (value) {
-                                                                    print(
-                                                                        'value is $value');
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    showDialog(
-                                                                        context:
-                                                                            context,
-                                                                        builder:
-                                                                            (context) {
-                                                                          return BillDialog(
-                                                                              typeValue: widget.memberShipModel.ownerTypeId.toString(),
-                                                                              citizenValue: 0,
-                                                                              militaryValue: 0);
-                                                                        });
-                                                                  })
-                                                                : Provider.of<VisitorProv>(context, listen: false)
-                                                                    .getBill(
-                                                                        visitorTypeId.toString(),
-                                                                        _citizensValue.toString(),
-                                                                        _militaryValue.toString())
-                                                                    .then((value) {
-                                                                    print(
-                                                                        'value is $value');
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    showDialog(
-                                                                        context:
-                                                                            context,
-                                                                        builder:
-                                                                            (context) {
-                                                                          return BillDialog(
-                                                                              typeValue: visitorTypeId,
-                                                                              citizenValue: _citizensValue,
-                                                                              militaryValue: _militaryValue);
-                                                                        });
-                                                                  });*/
                                               },
                                               title: 'إستمرار',
                                               buttonColor: ColorManager.primary,
@@ -1110,50 +793,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                     height: 20.h,
                                   ),
 
-                                  /*
-
-                                  Stack(
-                                    children: [
-
-                                      SizedBox(
-                                        width: 180.w,
-                                        height: 180.h,
-                                        child: Container(
-                                          color: Colors.white,
-                                          child: FadeInImage.memoryNetwork(
-                                            image:( Provider.of<VisitorProv>(context, listen: true).memberShipModel.memberProfilePath!='empty') ? BASE_URL +
-                                                    Provider.of<VisitorProv>(
-                                                            context,
-                                                            listen: true)
-                                                        .memberShipModel
-                                                        .memberProfilePath
-                                                        .replaceAll(
-                                                            '\\', '/') :
-                                                'https://rsconsultancy.com/wp-content/themes/consultix/images/no-image-found-360x250.png',
-                                            placeholder: kTransparentImage,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        child: InkWell(
-                                          onTap: getImage,
-                                          child: const CircleAvatar(
-                                            radius: 17,
-                                            backgroundColor: Colors.green,
-                                            child: Icon(
-                                              Icons.edit,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                        bottom: 25.h,
-                                        left: 145.w,
-                                      ),
-                                    ],
-                                  ),
-
-
-                                     */
 
                                   Consumer<VisitorProv>(
                                       builder: (context, message, child) {
@@ -1181,9 +820,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                     .memberProfilePath +
                                                                 '?v=${Random().nextInt(1000)}',
 
-                                                            /*image??visitorProv
-                                                          .memberShipModel
-                                                          .memberProfilePath*/
+
                                                           )),
                                                 shape: BoxShape.circle,
                                               ),
@@ -1648,7 +1285,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                               16,
                                                                           child:
                                                                               Image.network(
-                                                                            Provider.of<VisitorProv>(context, listen: true).memberShipModel.identityImagePath,
+                                                                            visitorProv.memberShipModel.identityImagePath,
                                                                             loadingBuilder: (BuildContext context,
                                                                                 Widget child,
                                                                                 ImageChunkEvent loadingProgress) {
@@ -1673,10 +1310,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                 },
                                                                 child: Image
                                                                     .network(
-                                                                  Provider.of<VisitorProv>(
-                                                                          context,
-                                                                          listen:
-                                                                              true)
+                                                                  visitorProv
                                                                       .memberShipModel
                                                                       .identityImagePath,
                                                                   loadingBuilder: (BuildContext
@@ -1714,24 +1348,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                             SizedBox(
                                               height: 20.h,
                                             ),
-                                            /*  ((visitorProv.idCard != null &&
-                                                visitorProv.rokhsa !=
-                                                    null) ||
-                                                (visitorProv.memberShipModel !=
-                                                    null &&
-                                                    !visitorProv
-                                                        .memberShipModel
-                                                        .identityImagePath
-                                                        .contains(
-                                                        'first time')))*/
 
-                                            /*  (!visitorProv.memberShipModel
-                                                        .identityImagePath
-                                                        .contains('empty') &&
-                                                    !visitorProv.memberShipModel
-                                                        .carImagePath
-                                                        .contains('empty'))
-                                                ?*/
                                             prefs.getString('role') != 'Admin'
                                                 ? RoundedButton(
                                                     width: 220,
@@ -1777,62 +1394,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                             });
                                                       });
 
-                                                      /*   if (defVisitorProv
-                                                    .memberShipModel !=
-                                                    null &&
-                                                    defVisitorProv
-                                                        .rokhsa !=
-                                                        null &&
-                                                    defVisitorProv
-                                                        .idCard !=
-                                                        null &&
-                                                    defVisitorProv
-                                                        .memberShipModel
-                                                        .carImagePath
-                                                        .contains(
-                                                        'first time')) {
-                                                  debugPrint(
-                                                      'MEMBERSHIP UPDATE IMAGES CASE');
-                                                  membershipUpdateImagesCase();
-                                                } else if (widget
-                                                    .memberShipModel !=
-                                                    null &&
-                                                    !defVisitorProv
-                                                        .memberShipModel
-                                                        .carImagePath
-                                                        .contains(
-                                                        'first time')) {
-                                                  debugPrint(
-                                                      'MEMBERSHIP IMAGES NOT NULL CASE');
-                                                  membershipImagesNonNullCase();
-                                                } else {
-                                                  defVisitorProv
-                                                      .getBill(
-                                                      visitorTypeId
-                                                          .toString(),
-                                                      _citizensValue
-                                                          .toString(),
-                                                      _militaryValue
-                                                          .toString())
-                                                      .then((value) {
-                                                    print(
-                                                        'value is $value');
-                                                    Navigator.pop(
-                                                        context);
-                                                    showDialog(
-                                                        context: context,
-                                                        builder:
-                                                            (context) {
-                                                          return BillDialog(
-                                                              typeValue:
-                                                              visitorTypeId,
-                                                              citizenValue:
-                                                              _citizensValue,
-                                                              militaryValue:
-                                                              _militaryValue);
-                                                        });
-                                                  });
-                                                }*/
                                                     },
                                                     title: defVisitorProv
                                                                 .memberShipModel
@@ -1876,10 +1437,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  String image;
+
 
   Future getImage() async {
-    //imageCache.clear();
+
     File pickedImage =
         (await ImagePicker.pickImage(source: ImageSource.gallery));
     if (pickedImage != null) {
@@ -1898,18 +1459,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               .buffer
               .asUint8List();
 
-          print('=prof image is $image');
-
-          Fluttertoast.showToast(
-              msg: 'تم التعديل',
-              backgroundColor: Colors.green,
-              toastLength: Toast.LENGTH_LONG);
+          debugPrint('=prof image is $image');
+        showToast('تم التعديل');
         }
       });
 
       Navigator.pop(context);
     } else {
-      print('No image selected.');
+      debugPrint('No image selected.');
     }
   }
 
@@ -1944,49 +1501,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       from: 'send',
                     )));
       }
-    });
-  }
-
-  void membershipUpdateImagesCase() {
-    Provider.of<VisitorProv>(context, listen: false)
-        .updateMemberShipImages(
-            widget.memberShipModel.id,
-            Provider.of<VisitorProv>(context, listen: false).rokhsa,
-            Provider.of<VisitorProv>(context, listen: false).idCard)
-        .then((value) {
-      if (value == 'Success') {
-        Provider.of<VisitorProv>(context, listen: false)
-            .getBill(widget.memberShipModel.ownerTypeId.toString(), '0', '0')
-            .then((value) {
-          debugPrint('value is $value');
-          Navigator.pop(context);
-          showDialog(
-              context: context,
-              builder: (context) {
-                return BillDialog(
-                    typeValue: widget.memberShipModel.ownerTypeId,
-                    citizenValue: 0,
-                    militaryValue: 0);
-              });
-        });
-      }
-    });
-  }
-
-  void membershipImagesNonNullCase() {
-    Provider.of<VisitorProv>(context, listen: false)
-        .getBill(widget.memberShipModel.ownerTypeId.toString(), '0', '0')
-        .then((value) {
-      print('value is $value');
-      Navigator.pop(context);
-      showDialog(
-          context: context,
-          builder: (context) {
-            return BillDialog(
-                typeValue: widget.memberShipModel.ownerTypeId.toString(),
-                citizenValue: 0,
-                militaryValue: 0);
-          });
     });
   }
 }

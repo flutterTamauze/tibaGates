@@ -13,7 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../../Presentation/guard/home_screen/g_home_screen.dart';
+import '../../Presentation/guard/g_home_screen.dart';
 import '../../ViewModel/guard/visitorProv.dart';
 import 'dialogs/bill_dialog.dart';
 

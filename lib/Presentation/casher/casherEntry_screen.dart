@@ -1,58 +1,52 @@
-import 'package:Tiba_Gates/Utilities/Shared/dialogs/exit_dialog2.dart';
+// ignore_for_file: missing_return
+import 'casherHome_screen.dart';
+import '../guard/scanner.dart';
+import '../login_screen/Widgets/outlined_button.dart';
+import '../../Utilities/Shared/noInternet.dart';
+import '../../ViewModel/casher/servicesProv.dart';
+import '../../Utilities/Shared/dialogs/exit_dialog2.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:camera/camera.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../Utilities/connectivityStatus.dart';
-import 'package:lottie/lottie.dart';
-import '../../login_screen/Widgets/outlined_button.dart';
-
-import '../parking_carsList.dart';
 import '../../../Utilities/Colors/colorManager.dart';
 import '../../../Utilities/Constants/constants.dart';
 import '../../../Utilities/Fonts/fontsManager.dart';
-import '../../../Utilities/Shared/exitDialog.dart';
 import '../../../Utilities/Shared/sharedWidgets.dart';
 import '../../../ViewModel/guard/authProv.dart';
 import '../../../ViewModel/guard/visitorProv.dart';
-import '../scanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../main.dart';
-import '../home_screen/g_home_screen.dart';
 
-List<CameraDescription> cameras;
-
-class EntryScreen extends StatefulWidget {
-  static const String routeName = '/firstScreen';
-
-  const EntryScreen({Key key}) : super(key: key);
+class CasherEntryScreen extends StatefulWidget {
+  const CasherEntryScreen({Key key}) : super(key: key);
 
   @override
-  State<EntryScreen> createState() => _EntryScreenState();
+  State<CasherEntryScreen> createState() => _CasherEntryScreenState();
 }
 
-class _EntryScreenState extends State<EntryScreen> {
+class _CasherEntryScreenState extends State<CasherEntryScreen> {
   String token;
 
   @override
   void initState() {
     super.initState();
+    if (Provider.of<ServicesProv>(context, listen: false)
+        .serviceObjects
+        .isNotEmpty) {
 
-    if (Provider.of<VisitorProv>(context, listen: false).memberShipModel !=
-        null) {
+/*      Provider.of<ServicesProv>(context, listen: false).servicePrice =
+          Provider.of<ServicesProv>(context, listen: false)
+              .serviceObjects[0]
+              .servicePrice;*/
 
-      Provider.of<VisitorProv>(context, listen: false)
-          .memberShipModel
-           = null;
+      Provider.of<ServicesProv>(context, listen: false).resetPrice();
     }
+
     token = prefs.getString('token');
     print(token);
     Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {
@@ -60,8 +54,7 @@ class _EntryScreenState extends State<EntryScreen> {
     });
   }
 
-  void cachingData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> cachingData() async {
     Provider.of<VisitorProv>(context, listen: false).logId = null;
     Provider.of<AuthProv>(context, listen: false).guardName =
         prefs.getString('guardName');
@@ -77,12 +70,15 @@ class _EntryScreenState extends State<EntryScreen> {
         prefs.getString('token');
     Provider.of<AuthProv>(context, listen: false).userId =
         prefs.getString('guardId');
-    Provider.of<AuthProv>(context, listen: false).parkTypes =
-        prefs.getStringList('parkingTypes');
   }
 
   @override
   Widget build(BuildContext context) {
+/*    if(mounted){
+      if(Provider.of<ServicesProv>(context,listen: false).serviceObjects.isNotEmpty){
+        Provider.of<ServicesProv>(context, listen: false).resetPrice();
+      }
+    }*/
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     ConnectivityStatus connectionStatus =
@@ -94,12 +90,7 @@ class _EntryScreenState extends State<EntryScreen> {
       },
       child: Scaffold(
         body: connectionStatus == ConnectivityStatus.Offline
-            ? Center(
-                child: SizedBox(
-                height: 400.h,
-                width: 400.w,
-                child: Lottie.asset('assets/lotties/noInternet.json'),
-              ))
+            ? NoInternet()
             : SafeArea(
                 child: Container(
                 height: height,
@@ -122,19 +113,13 @@ class _EntryScreenState extends State<EntryScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             OutlinedButton(
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const NotPrintedListScreen()));
-                              },
+                              onPressed: () {},
                               child: SizedBox(
                                 height: 45.h,
                                 width: 50.w,
                                 child: const Center(
                                   child: Icon(
-                                    Icons.directions_car_rounded,
+                                    Icons.table_view,
                                     color: Colors.blue,
                                     size: 36,
                                   ),
@@ -203,88 +188,8 @@ class _EntryScreenState extends State<EntryScreen> {
                             ),
                           ],
                         ),
-           /*             SizedBox(
-                          height: 8.h,
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: OutlinedButton(
-                            onPressed: () {
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                      builder: (context) => const QrCodeScreen(
-                                            screen: 'invitation',
-                                          )),
-                                  (Route<dynamic> route) => false);
-                            },
-                            child: SizedBox(
-                              height: 45.h,
-                              width: 50.w,
-                              child: const Center(
-                                child: Icon(
-                                  Icons.qr_code,
-                                  color: Colors.orange,
-                                  size: 36,
-                                ),
-                              ),
-                            ),
-                            style: ButtonStyle(
-                                side: MaterialStateProperty.all(BorderSide(
-                                    color: Colors.orange, width: 1.4.w)),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.white),
-                                padding: MaterialStateProperty.all(
-                                    EdgeInsets.symmetric(
-                                        vertical: 20.h, horizontal: 20.w)),
-                                shape: MaterialStateProperty.all(
-                                    const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20))))),
-                          ),
-                        ),*/
-                     /*   SizedBox(
-                          height: 8.h,
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: OutlinedButton(
-                            onPressed: () {
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                      builder: (context) => const QrCodeScreen(
-                                            screen: 'memberShip',
-                                          )),
-                                  (Route<dynamic> route) => false);
-                            },
-                            child: SizedBox(
-                              height: 45.h,
-                              width: 50.w,
-                              child: const Center(
-                                child: Icon(
-                                  Icons.sports_handball,
-                                  color: Colors.pink,
-                                  size: 36,
-                                ),
-                              ),
-                            ),
-                            style: ButtonStyle(
-                                side: MaterialStateProperty.all(BorderSide(
-                                    color: Colors.pink, width: 1.4.w)),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.white),
-                                padding: MaterialStateProperty.all(
-                                    EdgeInsets.symmetric(
-                                        vertical: 20.h, horizontal: 20.w)),
-                                shape: MaterialStateProperty.all(
-                                    const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20))))),
-                          ),
-                        ),*/
                         SizedBox(
-                          height: 15.h,
+                          height: 80.h,
                         ),
                         Hero(
                           tag: 'logo',
@@ -321,15 +226,9 @@ class _EntryScreenState extends State<EntryScreen> {
                               children: [
                                 RoundedButton(
                                   ontap: () async {
-                                    cameras = await availableCameras();
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (context) => HomeScreen(
-                                                  camera: cameras[1],
-                                                )),
-                                        (Route<dynamic> route) => false);
+                                    navigateTo(context, CasherHomeScreen());
                                   },
-                                  title: 'تسجيل دخول',
+                                  title: 'فواتير',
                                   width: 250,
                                   height: 55,
                                   buttonColor: ColorManager.primary,
@@ -342,43 +241,11 @@ class _EntryScreenState extends State<EntryScreen> {
                                   ontap: () {
                                     Navigator.of(context).pushAndRemoveUntil(
                                         MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                const QrCodeScreen()),
+                                            builder: (context) =>
+                                                const QrCodeScreen(
+                                                  screen: 'sports_casher',
+                                                )),
                                         (Route<dynamic> route) => false);
-                                  },
-                                  title: 'تسجيل خروج',
-                                  width: 250,
-                                  height: 55,
-                                  buttonColor: Colors.red,
-                                  titleColor: ColorManager.backGroundColor,
-                                ) ,   SizedBox(
-                                  height: 26.h,
-                                ),
-                                RoundedButton(
-                                  ontap: () {
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (context) => const QrCodeScreen(
-                                              screen: 'invitation',
-                                            )),
-                                            (Route<dynamic> route) => false);
-                                  },
-                                  title: 'دعوة/حجز إلكترونى',
-                                  width: 250,
-                                  height: 55,
-                                  buttonColor: Colors.blue,
-                                  titleColor: ColorManager.backGroundColor,
-                                )    ,SizedBox(
-                                  height: 26.h,
-                                ),
-                                RoundedButton(
-                                  ontap: () {
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (context) => const QrCodeScreen(
-                                              screen: 'memberShip',
-                                            )),
-                                            (Route<dynamic> route) => false);
                                   },
                                   title: 'أنشطة',
                                   width: 250,
@@ -391,13 +258,15 @@ class _EntryScreenState extends State<EntryScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: 150.h,
+                          height: 280.h,
                         ),
                         FadeInUp(
                             child: OutlineButtonFb1(
                           text: 'Logout',
-                          onPressed:  ()=> showDialog<Dialog>(context: context, builder: (BuildContext context) => ZoomIn(child: const DialogFb1()))
-                          ,
+                          onPressed: () => showDialog<Dialog>(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  ZoomIn(child: const DialogFb1())),
                         ))
                       ],
                     ),

@@ -10,7 +10,7 @@ class VisitorTypesModel {
       };
 
   factory VisitorTypesModel.fromJson( json) {
-    print('json ${json["type"]}');
+
     return VisitorTypesModel(
       id: json['id'],
       visitorType: json['type'] ?? '',

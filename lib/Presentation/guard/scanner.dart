@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:Tiba_Gates/Presentation/casher/casherEntry_screen.dart';
 import 'package:Tiba_Gates/Utilities/Shared/dialogs/invitation_dialog.dart';
 import 'package:animate_do/animate_do.dart';
 import '../admin/admin_bottomNav.dart';
@@ -15,10 +16,10 @@ import '../../Utilities/Constants/constants.dart';
 import '../../Utilities/Shared/sharedWidgets.dart';
 import '../../Utilities/connectivityStatus.dart';
 import 'package:lottie/lottie.dart';
-import 'entry_screen/entryScreen.dart';
-import 'home_screen/g_home_screen.dart';
+import 'entryScreen.dart';
+import 'g_home_screen.dart';
 import '../../ViewModel/guard/visitorProv.dart';
-import 'print_page2.dart';
+import 'guardPrint_Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -110,84 +111,45 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
           Provider.of<VisitorProv>(context, listen: false)
               .checkInvitationValidation(result)
               .then((value) {
-
             if (value == 'vip') {
-
               if (widget.screen == 'invitation_admin') {
                 // hna
                 showDialog(
                     context: context,
                     builder: (context) {
-                      return const InvitationDialog(
-                  );
+                      return const InvitationDialog();
                     });
-
-
-
 
                 log('invitation_admin ');
                 //adminCheckInvitation('VIP Invitation');
-              }
-
-              else {
-                Fluttertoast.showToast(
-                    msg: 'مرحباً بك',
-                    backgroundColor: Colors.green,
-                    toastLength: Toast.LENGTH_LONG);
+              } else {
+             showToast('مرحباً بك');
                 controller.dispose();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PrintScreen2(
-                              from: 'send',
-                              resendType: 'VIP Invitation',
-                            )));
+                navigateReplacementTo(context, const PrintScreen2(
+                  from: 'send',
+                  resendType: 'VIP Invitation',
+                ));
+
               }
-
-
-
             } else if (value == 'not valid') {
               if (widget.screen == 'invitation_admin') {
                 adminCheckInvitation('كود غير صحيح');
-              }
-
-
-
-
-
-              else {
-                Fluttertoast.showToast(
-                    msg: 'كود غير صحيح',
-                    backgroundColor: Colors.green,
-                    toastLength: Toast.LENGTH_LONG);
+              } else {
+            showToast('كود غير صحيح');
                 controller.dispose();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const EntryScreen()));
+                navigateReplacementTo(context, const EntryScreen());
+
               }
-            }
-
-
-
-            else if (value == 'not vip') {
+            } else if (value == 'not vip') {
               if (widget.screen == 'invitation_admin') {
                 showDialog(
                     context: context,
                     builder: (context) {
-                      return const InvitationDialog(
-                      );
+                      return const InvitationDialog();
                     });
-               // adminCheckInvitation('كود صحيح');
-                // hna 2
-              }
 
-
-              else {
-                Fluttertoast.showToast(
-                    msg: 'كود صحيح , مرحباً بك',
-                    backgroundColor: Colors.green,
-                    toastLength: Toast.LENGTH_LONG);
+              } else {
+                showToast('كود صحيح , مرحباً بك');
                 controller.dispose();
 
                 Provider.of<VisitorProv>(context, listen: false)
@@ -198,37 +160,26 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                         '0',
                         '0')
                     .then((value) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PrintScreen2(
-                                civilCount: 0,
-                                militaryCount: 0,
-                                from: 'send',
-                                resendType: 'Normal',
-                                typeId: Provider.of<VisitorProv>(context,
-                                        listen: false)
-                                    .ownerId
-                                    .toString(),
-                              )));
-                });
+                      navigateTo(context,PrintScreen2(
+                        civilCount: 0,
+                        militaryCount: 0,
+                        from: 'send',
+                        resendType: 'Normal',
+                        typeId: Provider.of<VisitorProv>(context,
+                            listen: false)
+                            .ownerId
+                            .toString(),
+                      ) );                });
               }
             } else {
               if (widget.screen == 'invitation_admin') {
                 adminCheckInvitation('كود غير صحيح');
-              }
-
-              else {
-                print('value is $value');
-                Fluttertoast.showToast(
-                    msg: 'كود غير صحيح',
-                    backgroundColor: Colors.green,
-                    toastLength: Toast.LENGTH_LONG);
+              } else {
+                debugPrint('value is $value');
+            showToast('كود غير صحيح');
                 controller.dispose();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const EntryScreen()));
+                navigateReplacementTo(context, const EntryScreen());
+
               }
             }
           });
@@ -245,76 +196,48 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
               log('memberShip Admin');
               if (value == 'Success') {
                 controller.dispose();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const MemberInformation(screen: 'admin',)));
+                navigateReplacementTo(context,const MemberInformation(
+                  screen: 'admin',
+                ) );
+
               } else if (value.toString().contains('منتهية')) {
-                print('value is $value');
-                Fluttertoast.showToast(
-                    msg: value,
-                    backgroundColor: Colors.green,
-                    toastLength: Toast.LENGTH_LONG);
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => BottomNav(comingIndex: 3,)));
+
+                debugPrint('value is $value');
+                showToast(value);
+                navigateReplacementTo(context,BottomNav(
+                  comingIndex: 3,
+                ) );
+
               } else {
-                print('value is $value');
-                Fluttertoast.showToast(
-                    msg: 'كود غير صحيح',
-                    backgroundColor: Colors.green,
-                    toastLength: Toast.LENGTH_LONG);
-                // controller.dispose();
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => BottomNav(comingIndex: 3,)));
+                debugPrint('value is $value');
+                showToast('كود غير صحيح');
+                navigateReplacementTo(context,BottomNav(
+                  comingIndex: 3,
+                ) );
+
               }
             } else {
               if (value == 'Success') {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomeScreen(
-                              screen: 'memberShip',
-                              memberShipModel: Provider.of<VisitorProv>(context,
-                                      listen: false)
-                                  .memberShipModel,
-                            )));
+                navigateReplacementTo(context,HomeScreen(
+                  screen: 'memberShip',
+                  memberShipModel: Provider.of<VisitorProv>(context,
+                      listen: false)
+                      .memberShipModel,
+                ) );
+
               } else if (value.toString().contains('منتهية')) {
-                print('value is $value');
-                Fluttertoast.showToast(
-                    msg: value,
-                    backgroundColor: Colors.green,
-                    toastLength: Toast.LENGTH_LONG);
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => EntryScreen()));
-              }else {
-                print('value is $value');
-                Fluttertoast.showToast(
-                    msg: 'كود غير صحيح',
-                    backgroundColor: Colors.green,
-                    toastLength: Toast.LENGTH_LONG);
-                // controller.dispose();
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => EntryScreen()));
+                debugPrint('value is $value');
+              showToast(value);
+                navigateReplacementTo(context,const EntryScreen() );
+              } else {
+                debugPrint('value is $value');
+                showToast('كود غير صحيح');
+                navigateReplacementTo(context,const EntryScreen() );
+
               }
             }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-       /*     if (value == 'Success') {
+            /*     if (value == 'Success') {
               controller.dispose();
 
               if (widget.screen == 'memberShip_admin') {
@@ -350,12 +273,12 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                           builder: (context) => const GameHome()));
                 }
 
-*//*                Navigator.pushReplacement(
+*/ /*                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => BottomNav(
                               comingIndex: 3,
-                            )));*//*
+                            )));*/ /*
               } else {
                 Navigator.pushReplacement(
                     context,
@@ -393,34 +316,47 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
               }
             }*/
           });
-        } else if (widget.screen == 'sports') {
+        } else if (widget.screen == 'sports' ||
+            widget.screen == 'sports_casher') {
           log('sports');
+
           Provider.of<VisitorProv>(context, listen: false)
               .checkMemberShipValidation(result)
               .then((value) async {
             log('value is $value');
             if (value == 'Success') {
-              controller.dispose();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => MemberInformation()));
+              if (widget.screen == 'sports_casher') {
+                controller.dispose();
+                navigateReplacementTo(
+                    context, const MemberInformation(screen: 'casher'));
+              } else {
+                controller.dispose();
+                navigateReplacementTo(context, const MemberInformation());
+              }
             } else if (value.toString().contains('منتهية')) {
               print('value is $value');
               Fluttertoast.showToast(
                   msg: value,
                   backgroundColor: Colors.green,
                   toastLength: Toast.LENGTH_LONG);
-              // controller.dispose();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const GameHome()));
+
+              if (widget.screen == 'sports_casher') {
+                navigateReplacementTo(context, const CasherEntryScreen());
+              } else {
+                navigateReplacementTo(context, const GameHome());
+              }
             } else {
               print('value =  $value');
               Fluttertoast.showToast(
                   msg: 'كود غير صحيح',
                   backgroundColor: Colors.green,
                   toastLength: Toast.LENGTH_LONG);
-              // controller.dispose();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const GameHome()));
+
+              if (widget.screen == 'sports_casher') {
+                navigateReplacementTo(context, const CasherEntryScreen());
+              } else {
+                navigateReplacementTo(context, const GameHome());
+              }
             }
           });
         } else {
@@ -672,30 +608,19 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
           title: InkWell(
               onTap: () {
                 if (widget.screen == 'sports') {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => const GameHome()));
+                  navigateReplacementTo(context, const GameHome());
                 } else if (widget.screen == 'memberShip_admin') {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BottomNav(
-                                comingIndex: 3,
-                              )));
+                  navigateReplacementTo(context, BottomNav(
+                    comingIndex: 3,
+                  ));
                 } else if (widget.screen == 'invitation_admin') {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BottomNav(
-                                comingIndex: 3,
-                              )));
+                  navigateReplacementTo(context, BottomNav(
+                    comingIndex: 3,
+                  ));
+                } else if (widget.screen == 'sports_casher') {
+                  navigateReplacementTo(context, const CasherEntryScreen());
                 } else {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              const EntryScreen()));
+                  navigateReplacementTo(context, const EntryScreen());
                 }
               },
               child: const Icon(
@@ -713,31 +638,19 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
             : WillPopScope(
                 onWillPop: () {
                   if (widget.screen == 'sports') {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                const GameHome()));
+                    navigateReplacementTo(context, const GameHome());
                   } else if (widget.screen == 'memberShip_admin') {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BottomNav(
-                                  comingIndex: 3,
-                                )));
+                    navigateReplacementTo(context, BottomNav(
+                      comingIndex: 3,
+                    ));
                   } else if (widget.screen == 'invitation_admin') {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BottomNav(
-                                  comingIndex: 3,
-                                )));
+                    navigateReplacementTo(context, BottomNav(
+                      comingIndex: 3,
+                    ));
+                  } else if (widget.screen == 'sports_casher') {
+                    navigateReplacementTo(context, const CasherEntryScreen());
                   } else {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                const EntryScreen()));
+                    navigateReplacementTo(context, const EntryScreen());
                   }
                 },
                 child: Column(

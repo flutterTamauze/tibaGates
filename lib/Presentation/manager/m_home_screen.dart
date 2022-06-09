@@ -36,7 +36,7 @@ class MHomeScreen extends StatefulWidget {
 
 class _MHomeScreenState extends State<MHomeScreen> {
   int invitationTypeId;
-  var selectedInvitationType;
+  String selectedInvitationType;
   var invitationsListener;
   final startDateController = TextEditingController();
   String token;
@@ -90,7 +90,7 @@ class _MHomeScreenState extends State<MHomeScreen> {
     cachingData();
   }
 
-  void cachingData() {
+  Future<void> cachingData() {
     Provider.of<AuthProv>(context, listen: false).token =
         prefs.getString('token');
     Provider.of<AuthProv>(context, listen: false).userRole =

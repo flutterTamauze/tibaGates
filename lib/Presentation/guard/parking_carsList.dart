@@ -21,8 +21,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'print_page2.dart';
-import 'entry_screen/entryScreen.dart';
+import 'guardPrint_Screen.dart';
+import 'entryScreen.dart';
 
 class NotPrintedListScreen extends StatefulWidget {
   const NotPrintedListScreen({Key key}) : super(key: key);

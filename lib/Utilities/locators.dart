@@ -1,4 +1,5 @@
 
+import 'package:Tiba_Gates/ViewModel/casher/servicesProv.dart';
 import 'package:get_it/get_it.dart';
 
 import '../ViewModel/admin/a_homeBioProv.dart';
@@ -35,6 +36,7 @@ class InitLocator {
     locator.registerLazySingleton(() => HolidaysProv());
     locator.registerLazySingleton(() => PublicHolidaysProv());
     locator.registerLazySingleton(() => GameProv());
+    locator.registerLazySingleton(() => ServicesProv());
 
 
     //Network

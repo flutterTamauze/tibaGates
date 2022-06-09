@@ -63,7 +63,7 @@ class ABioHomeState extends State {
     print('userId = ${Provider.of<AuthProv>(context, listen: false).userId}');
   }
 
-  void cachingData() async {
+  Future<void> cachingData() async {
     Provider.of<AuthProv>(context, listen: false).token =
         prefs.getString('token');
     Provider.of<AuthProv>(context, listen: false).userRole =
