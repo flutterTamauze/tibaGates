@@ -158,6 +158,9 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   }
 
   Future<void> getParkingList(String filterType, int pageNumber) async {
+
+
+
     debugPrint('filter type = $filterType  pageNumber = $pageNumber');
     String endPoint;
 
@@ -207,31 +210,31 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
   Future<ResponseData> checkIn(File carImg, File identityImg, String userID,
       int typeID, int citizenCount, int militaryCount, BuildContext context) async {
+
     ResponseData responseData = ResponseData();
-    debugPrint('userID $userID');
+    debugPrint('userID $userID   type id $typeID');
 
     var uri = Uri.parse('$BASE_URL/api/gate/CheckIn');
 
     var request = http.MultipartRequest('POST', uri);
 
-    if (carImg != null && identityImg != null) {
-      request.files.add(
-        await http.MultipartFile.fromPath('file', carImg.path),
-      );
-      request.files.add(
-        await http.MultipartFile.fromPath('file1', identityImg.path),
-      );
-    }
 
+    try {
+    if (carImg != null && identityImg != null) {
+    request.files.add(
+    await http.MultipartFile.fromPath('file', carImg.path),
+    );
+    request.files.add(
+    await http.MultipartFile.fromPath('file1', identityImg.path),
+    );
+    }
 
     request.fields['UserID'] = userID.toString();
     request.fields['TypeID'] = typeID.toString();
-    request.fields['militryCount'] = militaryCount.toString();
-    request.fields['civilCount'] = citizenCount.toString();
+    request.fields['MilitryCount'] = militaryCount.toString();
+    request.fields['CivilCount'] = citizenCount.toString();
 
     request.headers.addAll(mHeaders);
-
-    try {
       await request.send().then((response) async {
         debugPrint('status code is ${response.statusCode}');
         if (response.statusCode == 401) {
@@ -239,7 +242,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
         }
         response.stream.transform(utf8.decoder).listen((value) {
           Map<String, dynamic> responseDecoded = json.decode(value);
-          debugPrint("ah ah ${responseDecoded['response']}");
+          debugPrint("response is ${responseDecoded['response']}");
 
           debugPrint('message is ${responseDecoded['message']}');
           if (responseDecoded['message'] == 'Success') {

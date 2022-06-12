@@ -56,6 +56,8 @@ dependencies:
   intl: ^0.17.0
   bluetooth_print: ^3.0.1
   dotted_decoration: ^2.0.0
+  esc_pos_printer: ^4.0.3
+
   syncfusion_flutter_datepicker: ^19.4.55
   logger: ^1.1.0
   flutter_slidable: ^0.6.0

@@ -71,9 +71,7 @@ class _MShareQrState extends State<MShareQr> {
         floatingActionButton: ZoomIn(
           child: FloatingActionButton(
             onPressed: () async {
-              print('1');
-              var byteImage =
-                  await screenshotController.captureFromWidget(Container(
+              var byteImage = await screenshotController.captureFromWidget(Container(
                 height: 400.h,
                 width: 400.w,
                 color: Colors.white,
@@ -90,11 +88,8 @@ class _MShareQrState extends State<MShareQr> {
                   ],
                 ),
               ));
-              print('2');
               var directory = await getApplicationDocumentsDirectory();
-              print('3');
               var image = File('${directory.path}/qr.png');
-              print('4');
               image.writeAsBytesSync(byteImage);
               const String text =
                   'تسعدنا زيارتك فى دار الدفاع الجوى بالتجمع الخامس';

@@ -1,4 +1,6 @@
 // ignore_for_file: missing_return
+import 'dart:io';
+
 import 'casherHome_screen.dart';
 import '../guard/scanner.dart';
 import '../login_screen/Widgets/outlined_button.dart';
@@ -21,6 +23,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../main.dart';
+import 'periodBills_screen.dart';
 
 class CasherEntryScreen extends StatefulWidget {
   const CasherEntryScreen({Key key}) : super(key: key);
@@ -31,10 +34,12 @@ class CasherEntryScreen extends StatefulWidget {
 
 class _CasherEntryScreenState extends State<CasherEntryScreen> {
   String token;
-
+Future balanceListener;
   @override
   void initState() {
     super.initState();
+    balanceListener=Provider.of<AuthProv>(context,listen: false).getBalanceById(prefs.getString('guardId'),'Casher',);
+
     if (Provider.of<ServicesProv>(context, listen: false)
         .serviceObjects
         .isNotEmpty) {
@@ -113,7 +118,7 @@ class _CasherEntryScreenState extends State<CasherEntryScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             OutlinedButton(
-                              onPressed: () {},
+                              onPressed: () {    navigateReplacementTo(context, const PeriodBillsScreen());},
                               child: SizedBox(
                                 height: 45.h,
                                 width: 50.w,
@@ -140,27 +145,53 @@ class _CasherEntryScreenState extends State<CasherEntryScreen> {
                                               Radius.circular(20))))),
                             ),
                             OutlinedButton(
-                              onPressed: () {},
+                              onPressed: () {
+
+                              },
                               child: SizedBox(
                                 height: 45.h,
                                 child: Row(
                                   children: [
-                                    AutoSizeText(
-                                        '${Provider.of<AuthProv>(context, listen: true).balance ?? '0'} ',
+                                    FutureBuilder(
+                                        future: balanceListener,
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<dynamic> snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return Center(
+                                              child: Platform.isIOS
+                                                  ? const CupertinoActivityIndicator()
+                                                  : const Center(
+                                                child: CircularProgressIndicator(
+                                                  backgroundColor: Colors.green,
+                                                ),
+                                              ),
+                                            );
+                                          } else if (snapshot.connectionState ==
+                                              ConnectionState.done) {
+
+                                            return     AutoSizeText(
+                                                '${Provider.of<AuthProv>(context, listen: true).balance ?? '--'} ',
+                                                style: TextStyle(
+                                                  fontSize: setResponsiveFontSize(28),
+                                                  fontWeight: FontManager.bold,
+                                                  color: Colors.red,
+                                                ));
+                                          }
+                                          return Container();
+                                        }),
+                                    Padding(
+                                      padding:  EdgeInsets.only(left: 8.w),
+                                      child: AutoSizeText(
+                                        Provider.of<AuthProv>(context,
+                                                    listen: true)
+                                                .guardName ??
+                                            '',
                                         style: TextStyle(
-                                          fontSize: setResponsiveFontSize(28),
-                                          fontWeight: FontManager.bold,
-                                          color: Colors.red,
-                                        )),
-                                    AutoSizeText(
-                                      Provider.of<AuthProv>(context,
-                                                  listen: true)
-                                              .guardName ??
-                                          '',
-                                      style: TextStyle(
-                                          fontSize: setResponsiveFontSize(22),
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black),
+                                            fontSize: setResponsiveFontSize(22),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                      ),
                                     ),
                                     AutoSizeText(
                                       ' إجمالى فواتير',

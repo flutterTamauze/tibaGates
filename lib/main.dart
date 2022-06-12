@@ -131,7 +131,7 @@ class MyApp extends StatelessWidget {
                       return GetMaterialApp(
                         title: 'Tiba Rose',
                         debugShowCheckedModeBanner: false,
-                        home: const CasherEntryScreen()
+                        home:  SplashScreen()
                         //SplashScreen()
 
                         //MyBluetooth()

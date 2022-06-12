@@ -198,171 +198,22 @@ class _PrintScreen2State extends State<PrintScreen2> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.green,
-          title: InkWell(
-              onTap: () {
-
-                /*                                                                 visitorProv
-                  .checkIn(
-                visitorProv
-                    .rokhsa,
-                visitorProv
-                    .idCard,
-                authProv
-                    .userId,
-
-                int.parse(widget
-                    .typeId.toString()),
-
-                widget
-                    .civilCount,
-                widget
-                    .militaryCount,
-                context,
-              )
-                  .then(
-                      (value) async {
-                    if (value
-                        .message ==
-                        'Success') {
-                      prefs.setDouble(
-                          'balance',
-                          authProv.balance +
-                              visitorProv.totalPrice);
-                      authProv.balance =
-                          prefs.getDouble(
-                              'balance');
-                      debugPrint(
-                          'new balance is ${prefs.getDouble('balance')}');
-*/ /*
-                      Future.delayed(const Duration(
-                          seconds:
-                          1))
-                          .whenComplete(
-                              () async {
-                            setState(
-                                    () {
-                                  _device =
-                                      d;
-                                });
-
-                            // first we will connect the printer
-                            if (!_connected) {
-                              debugPrint(
-                                  'printer is not connected');
-
-                              if (_device !=
-                                  null &&
-                                  _device.address !=
-                                      null) {
-                                await bluetoothPrint
-                                    .connect(_device)
-                                    .then((value) {
-                                  debugPrint('printer is connected with value $value');
-                                  Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
-                                    await printScreenShot();
-                                  });
-                                });
-                              } else {
-                                debugPrint(
-                                    'device is null 4');
-                              }
-                            } else {
-                              debugPrint(
-                                  'printer is connected 2');
-                              // secondly we will print
-                              await printScreenShot();
-                            }
-                          });*/ /*
-                    } else if (value
-                        .message ==
-                        'unAuth') {
-                      cameras =
-                      await availableCameras();
-                      Fluttertoast.showToast(
-                          msg:
-                          'برجاء تسجيل الدخول من جديد',
-                          backgroundColor:
-                          Colors
-                              .green,
-                          toastLength:
-                          Toast.LENGTH_LONG);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen(
-                                camera: cameras[1],
-                              )));
-                    }
-                  });*/
-                /*    if (visitorProv.memberShipModel != null) {
-                  // keda hwa gy mn scan membership , hanshof lw el swr empty hn5lihom null 34an nb3thom ll database null
-                  if (visitorProv.memberShipModel.carImagePath.contains('empty')) {
-                    visitorProv.memberShipModel.carImagePath = null;
-                  } else if (visitorProv
-                      .memberShipModel
-                      .identityImagePath
-                      .contains(
-                      'empty')) {
-                    visitorProv
-                        .memberShipModel
-                        .identityImagePath = null;
-                  }
-
-                  // hna b2a hn-call checkInMembership
-                  visitorProv
-                      .checkInMemberShip(
-                      visitorProv.memberShipModel.id
-                      ,
-                      authProv.userId,
-
-                      context,
-                      Provider.of<VisitorProv>(context, listen: false)
-                          .memberShipModel
-                          .carImagePath
-                      ,
-                      Provider.of<VisitorProv>(context, listen: false)
-                          .memberShipModel
-                          .identityImagePath )
-                      .then(
-                          (value) async {
-                        if (value
-                            .message ==
-                            'Success') {
-                          prefs.setDouble(
-                              'balance',
-                              authProv.balance +
-                                  visitorProv.totalPrice);
-                          authProv.balance =
-                              prefs.getDouble(
-                                  'balance');
-                          debugPrint(
-                              'new balance is ${prefs.getDouble('balance')}');
-
-
-                        } else if (value
-                            .message ==
-                            'unAuth') {
-                          cameras =
-                          await availableCameras();
-                          Fluttertoast.showToast(
-                              msg:
-                              'برجاء تسجيل الدخول من جديد',
-                              backgroundColor:
-                              Colors
-                                  .green,
-                              toastLength:
-                              Toast.LENGTH_LONG);
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen(
-                                    camera: cameras[1],
-                                  )));
-                        }
-                      });
-                }*/
-              },
-              child: const Text('Connect your printer')),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Connect your printer'),
+              InkWell(
+                  onTap: () {
+                    bluetoothPrint
+                        .startScan(timeout: const Duration(seconds: 4))
+                        .then((value) => debugPrint('scan result is $value'));
+                  },
+                  child: const Icon(
+                    Icons.refresh_rounded,
+                    size: 36,
+                  ))
+            ],
+          ),
         ),
         body: connectionStatus == ConnectivityStatus.Offline
             ? Center(
@@ -1328,69 +1179,61 @@ class _PrintScreen2State extends State<PrintScreen2> {
                             initialData: const [],
                             builder: (c, snapshot) {
                               debugPrint('snapshot = ${snapshot.data.length}');
-                            //  debugPrint('address ${snapshot.data.first.address}');
+                              //  debugPrint('address ${snapshot.data.first.address}');
 
                               return snapshot.data.isNotEmpty
                                   ? Column(
-                                      children: snapshot.data
-                                          .map(
-                                              (d) {
-                                                print('d.address = ${d.address.toString()}');
-                                                print('mac address = ${Provider.of<AuthProv>(context, listen: false).printerAddress}');
+                                      children: snapshot.data.map((d) {
+                                        print(
+                                            'founded mac address = ${d.address.toString()}');
+                                        print(
+                                            'server mac address = ${authProv.printerAddress}');
 
+                                        print(d.address.toString().trim() ==
+                                            authProv.printerAddress
+                                                .toString()
+                                                .trim());
 
-                                                print(d.address.toString().trim() == Provider.of<AuthProv>(context, listen: false).printerAddress.toString().trim());
+                                        if (d.address.toString().trim() ==
+                                            authProv.printerAddress.toString().trim()) {
+                                          return RoundedButton(
+                                            height: 60,
+                                            width: 220,
+                                            ontap: () async {
+                                              showLoaderDialog(
+                                                  context, 'Loading...');
 
+                                              SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              /**
+                                       *
+                                       *                                                              ?*********** CHECKOUT PER HOUR CASE ************
+                                       */
 
-                                                if(d.address ==
-                                                    Provider.of<AuthProv>(
-                                                        context,
-                                                        listen: false)
-                                                        .printerAddress){
-                                                  return  RoundedButton(
-                                                    height: 60,
-                                                    width: 220,
-                                                    ontap: () async {
-                                                      showLoaderDialog(
-                                                          context,
-                                                          'Loading...');
+                                              if (widget.perHourObj != null) {
+                                                debugPrint('perHour');
 
-                                                      SharedPreferences
-                                                      prefs =
-                                                      await SharedPreferences
-                                                          .getInstance();
-                                                      /**
-                                                       *
-                                                       *                                                              ?*********** CHECKOUT PER HOUR CASE ************
-                                                       */
+                                                debugPrint(
+                                                    'userId ${authProv.userId}  logId ${widget.perHourObj.id}');
+                                                setState(() {
+                                                  _device = d;
+                                                });
 
-                                                      if (widget
-                                                          .perHourObj !=
-                                                          null) {
-                                                        debugPrint(
-                                                            'perHour');
+                                                visitorProv
+                                                    .confirmPerHour(
+                                                  widget.perHourObj.id,
+                                                  authProv.userId,
+                                                )
+                                                    .then((value) async {
+                                                  debugPrint(
+                                                      'message is $value');
+                                                  debugPrint(
+                                                      'userId ${authProv.userId}  logId ${widget.perHourObj.id}');
+                                                  if (value == 'Success') {
+/*
 
-                                                        debugPrint(
-                                                            'userId ${authProv.userId}  logId ${widget.perHourObj.id}');
-                                                        setState(() {
-                                                          _device = d;
-                                                        });
-
-                                                        visitorProv
-                                                            .confirmPerHour(
-                                                          widget
-                                                              .perHourObj
-                                                              .id,
-                                                          authProv.userId,
-                                                        )
-                                                            .then(
-                                                                (value) async {
-                                                              debugPrint(
-                                                                  'message is $value');
-                                                              debugPrint(
-                                                                  'userId ${authProv.userId}  logId ${widget.perHourObj.id}');
-                                                              if (value ==
-                                                                  'Success') {
+                                                                // commented laterly
                                                                 prefs.setDouble(
                                                                     'balance',
                                                                     authProv.balance +
@@ -1402,602 +1245,609 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                         'balance');
                                                                 debugPrint(
                                                                     'new balance is ${prefs.getDouble('balance')}');
-                                                                // we will connect the printer
-                                                                if (!_connected) {
-                                                                  debugPrint(
-                                                                      'printer is not connected');
+*/
+                                                    // we will connect the printer
+                                                    if (!_connected) {
+                                                      debugPrint(
+                                                          'printer is not connected');
 
-                                                                  if (_device !=
-                                                                      null &&
-                                                                      _device.address !=
-                                                                          null) {
-                                                                    await bluetoothPrint
-                                                                        .connect(
-                                                                        _device)
-                                                                        .then(
-                                                                            (value) {
-                                                                          Future.delayed(const Duration(seconds: 6))
-                                                                              .whenComplete(() async {
-                                                                            // take screenshot
-                                                                            await printScreenShot();
-                                                                          });
-                                                                        });
-                                                                  } else {
-                                                                    debugPrint(
-                                                                        'device is null 1');
-                                                                  }
-                                                                } else {
-                                                                  debugPrint(
-                                                                      'printer is connected asln');
-                                                                  // we will take screenshot
-                                                                  await printScreenShot();
-                                                                }
-                                                              }
-                                                            });
+                                                      if (_device != null &&
+                                                          _device.address !=
+                                                              null) {
+                                                        await bluetoothPrint
+                                                            .connect(_device)
+                                                            .then((value) {
+                                                          Future.delayed(
+                                                                  const Duration(
+                                                                      seconds:
+                                                                          6))
+                                                              .whenComplete(
+                                                                  () async {
+                                                            // take screenshot
+                                                            await printScreenShot();
+                                                          });
+                                                        });
+                                                      } else {
+                                                        debugPrint(
+                                                            'device is null 1');
                                                       }
+                                                    } else {
+                                                      debugPrint(
+                                                          'printer is connected asln');
+                                                      // we will take screenshot
+                                                      await printScreenShot();
+                                                    }
+                                                  }
+                                                });
+                                              }
 
-                                                      /**
-                                                       *
-                                                       *                                                              ?*********** RE-PRINT CASE ************
-                                                       */
-                                                      else if (widget
-                                                          .from ==
-                                                          'resend') {
-                                                        if (widget.resendType ==
-                                                            'Normal' ||
-                                                            widget.resendType ==
-                                                                'VIP Invitation') {
-                                                          Future.delayed(const Duration(
-                                                              milliseconds:
-                                                              1500))
-                                                              .whenComplete(
-                                                                  () async {
-                                                                setState(() {
-                                                                  _device = d;
-                                                                });
+                                              /**
+                                       *
+                                       *                                                              ?*********** RE-PRINT CASE ************
+                                       */
+                                              else if (widget.from ==
+                                                  'resend') {
+                                                if (widget.resendType ==
+                                                        'Normal' ||
+                                                    widget.resendType ==
+                                                        'VIP Invitation') {
+                                                  Future.delayed(const Duration(
+                                                          milliseconds: 1500))
+                                                      .whenComplete(() async {
+                                                    setState(() {
+                                                      _device = d;
+                                                    });
 
-                                                                visitorProv
-                                                                    .confirmPrint(
-                                                                    authProv
-                                                                        .userId,
-                                                                    visitorProv
-                                                                        .logId,
-                                                                    widget
-                                                                        .reasonId)
-                                                                    .then(
-                                                                        (value) async {
-                                                                      if (value ==
-                                                                          'Success') {
-                                                                        // we will connect the printer
-                                                                        if (!_connected) {
-                                                                          debugPrint(
-                                                                              'printer is not connected');
+                                                    visitorProv
+                                                        .confirmPrint(
+                                                            authProv.userId,
+                                                            visitorProv.logId,
+                                                            widget.reasonId)
+                                                        .then((value) async {
+                                                      if (value == 'Success') {
+                                                        // we will connect the printer
+                                                        if (!_connected) {
+                                                          debugPrint(
+                                                              'printer is not connected');
 
-                                                                          if (_device !=
-                                                                              null &&
-                                                                              _device.address !=
-                                                                                  null) {
-                                                                            await bluetoothPrint
-                                                                                .connect(_device)
-                                                                                .then((value) {
-                                                                              Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
-                                                                                // take screenshot
-                                                                                await printScreenShot();
-                                                                              });
-                                                                            });
-                                                                          } else {
-                                                                            debugPrint(
-                                                                                'device is null 1');
-                                                                          }
-                                                                        } else {
-                                                                          debugPrint(
-                                                                              'printer is connected asln');
-                                                                          // we will take screenshot
-                                                                          await printScreenShot();
-                                                                        }
-                                                                      }
-                                                                    });
+                                                          if (_device != null &&
+                                                              _device.address !=
+                                                                  null) {
+                                                            await bluetoothPrint
+                                                                .connect(
+                                                                    _device)
+                                                                .then((value) {
+                                                              Future.delayed(
+                                                                      const Duration(
+                                                                          seconds:
+                                                                              6))
+                                                                  .whenComplete(
+                                                                      () async {
+                                                                // take screenshot
+                                                                await printScreenShot();
                                                               });
-                                                        } else if (widget
-                                                            .resendType ==
-                                                            'المحاسبه بالساعه') {
-                                                          Future.delayed(const Duration(
-                                                              milliseconds:
-                                                              1500))
-                                                              .whenComplete(
-                                                                  () async {
-                                                                setState(() {
-                                                                  _device = d;
-                                                                });
-
-                                                                visitorProv
-                                                                    .confirmPrint(
-                                                                    authProv
-                                                                        .userId,
-                                                                    visitorProv
-                                                                        .logId,
-                                                                    widget
-                                                                        .reasonId)
-                                                                    .then(
-                                                                        (value) async {
-                                                                      if (value ==
-                                                                          'Success') {
-                                                                        prefs.setDouble(
-                                                                            'balance',
-                                                                            authProv.balance +
-                                                                                widget.reasonPrice);
-                                                                        authProv.balance =
-                                                                            prefs.getDouble(
-                                                                                'balance');
-                                                                        debugPrint(
-                                                                            'new balance in resend is ${authProv.balance}');
-
-                                                                        // we will connect the printer
-                                                                        if (!_connected) {
-                                                                          debugPrint(
-                                                                              'printer is not connected');
-
-                                                                          if (_device !=
-                                                                              null &&
-                                                                              _device.address !=
-                                                                                  null) {
-                                                                            await bluetoothPrint
-                                                                                .connect(_device)
-                                                                                .then((value) {
-                                                                              Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
-                                                                                // take screenshot
-                                                                                await printScreenShot();
-                                                                              });
-                                                                            });
-                                                                          } else {
-                                                                            debugPrint(
-                                                                                'device is null 1');
-                                                                          }
-                                                                        } else {
-                                                                          debugPrint(
-                                                                              'printer is connected asln');
-                                                                          // we will take screenshot
-                                                                          await printScreenShot();
-                                                                        }
-                                                                      }
-                                                                    });
-                                                              });
+                                                            });
+                                                          } else {
+                                                            debugPrint(
+                                                                'device is null 1');
+                                                          }
                                                         } else {
-                                                          Future.delayed(const Duration(
-                                                              milliseconds:
-                                                              1500))
-                                                              .whenComplete(
-                                                                  () async {
-                                                                setState(() {
-                                                                  _device = d;
-                                                                });
-                                                                visitorProv
-                                                                    .confirmPrint(
-                                                                    authProv
-                                                                        .userId,
-                                                                    visitorProv
-                                                                        .logId,
-                                                                    widget
-                                                                        .reasonId)
-                                                                    .then(
-                                                                        (value) async {
-                                                                      if (value ==
-                                                                          'Success') {
-                                                                        // we will update balance
-
-                                                                        prefs.setDouble(
-                                                                            'balance',
-                                                                            authProv.balance +
-                                                                                widget.reasonPrice);
-                                                                        authProv.balance =
-                                                                            prefs.getDouble(
-                                                                                'balance');
-                                                                        debugPrint(
-                                                                            'new balance in resend is ${authProv.balance}');
-
-                                                                        // we will connect the printer
-                                                                        if (!_connected) {
-                                                                          debugPrint(
-                                                                              'printer is not connected');
-
-                                                                          if (_device !=
-                                                                              null &&
-                                                                              _device.address !=
-                                                                                  null) {
-                                                                            await bluetoothPrint
-                                                                                .connect(_device)
-                                                                                .then((value) {
-                                                                              Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
-                                                                                // take screenshot
-                                                                                await printScreenShot();
-                                                                              });
-                                                                            });
-                                                                          } else {
-                                                                            debugPrint(
-                                                                                'device is null 2');
-                                                                          }
-                                                                        } else {
-                                                                          debugPrint(
-                                                                              'printer is connected asln');
-                                                                          // we will take screenshot
-                                                                          await printScreenShot();
-                                                                        }
-                                                                      }
-                                                                    });
-                                                              });
+                                                          debugPrint(
+                                                              'printer is connected asln');
+                                                          // we will take screenshot
+                                                          await printScreenShot();
                                                         }
                                                       }
+                                                    });
+                                                  });
+                                                } else if (widget.resendType ==
+                                                    'المحاسبه بالساعه') {
+                                                  Future.delayed(const Duration(
+                                                          milliseconds: 1500))
+                                                      .whenComplete(() async {
+                                                    setState(() {
+                                                      _device = d;
+                                                    });
 
-                                                      /**
-                                                       *                                                              ?*********** NORMAL PRINT CASE ************
-                                                       */
-
-                                                      else if (widget
-                                                          .from ==
-                                                          'send') {
-                                                        if (widget.resendType ==
-                                                            'Normal' ||
-                                                            widget.resendType ==
-                                                                'VIP Invitation') {
-
-
-                                                          debugPrint('invitation');
-                                                          visitorProv
-                                                              .checkInInvitation(
-                                                            authProv
-                                                                .userId,
-                                                            visitorProv
-                                                                .invitationID,
-                                                            context,
-                                                            visitorProv
-                                                                .rokhsa,
-                                                            visitorProv
-                                                                .idCard,
-                                                          )
-                                                              .then(
-                                                                  (value) async {
-                                                                if (value
-                                                                    .message ==
-                                                                    'Success') {
-                                                                  Future.delayed(const Duration(
-                                                                      seconds:
-                                                                      1))
-                                                                      .whenComplete(
-                                                                          () async {
-                                                                        setState(
-                                                                                () {
-                                                                              _device =
-                                                                                  d;
-                                                                            });
-
-                                                                        // first we will connect the printer
-                                                                        if (!_connected) {
-                                                                          print(
-                                                                              'printer is not connected in invitation');
-
-                                                                          if (_device !=
-                                                                              null &&
-                                                                              _device.address !=
-                                                                                  null) {
-                                                                            await bluetoothPrint
-                                                                                .connect(_device)
-                                                                                .then((value) {
-                                                                              print('printer is connected with value $value');
-                                                                              Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
-                                                                                await printScreenShot();
-                                                                              });
-                                                                            });
-                                                                          } else {
-                                                                            print(
-                                                                                'device is null 3');
-                                                                          }
-                                                                        } else {
-                                                                          await printScreenShot();
-                                                                        }
-                                                                      });
-                                                                }
-                                                              });
-                                                        } else if (widget
-                                                            .resendType ==
-                                                            'perHour') {
+                                                    visitorProv
+                                                        .confirmPrint(
+                                                            authProv.userId,
+                                                            visitorProv.logId,
+                                                            widget.reasonId)
+                                                        .then((value) async {
+                                                      if (value == 'Success') {
+                                                        /*
+                                                                        // commented laterly
+                                                                        prefs.setDouble(
+                                                                            'balance',
+                                                                            authProv.balance +
+                                                                                widget.reasonPrice);
+                                                                        authProv.balance =
+                                                                            prefs.getDouble(
+                                                                                'balance');
+                                                                        debugPrint(
+                                                                            'new balance in resend is ${authProv.balance}');
+*/
+                                                        // we will connect the printer
+                                                        if (!_connected) {
                                                           debugPrint(
-                                                              'perHour');
+                                                              'printer is not connected');
 
+                                                          if (_device != null &&
+                                                              _device.address !=
+                                                                  null) {
+                                                            await bluetoothPrint
+                                                                .connect(
+                                                                    _device)
+                                                                .then((value) {
+                                                              Future.delayed(
+                                                                      const Duration(
+                                                                          seconds:
+                                                                              6))
+                                                                  .whenComplete(
+                                                                      () async {
+                                                                // take screenshot
+                                                                await printScreenShot();
+                                                              });
+                                                            });
+                                                          } else {
+                                                            debugPrint(
+                                                                'device is null 1');
+                                                          }
+                                                        } else {
+                                                          debugPrint(
+                                                              'printer is connected asln');
+                                                          // we will take screenshot
+                                                          await printScreenShot();
+                                                        }
+                                                      }
+                                                    });
+                                                  });
+                                                } else {
+                                                  Future.delayed(const Duration(
+                                                          milliseconds: 1500))
+                                                      .whenComplete(() async {
+                                                    setState(() {
+                                                      _device = d;
+                                                    });
+                                                    visitorProv
+                                                        .confirmPrint(
+                                                            authProv.userId,
+                                                            visitorProv.logId,
+                                                            widget.reasonId)
+                                                        .then((value) async {
+                                                      if (value == 'Success') {
+                                                        /*
+                                                                        // we will update balance
+// commented laterly
+                                                                        prefs.setDouble(
+                                                                            'balance',
+                                                                            authProv.balance +
+                                                                                widget.reasonPrice);
+                                                                        authProv.balance =
+                                                                            prefs.getDouble(
+                                                                                'balance');
+                                                                        debugPrint(
+                                                                            'new balance in resend is ${authProv.balance}');
+*/
+                                                        // we will connect the printer
+                                                        if (!_connected) {
+                                                          debugPrint(
+                                                              'printer is not connected');
+
+                                                          if (_device != null &&
+                                                              _device.address !=
+                                                                  null) {
+                                                            await bluetoothPrint
+                                                                .connect(
+                                                                    _device)
+                                                                .then((value) {
+                                                              Future.delayed(
+                                                                      const Duration(
+                                                                          seconds:
+                                                                              6))
+                                                                  .whenComplete(
+                                                                      () async {
+                                                                // take screenshot
+                                                                await printScreenShot();
+                                                              });
+                                                            });
+                                                          } else {
+                                                            debugPrint(
+                                                                'device is null 2');
+                                                          }
+                                                        } else {
+                                                          debugPrint(
+                                                              'printer is connected asln');
+                                                          // we will take screenshot
+                                                          await printScreenShot();
+                                                        }
+                                                      }
+                                                    });
+                                                  });
+                                                }
+                                              }
+
+                                              /**
+                                       *                                                              ?*********** NORMAL PRINT CASE ************
+                                       */
+
+                                              else if (widget.from == 'send') {
+                                                if (widget.resendType ==
+                                                        'Normal' ||
+                                                    widget.resendType ==
+                                                        'VIP Invitation') {
+                                                  debugPrint('invitation');
+                                                  visitorProv
+                                                      .checkInInvitation(
+                                                    authProv.userId,
+                                                    visitorProv.invitationID,
+                                                    context,
+                                                    visitorProv.rokhsa,
+                                                    visitorProv.idCard,
+                                                  )
+                                                      .then((value) async {
+                                                    if (value.message ==
+                                                        'Success') {
+                                                      Future.delayed(
+                                                              const Duration(
+                                                                  seconds: 1))
+                                                          .whenComplete(
+                                                              () async {
+                                                        setState(() {
+                                                          _device = d;
+                                                        });
+
+                                                        // first we will connect the printer
+                                                        if (!_connected) {
+                                                          print(
+                                                              'printer is not connected in invitation');
+
+                                                          if (_device != null &&
+                                                              _device.address !=
+                                                                  null) {
+                                                            await bluetoothPrint
+                                                                .connect(
+                                                                    _device)
+                                                                .then((value) {
+                                                              print(
+                                                                  'printer is connected with value $value');
+                                                              Future.delayed(
+                                                                      const Duration(
+                                                                          seconds:
+                                                                              6))
+                                                                  .whenComplete(
+                                                                      () async {
+                                                                await printScreenShot();
+                                                              });
+                                                            });
+                                                          } else {
+                                                            print(
+                                                                'device is null 3');
+                                                          }
+                                                        } else {
+                                                          await printScreenShot();
+                                                        }
+                                                      });
+                                                    }
+                                                  });
+                                                } else if (widget.resendType ==
+                                                    'perHour') {
+                                                  debugPrint('perHour');
+
+                                                  setState(() {
+                                                    _device = d;
+                                                  });
+                                                  if (!_connected) {
+                                                    debugPrint(
+                                                        'printer is not connected');
+
+                                                    if (_device != null &&
+                                                        _device.address !=
+                                                            null) {
+                                                      await bluetoothPrint
+                                                          .connect(_device)
+                                                          .then((value) {
+                                                        Future.delayed(
+                                                                const Duration(
+                                                                    seconds: 6))
+                                                            .whenComplete(
+                                                                () async {
+                                                          // take screenshot
+                                                          await printScreenShot();
+                                                        });
+                                                      });
+                                                    } else {
+                                                      debugPrint(
+                                                          'device is null 1');
+                                                    }
+                                                  } else {
+                                                    debugPrint(
+                                                        'printer is connected asln');
+                                                    // we will take screenshot
+                                                    await printScreenShot();
+                                                  }
+                                                } else {
+                                                  if (visitorProv
+                                                          .memberShipModel !=
+                                                      null) {
+                                                    // keda hwa gy mn scan membership , hanshof lw el swr empty hn5lihom null 34an nb3thom ll database null
+                                                    if (visitorProv
+                                                        .memberShipModel
+                                                        .carImagePath
+                                                        .contains('empty')) {
+                                                      visitorProv
+                                                          .memberShipModel
+                                                          .carImagePath = null;
+                                                    } else if (visitorProv
+                                                        .memberShipModel
+                                                        .identityImagePath
+                                                        .contains('empty')) {
+                                                      visitorProv
+                                                              .memberShipModel
+                                                              .identityImagePath =
+                                                          null;
+                                                    }
+
+                                                    // hna b2a hn-call checkInMembership
+                                                    visitorProv
+                                                        .checkInMemberShip(
+                                                            visitorProv
+                                                                .memberShipModel
+                                                                .id,
+                                                            authProv.userId,
+                                                            context,
+                                                            Provider.of<VisitorProv>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .memberShipModel
+                                                                .carImagePath,
+                                                            Provider.of<VisitorProv>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .memberShipModel
+                                                                .identityImagePath)
+                                                        .then((value) async {
+                                                      if (value.message ==
+                                                          'Success') {
+/*
+
+                                                                    // commented laterly
+                                                                    prefs.setDouble(
+                                                                        'balance',
+                                                                        authProv.balance +
+                                                                            visitorProv.totalPrice);
+                                                                    authProv.balance =
+                                                                        prefs.getDouble(
+                                                                            'balance');
+                                                                    debugPrint(
+                                                                        'new balance is ${prefs.getDouble('balance')}');
+*/
+
+                                                        Future.delayed(
+                                                                const Duration(
+                                                                    seconds: 1))
+                                                            .whenComplete(
+                                                                () async {
                                                           setState(() {
                                                             _device = d;
                                                           });
+
+                                                          // first we will connect the printer
                                                           if (!_connected) {
                                                             debugPrint(
                                                                 'printer is not connected');
 
                                                             if (_device !=
-                                                                null &&
+                                                                    null &&
                                                                 _device.address !=
                                                                     null) {
                                                               await bluetoothPrint
                                                                   .connect(
-                                                                  _device)
+                                                                      _device)
                                                                   .then(
                                                                       (value) {
-                                                                    Future.delayed(const Duration(
+                                                                debugPrint(
+                                                                    'printer is connected with value $value');
+                                                                Future.delayed(const Duration(
                                                                         seconds:
-                                                                        6))
-                                                                        .whenComplete(
-                                                                            () async {
-                                                                          // take screenshot
-                                                                          await printScreenShot();
-                                                                        });
-                                                                  });
+                                                                            6))
+                                                                    .whenComplete(
+                                                                        () async {
+                                                                  await printScreenShot();
+                                                                });
+                                                              });
                                                             } else {
                                                               debugPrint(
-                                                                  'device is null 1');
+                                                                  'device is null 4');
                                                             }
                                                           } else {
                                                             debugPrint(
-                                                                'printer is connected asln');
-                                                            // we will take screenshot
+                                                                'printer is connected 2');
+                                                            // secondly we will print
                                                             await printScreenShot();
                                                           }
-                                                        } else {
-                                                          if (visitorProv
-                                                              .memberShipModel !=
-                                                              null) {
-                                                            // keda hwa gy mn scan membership , hanshof lw el swr empty hn5lihom null 34an nb3thom ll database null
-                                                            if (visitorProv
-                                                                .memberShipModel
-                                                                .carImagePath
-                                                                .contains(
-                                                                'empty')) {
-                                                              visitorProv
-                                                                  .memberShipModel
-                                                                  .carImagePath = null;
-                                                            } else if (visitorProv
-                                                                .memberShipModel
-                                                                .identityImagePath
-                                                                .contains(
-                                                                'empty')) {
-                                                              visitorProv
-                                                                  .memberShipModel
-                                                                  .identityImagePath = null;
-                                                            }
-
-                                                            // hna b2a hn-call checkInMembership
-                                                            visitorProv
-                                                                .checkInMemberShip(
-                                                                visitorProv
-                                                                    .memberShipModel
-                                                                    .id,
-                                                                authProv
-                                                                    .userId,
-                                                                context,
-                                                                Provider.of<VisitorProv>(context, listen: false)
-                                                                    .memberShipModel
-                                                                    .carImagePath,
-                                                                Provider.of<VisitorProv>(context, listen: false)
-                                                                    .memberShipModel
-                                                                    .identityImagePath)
-                                                                .then(
-                                                                    (value) async {
-                                                                  if (value
-                                                                      .message ==
-                                                                      'Success') {
-                                                                    prefs.setDouble(
-                                                                        'balance',
-                                                                        authProv.balance +
-                                                                            visitorProv.totalPrice);
-                                                                    authProv.balance =
-                                                                        prefs.getDouble(
-                                                                            'balance');
-                                                                    debugPrint(
-                                                                        'new balance is ${prefs.getDouble('balance')}');
-
-                                                                    Future.delayed(const Duration(
-                                                                        seconds:
-                                                                        1))
-                                                                        .whenComplete(
-                                                                            () async {
-                                                                          setState(
-                                                                                  () {
-                                                                                _device =
-                                                                                    d;
-                                                                              });
-
-                                                                          // first we will connect the printer
-                                                                          if (!_connected) {
-                                                                            debugPrint(
-                                                                                'printer is not connected');
-
-                                                                            if (_device != null &&
-                                                                                _device.address != null) {
-                                                                              await bluetoothPrint.connect(_device).then((value) {
-                                                                                debugPrint('printer is connected with value $value');
-                                                                                Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
-                                                                                  await printScreenShot();
-                                                                                });
-                                                                              });
-                                                                            } else {
-                                                                              debugPrint('device is null 4');
-                                                                            }
-                                                                          } else {
-                                                                            debugPrint(
-                                                                                'printer is connected 2');
-                                                                            // secondly we will print
-                                                                            await printScreenShot();
-                                                                          }
-                                                                        });
-                                                                  } else if (value
-                                                                      .message ==
-                                                                      'unAuth') {
-                                                                    cameras =
-                                                                    await availableCameras();
-                                                                    Fluttertoast.showToast(
-                                                                        msg:
-                                                                        'برجاء تسجيل الدخول من جديد',
-                                                                        backgroundColor: Colors
-                                                                            .green,
-                                                                        toastLength:
-                                                                        Toast.LENGTH_LONG);
-                                                                    Navigator.pushReplacement(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (context) => LoginScreen(
-                                                                              camera: cameras[1],
-                                                                            )));
-                                                                  }
-                                                                });
-                                                          } else {
-                                                            visitorProv
-                                                                .checkIn(
-                                                              visitorProv
-                                                                  .rokhsa,
-                                                              visitorProv
-                                                                  .idCard,
-                                                              authProv
-                                                                  .userId,
-                                                              int.parse(widget
-                                                                  .typeId
-                                                                  .toString()),
-                                                              widget
-                                                                  .civilCount,
-                                                              widget
-                                                                  .militaryCount,
-                                                              context,
-                                                            )
-                                                                .then(
-                                                                    (value) async {
-                                                                  if (value
-                                                                      .message ==
-                                                                      'Success') {
-
-
-                                                                    prefs.setDouble(
-                                                                        'balance',
-                                                                        authProv.balance +
-                                                                            visitorProv.totalPrice);
-                                                                    authProv.balance =
-                                                                        prefs.getDouble(
-                                                                            'balance');
-                                                                    debugPrint(
-                                                                        'new balance is ${prefs.getDouble('balance')}');
-
-                                                                    Future.delayed(const Duration(
-                                                                        seconds:
-                                                                        1))
-                                                                        .whenComplete(
-                                                                            () async {
-                                                                          setState(
-                                                                                  () {
-                                                                                _device =
-                                                                                    d;
-                                                                              });
-
-                                                                          // first we will connect the printer
-                                                                          if (!_connected) {
-                                                                            debugPrint(
-                                                                                'printer is not connected');
-
-                                                                            if (_device != null &&
-                                                                                _device.address != null) {
-                                                                              await bluetoothPrint.connect(_device).then((value) {
-                                                                                debugPrint('printer is connected with value $value');
-                                                                                Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
-                                                                                  await printScreenShot();
-                                                                                });
-                                                                              });
-                                                                            } else {
-                                                                              debugPrint('device is null 4');
-                                                                            }
-                                                                          } else {
-                                                                            debugPrint(
-                                                                                'printer is connected 2');
-                                                                            // secondly we will print
-                                                                            await printScreenShot();
-                                                                          }
-                                                                        });
-                                                                  } else if (value
-                                                                      .message ==
-                                                                      'unAuth') {
-                                                                    cameras =
-                                                                    await availableCameras();
-                                                                    Fluttertoast.showToast(
-                                                                        msg:
-                                                                        'برجاء تسجيل الدخول من جديد',
-                                                                        backgroundColor: Colors
-                                                                            .green,
-                                                                        toastLength:
-                                                                        Toast.LENGTH_LONG);
-                                                                    Navigator.pushReplacement(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (context) => LoginScreen(
-                                                                              camera: cameras[1],
-                                                                            )));
-                                                                  }
-                                                                });
-                                                          }
-                                                        }
-                                                      }
-                                                    },
-                                                    title: 'تأكيد',
-                                                    buttonColor:
-                                                    ColorManager
-                                                        .primary,
-                                                    titleColor: ColorManager
-                                                        .backGroundColor,
-                                                  );
-                                                }else{return RoundedButton(
-                                                  height: 60,
-                                                  width: 220,
-                                                  ontap: () async {
-                                                    try {
-                                                      visibleNotifier.value =
-                                                      true;
-                                                      if (finishScanning ==
-                                                          true) {
-                                                        bluetoothPrint
-                                                            .startScan(
-                                                            timeout:
-                                                            const Duration(
-                                                                seconds:
-                                                                4))
-                                                            .then((value) {
-                                                          debugPrint(
-                                                              'scan result is $value');
-                                                          if (snapshot
-                                                              .data.isEmpty) {
-                                                            Fluttertoast.showToast(
-                                                                msg:
-                                                                'Make Sure to open Bluetooth and Location',
-                                                                backgroundColor:
+                                                        });
+                                                      } else if (value
+                                                              .message ==
+                                                          'unAuth') {
+                                                        cameras =
+                                                            await availableCameras();
+                                                        Fluttertoast.showToast(
+                                                            msg:
+                                                                'برجاء تسجيل الدخول من جديد',
+                                                            backgroundColor:
                                                                 Colors.green,
-                                                                toastLength: Toast
-                                                                    .LENGTH_LONG);
-                                                          }
-                                                          visibleNotifier.value =
-                                                          false;
-                                                        });
-                                                      } else {
-                                                        Future.delayed(
-                                                            const Duration(
-                                                                seconds: 2))
-                                                            .whenComplete(() {
-                                                          visibleNotifier.value =
-                                                          false;
-                                                        });
+                                                            toastLength: Toast
+                                                                .LENGTH_LONG);
+                                                        Navigator
+                                                            .pushReplacement(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            LoginScreen(
+                                                                              camera: cameras[1],
+                                                                            )));
                                                       }
-                                                    } catch (error) {
-                                                      debugPrint(
-                                                          'error = $error');
-                                                    }
-                                                  },
-                                                  title: 'Refresh',
-                                                  buttonColor:
-                                                  ColorManager.primary,
-                                                  titleColor: ColorManager
-                                                      .backGroundColor,
-                                                );}
+                                                    });
+                                                  } else {
+                                                    visitorProv
+                                                        .checkIn(
+                                                      visitorProv.rokhsa,
+                                                      visitorProv.idCard,
+                                                      authProv.userId,
+                                                      int.parse(widget.typeId
+                                                          .toString()),
+                                                      widget.civilCount,
+                                                      widget.militaryCount,
+                                                      context,
+                                                    )
+                                                        .then((value) async {
+                                                      if (value.message ==
+                                                          'Success') {
+/*
+
+// commented laterly
+                                                                    prefs.setDouble(
+                                                                        'balance',
+                                                                        authProv.balance +
+                                                                            visitorProv.totalPrice);
+                                                                    authProv.balance =
+                                                                        prefs.getDouble(
+                                                                            'balance');
+                                                                    debugPrint(
+                                                                        'new balance is ${prefs.getDouble('balance')}');
+*/
+
+                                                        Future.delayed(
+                                                                const Duration(
+                                                                    seconds: 1))
+                                                            .whenComplete(
+                                                                () async {
+                                                          setState(() {
+                                                            _device = d;
+                                                          });
+
+                                                          // first we will connect the printer
+                                                          if (!_connected) {
+                                                            debugPrint(
+                                                                'printer is not connected');
+
+                                                            if (_device !=
+                                                                    null &&
+                                                                _device.address !=
+                                                                    null) {
+                                                              await bluetoothPrint
+                                                                  .connect(
+                                                                      _device)
+                                                                  .then(
+                                                                      (value) {
+                                                                debugPrint(
+                                                                    'printer is connected with value $value');
+                                                                Future.delayed(const Duration(
+                                                                        seconds:
+                                                                            6))
+                                                                    .whenComplete(
+                                                                        () async {
+                                                                  await printScreenShot();
+                                                                });
+                                                              });
+                                                            } else {
+                                                              debugPrint(
+                                                                  'device is null 4');
+                                                            }
+                                                          } else {
+                                                            debugPrint(
+                                                                'printer is connected 2');
+                                                            // secondly we will print
+                                                            await printScreenShot();
+                                                          }
+                                                        });
+                                                      } else if (value
+                                                              .message ==
+                                                          'unAuth') {
+                                                        cameras =
+                                                            await availableCameras();
+                                                        Fluttertoast.showToast(
+                                                            msg:
+                                                                'برجاء تسجيل الدخول من جديد',
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                            toastLength: Toast
+                                                                .LENGTH_LONG);
+                                                        Navigator
+                                                            .pushReplacement(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            LoginScreen(
+                                                                              camera: cameras[1],
+                                                                            )));
+                                                      }
+                                                    });
+                                                  }
+                                                }
                                               }
-                                                 /* d.address ==
+                                            },
+                                            title: 'تأكيد',
+                                            buttonColor: ColorManager.primary,
+                                            titleColor:
+                                                ColorManager.backGroundColor,
+                                          );
+                                        } else if (snapshot.data.length == 1) {
+                                          return RoundedButton(
+                                            height: 60,
+                                            width: 220,
+                                            ontap: () async {
+                                              try {
+                                                visibleNotifier.value = true;
+                                                if (finishScanning == true) {
+                                                  bluetoothPrint
+                                                      .startScan(
+                                                          timeout:
+                                                              const Duration(
+                                                                  seconds: 4))
+                                                      .then((value) {
+                                                    debugPrint(
+                                                        'scan result is $value');
+                                                    if (snapshot.data.isEmpty) {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              'Make Sure to open Bluetooth and Location',
+                                                          backgroundColor:
+                                                              Colors.green,
+                                                          toastLength: Toast
+                                                              .LENGTH_LONG);
+                                                    }
+                                                    visibleNotifier.value =
+                                                        false;
+                                                  });
+                                                } else {
+                                                  Future.delayed(const Duration(
+                                                          seconds: 2))
+                                                      .whenComplete(() {
+                                                    visibleNotifier.value =
+                                                        false;
+                                                  });
+                                                }
+                                              } catch (error) {
+                                                debugPrint('error = $error');
+                                              }
+                                            },
+                                            title: 'Refresh',
+                                            buttonColor: ColorManager.primary,
+                                            titleColor:
+                                                ColorManager.backGroundColor,
+                                          );
+                                        } else {
+                                          return Container();
+                                        }
+                                      }
+                                          /* d.address ==
                                                           Provider.of<AuthProv>(
                                                                   context,
                                                                   listen: false)
@@ -2014,10 +1864,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                 prefs =
                                                                 await SharedPreferences
                                                                     .getInstance();
-                                                            *//**
-                                   *
-                                   *                                                              ?*********** CHECKOUT PER HOUR CASE ************
-                                   *//*
+                                                            */ /**
+                                                                                            *
+                                                                                            *                                                              ?*********** CHECKOUT PER HOUR CASE ************
+                                                                                            */ /*
 
                                                             if (widget
                                                                     .perHourObj !=
@@ -2091,10 +1941,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                               });
                                                             }
 
-                                                            *//**
-                                   *
-                                   *                                                              ?*********** RE-PRINT CASE ************
-                                   *//*
+                                                            */ /**
+                                                                                                                                                               *
+                                                                                                                                                               *                                                              ?*********** RE-PRINT CASE ************
+                                                                                                                                                               */ /*
                                                             else if (widget
                                                                     .from ==
                                                                 'resend') {
@@ -2283,9 +2133,9 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                               }
                                                             }
 
-                                                            *//**
-                                   *                                                              ?*********** NORMAL PRINT CASE ************
-                                   *//*
+                                                            */ /**
+                                                                                                                                                                                                                                  *                                                              ?*********** NORMAL PRINT CASE ************
+                                                                                                                                                                                                                                  */ /*
 
                                                             else if (widget
                                                                     .from ==
@@ -2648,8 +2498,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                     titleColor: ColorManager
                                                         .backGroundColor,
                                                   )*/
-                                      )
-                                          .toList(),
+                                          ).toList(),
                                     )
                                   : ValueListenableBuilder(
                                       valueListenable: visibleNotifier,

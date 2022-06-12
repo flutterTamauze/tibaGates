@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:Tiba_Gates/Utilities/Shared/dialogs/exit_dialog2.dart';
 import 'package:Tiba_Gates/Utilities/Shared/noInternet.dart';
 import 'package:animate_do/animate_do.dart';
@@ -42,11 +44,11 @@ class EntryScreen extends StatefulWidget {
 
 class _EntryScreenState extends State<EntryScreen> {
   String token;
-
+Future balanceListener;
   @override
   void initState() {
     super.initState();
-
+    balanceListener=Provider.of<AuthProv>(context,listen: false).getBalanceById(prefs.getString('guardId'),'Guard',);
     if (Provider.of<VisitorProv>(context, listen: false).memberShipModel !=
         null) {
 
@@ -153,22 +155,46 @@ class _EntryScreenState extends State<EntryScreen> {
                                 height: 45.h,
                                 child: Row(
                                   children: [
-                                    AutoSizeText(
-                                        '${Provider.of<AuthProv>(context, listen: true).balance ?? '...'} ',
+                                    FutureBuilder(
+                                        future: balanceListener,
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<dynamic> snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return Center(
+                                              child: Platform.isIOS
+                                                  ? const CupertinoActivityIndicator()
+                                                  : const Center(
+                                                child: CircularProgressIndicator(
+                                                  backgroundColor: Colors.green,
+                                                ),
+                                              ),
+                                            );
+                                          } else if (snapshot.connectionState ==
+                                              ConnectionState.done) {
+
+                                            return     AutoSizeText(
+                                                '${Provider.of<AuthProv>(context, listen: true).balance ?? '--'} ',
+                                                style: TextStyle(
+                                                  fontSize: setResponsiveFontSize(28),
+                                                  fontWeight: FontManager.bold,
+                                                  color: Colors.red,
+                                                ));
+                                          }
+                                          return Container();
+                                        }),
+                                    Padding(
+                                      padding:  EdgeInsets.only(left: 8.w),
+                                      child: AutoSizeText(
+                                        Provider.of<AuthProv>(context,
+                                                    listen: true)
+                                                .guardName ??
+                                            '',
                                         style: TextStyle(
-                                          fontSize: setResponsiveFontSize(28),
-                                          fontWeight: FontManager.bold,
-                                          color: Colors.red,
-                                        )),
-                                    AutoSizeText(
-                                      Provider.of<AuthProv>(context,
-                                                  listen: true)
-                                              .guardName ??
-                                          '',
-                                      style: TextStyle(
-                                          fontSize: setResponsiveFontSize(22),
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black),
+                                            fontSize: setResponsiveFontSize(22),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                      ),
                                     ),
                                     AutoSizeText(
                                       ' إجمالى فواتير',

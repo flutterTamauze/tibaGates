@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:Tiba_Gates/Utilities/Shared/noInternet.dart';
 import 'package:Tiba_Gates/ViewModel/casher/servicesProv.dart';
 
+import '../../main.dart';
 import 'casherEntry_screen.dart';
 import 'casherPrint_screen.dart';
 import '../../Utilities/Shared/tiba_logo.dart';
@@ -42,7 +43,9 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
   void initState() {
     super.initState();
     servicesListener =
-        Provider.of<ServicesProv>(context, listen: false).getServices();
+        Provider.of<ServicesProv>(context, listen: false).getServices(prefs.getInt('gateId'));
+    Provider.of<ServicesProv>(context, listen: false).serviceObjects=[];
+    Provider.of<ServicesProv>(context, listen: false).serviceTypes=[];
   }
 
   @override

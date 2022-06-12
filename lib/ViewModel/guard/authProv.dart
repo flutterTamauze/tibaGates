@@ -19,6 +19,7 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
   String token;
   String printerAddress;
   String gateName;
+  int gateId;
   double balance;
   double lostTicketPrice;
   List<String> parkTypes;
@@ -60,6 +61,43 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     }
   }
 
+  Future<dynamic> getBalanceById(String userID, String role) async {
+    debugPrint('user id $userID');
+    String data = '';
+
+    try {
+      var response = await BaseClient()
+          .get(
+            BASE_URL,
+            '/api/Gate/GetUnPayedBills?UserID=$userId',
+          )
+          .catchError(handleError);
+
+      String responseBody = response;
+
+      var decodedRes = jsonDecode(responseBody);
+print(decodedRes['status']);
+      if (decodedRes['status'] == true) {
+
+        if (role == 'Casher') {
+          print('solidawy');
+          balance = double.parse(decodedRes['response']['balance'].toString());
+        }
+        if (role == 'Guard') {
+          balance = double.parse(
+              decodedRes['response']['summaryDTO']['total'].toString());
+        }
+
+        data = 'Success';
+      }
+
+      notifyListeners();
+      return data;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   Future<dynamic> login(String username, String password, File guardImage,
       String tabAddress) async {
     parkTypes = [];
@@ -83,10 +121,10 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
         debugPrint('status code ${response.statusCode}');
 
         response.stream.transform(utf8.decoder).listen((value) async {
-          Map<String, dynamic> responseDecoded =  json.decode(value);
+          Map<String, dynamic> responseDecoded = json.decode(value);
 
-          debugPrint("response is ${ responseDecoded['response']}");
-          debugPrint('message is ${ responseDecoded['message']}');
+          debugPrint("response is ${responseDecoded['response']}");
+          debugPrint('message is ${responseDecoded['message']}');
 
           if (responseDecoded['message'] == 'Success') {
             debugPrint('success case');
@@ -96,7 +134,7 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
             userRole = responseDecoded['response']['roles'][0];
 
             var reasonsJsonObj =
-            responseDecoded['response']['parkTypes'] as List;
+                responseDecoded['response']['parkTypes'] as List;
 
             if (parkTypes.isEmpty) {
               parkTypes.add('الكل');
@@ -109,14 +147,14 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
             token = userJson['token'];
 
             if (userRole != 'Manager' && userRole != 'Admin') {
-              guardName = userJson['name']??'  -  ';
-              balance = double.parse(userJson['balance'].toString());
+              guardName = userJson['name'] ?? '  -  ';
+              // balance = double.parse(userJson['balance'].toString());
               printerAddress = userJson['printerMac'];
               lostTicketPrice = double.parse(responseDecoded['response']
-              ['printReasons'][0]['price']
+                      ['printReasons'][0]['price']
                   .toString());
-             // gateName = userJson['gateName']??'  -  ';
-              gateName = responseDecoded['response']['gateName']??'  -  ';
+              gateName = responseDecoded['response']['gateName'] ?? '  -  ';
+              gateId = responseDecoded['response']['user']['gateID'] ?? 0;
             }
           } else if (responseDecoded['message'] == 'Incorrect User') {
             data = 'Incorrect User';
@@ -125,9 +163,8 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
             data = 'Incorrect Password';
           } else {
             debugPrint('else case');
-            data =  responseDecoded['message'];
+            data = responseDecoded['message'];
           }
-
         });
       });
     } catch (e) {
@@ -138,5 +175,3 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     return data;
   }
 }
-
-

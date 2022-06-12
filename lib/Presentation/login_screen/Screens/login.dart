@@ -318,6 +318,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
 
   Future<void> cachingData() async {
     await prefs.setString('guardId', authProv.userId);
+    await prefs.setInt('gateId', authProv.gateId);
     await prefs.setString('role', authProv.userRole ?? '');
     await prefs.setString('token', authProv.token);
     await prefs.setString('guardName', authProv.guardName ?? '');

@@ -27,16 +27,17 @@ int billId;
    // notifyListeners();
   }
 
-  Future<dynamic> getServices() async {
+  Future<dynamic> getServices(int gateId) async {
+    print('gate id $gateId');
     try {
-      if (serviceObjects.isNotEmpty) {
+ /*     if (serviceObjects.isNotEmpty) {
         print('service Objects not null');
         return;
-      } else {
-        print('service Objects null');
+      } else {*/
+   //     print('service Objects null');
 
         var response = await BaseClient()
-            .get(BASE_URL, '/api/Service/GetAllActive')
+            .get(BASE_URL, '/api/Service/GetAllActive/$gateId')
             .catchError(handleError);
 
         var jsonObj = jsonDecode(response)['response'] as List;
@@ -54,14 +55,14 @@ int billId;
         debugPrint('length of services types ${serviceTypes[0]}');
 
         notifyListeners();
-      }
+
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
 
-  Future<dynamic> addBill(int serviceId,double total,int count) async {
+  Future<dynamic> addBill(int serviceId,double total,int count,String userId) async {
 
     String data = '';
 
@@ -69,7 +70,8 @@ int billId;
       var response = await BaseClient().post(BASE_URL, '/api/Service_Bill/Add',{
         'qty': count,
         'total': total,
-        'serviceId': serviceId
+        'serviceId': serviceId,
+        'userId':userId
       }).catchError(handleError);
 
       String responseBody = response;
