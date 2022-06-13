@@ -45,18 +45,18 @@ dependencies:
   cupertino_icons: ^1.0.2
   dartz: ^0.10.1
 
-  flutter_svg: 
+  flutter_svg:
   fluttertoast: ^8.0.8
   #esc_pos_bluetooth: ^0.1.0
-  get_it: 
+  get_it:
   connectivity: ^3.0.6
   font_awesome_flutter: ^9.2.0
   lottie: ^1.2.1
   path_provider:
   intl: ^0.17.0
-  bluetooth_print:
+  bluetooth_print: ^3.0.1
   dotted_decoration: ^2.0.0
-  esc_pos_printer:
+  esc_pos_printer: ^4.0.3
 
   syncfusion_flutter_datepicker: ^19.4.55
   logger: ^1.1.0
@@ -68,7 +68,7 @@ dependencies:
   get: ^3.25.5
   flutter_bluetooth_serial: ^0.4.0
   syncfusion_flutter_sliders: ^19.4.56
- 
+
 dev_dependencies:
   flutter_lints: ^1.0.4
   flutter_test:
