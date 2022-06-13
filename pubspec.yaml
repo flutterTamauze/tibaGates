@@ -54,9 +54,9 @@ dependencies:
   lottie: ^1.2.1
   path_provider:
   intl: ^0.17.0
-  bluetooth_print: ^3.0.1
+  bluetooth_print:
   dotted_decoration: ^2.0.0
-  esc_pos_printer: ^4.0.3
+  esc_pos_printer:
 
   syncfusion_flutter_datepicker: ^19.4.55
   logger: ^1.1.0

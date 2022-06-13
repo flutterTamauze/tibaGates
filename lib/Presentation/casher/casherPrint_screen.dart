@@ -599,7 +599,7 @@ class _CasherPrintScreenState extends State<CasherPrintScreen> {
                             if (
                             d.address ==
                                 authProv.printerAddress
-                               // 'DC:0D:30:A0:64:74'
+                            // 'DC:0D:30:A0:64:74'
 
                             //'DC:0D:30:CC:27:07'
                             ) {
