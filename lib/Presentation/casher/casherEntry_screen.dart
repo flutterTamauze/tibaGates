@@ -34,28 +34,40 @@ class CasherEntryScreen extends StatefulWidget {
 
 class _CasherEntryScreenState extends State<CasherEntryScreen> {
   String token;
-Future balanceListener;
+  Future balanceListener;
+
   @override
   void initState() {
     super.initState();
-    balanceListener=Provider.of<AuthProv>(context,listen: false).getBalanceById(prefs.getString('guardId'),'Casher',);
 
+    Provider.of<ServicesProv>(context, listen: false).serviceObjects = [];
+    Provider.of<ServicesProv>(context, listen: false).serviceTypes = [];
+
+/*
     if (Provider.of<ServicesProv>(context, listen: false)
         .serviceObjects
         .isNotEmpty) {
 
+*/
 /*      Provider.of<ServicesProv>(context, listen: false).servicePrice =
           Provider.of<ServicesProv>(context, listen: false)
               .serviceObjects[0]
-              .servicePrice;*/
+              .servicePrice;*/ /*
+
 
       Provider.of<ServicesProv>(context, listen: false).resetPrice();
     }
+*/
 
     token = prefs.getString('token');
     print(token);
     Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {
       cachingData();
+      balanceListener =
+          Provider.of<AuthProv>(context, listen: false).getBalanceById(
+        prefs.getString('guardId'),
+        'Casher',
+      );
     });
   }
 
@@ -118,7 +130,10 @@ Future balanceListener;
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             OutlinedButton(
-                              onPressed: () {    navigateReplacementTo(context, const PeriodBillsScreen());},
+                              onPressed: () {
+                                navigateReplacementTo(
+                                    context, const PeriodBillsScreen());
+                              },
                               child: SizedBox(
                                 height: 45.h,
                                 width: 50.w,
@@ -145,9 +160,7 @@ Future balanceListener;
                                               Radius.circular(20))))),
                             ),
                             OutlinedButton(
-                              onPressed: () {
-
-                              },
+                              onPressed: () {},
                               child: SizedBox(
                                 height: 45.h,
                                 child: Row(
@@ -162,18 +175,20 @@ Future balanceListener;
                                               child: Platform.isIOS
                                                   ? const CupertinoActivityIndicator()
                                                   : const Center(
-                                                child: CircularProgressIndicator(
-                                                  backgroundColor: Colors.green,
-                                                ),
-                                              ),
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        backgroundColor:
+                                                            Colors.green,
+                                                      ),
+                                                    ),
                                             );
                                           } else if (snapshot.connectionState ==
                                               ConnectionState.done) {
-
-                                            return     AutoSizeText(
+                                            return AutoSizeText(
                                                 '${Provider.of<AuthProv>(context, listen: true).balance ?? '--'} ',
                                                 style: TextStyle(
-                                                  fontSize: setResponsiveFontSize(28),
+                                                  fontSize:
+                                                      setResponsiveFontSize(28),
                                                   fontWeight: FontManager.bold,
                                                   color: Colors.red,
                                                 ));
@@ -181,7 +196,7 @@ Future balanceListener;
                                           return Container();
                                         }),
                                     Padding(
-                                      padding:  EdgeInsets.only(left: 8.w),
+                                      padding: EdgeInsets.only(left: 8.w),
                                       child: AutoSizeText(
                                         Provider.of<AuthProv>(context,
                                                     listen: true)
@@ -257,7 +272,21 @@ Future balanceListener;
                               children: [
                                 RoundedButton(
                                   ontap: () async {
-                                    navigateTo(context, CasherHomeScreen());
+                                    Provider.of<ServicesProv>(context,
+                                            listen: false)
+                                        .getServices(prefs.getInt('gateId'))
+                                        .then((value) {
+                                      if (Provider.of<ServicesProv>(context,
+                                                  listen: false)
+                                              .serviceTypes.isNotEmpty) {
+                                        navigateTo(
+                                            context, const CasherHomeScreen());
+                                      } else {
+                                        showToast(
+                                            ' لا توجد أصناف حالية على نقطة البيع');
+                                      }
+                                    });
+
                                   },
                                   title: 'فواتير',
                                   width: 250,
@@ -289,7 +318,7 @@ Future balanceListener;
                           ),
                         ),
                         SizedBox(
-                          height: 280.h,
+                          height: 260.h,
                         ),
                         FadeInUp(
                             child: OutlineButtonFb1(

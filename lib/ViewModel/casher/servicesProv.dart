@@ -12,9 +12,10 @@ import '../../api/base_exception_handling.dart';
 class ServicesProv with ChangeNotifier, BaseExceptionHandling {
   List<ServicesModel> serviceObjects = [];
   List<String> serviceTypes = [];
-String printTime;
+  List<String> engServiceTypes = [];
+  String printTime;
   double servicePrice = 0;
-int billId;
+  int billId;
 
   void calcPrice(int number, double selectedServicePrice) {
     debugPrint('number is $number   price  $selectedServicePrice');
@@ -24,54 +25,63 @@ int billId;
 
   void resetPrice() {
     servicePrice = serviceObjects[0].servicePrice;
-   // notifyListeners();
   }
 
   Future<dynamic> getServices(int gateId) async {
+    String data='';
     print('gate id $gateId');
     try {
- /*     if (serviceObjects.isNotEmpty) {
-        print('service Objects not null');
-        return;
-      } else {*/
-   //     print('service Objects null');
+      var response = await BaseClient()
+          .get(BASE_URL, '/api/Service/GetAllActive/$gateId')
+          .catchError(handleError);
 
-        var response = await BaseClient()
-            .get(BASE_URL, '/api/Service/GetAllActive/$gateId')
-            .catchError(handleError);
+      var jsonObj = jsonDecode(response)['response'] as List;
 
-        var jsonObj = jsonDecode(response)['response'] as List;
+      serviceObjects =
+          jsonObj.map((item) => ServicesModel.fromJson(item)).toList();
 
-        serviceObjects =
-            jsonObj.map((item) => ServicesModel.fromJson(item)).toList();
-        servicePrice = serviceObjects[0].servicePrice;
-        for (int i = 0; i < serviceObjects.length; i++) {
-          debugPrint(serviceObjects[i].serviceName);
-          if (!serviceTypes.contains(serviceObjects[i].serviceName)) {
-            serviceTypes.add(serviceObjects[i].serviceName);
-          }
+  /*    serviceObjects=[
+        ServicesModel(id: 1,arServiceName: 'رضوان',serviceName: 'radwan',servicePrice: 20),
+        ServicesModel(id: 1,arServiceName: 'رضوان',serviceName: 'radwan',servicePrice: 20),
+        ServicesModel(id: 1,arServiceName: 'رضوان',serviceName: 'radwan',servicePrice: 20),
+      ];
+*/
+
+      servicePrice = serviceObjects[0].servicePrice;
+
+      for (int i = 0; i < serviceObjects.length; i++) {
+
+        if (!serviceTypes.contains(serviceObjects[i].arServiceName)) {
+          serviceTypes.add(serviceObjects[i].arServiceName);
         }
 
-        debugPrint('length of services types ${serviceTypes[0]}');
 
-        notifyListeners();
+        if (!engServiceTypes.contains(serviceObjects[i].serviceName)) {
+          engServiceTypes.add(serviceObjects[i].serviceName);
+        }
 
+
+      }
+
+      debugPrint('length of services types ${serviceTypes[0]}');
+
+      notifyListeners();
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
-
-  Future<dynamic> addBill(int serviceId,double total,int count,String userId) async {
-
+  Future<dynamic> addBill(
+      int serviceId, double total, int count, String userId) async {
     String data = '';
 
     try {
-      var response = await BaseClient().post(BASE_URL, '/api/Service_Bill/Add',{
+      var response = await BaseClient().post(
+          BASE_URL, '/api/Service_Bill/Add', {
         'qty': count,
         'total': total,
         'serviceId': serviceId,
-        'userId':userId
+        'userId': userId
       }).catchError(handleError);
 
       String responseBody = response;
@@ -79,10 +89,9 @@ int billId;
       var decodedRes = jsonDecode(responseBody);
 
       if (decodedRes['message'] == 'Success') {
-
         data = 'Success';
-        printTime=decodedRes['response']['billDate'];
-        billId=decodedRes['response']['id'];
+        printTime = decodedRes['response']['billDate'];
+        billId = decodedRes['response']['id'];
       }
 
       notifyListeners();
@@ -91,6 +100,4 @@ int billId;
       debugPrint(e.toString());
     }
   }
-
-
 }

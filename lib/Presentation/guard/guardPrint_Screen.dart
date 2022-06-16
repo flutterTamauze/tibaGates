@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:Tiba_Gates/Utilities/Shared/tiba_logo.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bluetooth_print/bluetooth_print.dart';
+import 'package:bluetooth_print/bluetooth_print_model.dart';
+
 // import 'package:bluetooth_print/bluetooth_print_model.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/painting.dart';
@@ -66,10 +69,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
   ScreenshotController screenshotController = ScreenshotController();
   Uint8List _imageFile;
   Map<String, dynamic> config = {};
-  // List<LineText> list = [];
+  List<LineText> list = [];
   bool isLoading = false;
   bool _connected = false;
-  // BluetoothDevice _device;
+  BluetoothDevice _device;
   String base64Image;
   final visibleNotifier = ValueNotifier<bool>(false);
   bool finishScanning = false;
@@ -90,7 +93,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
       //Capture Done
       setState(() {
         _imageFile = image;
-        print('image is $_imageFile');
+        log('image is $_imageFile');
       });
 
       try {
@@ -99,7 +102,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
         config['gap'] = 2;
 
         base64Image = base64Encode(_imageFile);
-/*
+
         list.add(LineText(
           type: LineText.TYPE_IMAGE,
           x: 10,
@@ -114,7 +117,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
               MaterialPageRoute(builder: (context) => const EntryScreen()));
         }).onError((error, stackTrace) {
           debugPrint('this is error $error');
-        });*/
+        });
       } on PlatformException catch (err) {
         debugPrint('error ==> $err');
       } catch (error) {
@@ -127,9 +130,9 @@ class _PrintScreen2State extends State<PrintScreen2> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initBluetooth() async {
-/*    bluetoothPrint
+    bluetoothPrint
         .startScan(timeout: const Duration(seconds: 5))
-        .whenComplete(() => finishScanning = true);*/
+        .whenComplete(() => finishScanning = true);
 
     bool isConnected = await bluetoothPrint.isConnected;
     debugPrint('** is connected = $isConnected');
@@ -160,7 +163,9 @@ class _PrintScreen2State extends State<PrintScreen2> {
       }
     });
 
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
 
     if (isConnected) {
       setState(() {
@@ -204,9 +209,9 @@ class _PrintScreen2State extends State<PrintScreen2> {
               const Text('Connect your printer'),
               InkWell(
                   onTap: () {
-               /*     bluetoothPrint
+                    bluetoothPrint
                         .startScan(timeout: const Duration(seconds: 4))
-                        .then((value) => debugPrint('scan result is $value'));*/
+                        .then((value) => debugPrint('scan result is $value'));
                   },
                   child: const Icon(
                     Icons.refresh_rounded,
@@ -223,8 +228,8 @@ class _PrintScreen2State extends State<PrintScreen2> {
                 child: Lottie.asset('assets/lotties/noInternet.json'),
               ))
             : RefreshIndicator(
-            /*    onRefresh: () => bluetoothPrint.startScan(
-                    timeout: const Duration(seconds: 4)),*/
+                onRefresh: () => bluetoothPrint.startScan(
+                    timeout: const Duration(seconds: 4)),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1172,14 +1177,13 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                 ),
                               ),
                       ),
-                     /* Align(
+                      Align(
                         alignment: Alignment.bottomCenter,
                         child: StreamBuilder<List<BluetoothDevice>>(
                             stream: bluetoothPrint.scanResults,
                             initialData: const [],
                             builder: (c, snapshot) {
                               debugPrint('snapshot = ${snapshot.data.length}');
-                              //  debugPrint('address ${snapshot.data.first.address}');
 
                               return snapshot.data.isNotEmpty
                                   ? Column(
@@ -1190,12 +1194,16 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                             'server mac address = ${authProv.printerAddress}');
 
                                         print(d.address.toString().trim() ==
-                                            authProv.printerAddress
-                                                .toString()
-                                                .trim());
+                                              //  'DC:0D:30:CC:27:07'
+                                      authProv.printerAddress
+                                          .toString()
+                                          .trim()
+                                            );
 
                                         if (d.address.toString().trim() ==
-                                            authProv.printerAddress.toString().trim()) {
+                                                // 'DC:0D:30:CC:27:07'
+                                                authProv.printerAddress.toString().trim()
+                                            ) {
                                           return RoundedButton(
                                             height: 60,
                                             width: 220,
@@ -1203,13 +1211,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                               showLoaderDialog(
                                                   context, 'Loading...');
 
-                                              SharedPreferences prefs =
-                                                  await SharedPreferences
-                                                      .getInstance();
-                                              *//**
-                                       *
-                                       *                                                              ?*********** CHECKOUT PER HOUR CASE ************
-                                       *//*
+                                              /**
+                                   *
+                                   *                                                              ?*********** CHECKOUT PER HOUR CASE ************
+                                   */
 
                                               if (widget.perHourObj != null) {
                                                 debugPrint('perHour');
@@ -1231,8 +1236,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                   debugPrint(
                                                       'userId ${authProv.userId}  logId ${widget.perHourObj.id}');
                                                   if (value == 'Success') {
-*//*
-
+/*
                                                                 // commented laterly
                                                                 prefs.setDouble(
                                                                     'balance',
@@ -1245,7 +1249,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                         'balance');
                                                                 debugPrint(
                                                                     'new balance is ${prefs.getDouble('balance')}');
-*//*
+*/
                                                     // we will connect the printer
                                                     if (!_connected) {
                                                       debugPrint(
@@ -1281,10 +1285,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                 });
                                               }
 
-                                              *//**
-                                       *
-                                       *                                                              ?*********** RE-PRINT CASE ************
-                                       *//*
+                                              /**
+                                   *
+                                   *                                                              ?*********** RE-PRINT CASE ************
+                                   */
                                               else if (widget.from ==
                                                   'resend') {
                                                 if (widget.resendType ==
@@ -1356,7 +1360,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                             widget.reasonId)
                                                         .then((value) async {
                                                       if (value == 'Success') {
-                                                        *//*
+                                                        /*
                                                                         // commented laterly
                                                                         prefs.setDouble(
                                                                             'balance',
@@ -1367,7 +1371,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                                 'balance');
                                                                         debugPrint(
                                                                             'new balance in resend is ${authProv.balance}');
-*//*
+*/
                                                         // we will connect the printer
                                                         if (!_connected) {
                                                           debugPrint(
@@ -1417,7 +1421,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                             widget.reasonId)
                                                         .then((value) async {
                                                       if (value == 'Success') {
-                                                        *//*
+                                                        /*
                                                                         // we will update balance
 // commented laterly
                                                                         prefs.setDouble(
@@ -1429,7 +1433,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                                 'balance');
                                                                         debugPrint(
                                                                             'new balance in resend is ${authProv.balance}');
-*//*
+*/
                                                         // we will connect the printer
                                                         if (!_connected) {
                                                           debugPrint(
@@ -1468,9 +1472,9 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                 }
                                               }
 
-                                              *//**
-                                       *                                                              ?*********** NORMAL PRINT CASE ************
-                                       *//*
+                                              /**
+                                   *                                                              ?*********** NORMAL PRINT CASE ************
+                                   */
 
                                               else if (widget.from == 'send') {
                                                 if (widget.resendType ==
@@ -1612,8 +1616,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                         .then((value) async {
                                                       if (value.message ==
                                                           'Success') {
-*//*
-
+/*
                                                                     // commented laterly
                                                                     prefs.setDouble(
                                                                         'balance',
@@ -1624,7 +1627,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                             'balance');
                                                                     debugPrint(
                                                                         'new balance is ${prefs.getDouble('balance')}');
-*//*
+*/
 
                                                         Future.delayed(
                                                                 const Duration(
@@ -1708,8 +1711,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                         .then((value) async {
                                                       if (value.message ==
                                                           'Success') {
-*//*
-
+/*
 // commented laterly
                                                                     prefs.setDouble(
                                                                         'balance',
@@ -1720,7 +1722,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                             'balance');
                                                                     debugPrint(
                                                                         'new balance is ${prefs.getDouble('balance')}');
-*//*
+*/
 
                                                         Future.delayed(
                                                                 const Duration(
@@ -1787,6 +1789,12 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                             LoginScreen(
                                                                               camera: cameras[1],
                                                                             )));
+                                                      }else if (value
+                                                              .message ==
+                                                          'Forbidden') {
+                                               Navigator.pop(context);
+                                               showToast('Status Code : 403 \n access to the requested resource is forbidden');
+
                                                       }
                                                     });
                                                   }
@@ -1847,7 +1855,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                           return Container();
                                         }
                                       }
-                                          *//* d.address ==
+                                          /* d.address ==
                                                           Provider.of<AuthProv>(
                                                                   context,
                                                                   listen: false)
@@ -1859,28 +1867,24 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                             showLoaderDialog(
                                                                 context,
                                                                 'Loading...');
-
                                                             SharedPreferences
                                                                 prefs =
                                                                 await SharedPreferences
                                                                     .getInstance();
-                                                            *//* *//**
+                                                            */ /**
                                                                                             *
                                                                                             *                                                              ?*********** CHECKOUT PER HOUR CASE ************
-                                                                                            *//* *//*
-
+                                                                                            */ /*
                                                             if (widget
                                                                     .perHourObj !=
                                                                 null) {
                                                               debugPrint(
                                                                   'perHour');
-
                                                               debugPrint(
                                                                   'userId ${authProv.userId}  logId ${widget.perHourObj.id}');
                                                               setState(() {
                                                                 _device = d;
                                                               });
-
                                                               visitorProv
                                                                   .confirmPerHour(
                                                                 widget
@@ -1911,7 +1915,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                   if (!_connected) {
                                                                     debugPrint(
                                                                         'printer is not connected');
-
                                                                     if (_device !=
                                                                             null &&
                                                                         _device.address !=
@@ -1940,11 +1943,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                 }
                                                               });
                                                             }
-
-                                                            *//* *//**
+                                                            */ /**
                                                                                                                                                                *
                                                                                                                                                                *                                                              ?*********** RE-PRINT CASE ************
-                                                                                                                                                               *//* *//*
+                                                                                                                                                               */ /*
                                                             else if (widget
                                                                     .from ==
                                                                 'resend') {
@@ -1960,7 +1962,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                   setState(() {
                                                                     _device = d;
                                                                   });
-
                                                                   visitorProv
                                                                       .confirmPrint(
                                                                           authProv
@@ -1977,7 +1978,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                       if (!_connected) {
                                                                         debugPrint(
                                                                             'printer is not connected');
-
                                                                         if (_device !=
                                                                                 null &&
                                                                             _device.address !=
@@ -2014,7 +2014,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                   setState(() {
                                                                     _device = d;
                                                                   });
-
                                                                   visitorProv
                                                                       .confirmPrint(
                                                                           authProv
@@ -2036,12 +2035,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                               'balance');
                                                                       debugPrint(
                                                                           'new balance in resend is ${authProv.balance}');
-
                                                                       // we will connect the printer
                                                                       if (!_connected) {
                                                                         debugPrint(
                                                                             'printer is not connected');
-
                                                                         if (_device !=
                                                                                 null &&
                                                                             _device.address !=
@@ -2089,7 +2086,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                     if (value ==
                                                                         'Success') {
                                                                       // we will update balance
-
                                                                       prefs.setDouble(
                                                                           'balance',
                                                                           authProv.balance +
@@ -2099,12 +2095,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                               'balance');
                                                                       debugPrint(
                                                                           'new balance in resend is ${authProv.balance}');
-
                                                                       // we will connect the printer
                                                                       if (!_connected) {
                                                                         debugPrint(
                                                                             'printer is not connected');
-
                                                                         if (_device !=
                                                                                 null &&
                                                                             _device.address !=
@@ -2132,11 +2126,9 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                 });
                                                               }
                                                             }
-
-                                                            *//* *//**
+                                                            */ /**
                                                                                                                                                                                                                                   *                                                              ?*********** NORMAL PRINT CASE ************
-                                                                                                                                                                                                                                  *//* *//*
-
+                                                                                                                                                                                                                                  */ /*
                                                             else if (widget
                                                                     .from ==
                                                                 'send') {
@@ -2173,12 +2165,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                         _device =
                                                                             d;
                                                                       });
-
                                                                       // first we will connect the printer
                                                                       if (!_connected) {
                                                                         print(
                                                                             'printer is not connected in invitation');
-
                                                                         if (_device !=
                                                                                 null &&
                                                                             _device.address !=
@@ -2206,14 +2196,12 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                   'perHour') {
                                                                 debugPrint(
                                                                     'perHour');
-
                                                                 setState(() {
                                                                   _device = d;
                                                                 });
                                                                 if (!_connected) {
                                                                   debugPrint(
                                                                       'printer is not connected');
-
                                                                   if (_device !=
                                                                           null &&
                                                                       _device.address !=
@@ -2264,7 +2252,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                         .memberShipModel
                                                                         .identityImagePath = null;
                                                                   }
-
                                                                   // hna b2a hn-call checkInMembership
                                                                   visitorProv
                                                                       .checkInMemberShip(
@@ -2294,7 +2281,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                               'balance');
                                                                       debugPrint(
                                                                           'new balance is ${prefs.getDouble('balance')}');
-
                                                                       Future.delayed(const Duration(
                                                                               seconds:
                                                                                   1))
@@ -2305,12 +2291,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                           _device =
                                                                               d;
                                                                         });
-
                                                                         // first we will connect the printer
                                                                         if (!_connected) {
                                                                           debugPrint(
                                                                               'printer is not connected');
-
                                                                           if (_device != null &&
                                                                               _device.address != null) {
                                                                             await bluetoothPrint.connect(_device).then((value) {
@@ -2381,7 +2365,6 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                               'balance');
                                                                       debugPrint(
                                                                           'new balance is ${prefs.getDouble('balance')}');
-
                                                                       Future.delayed(const Duration(
                                                                               seconds:
                                                                                   1))
@@ -2392,12 +2375,10 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                                           _device =
                                                                               d;
                                                                         });
-
                                                                         // first we will connect the printer
                                                                         if (!_connected) {
                                                                           debugPrint(
                                                                               'printer is not connected');
-
                                                                           if (_device != null &&
                                                                               _device.address != null) {
                                                                             await bluetoothPrint.connect(_device).then((value) {
@@ -2497,7 +2478,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                                     ColorManager.primary,
                                                     titleColor: ColorManager
                                                         .backGroundColor,
-                                                  )*//*
+                                                  )*/
                                           ).toList(),
                                     )
                                   : ValueListenableBuilder(
@@ -2561,7 +2542,7 @@ class _PrintScreen2State extends State<PrintScreen2> {
                                       },
                                     );
                             }),
-                      ),*/
+                      ),
                     ],
                   ),
                 ),

@@ -30,13 +30,15 @@ dependencies:
   shared_preferences: ^2.0.5
   screenshot: ^1.2.3
   google_fonts: ^1.1.2
-  flutter_launcher_icons: ^0.9.2
+  flutter_launcher_icons:
   flutter_screenutil: ^5.0.1+2
   pull_to_refresh: null
   animate_do: ^2.0.0
   auto_size_text: ^3.0.0
   bordered_text: ^2.0.0
-  flutter_udid: ^2.0.0
+  flutter_udid:
+  charset_converter: ^2.1.0
+  permission_handler: ^6.1.1
   expandable: ^5.0.1
   share: ^2.0.1
   share_plus: ^2.1.4
@@ -44,6 +46,7 @@ dependencies:
   transparent_image: ^1.0.0
   cupertino_icons: ^1.0.2
   dartz: ^0.10.1
+  flutter_bluetooth_basic: ^0.1.5
 
   flutter_svg:
   fluttertoast: ^8.0.8
@@ -51,12 +54,13 @@ dependencies:
   get_it:
   connectivity: ^3.0.6
   font_awesome_flutter: ^9.2.0
-  lottie: ^1.2.1
+  lottie:
   path_provider:
   intl: ^0.17.0
-  bluetooth_print: ^3.0.1
+  bluetooth_print: ^2.0.0
   dotted_decoration: ^2.0.0
-  esc_pos_printer: ^4.0.3
+  #esc_pos_printer: ^4.0.3
+  esc_pos_bluetooth: ^0.2.8
 
   syncfusion_flutter_datepicker: ^19.4.55
   logger: ^1.1.0

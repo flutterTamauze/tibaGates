@@ -240,6 +240,9 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
         if (response.statusCode == 401) {
           responseData.message = 'unAuth';
         }
+        else  if (response.statusCode == 403) {
+          responseData.message = 'Forbidden';
+        }
         response.stream.transform(utf8.decoder).listen((value) {
           Map<String, dynamic> responseDecoded = json.decode(value);
           debugPrint("response is ${responseDecoded['response']}");

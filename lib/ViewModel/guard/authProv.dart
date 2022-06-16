@@ -12,8 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProv with ChangeNotifier, BaseExceptionHandling {
-  var userId;
-
+  String userId;
   String guardName;
   String userRole;
   String token;
@@ -76,9 +75,10 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
       String responseBody = response;
 
       var decodedRes = jsonDecode(responseBody);
-print(decodedRes['status']);
-      if (decodedRes['status'] == true) {
 
+      print('status ${decodedRes['status']}');
+
+      if (decodedRes['status'] == true) {
         if (role == 'Casher') {
           print('solidawy');
           balance = double.parse(decodedRes['response']['balance'].toString());
@@ -90,7 +90,6 @@ print(decodedRes['status']);
 
         data = 'Success';
       }
-
       notifyListeners();
       return data;
     } catch (e) {
@@ -106,9 +105,21 @@ print(decodedRes['status']);
     Uri uri = Uri.parse('$BASE_URL/api/user/LogIn');
 
     http.MultipartRequest request = http.MultipartRequest('POST', uri);
-    request.files.add(
-      await http.MultipartFile.fromPath('file', guardImage.path),
-    );
+
+    if(guardImage!=null){
+      request.files.add(
+        await http.MultipartFile.fromPath('file', guardImage.path),
+      );
+    }
+/*
+    else if(guardImage==null){
+      request.files.add(
+        await http.MultipartFile.fromPath('file', 'null'),
+      );
+    }
+*/
+
+
     request.fields['Password'] = password;
     request.fields['UserName'] = username;
     request.fields['PhoneMac'] = tabAddress;
@@ -129,6 +140,7 @@ print(decodedRes['status']);
           if (responseDecoded['message'] == 'Success') {
             debugPrint('success case');
             data = 'Success';
+            isLogged = true;
             var userJson = responseDecoded['response']['user'];
 
             userRole = responseDecoded['response']['roles'][0];
@@ -139,22 +151,22 @@ print(decodedRes['status']);
             if (parkTypes.isEmpty) {
               parkTypes.add('الكل');
               reasonsJsonObj.map((e) => parkTypes.add(e)).toList();
-              debugPrint(parkTypes.length.toString());
             }
 
-            isLogged = true;
+
             userId = userJson['id'];
             token = userJson['token'];
 
+
             if (userRole != 'Manager' && userRole != 'Admin') {
               guardName = userJson['name'] ?? '  -  ';
-              // balance = double.parse(userJson['balance'].toString());
-              printerAddress = userJson['printerMac'];
+              printerAddress = userJson['printerMac']?? '  -  ';
               lostTicketPrice = double.parse(responseDecoded['response']
-                      ['printReasons'][0]['price']
+              ['printReasons'][0]['price']
                   .toString());
               gateName = responseDecoded['response']['gateName'] ?? '  -  ';
               gateId = responseDecoded['response']['user']['gateID'] ?? 0;
+              // balance = double.parse(userJson['balance'].toString());
             }
           } else if (responseDecoded['message'] == 'Incorrect User') {
             data = 'Incorrect User';

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -7,16 +8,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 //const String BASE_URL = 'https://tibarose.tibarosehotel.com';
-const String BASE_URL = 'https://10.0.0.51:447';
-//const String BASE_URL = 'https://192.168.2.51:446';
-
 //const String BASE_URL = 'https://10.0.0.51:447';
+//const String BASE_URL = 'https://192.168.2.51:446';
 //const String BASE_URL = 'http://10.0.0.242/GATE';
-//const String BASE_URL = 'https://10.0.0.242/PARKING';
+const String BASE_URL = 'https://10.0.0.242/PARKING';
 
-const kTextFieldDecorationWhite = InputDecoration(
+
+
+void showSnakBar(
+    {BuildContext context, String text, Color color, IconData icon}){
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    backgroundColor: color,
+    content: Row(
+      mainAxisAlignment:
+      MainAxisAlignment.spaceBetween,
+      children: [
+         Icon(
+          icon,
+          color: Colors.white,
+        ),
+        AutoSizeText(text
+          ,
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: setResponsiveFontSize(30)),
+        )
+      ],
+    ),
+  ));
+}
+
+
+const InputDecoration kTextFieldDecorationWhite = InputDecoration(
   isDense: true,
-
   contentPadding: EdgeInsets.symmetric(vertical: 10.0),
   hintText: 'Enter a value',
   hintStyle:

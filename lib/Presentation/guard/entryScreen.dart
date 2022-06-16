@@ -48,7 +48,6 @@ Future balanceListener;
   @override
   void initState() {
     super.initState();
-    balanceListener=Provider.of<AuthProv>(context,listen: false).getBalanceById(prefs.getString('guardId'),'Guard',);
     if (Provider.of<VisitorProv>(context, listen: false).memberShipModel !=
         null) {
 
@@ -56,10 +55,12 @@ Future balanceListener;
           .memberShipModel
            = null;
     }
+
     token = prefs.getString('token');
     debugPrint(token);
     Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {
-      cachingData();
+      cachingData().whenComplete(() {    balanceListener=Provider.of<AuthProv>(context,listen: false).getBalanceById(prefs.getString('guardId'),'Guard',);
+      });
     });
   }
 
