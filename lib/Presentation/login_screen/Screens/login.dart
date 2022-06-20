@@ -206,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                                   takeImage().then((image) async {
 
                                                     debugPrint('image during login is   $image');
-                                                    showToast('image is $image');
+                                                   // showToast('image is $image');
                                                     await login(image);
                                                   /*  if (image == null) {
 
@@ -337,7 +337,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     await prefs.setString('role', authProv.userRole ?? '');
     await prefs.setString('token', authProv.token);
     await prefs.setString('guardName', authProv.guardName ?? '');
-    await prefs.setDouble('balance', authProv.balance ?? 0.0);
+   // await prefs.setDouble('balance', authProv.balance ?? 0.0);
     await prefs.setDouble('ticketLostPrice', authProv.lostTicketPrice ?? 0.0);
     await prefs.setString('printerAddress', authProv.printerAddress ?? '');
     await prefs.setString('gateName', authProv.gateName ?? '');

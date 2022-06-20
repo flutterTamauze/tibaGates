@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:Tiba_Gates/Utilities/Shared/dialogs/hotel_guest_dialog.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../Utilities/Shared/dialogs/loading_dialog.dart';
 import '../../ViewModel/guard/authProv.dart';
@@ -312,135 +315,403 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
                                       ),
                                     ),
                                     buildDivider(),
+
                                     SizedBox(
                                       height: 30.h,
                                     ),
-                                    isScaning == true
-                                        ? const CircularProgressIndicator()
-                                        : ((_devices.isEmpty ||
-                                                defServiceProv
-                                                    .serviceObjects.isEmpty || myDevice==null)
-                                            ? Center(
-                                                child: RoundedButton(
-                                                width: 220,
-                                                height: 60,
-                                                ontap: () async {
-                                                  setState(() {
-                                                    isScaning = true;
-                                                  });
-                                                  refreshPrinter();
-                                                },
-                                                title: 'Refresh',
-                                                buttonColor:
-                                                    ColorManager.primary,
-                                                titleColor: ColorManager
-                                                    .backGroundColor,
-                                              ))
-                                            : SizedBox(
-                                                height: 70.h,
-                                                width: 220.w,
-                                                child: (
 
-                                                    myDevice.address ==
-                                                         Provider.of<AuthProv>(context,listen: false).printerAddress
-                                                        // 'DC:0D:30:CC:27:07'
-                                      //                  'DC:0D:30:A0:64:74'
-                                                    //  'DC:0D:30:A0:65:A8'
+                                    Row(
 
-                                                    )
-                                                    ? RoundedButton(
-                                                        width: 220,
-                                                        height: 60,
-                                                        ontap: () async {
-                                                          showLoaderDialog(
-                                                              context,
-                                                              'جارى التحميل..');
-                                                          serviceProv
-                                                              .addBill(
-                                                                  serviceTypeId,
-                                                                  servicePrice,
-                                                                  _count,
-                                                                  prefs.getString(
-                                                                      'guardId'))
-                                                              .then(
-                                                                  ((value) async {
-                                                            if (value ==
-                                                                'Success') {
-                                                              Future.delayed(
-                                                                      const Duration(
-                                                                          seconds:
-                                                                              1))
-                                                                  .whenComplete(
-                                                                      () async {
-
-                                                                        PosPrintResult result =  await  _printerManager.printTicket(
-                                                                    await casherTicket(
-                                                                        PaperSize
-                                                                            .mm58),
-                                                                    queueSleepTimeMs:
-                                                                        50);
-
-                                                                        Navigator.pop(context);
-                                                                        print('printing result is ${result.msg}');
-                                                                        if (result.msg == 'Success') {
-                                                                          showSnakBar(
-                                                                              color: Colors.green,
-                                                                              context: context,
-                                                                              text: result.msg,
-                                                                              icon: Icons.done_outline);
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                      isScaning == true
+                                          ? const CircularProgressIndicator()
+                                          : ((_devices.isEmpty ||
+                                          defServiceProv
+                                              .serviceObjects.isEmpty || myDevice==null)
+                                          ? Center(
+                                          child:                                        OutlinedButton(
+                                            onPressed: () async {
+                                              setState(() {
+                                                isScaning = true;
+                                              });
+                                              refreshPrinter();
+                                            },
+                                            child: SizedBox(
+                                              height: 45.h,
+                                              width: 50.w,
+                                              child: const Center(
+                                                child: Icon(
+                                                  Icons.refresh_rounded,
+                                                  color: Colors.green,
+                                                  size: 32,
+                                                ),
+                                              ),
+                                            ),
+                                            style: ButtonStyle(
+                                                side: MaterialStateProperty.all(
+                                                    BorderSide(
+                                                        color: Colors.green,
+                                                        width: 2.w)),
+                                                backgroundColor:
+                                                MaterialStateProperty.all<Color>(
+                                                    Colors.white),
+                                                padding: MaterialStateProperty.all(
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 20.h,
+                                                        horizontal: 20.w)),
+                                                shape: MaterialStateProperty.all(
+                                                    const RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.all(
+                                                            Radius.circular(20))))),
+                                          )
 
 
-                                                                        } else if (result.msg == 'Error. Printer connection timeout') {
-                                                                          showSnakBar(
-                                                                              color: Colors.red[400],
-                                                                              context: context,
-                                                                              text: 'Error!! Printer connection timeout',
-                                                                              icon: Icons.watch_later_outlined);
-                                                                        } else if (result.msg == 'Error. Printer not selected') {
-                                                                          showSnakBar(
-                                                                              color: Colors.red[400],
-                                                                              context: context,
-                                                                              text: 'Error!! Printer not selected',
-                                                                              icon: Icons.print_disabled_outlined);
-                                                                        } else {
-                                                                          showSnakBar(
-                                                                              color: Colors.red[400],
-                                                                              context: context,
-                                                                              text: result.msg,
-                                                                              icon: Icons.error_outline);
-                                                                        }
-                                                                        navigateReplacementTo(context, const CasherEntryScreen());
 
-                                                             /*   _startPrint(
+
+
+
+                       /*       RoundedButton(
+                                            width: 220,
+                                            height: 60,
+                                            ontap: () async {
+                                              setState(() {
+                                                isScaning = true;
+                                              });
+                                              refreshPrinter();
+                                            },
+                                            title: 'Refresh',
+                                            buttonColor:
+                                            ColorManager.primary,
+                                            titleColor: ColorManager
+                                                .backGroundColor,
+                                          )*/)
+                                          : SizedBox(
+                                        height: 70.h,
+                                        width: 220.w,
+                                        child: (
+
+                                            myDevice.address ==
+                                                Provider.of<AuthProv>(context,listen: false).printerAddress
+                                            // 'DC:0D:30:CC:27:07'
+                                            //                  'DC:0D:30:A0:64:74'
+                                            //  'DC:0D:30:A0:65:A8'
+
+                                        )
+                                            ?
+                                        OutlinedButton(
+                                          onPressed: () async {
+                                            showLoaderDialog(
+                                                context,
+                                                'جارى التحميل..');
+                                            serviceProv
+                                                .addBill(
+                                                serviceTypeId,
+                                                servicePrice,
+                                                _count,
+                                                prefs.getString(
+                                                    'guardId'))
+                                                .then(
+                                                ((value) async {
+                                                  if (value ==
+                                                      'Success') {
+                                                    Future.delayed(
+                                                        const Duration(
+                                                            seconds:
+                                                            1))
+                                                        .whenComplete(
+                                                            () async {
+
+                                                          PosPrintResult result =  await  _printerManager.printTicket(
+                                                              await casherTicket(
+                                                                  PaperSize.mm58),
+                                                              queueSleepTimeMs: 50);
+
+                                                          Navigator.pop(context);
+                                                          print('printing result is ${result.msg}');
+                                                          if (result.msg == 'Success') {
+                                                            showSnakBar(
+                                                                color: Colors.green,
+                                                                context: context,
+                                                                text: result.msg,
+                                                                icon: Icons.done_outline);
+
+
+                                                          } else if (result.msg == 'Error. Printer connection timeout') {
+                                                            showSnakBar(
+                                                                color: Colors.red[400],
+                                                                context: context,
+                                                                text: 'Error!! Printer connection timeout',
+                                                                icon: Icons.watch_later_outlined);
+                                                          } else if (result.msg == 'Error. Printer not selected') {
+                                                            showSnakBar(
+                                                                color: Colors.red[400],
+                                                                context: context,
+                                                                text: 'Error!! Printer not selected',
+                                                                icon: Icons.print_disabled_outlined);
+                                                          } else {
+                                                            showSnakBar(
+                                                                color: Colors.red[400],
+                                                                context: context,
+                                                                text: result.msg,
+                                                                icon: Icons.error_outline);
+                                                          }
+                                                          navigateReplacementTo(context, const CasherEntryScreen());
+
+                                                          /*   _startPrint(
                                                                     myDevice);*/
-                                                              });
-                                                            }
-                                                          }));
-                                                        },
-                                                        title: 'تأكيد',
-                                                        buttonColor:
-                                                            ColorManager
-                                                                .primary,
-                                                        titleColor: ColorManager
-                                                            .backGroundColor,
-                                                      )
-                                                    : RoundedButton(
-                                                        width: 220,
-                                                        height: 60,
-                                                        ontap: () async {
-                                                          setState(() {
-                                                            isScaning = true;
-                                                          });
-                                                          refreshPrinter();
-                                                        },
-                                                        title: 'Refresh',
-                                                        buttonColor:
-                                                            ColorManager
-                                                                .primary,
-                                                        titleColor: ColorManager
-                                                            .backGroundColor,
-                                                      ),
-                                              ))
+                                                        });
+                                                  }
+                                                }));
+                                          },
+                                          child: SizedBox(
+                                            height: 45.h,
+                                            width: 50.w,
+                                            child: const Center(
+                                              child: Icon(
+                                                Icons.print,
+                                                color: Colors.green,
+                                                size: 32,
+                                              ),
+                                            ),
+                                          ),
+                                          style: ButtonStyle(
+                                              side: MaterialStateProperty.all(
+                                                  BorderSide(
+                                                      color: Colors.green,
+                                                      width: 2.w)),
+                                              backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.white),
+                                              padding: MaterialStateProperty.all(
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 20.h,
+                                                      horizontal: 20.w)),
+                                              shape: MaterialStateProperty.all(
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.all(
+                                                          Radius.circular(20))))),
+                                        )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     /*   RoundedButton(
+                                          width: 220,
+                                          height: 60,
+                                          ontap: () async {
+                                            showLoaderDialog(
+                                                context,
+                                                'جارى التحميل..');
+                                            serviceProv
+                                                .addBill(
+                                                serviceTypeId,
+                                                servicePrice,
+                                                _count,
+                                                prefs.getString(
+                                                    'guardId'))
+                                                .then(
+                                                ((value) async {
+                                                  if (value ==
+                                                      'Success') {
+                                                    Future.delayed(
+                                                        const Duration(
+                                                            seconds:
+                                                            1))
+                                                        .whenComplete(
+                                                            () async {
+
+                                                          PosPrintResult result =  await  _printerManager.printTicket(
+                                                              await casherTicket(
+                                                                  PaperSize.mm58),
+                                                              queueSleepTimeMs: 50);
+
+                                                          Navigator.pop(context);
+                                                          print('printing result is ${result.msg}');
+                                                          if (result.msg == 'Success') {
+                                                            showSnakBar(
+                                                                color: Colors.green,
+                                                                context: context,
+                                                                text: result.msg,
+                                                                icon: Icons.done_outline);
+
+
+                                                          } else if (result.msg == 'Error. Printer connection timeout') {
+                                                            showSnakBar(
+                                                                color: Colors.red[400],
+                                                                context: context,
+                                                                text: 'Error!! Printer connection timeout',
+                                                                icon: Icons.watch_later_outlined);
+                                                          } else if (result.msg == 'Error. Printer not selected') {
+                                                            showSnakBar(
+                                                                color: Colors.red[400],
+                                                                context: context,
+                                                                text: 'Error!! Printer not selected',
+                                                                icon: Icons.print_disabled_outlined);
+                                                          } else {
+                                                            showSnakBar(
+                                                                color: Colors.red[400],
+                                                                context: context,
+                                                                text: result.msg,
+                                                                icon: Icons.error_outline);
+                                                          }
+                                                          navigateReplacementTo(context, const CasherEntryScreen());
+
+                                                          *//*   _startPrint(
+                                                                    myDevice);*//*
+                                                        });
+                                                  }
+                                                }));
+                                          },
+                                          title: 'تأكيد',
+                                          buttonColor:
+                                          ColorManager
+                                              .primary,
+                                          titleColor: ColorManager
+                                              .backGroundColor,
+                                        )*/
+                                            :
+                                        OutlinedButton(
+                                          onPressed: () async {
+                                            setState(() {
+                                              isScaning = true;
+                                            });
+                                            refreshPrinter();
+                                          },
+                                          child: SizedBox(
+                                            height: 45.h,
+                                            width: 50.w,
+                                            child: const Center(
+                                              child: Icon(
+                                                Icons.refresh_rounded,
+                                                color: Colors.green,
+                                                size: 32,
+                                              ),
+                                            ),
+                                          ),
+                                          style: ButtonStyle(
+                                              side: MaterialStateProperty.all(
+                                                  BorderSide(
+                                                      color: Colors.green,
+                                                      width: 2.w)),
+                                              backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.white),
+                                              padding: MaterialStateProperty.all(
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 20.h,
+                                                      horizontal: 20.w)),
+                                              shape: MaterialStateProperty.all(
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.all(
+                                                          Radius.circular(20))))),
+                                        )
+
+
+
+
+
+                                      /*  RoundedButton(
+                                          width: 220,
+                                          height: 60,
+                                          ontap: () async {
+                                            setState(() {
+                                              isScaning = true;
+                                            });
+                                            refreshPrinter();
+                                          },
+                                          title: 'Refresh',
+                                          buttonColor:
+                                          ColorManager
+                                              .primary,
+                                          titleColor: ColorManager
+                                              .backGroundColor,
+                                        ),*/
+                                      )),
+
+                                      Padding(
+                                        padding:
+                                        EdgeInsets.only( left: 30.w),
+                                        child: OutlinedButton(
+                                          onPressed: () async {
+                                            String barCode;
+                                            try {
+                                              barCode = await FlutterBarcodeScanner
+                                                  .scanBarcode(
+                                                  '#FF039212',
+                                                  'Cancel',
+                                                  true,
+                                                  ScanMode.BARCODE);
+                                              // showToast(barCode);
+                                        /*      showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return const HotelGuestDialog(
+                                                      name: 'Ahmed Radwan',
+                                                      fromDate: '18-06-2022',
+                                                      toDate: '18-07-2022',
+                                                    );
+                                                  });*/
+                                            } on PlatformException {
+                                              barCode = 'Failed to get barcode';
+                                            }
+                                            if (!mounted) {
+                                              return;
+                                            }
+                                          },
+                                          child: SizedBox(
+                                            height: 45.h,
+                                            width: 50.w,
+                                            child: const Center(
+                                              child: Icon(
+                                                FontAwesomeIcons.barcode,
+                                                color: Colors.black,
+                                                size: 32,
+                                              ),
+                                            ),
+                                          ),
+                                          style: ButtonStyle(
+                                              side: MaterialStateProperty.all(
+                                                  BorderSide(
+                                                      color: Colors.black,
+                                                      width: 1.4.w)),
+                                              backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.white),
+                                              padding: MaterialStateProperty.all(
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 20.h,
+                                                      horizontal: 20.w)),
+                                              shape: MaterialStateProperty.all(
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.all(
+                                                          Radius.circular(20))))),
+                                        ),
+                                      ),
+
+                                    ],)
+
                                   ],
                                 ),
                               ),

@@ -660,6 +660,64 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   }
 
 
+
+  Future<dynamic> scanBarcode(String barcode) async {
+    String data = '';
+    debugPrint('barcode $barcode');
+
+    try {
+      Uri uri = Uri.parse('$BASE_URL/api/Invitation/ScanInvitationQr');
+      http.MultipartRequest request = http.MultipartRequest('POST', uri);
+
+      request.fields['QrCode'] = qrCode;
+      request.headers.addAll(mHeaders);
+
+      try {
+        await request.send().then((response) async {
+          debugPrint(' status code = ${response.statusCode}');
+
+          response.stream.transform(utf8.decoder).listen((value) {
+            Map<String, dynamic> responseDecoded = json.decode(value);
+            debugPrint("response ${responseDecoded['response']}");
+            debugPrint('message is $responseDecoded');
+
+            if(responseDecoded['message']=='Invalid QR' ||responseDecoded['response']==null ){
+              data='invalid qr';
+            }
+
+            else{
+              invitationID = responseDecoded['response']['id'];
+              isVIP = responseDecoded['response']['isVIP'];
+              ownerId = responseDecoded['response']['ownerId']??-1;
+              invitationDescription = responseDecoded['response']['description'];
+              invitationName = responseDecoded['response']['name'];
+              invitationCreationDate = responseDecoded['response']['creationDate'];
+              invitationExpireDate = responseDecoded['response']['expiryDate'];
+              invitationType = responseDecoded['response']['invitationType'];
+
+              if (isVIP) {
+                data = 'vip';
+              } else if (responseDecoded['message'] == 'Success') {
+                data = 'not vip';
+              }
+            }
+
+          });
+        }).catchError((e) {
+          debugPrint(e.toString());
+        });
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+
+      notifyListeners();
+      return data;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+
   Future<dynamic> checkMemberShipValidation(String qrCode) async {
     String data = '';
     debugPrint('qrCode $qrCode');

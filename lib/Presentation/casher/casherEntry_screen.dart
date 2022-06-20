@@ -1,6 +1,12 @@
 // ignore_for_file: missing_return
 import 'dart:io';
 
+import 'package:Tiba_Gates/Presentation/area_manager/areaManager_Entry_screen.dart';
+import 'package:Tiba_Gates/Utilities/Shared/dialogs/hotel_guest_dialog.dart';
+import 'package:Tiba_Gates/ViewModel/common/commonProv.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:intl/intl.dart';
+
 import 'casherHome_screen.dart';
 import '../guard/scanner.dart';
 import '../login_screen/Widgets/outlined_button.dart';
@@ -91,11 +97,9 @@ class _CasherEntryScreenState extends State<CasherEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-/*    if(mounted){
-      if(Provider.of<ServicesProv>(context,listen: false).serviceObjects.isNotEmpty){
-        Provider.of<ServicesProv>(context, listen: false).resetPrice();
-      }
-    }*/
+
+    CommonProv commonProv=Provider.of<CommonProv>(context,listen: false);
+
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     ConnectivityStatus connectionStatus =
@@ -312,13 +316,60 @@ class _CasherEntryScreenState extends State<CasherEntryScreen> {
                                   height: 55,
                                   buttonColor: Colors.orange,
                                   titleColor: ColorManager.backGroundColor,
+                                ),      SizedBox(
+                                  height: 26.h,
+                                ), RoundedButton(
+                                  ontap: () async {
+                                    String barCode;
+                                    try{
+                                      barCode=await FlutterBarcodeScanner.scanBarcode('#FF039212', 'Cancel', true, ScanMode.BARCODE);
+                                      commonProv.checkBarcodeValidation(barCode).then((value) {
+                                        if(value=='Success'){
+
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return  HotelGuestDialog(name:commonProv.hotelGuestModel.guestName ,
+                                                  fromDate: DateFormat('yyyy-MM-dd / hh:mm').format(DateTime.parse(commonProv.hotelGuestModel.startDate)).toString() ,
+                                                  hotelName: commonProv.hotelGuestModel.hotelName,
+                                                  toDate:DateFormat('yyyy-MM-dd / hh:mm').format(DateTime.parse(commonProv.hotelGuestModel.endDate)).toString() ,
+                                                  onPressed: (){
+
+                                                    Navigator.pop(context);
+                                                  },);
+                                              });
+
+                                        }
+                                        else{
+                                          debugPrint('value is $value');
+                                        }
+
+
+                                      });
+
+
+
+
+                                    }on PlatformException{
+                                      barCode='Failed to get barcode';
+                                    }
+                                    if(!mounted) {
+                                      return;
+                                    }
+
+                                  },
+                                  title: 'باركود',
+                                  width: 250,
+                                  height: 55,
+                                  buttonColor: Colors.black,
+                                  titleColor: ColorManager.backGroundColor,
                                 )
                               ],
                             ),
                           ),
                         ),
                         SizedBox(
-                          height: 260.h,
+                          height: 160.h,
                         ),
                         FadeInUp(
                             child: OutlineButtonFb1(

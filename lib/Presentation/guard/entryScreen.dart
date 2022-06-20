@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:Tiba_Gates/Utilities/Shared/dialogs/hotel_guest_dialog.dart';
+import 'package:Tiba_Gates/ViewModel/common/commonProv.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import 'package:Tiba_Gates/Utilities/Shared/dialogs/exit_dialog2.dart';
 import 'package:Tiba_Gates/Utilities/Shared/noInternet.dart';
@@ -6,6 +9,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import '../../Utilities/connectivityStatus.dart';
 import 'package:lottie/lottie.dart';
 import '../login_screen/Widgets/outlined_button.dart';
@@ -91,7 +95,7 @@ Future balanceListener;
     double width = MediaQuery.of(context).size.width;
     ConnectivityStatus connectionStatus =
         Provider.of<ConnectivityStatus>(context);
-
+CommonProv commonProv=     Provider.of<CommonProv>(context,listen: false);
     return WillPopScope(
       onWillPop: () {
         SystemNavigator.pop();
@@ -326,13 +330,61 @@ Future balanceListener;
                                   height: 55,
                                   buttonColor: Colors.orange,
                                   titleColor: ColorManager.backGroundColor,
+                                ) ,SizedBox(
+                                  height: 26.h,
+                                ),
+                                RoundedButton(
+                                  ontap: () async {
+                                    String barCode;
+                                    try{
+                                      barCode=await FlutterBarcodeScanner.scanBarcode('#FF039212', 'Cancel', true, ScanMode.BARCODE);
+                                      commonProv.checkBarcodeValidation(barCode).then((value) {
+                                        if(value=='Success'){
+
+                                          showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return  HotelGuestDialog(name:commonProv.hotelGuestModel.guestName ,
+                                              fromDate: DateFormat('yyyy-MM-dd / hh:mm').format(DateTime.parse(commonProv.hotelGuestModel.startDate)).toString() ,
+                                              hotelName: commonProv.hotelGuestModel.hotelName,
+                                              toDate:DateFormat('yyyy-MM-dd / hh:mm').format(DateTime.parse(commonProv.hotelGuestModel.endDate)).toString() ,
+                                              onPressed: (){
+                                              print('a');
+                                              Navigator.pop(context);
+                                              },);
+                                          });
+
+                                        }
+                                        else{
+                                         debugPrint('value is $value');
+                                        }
+
+
+                                      });
+
+
+
+
+                                    }on PlatformException{
+                                      barCode='Failed to get barcode';
+                                    }
+                                    if(!mounted) {
+                                      return;
+                                    }
+
+                                  },
+                                  title: 'باركود',
+                                  width: 250,
+                                  height: 55,
+                                  buttonColor: Colors.black,
+                                  titleColor: ColorManager.backGroundColor,
                                 )
                               ],
                             ),
                           ),
                         ),
                         SizedBox(
-                          height: 150.h,
+                          height: 80.h,
                         ),
                         FadeInUp(
                             child: OutlineButtonFb1(
@@ -347,5 +399,17 @@ Future balanceListener;
               )),
       ),
     );
+  }
+  Future<void> scanBarcode()async{
+    String barCode;
+    try{
+      barCode=await FlutterBarcodeScanner.scanBarcode('', 'Cancel', true, ScanMode.BARCODE);
+
+    }on PlatformException{
+      barCode='Failed to get barcode';
+    }
+    if(!mounted) {
+      return;
+    }
   }
 }

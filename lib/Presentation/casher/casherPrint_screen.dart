@@ -265,9 +265,7 @@ class _CasherPrintScreenState extends State<CasherPrintScreen> {
                                     ),
                                     trueVisitorProv.printTime != null
                                         ? Text(
-                                      'Date : ${                      DateFormat('yyyy-MM-dd / hh:mm')
-                                          .format(DateTime.parse(trueVisitorProv.printTime))
-                                          .toString()                   }',
+                                      'Date : ${ DateFormat('yyyy-MM-dd / hh:mm').format(DateTime.parse(trueVisitorProv.printTime)).toString()                   }',
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
                                           color: Colors.black,
