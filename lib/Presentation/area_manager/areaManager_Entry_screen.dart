@@ -6,7 +6,7 @@ import 'package:Tiba_Gates/ViewModel/common/commonProv.dart';
 import '../guard/scanner.dart';
 import '../login_screen/Widgets/outlined_button.dart';
 import '../../Utilities/Shared/noInternet.dart';
-import '../../ViewModel/casher/servicesProv.dart';
+import '../../ViewModel/casher/casherServicesProv.dart';
 import '../../Utilities/Shared/dialogs/exit_dialog2.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';

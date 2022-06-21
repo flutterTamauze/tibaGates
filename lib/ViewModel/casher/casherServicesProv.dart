@@ -1,11 +1,8 @@
 import 'dart:convert';
-
 import '../../Data/Models/casher/services_model.dart';
-
 import '../../Utilities/Constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../api/base_client.dart';
 import '../../api/base_exception_handling.dart';
 
@@ -28,7 +25,7 @@ class ServicesProv with ChangeNotifier, BaseExceptionHandling {
   }
 
   Future<dynamic> getServices(int gateId) async {
-    String data='';
+    String data = '';
     print('gate id $gateId');
     try {
       var response = await BaseClient()
@@ -40,27 +37,16 @@ class ServicesProv with ChangeNotifier, BaseExceptionHandling {
       serviceObjects =
           jsonObj.map((item) => ServicesModel.fromJson(item)).toList();
 
-  /*    serviceObjects=[
-        ServicesModel(id: 1,arServiceName: 'رضوان',serviceName: 'radwan',servicePrice: 20),
-        ServicesModel(id: 1,arServiceName: 'رضوان',serviceName: 'radwan',servicePrice: 20),
-        ServicesModel(id: 1,arServiceName: 'رضوان',serviceName: 'radwan',servicePrice: 20),
-      ];
-*/
-
       servicePrice = serviceObjects[0].servicePrice;
 
       for (int i = 0; i < serviceObjects.length; i++) {
-
         if (!serviceTypes.contains(serviceObjects[i].arServiceName)) {
           serviceTypes.add(serviceObjects[i].arServiceName);
         }
 
-
         if (!engServiceTypes.contains(serviceObjects[i].serviceName)) {
           engServiceTypes.add(serviceObjects[i].serviceName);
         }
-
-
       }
 
       debugPrint('length of services types ${serviceTypes[0]}');
@@ -71,18 +57,26 @@ class ServicesProv with ChangeNotifier, BaseExceptionHandling {
     }
   }
 
-  Future<dynamic> addBill(
-      int serviceId, double total, int count, String userId) async {
+  Future<dynamic> addBill(int serviceId, double total, int count, String userId,
+      List<String> followersBarcode) async {
     String data = '';
+    Map<String, dynamic> postedData;
+    debugPrint('barcodes legnth ${followersBarcode.length}');
 
     try {
-      var response = await BaseClient().post(
-          BASE_URL, '/api/Service_Bill/Add', {
+      postedData = {
+        'barCodes': followersBarcode,
         'qty': count,
         'total': total,
         'serviceId': serviceId,
         'userId': userId
-      }).catchError(handleError);
+      };
+
+      print('data is $postedData');
+
+      var response = await BaseClient()
+          .post(BASE_URL, '/api/Service_Bill/Add', postedData)
+          .catchError(handleError);
 
       String responseBody = response;
 

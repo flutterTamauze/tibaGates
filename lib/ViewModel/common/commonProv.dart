@@ -16,6 +16,7 @@ class CommonProv with ChangeNotifier, BaseExceptionHandling {
     'Authorization': 'Bearer ${prefs.getString('token')}'
   };
 
+
   HotelGuestModel hotelGuestModel;
 
   Future<dynamic> checkBarcodeValidation(String barcode) async {
@@ -29,7 +30,29 @@ class CommonProv with ChangeNotifier, BaseExceptionHandling {
       if (jsonDecode(response)['message'] == 'Success') {
         message = 'Success';
         hotelGuestModel =  HotelGuestModel.fromJson(jsonObj);
-        debugPrint('guest name is $hotelGuestModel');
+        debugPrint('guest name is ${hotelGuestModel.guestName}');
+      }
+      else if (jsonDecode(response)['message'] == 'Invalid Barcode') {
+        message = 'invalid';
+      }
+
+      notifyListeners();
+      return message;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+
+  Future<dynamic> confirmBarcodeLog(int id) async {
+    String message;
+    try {
+      var response = await BaseClient()
+          .post(BASE_URL, '/api/HotelGuestLog/Add/$id')
+          .catchError(handleError);
+
+      if (jsonDecode(response)['message'] == 'Success') {
+        message = 'Success';
       }
 
       notifyListeners();

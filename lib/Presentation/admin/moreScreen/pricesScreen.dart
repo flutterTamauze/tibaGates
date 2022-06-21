@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Tiba_Gates/Utilities/media_query.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../../Utilities/responsive.dart';
 import '../../../Data/Models/admin/prices.dart';
@@ -428,8 +429,8 @@ class _PricesScreenState extends State<PricesScreen> {
     ConnectivityStatus connectionStatus =
         Provider.of<ConnectivityStatus>(context);
 
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height =context.height;
+    double width = context.width;
     return SafeArea(
       child: Scaffold(
         floatingActionButton: ZoomIn(

@@ -186,7 +186,7 @@ class BillDialog extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PrintScreen2(
+                                builder: (context) => PrintScreen(
                                       civilCount: citizenValue,
                                       militaryCount: militaryValue,
                                       from: 'send',

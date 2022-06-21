@@ -118,6 +118,12 @@ void showToast(String message) => Fluttertoast.showToast(
     backgroundColor: Colors.green,
     toastLength: Toast.LENGTH_LONG);
 
+
+void showShortToast(String message) => Fluttertoast.showToast(
+    msg: message,
+    backgroundColor: Colors.green,
+    toastLength: Toast.LENGTH_SHORT);
+
 final ktextFieldDecoration = InputDecoration(
   errorStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
   focusedBorder: OutlineInputBorder(

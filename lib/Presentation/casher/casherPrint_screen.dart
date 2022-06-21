@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 import 'package:Tiba_Gates/Presentation/casher/casherEntry_screen.dart';
 import 'package:Tiba_Gates/Utilities/Shared/noInternet.dart';
 import 'package:Tiba_Gates/Utilities/Shared/tiba_logo.dart';
-import 'package:Tiba_Gates/ViewModel/casher/servicesProv.dart';
+import 'package:Tiba_Gates/ViewModel/casher/casherServicesProv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:bluetooth_print/bluetooth_print_model.dart';
@@ -611,7 +611,7 @@ class _CasherPrintScreenState extends State<CasherPrintScreen> {
                                       .addBill(
                                       widget.typeId,
                                       widget.totalPrice,
-                                      widget.count,prefs.getString('guardId'))
+                                      widget.count,prefs.getString('guardId'),[])
                                       .then(((value) async {
                                     if (value ==
                                         'Success') {

@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'Presentation/casher/casherEntry_screen.dart';
 import 'Presentation/splash_screen/splash_screen.dart';
-import 'ViewModel/casher/servicesProv.dart';
+import 'ViewModel/casher/casherServicesProv.dart';
 import 'ViewModel/common/commonProv.dart';
 import 'ViewModel/game/gameProv.dart';
 import 'ViewModel/guard/authProv.dart';

@@ -11,7 +11,7 @@ import 'casherHome_screen.dart';
 import '../guard/scanner.dart';
 import '../login_screen/Widgets/outlined_button.dart';
 import '../../Utilities/Shared/noInternet.dart';
-import '../../ViewModel/casher/servicesProv.dart';
+import '../../ViewModel/casher/casherServicesProv.dart';
 import '../../Utilities/Shared/dialogs/exit_dialog2.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -323,6 +323,7 @@ class _CasherEntryScreenState extends State<CasherEntryScreen> {
                                     String barCode;
                                     try{
                                       barCode=await FlutterBarcodeScanner.scanBarcode('#FF039212', 'Cancel', true, ScanMode.BARCODE);
+                                      // showToast(barCode);
                                       commonProv.checkBarcodeValidation(barCode).then((value) {
                                         if(value=='Success'){
 
@@ -335,10 +336,25 @@ class _CasherEntryScreenState extends State<CasherEntryScreen> {
                                                   toDate:DateFormat('yyyy-MM-dd / hh:mm').format(DateTime.parse(commonProv.hotelGuestModel.endDate)).toString() ,
                                                   onPressed: (){
 
-                                                    Navigator.pop(context);
+                                                    debugPrint('log id is ${commonProv.hotelGuestModel.id}');
+                                                    commonProv.confirmBarcodeLog(commonProv.hotelGuestModel.id)
+                                                        .then((value) {
+                                                      if (value == 'Success') {
+                                                        showToast(
+                                                            'تم التأكيد بنجاح');
+                                                        Navigator.pop(context);
+                                                      } else {
+                                                        showToast('حدث خطأ ما');
+                                                        Navigator.pop(context);
+                                                      }
+                                                    });
                                                   },);
                                               });
 
+                                        }
+                                        else if(value=='invalid'){
+                                          debugPrint('value is $value');
+                                          showToast('كود غير صحيح');
                                         }
                                         else{
                                           debugPrint('value is $value');

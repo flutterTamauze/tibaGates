@@ -68,12 +68,12 @@ class HotelGuestDialog extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('نزيل فندق :             ',
+                    AutoSizeText('نزيل فندق :             ',
                         textAlign: TextAlign.end,
                         style: TextStyle(
                             fontSize: setResponsiveFontSize(30),
                             fontWeight: FontWeight.bold)),
-                    Text(
+                    AutoSizeText(
                       hotelName,
                       textAlign: TextAlign.start,
                       style: TextStyle(
@@ -105,12 +105,12 @@ class HotelGuestDialog extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('الإسم :             ',
+                    AutoSizeText('الإسم :             ',
                         textAlign: TextAlign.end,
                         style: TextStyle(
                             fontSize: setResponsiveFontSize(30),
                             fontWeight: FontWeight.bold)),
-                    Text(
+                    AutoSizeText(
                       name,
                       textAlign: TextAlign.start,
                       style: TextStyle(
@@ -142,12 +142,12 @@ class HotelGuestDialog extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('من :             ',
+                    AutoSizeText('من :             ',
                         textAlign: TextAlign.end,
                         style: TextStyle(
                             fontSize: setResponsiveFontSize(30),
                             fontWeight: FontWeight.bold)),
-                    Text(
+                    AutoSizeText(
                       fromDate,
                       textAlign: TextAlign.start,
                       style: TextStyle(
@@ -179,12 +179,12 @@ class HotelGuestDialog extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('إلى :             ',
+                    AutoSizeText('إلى :             ',
                         textAlign: TextAlign.end,
                         style: TextStyle(
                             fontSize: setResponsiveFontSize(30),
                             fontWeight: FontWeight.bold)),
-                    Text(
+                    AutoSizeText(
                       toDate,
                       textAlign: TextAlign.start,
                       style: TextStyle(
@@ -219,10 +219,6 @@ class HotelGuestDialog extends StatelessWidget {
                     RoundedButton(
                       ontap: () {
                         Navigator.pop(context);
-                        /*    Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EntryScreen()));*/
                       },
                       title: 'عودة',
                       width: 220,

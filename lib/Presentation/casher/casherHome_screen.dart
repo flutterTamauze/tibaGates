@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:Tiba_Gates/Utilities/Shared/dialogs/hotel_guest_dialog.dart';
+import 'package:Tiba_Gates/ViewModel/common/commonProv.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +12,7 @@ import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
 import 'package:flutter_bluetooth_basic/flutter_bluetooth_basic.dart';
 import 'package:intl/intl.dart';
 import '../../Utilities/Shared/noInternet.dart';
-import '../../ViewModel/casher/servicesProv.dart';
+import '../../ViewModel/casher/casherServicesProv.dart';
 import '../../main.dart';
 import 'dart:typed_data';
 import 'package:flutter/material.dart' hide Image;
@@ -57,10 +58,10 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
   String _devicesMsg;
   BluetoothManager bluetoothManager = BluetoothManager.instance;
   PrinterBluetooth myDevice;
+  List<String>barcodeFollowers = [];
 
   @override
   void initState() {
-
     if (mounted) {
       //  if (Platform.isAndroid) {
       bluetoothManager.state.listen((val) {
@@ -82,7 +83,7 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
   }
 
 
-  void initDropDown(ServicesProv defServiceProv){
+  void initDropDown(ServicesProv defServiceProv) {
     serviceTypeId ??= defServiceProv.serviceObjects[0].id;
     servicePrice ??= defServiceProv.serviceObjects[0].servicePrice;
     selectedServiceType ??= defServiceProv.serviceObjects[0].arServiceName;
@@ -91,14 +92,22 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
     debugPrint('type id $serviceTypeId');
     debugPrint('price $servicePrice');
   }
+
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
     ConnectivityStatus connectionStatus =
-        Provider.of<ConnectivityStatus>(context);
+    Provider.of<ConnectivityStatus>(context);
     ServicesProv serviceProv = Provider.of<ServicesProv>(context, listen: true);
-    ServicesProv defServiceProv = Provider.of<ServicesProv>(context, listen: false);
+    ServicesProv defServiceProv = Provider.of<ServicesProv>(
+        context, listen: false);
     initDropDown(defServiceProv);
 
     return WillPopScope(
@@ -112,225 +121,228 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
         body: connectionStatus == ConnectivityStatus.Offline
             ? NoInternet()
             : SafeArea(
-                child: SingleChildScrollView(
-                    child: Container(
-                  height: height,
-                  width: width,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    image: DecorationImage(
-                        image: AssetImage(
-                          'assets/images/bg1.jpeg',
+          child: SingleChildScrollView(
+              child: Container(
+                height: height,
+                width: width,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  image: DecorationImage(
+                      image: AssetImage(
+                        'assets/images/bg1.jpeg',
+                      ),
+                      fit: BoxFit.fill),
+                ),
+                child: Padding(
+                  padding:
+                  EdgeInsets.symmetric(horizontal: 20.w, vertical: 40.h),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 20.h,
                         ),
-                        fit: BoxFit.fill),
-                  ),
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 40.h),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          TibaLogo(
-                            height: height,
-                            width: width,
-                          ),
-                          SizedBox(
-                            height: 40.h,
-                          ),
-                          SizedBox(
-                            width: width,
-                            child: Card(
-                              elevation: 6,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20.h),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 60.w, vertical: 20.h),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                    color: Colors.green,
-                                                    width: 1.w)),
-                                            width: 300.w,
-                                            height: 70.h,
-                                            child: DropdownButtonHideUnderline(
-                                                child: ButtonTheme(
-                                              alignedDropdown: true,
-                                              child: DropdownButton(
-                                                elevation: 2,
-                                                isExpanded: true,
-                                                items: defServiceProv
-                                                    .serviceTypes
-                                                    .map((String x) {
-                                                  return DropdownMenuItem<
-                                                          String>(
-                                                      value: x,
-                                                      child: Center(
-                                                        child: Text(
-                                                          x,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                                  setResponsiveFontSize(
-                                                                      25),
-                                                              color:
-                                                                  Colors.green,
-                                                              fontFamily:
-                                                                  'Almarai'),
-                                                        ),
-                                                      ));
-                                                }).toList(),
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    serviceTypeId =
-                                                        defServiceProv
-                                                            .serviceObjects[
-                                                                defServiceProv
-                                                                    .serviceTypes
-                                                                    .indexOf(
-                                                                        value)]
-                                                            .id;
-                                                    servicePrice = defServiceProv
-                                                        .serviceObjects[
-                                                            defServiceProv
-                                                                .serviceTypes
-                                                                .indexOf(value)]
-                                                        .servicePrice;
-                                                    selectedServiceType =
-                                                        defServiceProv
-                                                            .serviceObjects[
-                                                                defServiceProv
-                                                                    .serviceTypes
-                                                                    .indexOf(
-                                                                        value)]
-                                                            .arServiceName;
-                                                    enSelectedServiceType =
-                                                        defServiceProv
-                                                            .serviceObjects[
-                                                                defServiceProv
-                                                                    .serviceTypes
-                                                                    .indexOf(
-                                                                        value)]
-                                                            .serviceName;
-
-                                                    serviceProv.calcPrice(
-                                                        _count, servicePrice);
-                                                    debugPrint(
-                                                        'selected service type is $selectedServiceType    and $enSelectedServiceType');
-                                                    debugPrint(
-                                                        'selected service type id is $serviceTypeId');
-                                                  });
-                                                },
-                                                value: selectedServiceType ??
-                                                    defServiceProv
-                                                        .serviceTypes[0],
-                                              ),
-                                            )),
-                                          ),
-                                          AutoSizeText(
-                                            ' : نوع الخدمة',
-                                            textAlign: TextAlign.end,
-                                            style: TextStyle(
-                                                fontSize:
-                                                    setResponsiveFontSize(28),
-                                                fontWeight: FontManager.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    buildDivider(),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                              isTab(context) ? 60.w : 40.w,
-                                          vertical: 20.h),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Consumer<ServicesProv>(builder:
-                                              (context, message, child) {
-                                            return SizedBox(
-                                              /*           height: (height * 0.15),
-                                              width: (width * 0.32),*/
-                                              child: AutoSizeText(
-                                                message.servicePrice
-                                                        .toString() +
-                                                    '  LE',
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        setResponsiveFontSize(
-                                                            26),
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.green),
-                                              ),
-                                            );
-                                          }),
-                                          AutoSizeText(
-                                            ' : السعر',
-                                            style: TextStyle(
-                                                fontSize:
-                                                    setResponsiveFontSize(28),
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          NumberPicker(
-                                            value: _count,
-                                            minValue: 1,
-                                            selectedTextStyle: TextStyle(
-                                                color: Colors.green,
-                                                fontSize:
-                                                    setResponsiveFontSize(30),
-                                                fontWeight: FontWeight.bold),
-                                            maxValue: 30,
-                                            onChanged: (value) => setState(() {
-                                              _count = value;
-                                              serviceProv.calcPrice(
-                                                  _count, servicePrice);
-                                            }),
-                                          ),
-                                          AutoSizeText(
-                                            ' : العدد',
-                                            textAlign: TextAlign.end,
-                                            style: TextStyle(
-                                                fontSize:
-                                                    setResponsiveFontSize(26),
-                                                fontWeight: FontManager.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    buildDivider(),
-
-                                    SizedBox(
-                                      height: 30.h,
-                                    ),
-
-                                    Row(
-
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                        TibaLogo(
+                          height: height,
+                          width: width,
+                        ),
+                        SizedBox(
+                          height: 40.h,
+                        ),
+                        SizedBox(
+                          width: width,
+                          child: Card(
+                            elevation: 6,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20.h),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 60.w, vertical: 20.h),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                              BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: Colors.green,
+                                                  width: 1.w)),
+                                          width: 300.w,
+                                          height: 70.h,
+                                          child: DropdownButtonHideUnderline(
+                                              child: ButtonTheme(
+                                                alignedDropdown: true,
+                                                child: DropdownButton(
+                                                  elevation: 2,
+                                                  isExpanded: true,
+                                                  items: defServiceProv
+                                                      .serviceTypes
+                                                      .map((String x) {
+                                                    return DropdownMenuItem<
+                                                        String>(
+                                                        value: x,
+                                                        child: Center(
+                                                          child: Text(
+                                                            x,
+                                                            textAlign:
+                                                            TextAlign.center,
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                setResponsiveFontSize(
+                                                                    25),
+                                                                color:
+                                                                Colors.green,
+                                                                fontFamily:
+                                                                'Almarai'),
+                                                          ),
+                                                        ));
+                                                  }).toList(),
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      serviceTypeId =
+                                                          defServiceProv
+                                                              .serviceObjects[
+                                                          defServiceProv
+                                                              .serviceTypes
+                                                              .indexOf(
+                                                              value)]
+                                                              .id;
+                                                      servicePrice =
+                                                          defServiceProv
+                                                              .serviceObjects[
+                                                          defServiceProv
+                                                              .serviceTypes
+                                                              .indexOf(value)]
+                                                              .servicePrice;
+                                                      selectedServiceType =
+                                                          defServiceProv
+                                                              .serviceObjects[
+                                                          defServiceProv
+                                                              .serviceTypes
+                                                              .indexOf(
+                                                              value)]
+                                                              .arServiceName;
+                                                      enSelectedServiceType =
+                                                          defServiceProv
+                                                              .serviceObjects[
+                                                          defServiceProv
+                                                              .serviceTypes
+                                                              .indexOf(
+                                                              value)]
+                                                              .serviceName;
+
+                                                      serviceProv.calcPrice(
+                                                          _count, servicePrice);
+                                                      debugPrint(
+                                                          'selected service type is $selectedServiceType    and $enSelectedServiceType');
+                                                      debugPrint(
+                                                          'selected service type id is $serviceTypeId');
+                                                    });
+                                                  },
+                                                  value: selectedServiceType ??
+                                                      defServiceProv
+                                                          .serviceTypes[0],
+                                                ),
+                                              )),
+                                        ),
+                                        AutoSizeText(
+                                          ' : نوع الخدمة',
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                              fontSize:
+                                              setResponsiveFontSize(28),
+                                              fontWeight: FontManager.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  buildDivider(),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                        isTab(context) ? 60.w : 40.w,
+                                        vertical: 20.h),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Consumer<ServicesProv>(builder:
+                                            (context, message, child) {
+                                          return SizedBox(
+                                            /*           height: (height * 0.15),
+                                              width: (width * 0.32),*/
+                                            child: AutoSizeText(
+                                              message.servicePrice
+                                                  .toString() +
+                                                  '  LE',
+                                              style: TextStyle(
+                                                  fontSize:
+                                                  setResponsiveFontSize(
+                                                      26),
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green),
+                                            ),
+                                          );
+                                        }),
+                                        AutoSizeText(
+                                          ' : السعر',
+                                          style: TextStyle(
+                                              fontSize:
+                                              setResponsiveFontSize(28),
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                        NumberPicker(
+                                          value: _count,
+                                          minValue: 1,
+                                          selectedTextStyle: TextStyle(
+                                              color: Colors.green,
+                                              fontSize:
+                                              setResponsiveFontSize(30),
+                                              fontWeight: FontWeight.bold),
+                                          maxValue: 30,
+                                          onChanged: (value) =>
+                                              setState(() {
+                                                _count = value;
+                                                serviceProv.calcPrice(
+                                                    _count, servicePrice);
+                                              }),
+                                        ),
+                                        AutoSizeText(
+                                          ' : العدد',
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                              fontSize:
+                                              setResponsiveFontSize(26),
+                                              fontWeight: FontManager.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  buildDivider(),
+
+                                  SizedBox(
+                                    height: 30.h,
+                                  ),
+
+                                  Row(
+
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
                                       isScaning == true
                                           ? const CircularProgressIndicator()
                                           : ((_devices.isEmpty ||
                                           defServiceProv
-                                              .serviceObjects.isEmpty || myDevice==null)
+                                              .serviceObjects.isEmpty ||
+                                          myDevice == null)
                                           ? Center(
-                                          child:                                        OutlinedButton(
+                                          child: OutlinedButton(
                                             onPressed: () async {
                                               setState(() {
                                                 isScaning = true;
@@ -354,24 +366,25 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
                                                         color: Colors.green,
                                                         width: 2.w)),
                                                 backgroundColor:
-                                                MaterialStateProperty.all<Color>(
+                                                MaterialStateProperty.all<
+                                                    Color>(
                                                     Colors.white),
-                                                padding: MaterialStateProperty.all(
+                                                padding: MaterialStateProperty
+                                                    .all(
                                                     EdgeInsets.symmetric(
                                                         vertical: 20.h,
                                                         horizontal: 20.w)),
-                                                shape: MaterialStateProperty.all(
+                                                shape: MaterialStateProperty
+                                                    .all(
                                                     const RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.all(
-                                                            Radius.circular(20))))),
+                                                        borderRadius: BorderRadius
+                                                            .all(
+                                                            Radius.circular(
+                                                                20))))),
                                           )
 
 
-
-
-
-
-                       /*       RoundedButton(
+                                        /*       RoundedButton(
                                             width: 220,
                                             height: 60,
                                             ontap: () async {
@@ -387,137 +400,139 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
                                                 .backGroundColor,
                                           )*/)
                                           : SizedBox(
-                                        height: 70.h,
-                                        width: 220.w,
-                                        child: (
+                                        /*   height: 70.h,
+                                          width: 220.w,*/
+                                          child: (
 
-                                            myDevice.address ==
-                                                Provider.of<AuthProv>(context,listen: false).printerAddress
-                                            // 'DC:0D:30:CC:27:07'
-                                            //                  'DC:0D:30:A0:64:74'
-                                            //  'DC:0D:30:A0:65:A8'
+                                              myDevice.address ==
+                                                    Provider.of<AuthProv>(context,listen: false).printerAddress
+                                                  // 'DC:0D:30:CC:27:07'
+                                             //     'DC:0D:30:A0:64:74'
+                                              //  'DC:0D:30:A0:65:A8'
 
-                                        )
-                                            ?
-                                        OutlinedButton(
-                                          onPressed: () async {
-                                            showLoaderDialog(
-                                                context,
-                                                'جارى التحميل..');
-                                            serviceProv
-                                                .addBill(
-                                                serviceTypeId,
-                                                servicePrice,
-                                                _count,
-                                                prefs.getString(
-                                                    'guardId'))
-                                                .then(
-                                                ((value) async {
-                                                  if (value ==
-                                                      'Success') {
-                                                    Future.delayed(
-                                                        const Duration(
-                                                            seconds:
-                                                            1))
-                                                        .whenComplete(
-                                                            () async {
+                                          )
+                                              ?
+                                          OutlinedButton(
+                                            onPressed: () async {
+                                              showLoaderDialog(
+                                                  context,
+                                                  'جارى التحميل..');
+                                              serviceProv
+                                                  .addBill(
+                                                  serviceTypeId,
+                                                  servicePrice,
+                                                  _count,
+                                                  prefs.getString(
+                                                      'guardId'),
+                                                  barcodeFollowers)
+                                                  .then(
+                                                  ((value) async {
+                                                    if (value ==
+                                                        'Success') {
+                                                      Future.delayed(
+                                                          const Duration(
+                                                              seconds:
+                                                              1))
+                                                          .whenComplete(
+                                                              () async {
+                                                            PosPrintResult result = await _printerManager
+                                                                .printTicket(
+                                                                await casherTicket(
+                                                                    PaperSize
+                                                                        .mm58),
+                                                                queueSleepTimeMs: 50);
 
-                                                          PosPrintResult result =  await  _printerManager.printTicket(
-                                                              await casherTicket(
-                                                                  PaperSize.mm58),
-                                                              queueSleepTimeMs: 50);
+                                                            Navigator.pop(
+                                                                context);
+                                                            print(
+                                                                'printing result is ${result
+                                                                    .msg}');
+                                                            if (result.msg ==
+                                                                'Success') {
+                                                              showSnakBar(
+                                                                  color: Colors
+                                                                      .green,
+                                                                  context: context,
+                                                                  text: result
+                                                                      .msg,
+                                                                  icon: Icons
+                                                                      .done_outline);
+                                                            } else
+                                                            if (result.msg ==
+                                                                'Error. Printer connection timeout') {
+                                                              showSnakBar(
+                                                                  color: Colors
+                                                                      .red[400],
+                                                                  context: context,
+                                                                  text: 'Error!! Printer connection timeout',
+                                                                  icon: Icons
+                                                                      .watch_later_outlined);
+                                                            } else
+                                                            if (result.msg ==
+                                                                'Error. Printer not selected') {
+                                                              showSnakBar(
+                                                                  color: Colors
+                                                                      .red[400],
+                                                                  context: context,
+                                                                  text: 'Error!! Printer not selected',
+                                                                  icon: Icons
+                                                                      .print_disabled_outlined);
+                                                            } else {
+                                                              showSnakBar(
+                                                                  color: Colors
+                                                                      .red[400],
+                                                                  context: context,
+                                                                  text: result
+                                                                      .msg,
+                                                                  icon: Icons
+                                                                      .error_outline);
+                                                            }
+                                                            navigateReplacementTo(
+                                                                context,
+                                                                const CasherEntryScreen());
 
-                                                          Navigator.pop(context);
-                                                          print('printing result is ${result.msg}');
-                                                          if (result.msg == 'Success') {
-                                                            showSnakBar(
-                                                                color: Colors.green,
-                                                                context: context,
-                                                                text: result.msg,
-                                                                icon: Icons.done_outline);
-
-
-                                                          } else if (result.msg == 'Error. Printer connection timeout') {
-                                                            showSnakBar(
-                                                                color: Colors.red[400],
-                                                                context: context,
-                                                                text: 'Error!! Printer connection timeout',
-                                                                icon: Icons.watch_later_outlined);
-                                                          } else if (result.msg == 'Error. Printer not selected') {
-                                                            showSnakBar(
-                                                                color: Colors.red[400],
-                                                                context: context,
-                                                                text: 'Error!! Printer not selected',
-                                                                icon: Icons.print_disabled_outlined);
-                                                          } else {
-                                                            showSnakBar(
-                                                                color: Colors.red[400],
-                                                                context: context,
-                                                                text: result.msg,
-                                                                icon: Icons.error_outline);
-                                                          }
-                                                          navigateReplacementTo(context, const CasherEntryScreen());
-
-                                                          /*   _startPrint(
+                                                            /*   _startPrint(
                                                                     myDevice);*/
-                                                        });
-                                                  }
-                                                }));
-                                          },
-                                          child: SizedBox(
-                                            height: 45.h,
-                                            width: 50.w,
-                                            child: const Center(
-                                              child: Icon(
-                                                Icons.print,
-                                                color: Colors.green,
-                                                size: 32,
+                                                          });
+                                                    }
+                                                  }));
+                                            },
+                                            child: SizedBox(
+                                              height: 45.h,
+                                              width: 50.w,
+                                              child: const Center(
+                                                child: Icon(
+                                                  Icons.print,
+                                                  color: Colors.green,
+                                                  size: 32,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          style: ButtonStyle(
-                                              side: MaterialStateProperty.all(
-                                                  BorderSide(
-                                                      color: Colors.green,
-                                                      width: 2.w)),
-                                              backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  Colors.white),
-                                              padding: MaterialStateProperty.all(
-                                                  EdgeInsets.symmetric(
-                                                      vertical: 20.h,
-                                                      horizontal: 20.w)),
-                                              shape: MaterialStateProperty.all(
-                                                  const RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.all(
-                                                          Radius.circular(20))))),
-                                        )
+                                            style: ButtonStyle(
+                                                side: MaterialStateProperty.all(
+                                                    BorderSide(
+                                                        color: Colors.green,
+                                                        width: 2.w)),
+                                                backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(
+                                                    Colors.white),
+                                                padding: MaterialStateProperty
+                                                    .all(
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 20.h,
+                                                        horizontal: 20.w)),
+                                                shape: MaterialStateProperty
+                                                    .all(
+                                                    const RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius
+                                                            .all(
+                                                            Radius.circular(
+                                                                20))))),
+                                          )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                     /*   RoundedButton(
+                                          /*   RoundedButton(
                                           width: 220,
                                           height: 60,
                                           ontap: () async {
@@ -578,8 +593,8 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
                                                           }
                                                           navigateReplacementTo(context, const CasherEntryScreen());
 
-                                                          *//*   _startPrint(
-                                                                    myDevice);*//*
+                                                          */ /*   _startPrint(
+                                                                    myDevice);*/ /*
                                                         });
                                                   }
                                                 }));
@@ -591,48 +606,50 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
                                           titleColor: ColorManager
                                               .backGroundColor,
                                         )*/
-                                            :
-                                        OutlinedButton(
-                                          onPressed: () async {
-                                            setState(() {
-                                              isScaning = true;
-                                            });
-                                            refreshPrinter();
-                                          },
-                                          child: SizedBox(
-                                            height: 45.h,
-                                            width: 50.w,
-                                            child: const Center(
-                                              child: Icon(
-                                                Icons.refresh_rounded,
-                                                color: Colors.green,
-                                                size: 32,
+                                              :
+                                          OutlinedButton(
+                                            onPressed: () async {
+                                              setState(() {
+                                                isScaning = true;
+                                              });
+                                              refreshPrinter();
+                                            },
+                                            child: SizedBox(
+                                              height: 45.h,
+                                              width: 50.w,
+                                              child: const Center(
+                                                child: Icon(
+                                                  Icons.refresh_rounded,
+                                                  color: Colors.green,
+                                                  size: 32,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          style: ButtonStyle(
-                                              side: MaterialStateProperty.all(
-                                                  BorderSide(
-                                                      color: Colors.green,
-                                                      width: 2.w)),
-                                              backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  Colors.white),
-                                              padding: MaterialStateProperty.all(
-                                                  EdgeInsets.symmetric(
-                                                      vertical: 20.h,
-                                                      horizontal: 20.w)),
-                                              shape: MaterialStateProperty.all(
-                                                  const RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.all(
-                                                          Radius.circular(20))))),
-                                        )
+                                            style: ButtonStyle(
+                                                side: MaterialStateProperty.all(
+                                                    BorderSide(
+                                                        color: Colors.green,
+                                                        width: 2.w)),
+                                                backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(
+                                                    Colors.white),
+                                                padding: MaterialStateProperty
+                                                    .all(
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 20.h,
+                                                        horizontal: 20.w)),
+                                                shape: MaterialStateProperty
+                                                    .all(
+                                                    const RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius
+                                                            .all(
+                                                            Radius.circular(
+                                                                20))))),
+                                          )
 
 
-
-
-
-                                      /*  RoundedButton(
+                                        /*  RoundedButton(
                                           width: 220,
                                           height: 60,
                                           ontap: () async {
@@ -649,80 +666,87 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
                                               .backGroundColor,
                                         ),*/
                                       )),
+                                      SizedBox(width: 30.w,),
+                                      OutlinedButton(
+                                        onPressed: () async {
+                                          String barCode;
+                                          try {
+                                            barCode =
+                                            await FlutterBarcodeScanner
+                                                .scanBarcode(
+                                                '#FF039212',
+                                                'Cancel',
+                                                true,
+                                                ScanMode.BARCODE);
 
-                                      Padding(
-                                        padding:
-                                        EdgeInsets.only( left: 30.w),
-                                        child: OutlinedButton(
-                                          onPressed: () async {
-                                            String barCode;
-                                            try {
-                                              barCode = await FlutterBarcodeScanner
-                                                  .scanBarcode(
-                                                  '#FF039212',
-                                                  'Cancel',
-                                                  true,
-                                                  ScanMode.BARCODE);
-                                              // showToast(barCode);
-                                        /*      showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return const HotelGuestDialog(
-                                                      name: 'Ahmed Radwan',
-                                                      fromDate: '18-06-2022',
-                                                      toDate: '18-07-2022',
-                                                    );
-                                                  });*/
-                                            } on PlatformException {
-                                              barCode = 'Failed to get barcode';
-                                            }
-                                            if (!mounted) {
-                                              return;
-                                            }
-                                          },
-                                          child: SizedBox(
-                                            height: 45.h,
-                                            width: 50.w,
-                                            child: const Center(
-                                              child: Icon(
-                                                FontAwesomeIcons.barcode,
-                                                color: Colors.black,
-                                                size: 32,
-                                              ),
+                                            Provider.of<CommonProv>(context,listen: false).checkBarcodeValidation(barCode).then((value) {
+                                              if(value=='invalid'){
+                                                barcodeFollowers.add(barCode);
+                                                showShortToast('تم إضافة عدد ${barcodeFollowers.length} شخص إلى التذكرة ');
+                                              }
+                                              else{
+
+                                                showToast('هذا الكود موجود بالفعل');
+
+
+                                              }
+
+                                            });
+
+
+
+                                          } on PlatformException {
+                                            barCode = 'Failed to get barcode';
+                                          }
+                                          if (!mounted) {
+                                            return;
+                                          }
+                                        },
+                                        child: SizedBox(
+                                          height: 45.h,
+                                          width: 50.w,
+                                          child: const Center(
+                                            child: Icon(
+                                              FontAwesomeIcons.barcode,
+                                              color: Colors.black,
+                                              size: 32,
                                             ),
                                           ),
-                                          style: ButtonStyle(
-                                              side: MaterialStateProperty.all(
-                                                  BorderSide(
-                                                      color: Colors.black,
-                                                      width: 1.4.w)),
-                                              backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  Colors.white),
-                                              padding: MaterialStateProperty.all(
-                                                  EdgeInsets.symmetric(
-                                                      vertical: 20.h,
-                                                      horizontal: 20.w)),
-                                              shape: MaterialStateProperty.all(
-                                                  const RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.all(
-                                                          Radius.circular(20))))),
                                         ),
+                                        style: ButtonStyle(
+                                            side: MaterialStateProperty.all(
+                                                BorderSide(
+                                                    color: Colors.black,
+                                                    width: 1.4.w)),
+                                            backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Colors.white),
+                                            padding: MaterialStateProperty
+                                                .all(
+                                                EdgeInsets.symmetric(
+                                                    vertical: 20.h,
+                                                    horizontal: 20.w)),
+                                            shape: MaterialStateProperty.all(
+                                                const RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius
+                                                        .all(
+                                                        Radius.circular(
+                                                            20))))),
                                       ),
 
                                     ],)
 
-                                  ],
-                                ),
+                                ],
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                )),
-              ),
+                ),
+              )),
+        ),
       ),
     );
   }
@@ -791,7 +815,9 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
       PosColumn(
           text: DateFormat('yyyy-MM-dd / hh:mm')
               .format(DateTime.parse(
-                  Provider.of<ServicesProv>(context, listen: false).printTime))
+              Provider
+                  .of<ServicesProv>(context, listen: false)
+                  .printTime))
               .toString(),
           width: 7,
           styles: const PosStyles(bold: true)),
@@ -805,7 +831,9 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
             bold: true,
           )),
       PosColumn(
-          text: (Provider.of<AuthProv>(context, listen: false).guardName) ??
+          text: (Provider
+              .of<AuthProv>(context, listen: false)
+              .guardName) ??
               '  -  ',
           width: 7,
           styles: const PosStyles(bold: true)),
@@ -819,7 +847,9 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
             bold: true,
           )),
       PosColumn(
-          text: (Provider.of<AuthProv>(context, listen: false).gateName) ??
+          text: (Provider
+              .of<AuthProv>(context, listen: false)
+              .gateName) ??
               '  -  ',
           width: 7,
           styles: const PosStyles(bold: true)),
@@ -858,8 +888,10 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
           )),
       PosColumn(
           text:
-              ('${Provider.of<ServicesProv>(context, listen: false).servicePrice / _count}  Le')
-                  .toString(),
+          ('${Provider
+              .of<ServicesProv>(context, listen: false)
+              .servicePrice / _count}  Le')
+              .toString(),
           width: 5,
           styles: const PosStyles(bold: true)),
     ]);
@@ -893,7 +925,9 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
           )),
       PosColumn(
           text:
-              '${Provider.of<ServicesProv>(context, listen: false).servicePrice} Le',
+          '${Provider
+              .of<ServicesProv>(context, listen: false)
+              .servicePrice} Le',
           width: 7,
           styles: const PosStyles(bold: true)),
     ]);
@@ -909,7 +943,9 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
     );
     //ticket.feed(1);
 
-    ticket.text('S-${Provider.of<ServicesProv>(context, listen: false).billId}',
+    ticket.text('S-${Provider
+        .of<ServicesProv>(context, listen: false)
+        .billId}',
         styles: const PosStyles(
             align: PosAlign.center,
             height: PosTextSize.size2,
@@ -939,7 +975,6 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
   }
 
 
-
   Future<void> initPrinter() async {
     _printerManager.startScan(const Duration(seconds: 2));
     _printerManager.scanResults.listen((val) {
@@ -953,12 +988,12 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
         try {
           debugPrint('devices length is ${_devices.length}');
           myDevice = _devices.firstWhere((element) =>
-              element.address ==
-               Provider.of<AuthProv>(context,listen: false).printerAddress
-                  //     'DC:0D:30:A0:65:A8'
-           //    'DC:0D:30:A0:64:74'
-                  ??''
-              );
+          element.address ==
+              Provider.of<AuthProv>(context,listen: false).printerAddress
+              //     'DC:0D:30:A0:65:A8'
+           //   'DC:0D:30:A0:64:74'
+              ?? ''
+          );
           _printerManager.selectPrinter(myDevice);
         } catch (ex) {
           debugPrint('ex is $ex');
@@ -966,7 +1001,6 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
       }
     });
   }
-
 
 
   void refreshPrinter() {
@@ -992,7 +1026,7 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
     _printerManager.selectPrinter(printer);
 
     PosPrintResult result =
-        await _printerManager.printTicket(await casherTicket(
+    await _printerManager.printTicket(await casherTicket(
       PaperSize.mm58,
     ));
 

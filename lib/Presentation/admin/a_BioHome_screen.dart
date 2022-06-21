@@ -248,8 +248,18 @@ class ABioHomeState extends State {
                                                       hotelName: commonProv.hotelGuestModel.hotelName,
                                                       toDate:DateFormat('yyyy-MM-dd / hh:mm').format(DateTime.parse(commonProv.hotelGuestModel.endDate)).toString() ,
                                                       onPressed: (){
-
-                                                        Navigator.pop(context);
+                                                        debugPrint('log id is ${commonProv.hotelGuestModel.id}');
+                                                        commonProv.confirmBarcodeLog(commonProv.hotelGuestModel.id)
+                                                            .then((value) {
+                                                          if (value == 'Success') {
+                                                            showToast(
+                                                                'تم التأكيد بنجاح');
+                                                            Navigator.pop(context);
+                                                          } else {
+                                                            showToast('حدث خطأ ما');
+                                                            Navigator.pop(context);
+                                                          }
+                                                        });
                                                       },);
                                                   });
 

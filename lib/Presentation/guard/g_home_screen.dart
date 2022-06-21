@@ -745,7 +745,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         builder: (context) {
                                                           return BillDialog(
                                                               typeValue:
-                                                                  visitorTypeId,
+                                                                  visitorTypeId.toString(),
                                                               citizenValue:
                                                                   _citizensValue,
                                                               militaryValue:
@@ -1361,21 +1361,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                               .memberShipSports ==
                                                           null) {
                                                         navigateTo(context,
-                                                            EntryScreen());
+                                                            const EntryScreen());
                                                         return;
                                                       }
 
-                                                      showLoaderDialog(context,
-                                                          'Loading...');
+                                                      showLoaderDialog(context, 'Loading...');
 
-                                                      Provider.of<VisitorProv>(
-                                                              context,
-                                                              listen: false)
-                                                          .getBill(
-                                                              widget
-                                                                  .memberShipModel
-                                                                  .ownerTypeId
-                                                                  .toString(),
+                                                      defVisitorProv.getBill(widget.memberShipModel.ownerTypeId.toString(),
                                                               '0',
                                                               '0')
                                                           .then((value) {
@@ -1476,7 +1468,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const PrintScreen2(
+            builder: (context) => const PrintScreen(
                   civilCount: 0,
                   militaryCount: 0,
                   resendType: 'Normal',
@@ -1496,7 +1488,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const PrintScreen2(
+                builder: (context) => const PrintScreen(
                       civilCount: 0,
                       militaryCount: 0,
                       resendType: 'perHour',

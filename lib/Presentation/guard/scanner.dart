@@ -125,7 +125,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
               } else {
              showToast('مرحباً بك');
                 controller.dispose();
-                navigateReplacementTo(context, const PrintScreen2(
+                navigateReplacementTo(context, const PrintScreen(
                   from: 'send',
                   resendType: 'VIP Invitation',
                 ));
@@ -160,7 +160,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                         '0',
                         '0')
                     .then((value) {
-                      navigateTo(context,PrintScreen2(
+                      navigateTo(context,PrintScreen(
                         civilCount: 0,
                         militaryCount: 0,
                         from: 'send',
@@ -534,7 +534,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        PrintScreen2(
+                                                        PrintScreen(
                                                           perHourObj: value,
                                                           from: 'send',
                                                           resendType: 'perHour',

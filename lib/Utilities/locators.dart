@@ -1,5 +1,5 @@
 
-import 'package:Tiba_Gates/ViewModel/casher/servicesProv.dart';
+import 'package:Tiba_Gates/ViewModel/casher/casherServicesProv.dart';
 import 'package:Tiba_Gates/ViewModel/common/commonProv.dart';
 import 'package:get_it/get_it.dart';
 
