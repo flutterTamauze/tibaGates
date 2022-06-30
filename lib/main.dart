@@ -27,6 +27,7 @@ import 'ViewModel/admin/reports/admin_reportsProv.dart';
 import 'ViewModel/admin/more/holidaysProv.dart';
 import 'ViewModel/manager/managerProv.dart';
 import 'ViewModel/admin/more/pricesProv.dart';
+import 'ocr_test.dart';
 
 SharedPreferences prefs;
 GetIt getIt = GetIt.instance;
@@ -134,7 +135,9 @@ class MyApp extends StatelessWidget {
                       return GetMaterialApp(
                         title: 'Tiba Rose',
                         debugShowCheckedModeBanner: false,
-                        home:  SplashScreen()
+                        home:
+                        //OcrTest()
+                        SplashScreen()
                         //SplashScreen()
 
                         //MyBluetooth()

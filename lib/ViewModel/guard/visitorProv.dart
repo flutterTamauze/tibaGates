@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:Tiba_Gates/Data/Models/casher/services_model.dart';
 import 'package:camera/camera.dart';
 
 import '../../Data/Models/guard/memberChip_model.dart';
@@ -156,6 +157,30 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
       debugPrint(e.toString());
     }
   }
+
+
+/*
+  Future<dynamic> getAlbums() async {
+    List<AlbumModel> albumObjects = [];
+    try {
+        var response = await BaseClient()
+            .get(BASE_URL, '/api/getAllAlbums')
+            .catchError(handleError);
+
+        var jsonObj = jsonDecode(response)['response'] as List;
+
+        albumObjects =
+            jsonObj.map((item) => AlbumModel.fromJson(item)).toList();
+
+        debugPrint('first album name is ${albumObjects[0].albumName}');
+
+        notifyListeners();
+
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+*/
 
   Future<void> getParkingList(String filterType, int pageNumber) async {
 
@@ -314,6 +339,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     return responseData;
   }
 
+
   Future<ResponseData> checkInInvitation(
       String userID,
       int invitationID,
@@ -323,7 +349,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
       ]) async {
     ResponseData responseData = ResponseData();
     debugPrint('userID $userID');
-    debugPrint('invitation id $userID');
+    debugPrint('invitation id $invitationID');
 
 
     var uri = Uri.parse('$BASE_URL/api/invitation/CheckInInvitation');
@@ -348,14 +374,18 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
       await request.send().then((response) async {
         response.stream.transform(utf8.decoder).listen((value) {
           Map<String, dynamic> responseDecoded = json.decode(value);
-          debugPrint("ah ah ${responseDecoded['response']}");
-
+          log("response is  ${responseDecoded['response']}");
           debugPrint('message is ${responseDecoded['message']}');
+
           if (responseDecoded['message'] == 'Success') {
             responseData.message = 'Success';
             qrCode = responseDecoded['response']['qrCode'];
             printTime = responseDecoded['response']['printTime'];
             logId = responseDecoded['response']['id'];
+
+            debugPrint('qr = $qrCode  print time = $printTime  logId = $logId');
+
+
           }
         });
       }).catchError((e) {
@@ -606,7 +636,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
   Future<dynamic> checkInvitationValidation(String qrCode) async {
     String data = '';
-    debugPrint('qrCode $qrCode');
+    debugPrint('qrCode is => $qrCode');
 
     try {
       var uri = Uri.parse('$BASE_URL/api/Invitation/ScanInvitationQr');
@@ -618,7 +648,9 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
       try {
         await request.send().then((response) async {
           debugPrint(' status code = ${response.statusCode}');
-
+/*if (response.statusCode==403){
+  throw
+}*/
           response.stream.transform(utf8.decoder).listen((value) {
             Map<String, dynamic> responseDecoded = json.decode(value);
             debugPrint("response ${responseDecoded['response']}");

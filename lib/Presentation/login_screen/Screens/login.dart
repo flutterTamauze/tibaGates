@@ -207,16 +207,17 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
 
                                                     debugPrint('image during login is   $image');
                                                    // showToast('image is $image');
-                                                    await login(image);
-                                                  /*  if (image == null) {
-
-                                                      authProv.changeLoadingState(false);
-                                                      showToast('حدث خطأ ما برجاء المحاولة مجدداً');
+                                                //    await login(image);
+                                                    if (image == null) {
+                                                      File f = await getImageFileFromAssets('images/logoPrint.png');
+                                                      await login(f);
+                                                    /*  authProv.changeLoadingState(false);
+                                                      showToast('حدث خطأ ما برجاء المحاولة مجدداً');*/
 
                                                       return;
                                                     } else {
                                                       await login(image);
-                                                    }*/
+                                                    }
                                                   });
                                                 }
                                               },
@@ -344,6 +345,17 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     await prefs.setBool('isLoggedIn', authProv.isLogged);
     await prefs.setStringList('parkingTypes', authProv.parkTypes);
   }
+
+
+  Future<File> getImageFileFromAssets(String path) async {
+    ByteData byteData = await rootBundle.load('assets/$path');
+
+    File file = File('${(await getTemporaryDirectory()).path}/$path');
+    await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+    return file;
+  }
+
 
   Future<File> takeImage() async {
     _controller = CameraController(

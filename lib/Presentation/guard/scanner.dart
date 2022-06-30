@@ -600,7 +600,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
 
     return GestureDetector(
       onTap: () {
-        print(result?.code);
+     //   print(result?.code);
       },
       child: Scaffold(
         appBar: AppBar(

@@ -26,7 +26,7 @@ class ServicesProv with ChangeNotifier, BaseExceptionHandling {
 
   Future<dynamic> getServices(int gateId) async {
     String data = '';
-    print('gate id $gateId');
+    debugPrint('gate id $gateId');
     try {
       var response = await BaseClient()
           .get(BASE_URL, '/api/Service/GetAllActive/$gateId')

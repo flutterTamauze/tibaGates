@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+
 import 'package:Tiba_Gates/Data/Models/guard/perHour.dart';
 import 'package:Tiba_Gates/Presentation/guard/widgets/print_time_ticket.dart';
 import 'package:Tiba_Gates/Presentation/guard/widgets/ticket_divider.dart';
@@ -9,34 +10,33 @@ import 'package:Tiba_Gates/Presentation/guard/widgets/ticket_footer.dart';
 import 'package:Tiba_Gates/Utilities/Shared/dotted_divider.dart';
 import 'package:Tiba_Gates/Utilities/Shared/noInternet.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-
-import '../../Utilities/Shared/tiba_logo.dart';
 import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:bluetooth_print/bluetooth_print_model.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
-import '../login_screen/Screens/login.dart';
-import '../../ViewModel/guard/authProv.dart';
-import '../../ViewModel/guard/visitorProv.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
-import 'entryScreen.dart';
+
 import '../../Utilities/Colors/colorManager.dart';
 import '../../Utilities/Constants/constants.dart';
 import '../../Utilities/Fonts/fontsManager.dart';
 import '../../Utilities/Shared/dialogs/loading_dialog.dart';
 import '../../Utilities/Shared/qr.dart';
 import '../../Utilities/Shared/sharedWidgets.dart';
+import '../../Utilities/Shared/tiba_logo.dart';
 import '../../Utilities/connectivityStatus.dart';
+import '../../ViewModel/guard/authProv.dart';
+import '../../ViewModel/guard/visitorProv.dart';
+import '../login_screen/Screens/login.dart';
+import 'entryScreen.dart';
 import 'widgets/gate_id_ticket.dart';
 import 'widgets/gate_name_ticket.dart';
 import 'widgets/guard_name_ticket.dart';
@@ -49,7 +49,7 @@ import 'widgets/vip_logo_ticket.dart';
 List<CameraDescription> cameras;
 
 class PrintScreen extends StatefulWidget {
-  final  typeId;
+  final typeId;
   final int militaryCount;
   final int civilCount;
   final String from;
@@ -92,7 +92,7 @@ class _PrintScreenState extends State<PrintScreen> {
   @override
   void initState() {
     super.initState();
-
+    debugPrint('widget.resendType ${widget.resendType}');
     debugPrint(
         'mac address is ${Provider.of<AuthProv>(context, listen: false).printerAddress}');
     WidgetsBinding.instance.addPostFrameCallback((_) => initBluetooth());
@@ -211,7 +211,22 @@ class _PrintScreenState extends State<PrintScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    /*         visitorProv
+                        .checkInInvitation(
+                      authProv.userId,
+                      visitorProv.invitationID,
+                      context,
+                      visitorProv.rokhsa,
+                      visitorProv.idCard,
+                    )
+                        .then((value) async {
+                      if (value.message == 'Success') {
+                        Future.delayed(const Duration(seconds: 1))
+                            .whenComplete(() async {});
+                      }
+                    });*/
+                  },
                   child: const AutoSizeText('Connect your printer')),
               InkWell(
                   onTap: () {
@@ -259,13 +274,15 @@ class _PrintScreenState extends State<PrintScreen> {
                                             'server mac address = ${authProv.printerAddress}');
 
                                         print(d.address.toString().trim() ==
-                                            //  'DC:0D:30:CC:27:07'
+                                            //  'DC:0D:30:A0:64:74'
+                                            //      'DC:0D:30:CC:27:07'
                                             authProv.printerAddress
                                                 .toString()
                                                 .trim());
 
                                         if (d.address.toString().trim() ==
-                                            // 'DC:0D:30:CC:27:07'
+                                            //  'DC:0D:30:A0:64:74'
+                                            //   'DC:0D:30:CC:27:07'
                                             authProv.printerAddress
                                                 .toString()
                                                 .trim()) {
@@ -281,8 +298,8 @@ class _PrintScreenState extends State<PrintScreen> {
                                       ?*********** CHECKOUT PER HOUR CASE ************
                                    */
 
-                                              if (widget.perHourObj != null) {
 
+                                              if (widget.perHourObj != null) {
                                                 debugPrint('perHour');
 
                                                 debugPrint(
@@ -290,7 +307,6 @@ class _PrintScreenState extends State<PrintScreen> {
                                                 setState(() {
                                                   _device = d;
                                                 });
-
 
                                                 visitorProv
                                                     .confirmPerHour(
@@ -341,7 +357,14 @@ class _PrintScreenState extends State<PrintScreen> {
                                               /**
                                       ?*********** RE-PRINT CASE ************
                                    */
+
                                               else if (widget.from ==
+                                                  'resend') {
+                                                rePrintCase(
+                                                    d, visitorProv, authProv);
+                                              }
+
+                                              /*     else if (widget.from ==
                                                   'resend') {
                                                 if (widget.resendType ==
                                                         'Normal' ||
@@ -497,12 +520,17 @@ class _PrintScreenState extends State<PrintScreen> {
                                                     });
                                                   });
                                                 }
-                                              }
+                                              }*/
 
                                               /**
                                       ?*********** NORMAL PRINT CASE ************
                                    */
+                                              if (widget.from == 'send') {
+                                                normalPrintCase(
+                                                    d, visitorProv, authProv);
+                                              }
 
+/*
                                               else if (widget.from == 'send') {
                                                 if (widget.resendType ==
                                                         'Normal' ||
@@ -784,7 +812,7 @@ class _PrintScreenState extends State<PrintScreen> {
                                                     });
                                                   }
                                                 }
-                                              }
+                                              }*/
                                             },
                                             title: 'تأكيد',
                                             buttonColor: ColorManager.primary,
@@ -978,8 +1006,10 @@ class _PrintScreenState extends State<PrintScreen> {
                 alignment: Alignment.bottomLeft,
                 child: Column(
                   children: [
-                    (widget.resendType != ('VIP Invitation') &&
-                            widget.resendType != ('Normal'))
+                    (widget.resendType !=
+                            ('VIP Invitation') /* &&
+                            widget.resendType != ('Normal')*/
+                        )
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -1376,5 +1406,292 @@ class _PrintScreenState extends State<PrintScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> normalPrintCase(
+      BluetoothDevice d, VisitorProv visitorProv, AuthProv authProv) async {
+    if (widget.resendType == 'Normal' ||
+        widget.resendType == 'VIP Invitation') {
+      debugPrint('invitation');
+      visitorProv
+          .checkInInvitation(
+        authProv.userId,
+        visitorProv.invitationID,
+        context,
+        visitorProv.rokhsa,
+        visitorProv.idCard,
+      )
+          .then((value) async {
+        if (value.message == 'Success') {
+          Future.delayed(const Duration(seconds: 1)).whenComplete(() async {
+            setState(() {
+              _device = d;
+            });
+
+                // first we will connect the printer
+            if (!_connected) {
+              print('printer is not connected in invitation');
+
+              if (_device != null && _device.address != null) {
+                await bluetoothPrint.connect(_device).then((value) {
+                  print('printer is connected with value $value');
+                  Future.delayed(const Duration(seconds: 6))
+                      .whenComplete(() async {
+                    printScreenShot();
+                  });
+                });
+              } else {
+                debugPrint('device is null 3');
+              }
+            } else {
+               printScreenShot();
+            }
+          });
+        }
+      });
+    } else if (widget.resendType == 'perHour') {
+      debugPrint('perHour');
+
+      setState(() {
+        _device = d;
+      });
+      if (!_connected) {
+        debugPrint('printer is not connected');
+
+        if (_device != null && _device.address != null) {
+          await bluetoothPrint.connect(_device).then((value) {
+            Future.delayed(const Duration(seconds: 6)).whenComplete(() async {
+              // take screenshot
+              printScreenShot();
+            });
+          });
+        } else {
+          debugPrint('device is null 1');
+        }
+      } else {
+        debugPrint('printer is connected asln');
+        // we will take screenshot
+        printScreenShot();
+      }
+    } else {
+      if (visitorProv.memberShipModel != null) {
+        // keda hwa gy mn scan membership , hanshof lw el swr empty hn5lihom null 34an nb3thom ll database null
+        if (visitorProv.memberShipModel.carImagePath.contains('empty')) {
+          visitorProv.memberShipModel.carImagePath = null;
+        } else if (visitorProv.memberShipModel.identityImagePath
+            .contains('empty')) {
+          visitorProv.memberShipModel.identityImagePath = null;
+        }
+
+        // hna b2a hn-call checkInMembership
+        visitorProv
+            .checkInMemberShip(
+                visitorProv.memberShipModel.id,
+                authProv.userId,
+                context,
+                Provider.of<VisitorProv>(context, listen: false)
+                    .memberShipModel
+                    .carImagePath,
+                Provider.of<VisitorProv>(context, listen: false)
+                    .memberShipModel
+                    .identityImagePath)
+            .then((value) async {
+          if (value.message == 'Success') {
+            Future.delayed(const Duration(seconds: 1)).whenComplete(() async {
+              setState(() {
+                _device = d;
+              });
+
+              // first we will connect the printer
+              if (!_connected) {
+                debugPrint('printer is not connected');
+
+                if (_device != null && _device.address != null) {
+                  await bluetoothPrint.connect(_device).then((value) {
+                    debugPrint('printer is connected with value $value');
+                    Future.delayed(const Duration(seconds: 6))
+                        .whenComplete(() async {
+                      printScreenShot();
+                    });
+                  });
+                } else {
+                  debugPrint('device is null 4');
+                }
+              } else {
+                debugPrint('printer is connected 2');
+                // secondly we will print
+                printScreenShot();
+              }
+            });
+          } else if (value.message == 'unAuth') {
+            cameras = await availableCameras();
+            showToast('برجاء تسجيل الدخول من جديد');
+            navigateReplacementTo(
+                context,
+                LoginScreen(
+                  camera: cameras[1],
+                ));
+          }
+        });
+      } else {
+        visitorProv
+            .checkIn(
+          visitorProv.rokhsa,
+          visitorProv.idCard,
+          authProv.userId,
+          int.parse(widget.typeId.toString()),
+          widget.civilCount,
+          widget.militaryCount,
+          context,
+        )
+            .then((value) async {
+          if (value.message == 'Success') {
+            Future.delayed(const Duration(seconds: 1)).whenComplete(() async {
+              setState(() {
+                _device = d;
+              });
+
+              // first we will connect the printer
+              if (!_connected) {
+                debugPrint('printer is not connected');
+
+                if (_device != null && _device.address != null) {
+                  await bluetoothPrint.connect(_device).then((value) {
+                    debugPrint('printer is connected with value $value');
+                    Future.delayed(const Duration(seconds: 6))
+                        .whenComplete(() async {
+                      printScreenShot();
+                    });
+                  });
+                } else {
+                  debugPrint('device is null 4');
+                }
+              } else {
+                debugPrint('printer is connected 2');
+                // secondly we will print
+                printScreenShot();
+              }
+            });
+          } else if (value.message == 'unAuth') {
+            cameras = await availableCameras();
+            showToast('برجاء تسجيل الدخول من جديد');
+            navigateReplacementTo(
+                context,
+                LoginScreen(
+                  camera: cameras[1],
+                ));
+          } else if (value.message == 'Forbidden') {
+            Navigator.pop(context);
+            showToast(
+                'Status Code : 403 \n access to the requested resource is forbidden');
+          }
+        });
+      }
+    }
+  }
+
+  void rePrintCase(
+      BluetoothDevice d, VisitorProv visitorProv, AuthProv authProv) {
+    if (widget.resendType == 'Normal' ||
+        widget.resendType == 'VIP Invitation') {
+      Future.delayed(const Duration(milliseconds: 1500)).whenComplete(() async {
+        setState(() {
+          _device = d;
+        });
+
+        visitorProv
+            .confirmPrint(authProv.userId, visitorProv.logId, widget.reasonId)
+            .then((value) async {
+          if (value == 'Success') {
+            // we will connect the printer
+            if (!_connected) {
+              debugPrint('printer is not connected');
+
+              if (_device != null && _device.address != null) {
+                await bluetoothPrint.connect(_device).then((value) {
+                  Future.delayed(const Duration(seconds: 6))
+                      .whenComplete(() async {
+                    // take screenshot
+                    printScreenShot();
+                  });
+                });
+              } else {
+                debugPrint('device is null 1');
+              }
+            } else {
+              debugPrint('printer is connected asln');
+              // we will take screenshot
+              printScreenShot();
+            }
+          }
+        });
+      });
+    } else if (widget.resendType == 'المحاسبه بالساعه') {
+      Future.delayed(const Duration(milliseconds: 1500)).whenComplete(() async {
+        setState(() {
+          _device = d;
+        });
+
+        visitorProv
+            .confirmPrint(authProv.userId, visitorProv.logId, widget.reasonId)
+            .then((value) async {
+          if (value == 'Success') {
+            // we will connect the printer
+            if (!_connected) {
+              debugPrint('printer is not connected');
+
+              if (_device != null && _device.address != null) {
+                await bluetoothPrint.connect(_device).then((value) {
+                  Future.delayed(const Duration(seconds: 6))
+                      .whenComplete(() async {
+                    // take screenshot
+                    printScreenShot();
+                  });
+                });
+              } else {
+                debugPrint('device is null 1');
+              }
+            } else {
+              debugPrint('printer is connected asln');
+              // we will take screenshot
+              printScreenShot();
+            }
+          }
+        });
+      });
+    } else {
+      Future.delayed(const Duration(milliseconds: 1500)).whenComplete(() async {
+        setState(() {
+          _device = d;
+        });
+
+        visitorProv
+            .confirmPrint(authProv.userId, visitorProv.logId, widget.reasonId)
+            .then((value) async {
+          if (value == 'Success') {
+            // we will connect the printer
+            if (!_connected) {
+              debugPrint('printer is not connected');
+
+              if (_device != null && _device.address != null) {
+                await bluetoothPrint.connect(_device).then((value) {
+                  Future.delayed(const Duration(seconds: 6))
+                      .whenComplete(() async {
+                    // take screenshot
+                    printScreenShot();
+                  });
+                });
+              } else {
+                debugPrint('device is null 2');
+              }
+            } else {
+              debugPrint('printer is connected asln');
+              // we will take screenshot
+              printScreenShot();
+            }
+          }
+        });
+      });
+    }
   }
 }
