@@ -236,85 +236,6 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
 
               }
             }
-
-            /*     if (value == 'Success') {
-              controller.dispose();
-
-              if (widget.screen == 'memberShip_admin') {
-                log('memberShip_admin');
-
-                if (value == 'Success') {
-                  controller.dispose();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MemberInformation()));
-                } else if (value.toString().contains('منتهية')) {
-                  print('value is $value');
-                  Fluttertoast.showToast(
-                      msg: value,
-                      backgroundColor: Colors.green,
-                      toastLength: Toast.LENGTH_LONG);
-                  // controller.dispose();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const GameHome()));
-                } else {
-                  print('value is $value');
-                  Fluttertoast.showToast(
-                      msg: 'كود غير صحيح',
-                      backgroundColor: Colors.green,
-                      toastLength: Toast.LENGTH_LONG);
-                  // controller.dispose();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const GameHome()));
-                }
-
-*/ /*                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BottomNav(
-                              comingIndex: 3,
-                            )));*/ /*
-              } else {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomeScreen(
-                              screen: 'memberShip',
-                              memberShipModel: Provider.of<VisitorProv>(context,
-                                      listen: false)
-                                  .memberShipModel,
-                            )));
-              }
-            } else {
-              if (widget.screen == 'memberShip_admin') {
-                print('value is $value');
-                Fluttertoast.showToast(
-                    msg: 'كود غير صحيح',
-                    backgroundColor: Colors.green,
-                    toastLength: Toast.LENGTH_LONG);
-                // controller.dispose();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BottomNav(
-                              comingIndex: 3,
-                            )));
-              } else {
-                print('value is $value');
-                Fluttertoast.showToast(
-                    msg: 'كود غير صحيح',
-                    backgroundColor: Colors.green,
-                    toastLength: Toast.LENGTH_LONG);
-                // controller.dispose();
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => EntryScreen()));
-              }
-            }*/
           });
         } else if (widget.screen == 'sports' ||
             widget.screen == 'sports_casher') {
@@ -596,17 +517,43 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    ConnectivityStatus connectionStatus = Provider.of<ConnectivityStatus>(context);
 
-    return GestureDetector(
-      onTap: () {
-     //   print(result?.code);
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          title: InkWell(
-              onTap: () {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: InkWell(
+            onTap: () {
+              if (widget.screen == 'sports') {
+                navigateReplacementTo(context, const GameHome());
+              } else if (widget.screen == 'memberShip_admin') {
+                navigateReplacementTo(context, BottomNav(
+                  comingIndex: 3,
+                ));
+              } else if (widget.screen == 'invitation_admin') {
+                navigateReplacementTo(context, BottomNav(
+                  comingIndex: 3,
+                ));
+              } else if (widget.screen == 'sports_casher') {
+                navigateReplacementTo(context, const CasherEntryScreen());
+              } else {
+                navigateReplacementTo(context, const EntryScreen());
+              }
+            },
+            child: const Icon(
+              Icons.arrow_back,
+              size: 30,
+            )),
+      ),
+      body: connectionStatus == ConnectivityStatus.Offline
+          ? Center(
+              child: SizedBox(
+              height: 400.h,
+              width: 400.w,
+              child: Lottie.asset('assets/lotties/noInternet.json'),
+            ))
+          : WillPopScope(
+              onWillPop: () {
                 if (widget.screen == 'sports') {
                   navigateReplacementTo(context, const GameHome());
                 } else if (widget.screen == 'memberShip_admin') {
@@ -623,43 +570,12 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   navigateReplacementTo(context, const EntryScreen());
                 }
               },
-              child: const Icon(
-                Icons.arrow_back,
-                size: 30,
-              )),
-        ),
-        body: connectionStatus == ConnectivityStatus.Offline
-            ? Center(
-                child: SizedBox(
-                height: 400.h,
-                width: 400.w,
-                child: Lottie.asset('assets/lotties/noInternet.json'),
-              ))
-            : WillPopScope(
-                onWillPop: () {
-                  if (widget.screen == 'sports') {
-                    navigateReplacementTo(context, const GameHome());
-                  } else if (widget.screen == 'memberShip_admin') {
-                    navigateReplacementTo(context, BottomNav(
-                      comingIndex: 3,
-                    ));
-                  } else if (widget.screen == 'invitation_admin') {
-                    navigateReplacementTo(context, BottomNav(
-                      comingIndex: 3,
-                    ));
-                  } else if (widget.screen == 'sports_casher') {
-                    navigateReplacementTo(context, const CasherEntryScreen());
-                  } else {
-                    navigateReplacementTo(context, const EntryScreen());
-                  }
-                },
-                child: Column(
-                  children: <Widget>[
-                    Expanded(child: _buildQrView(context)),
-                  ],
-                ),
+              child: Column(
+                children: <Widget>[
+                  Expanded(child: _buildQrView(context)),
+                ],
               ),
-      ),
+            ),
     );
   }
 }

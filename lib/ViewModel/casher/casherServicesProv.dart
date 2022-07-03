@@ -72,7 +72,7 @@ class ServicesProv with ChangeNotifier, BaseExceptionHandling {
         'userId': userId
       };
 
-      print('data is $postedData');
+      debugPrint('data is $postedData');
 
       var response = await BaseClient()
           .post(BASE_URL, '/api/Service_Bill/Add', postedData)

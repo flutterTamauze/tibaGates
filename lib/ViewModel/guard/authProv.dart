@@ -11,6 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../main.dart';
+
 class AuthProv with ChangeNotifier, BaseExceptionHandling {
   String userId;
   String guardName;
@@ -102,11 +104,11 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     parkTypes = [];
     String data = '';
     Map<String, String> headers = {'Content-Type': 'application/json'};
-    Uri uri = Uri.parse('$BASE_URL/api/user/LogIn');
+    Uri uri = Uri.parse('${prefs.getString("baseUrl")}/api/user/LogIn');
 
     http.MultipartRequest request = http.MultipartRequest('POST', uri);
 
-    if(guardImage!=null){
+    if (guardImage != null) {
       request.files.add(
         await http.MultipartFile.fromPath('file', guardImage.path),
       );
@@ -118,7 +120,6 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
       );
     }
 */
-
 
     request.fields['Password'] = password;
     request.fields['UserName'] = username;
@@ -153,16 +154,14 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
               reasonsJsonObj.map((e) => parkTypes.add(e)).toList();
             }
 
-
             userId = userJson['id'];
             token = userJson['token'];
 
-
             if (userRole != 'Manager' && userRole != 'Admin') {
               guardName = userJson['name'] ?? '  -  ';
-              printerAddress = userJson['printerMac']?? '  -  ';
+              printerAddress = userJson['printerMac'] ?? '  -  ';
               lostTicketPrice = double.parse(responseDecoded['response']
-              ['printReasons'][0]['price']
+                      ['printReasons'][0]['price']
                   .toString());
               gateName = responseDecoded['response']['gateName'] ?? '  -  ';
               gateId = responseDecoded['response']['user']['gateID'] ?? 0;
@@ -173,6 +172,17 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
           } else if (responseDecoded['message'] ==
               'failure during signning in') {
             data = 'Incorrect Password';
+          } else if (responseDecoded['message'] == 'This user is not exist') {
+            if (firstLoginTry) {
+              firstLoginTry = false;
+              debugPrint('switch into local');
+              prefs.setString('baseUrl', 'https://10.0.0.51:447');
+     data='try local';
+              //logout();
+           //   login(username, password, guardImage, tabAddress).then((value) {});
+            } else {
+              data = responseDecoded['message'];
+            }
           } else {
             debugPrint('else case');
             data = responseDecoded['message'];
@@ -187,3 +197,5 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     return data;
   }
 }
+
+bool firstLoginTry = true;

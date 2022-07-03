@@ -405,9 +405,12 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
                                           child: (
 
                                               myDevice.address ==
-                                                    Provider.of<AuthProv>(context,listen: false).printerAddress
-                                                  // 'DC:0D:30:CC:27:07'
-                                             //     'DC:0D:30:A0:64:74'
+                                                  Provider
+                                                      .of<AuthProv>(
+                                                      context, listen: false)
+                                                      .printerAddress
+                                              // 'DC:0D:30:CC:27:07'
+                                              //     'DC:0D:30:A0:64:74'
                                               //  'DC:0D:30:A0:65:A8'
 
                                           )
@@ -420,7 +423,7 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
                                               serviceProv
                                                   .addBill(
                                                   serviceTypeId,
-                                                  servicePrice,
+                                                  defServiceProv.servicePrice,
                                                   _count,
                                                   prefs.getString(
                                                       'guardId'),
@@ -429,71 +432,7 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
                                                   ((value) async {
                                                     if (value ==
                                                         'Success') {
-                                                      Future.delayed(
-                                                          const Duration(
-                                                              seconds:
-                                                              1))
-                                                          .whenComplete(
-                                                              () async {
-                                                            PosPrintResult result = await _printerManager
-                                                                .printTicket(
-                                                                await casherTicket(
-                                                                    PaperSize
-                                                                        .mm58),
-                                                                queueSleepTimeMs: 50);
-
-                                                            Navigator.pop(
-                                                                context);
-                                                            print(
-                                                                'printing result is ${result
-                                                                    .msg}');
-                                                            if (result.msg ==
-                                                                'Success') {
-                                                              showSnakBar(
-                                                                  color: Colors
-                                                                      .green,
-                                                                  context: context,
-                                                                  text: result
-                                                                      .msg,
-                                                                  icon: Icons
-                                                                      .done_outline);
-                                                            } else
-                                                            if (result.msg ==
-                                                                'Error. Printer connection timeout') {
-                                                              showSnakBar(
-                                                                  color: Colors
-                                                                      .red[400],
-                                                                  context: context,
-                                                                  text: 'Error!! Printer connection timeout',
-                                                                  icon: Icons
-                                                                      .watch_later_outlined);
-                                                            } else
-                                                            if (result.msg ==
-                                                                'Error. Printer not selected') {
-                                                              showSnakBar(
-                                                                  color: Colors
-                                                                      .red[400],
-                                                                  context: context,
-                                                                  text: 'Error!! Printer not selected',
-                                                                  icon: Icons
-                                                                      .print_disabled_outlined);
-                                                            } else {
-                                                              showSnakBar(
-                                                                  color: Colors
-                                                                      .red[400],
-                                                                  context: context,
-                                                                  text: result
-                                                                      .msg,
-                                                                  icon: Icons
-                                                                      .error_outline);
-                                                            }
-                                                            navigateReplacementTo(
-                                                                context,
-                                                                const CasherEntryScreen());
-
-                                                            /*   _startPrint(
-                                                                    myDevice);*/
-                                                          });
+                                                      _startPrint();
                                                     }
                                                   }));
                                             },
@@ -679,22 +618,21 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
                                                 true,
                                                 ScanMode.BARCODE);
 
-                                            Provider.of<CommonProv>(context,listen: false).checkBarcodeValidation(barCode).then((value) {
-                                              if(value=='invalid'){
+                                            Provider.of<CommonProv>(
+                                                context, listen: false)
+                                                .checkBarcodeValidation(barCode)
+                                                .then((value) {
+                                              if (value == 'invalid') {
                                                 barcodeFollowers.add(barCode);
-                                                showShortToast('تم إضافة عدد ${barcodeFollowers.length} شخص إلى التذكرة ');
+                                                showShortToast(
+                                                    'تم إضافة عدد ${barcodeFollowers
+                                                        .length} شخص إلى التذكرة ');
                                               }
-                                              else{
-
-                                                showToast('هذا الكود موجود بالفعل');
-
-
+                                              else {
+                                                showToast(
+                                                    'هذا الكود موجود بالفعل');
                                               }
-
                                             });
-
-
-
                                           } on PlatformException {
                                             barCode = 'Failed to get barcode';
                                           }
@@ -989,9 +927,11 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
           debugPrint('devices length is ${_devices.length}');
           myDevice = _devices.firstWhere((element) =>
           element.address ==
-              Provider.of<AuthProv>(context,listen: false).printerAddress
+              Provider
+                  .of<AuthProv>(context, listen: false)
+                  .printerAddress
               //     'DC:0D:30:A0:65:A8'
-           //   'DC:0D:30:A0:64:74'
+              //   'DC:0D:30:A0:64:74'
               ?? ''
           );
           _printerManager.selectPrinter(myDevice);
@@ -1022,51 +962,67 @@ class _CasherHomeScreenState extends State<CasherHomeScreen>
     });
   }
 
-  Future<void> _startPrint(PrinterBluetooth printer) async {
-    _printerManager.selectPrinter(printer);
+  Future<void> _startPrint() async {
+    Future.delayed(
+        const Duration(
+            seconds:
+            1))
+        .whenComplete(
+            () async {
+          PosPrintResult result = await _printerManager
+              .printTicket(
+              await casherTicket(
+                  PaperSize
+                      .mm58),
+              queueSleepTimeMs: 50);
 
-    PosPrintResult result =
-    await _printerManager.printTicket(await casherTicket(
-      PaperSize.mm58,
-    ));
-
-    Navigator.pop(context);
-    print('printing result is ${result.msg}');
-    if (result.msg == 'Success') {
-      showSnakBar(
-          color: Colors.green,
-          context: context,
-          text: result.msg,
-          icon: Icons.done_outline);
-
-/*      _startPrint(
-          _devices.firstWhere((device) => device.address == myDevice.address));*/
-    } else if (result.msg == 'Error. Printer connection timeout') {
-      showSnakBar(
-          color: Colors.red[400],
-          context: context,
-          text: 'Error!! Printer connection timeout',
-          icon: Icons.watch_later_outlined);
-    } else if (result.msg == 'Error. Printer not selected') {
-      showSnakBar(
-          color: Colors.red[400],
-          context: context,
-          text: 'Error!! Printer not selected',
-          icon: Icons.print_disabled_outlined);
-    } else {
-      showSnakBar(
-          color: Colors.red[400],
-          context: context,
-          text: result.msg,
-          icon: Icons.error_outline);
-    }
-    navigateReplacementTo(context, const CasherEntryScreen());
-    /*   showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        content: Text(result.msg),
-      ),
-    );*/
+          Navigator.pop(
+              context);
+          debugPrint(
+              'printing result is ${result
+                  .msg}');
+          if (result.msg ==
+              'Success') {
+            showSnakBar(
+                color: Colors
+                    .green,
+                context: context,
+                text: result
+                    .msg,
+                icon: Icons
+                    .done_outline);
+          } else if (result.msg ==
+              'Error. Printer connection timeout') {
+            showSnakBar(
+                color: Colors
+                    .red[400],
+                context: context,
+                text: 'Error!! Printer connection timeout',
+                icon: Icons
+                    .watch_later_outlined);
+          } else if (result.msg ==
+              'Error. Printer not selected') {
+            showSnakBar(
+                color: Colors
+                    .red[400],
+                context: context,
+                text: 'Error!! Printer not selected',
+                icon: Icons
+                    .print_disabled_outlined);
+          } else {
+            showSnakBar(
+                color: Colors
+                    .red[400],
+                context: context,
+                text: result
+                    .msg,
+                icon: Icons
+                    .error_outline);
+          }
+          navigateReplacementTo(
+              context,
+              const CasherEntryScreen());
+        });
   }
 
   @override

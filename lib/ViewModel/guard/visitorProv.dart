@@ -291,6 +291,38 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
   }
 
 
+
+  Future<void> uploadImage( File pickedImage) async {
+    var uri = Uri.parse('$BASE_URL/FaceAuth');
+    var request = http.MultipartRequest('POST', uri);
+    try {
+
+    request.files.add(
+    await http.MultipartFile.fromPath('PhotoUrl', pickedImage.path),
+    );
+
+    // request.fields['UserID'] = userID.toString();
+
+    request.headers.addAll(mHeaders);
+      await request.send().then((response) async {
+        response.stream.transform(utf8.decoder).listen((value) {
+          Map<String, dynamic> responseDecoded = json.decode(value);
+          debugPrint("response is ${responseDecoded['response']}");
+          debugPrint('message is ${responseDecoded['message']}');
+          if (responseDecoded['message'] == 'Success') {
+            // do what you want here
+
+          }
+        });
+      }).catchError((e) {
+        debugPrint(e.toString());
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+
   Future<ResponseData> checkInMemberShip( int memberId,String userID, BuildContext context,
       [String image1, String image2]) async {
     ResponseData responseData = ResponseData();

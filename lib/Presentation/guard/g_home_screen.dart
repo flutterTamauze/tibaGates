@@ -60,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Future typesListener;
   CameraController _controller;
   String image;
+
   @override
   void initState() {
     super.initState();
@@ -144,7 +145,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   SizedBox(
                                     height: 20.h,
                                   ),
-                              TibaLogo(height: height,width: width,),
+                                  TibaLogo(
+                                    height: height,
+                                    width: width,
+                                  ),
                                   SizedBox(
                                     height: 40.h,
                                   ),
@@ -554,7 +558,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                   ],
                                                                 )),
                                                           )
-
                                                         : Container(),
                                                   ],
                                                 ),
@@ -702,7 +705,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                   ],
                                                                 )),
                                                           )
-
                                                         : Container(),
                                                   ],
                                                 ),
@@ -725,10 +727,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                 } else if (isPerHour == true) {
                                                   debugPrint('PER HOUR CASE');
                                                   perHourCase();
-                                                }
-
-                                                else {
-
+                                                } else {
                                                   defVisitorProv
                                                       .getBill(
                                                           visitorTypeId
@@ -745,7 +744,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         builder: (context) {
                                                           return BillDialog(
                                                               typeValue:
-                                                                  visitorTypeId.toString(),
+                                                                  visitorTypeId
+                                                                      .toString(),
                                                               citizenValue:
                                                                   _citizensValue,
                                                               militaryValue:
@@ -753,8 +753,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         });
                                                   });
                                                 }
-
-
                                               },
                                               title: 'إستمرار',
                                               buttonColor: ColorManager.primary,
@@ -792,8 +790,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   SizedBox(
                                     height: 20.h,
                                   ),
-
-
                                   Consumer<VisitorProv>(
                                       builder: (context, message, child) {
                                     return ZoomIn(
@@ -819,8 +815,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                             message.memberShipModel
                                                                     .memberProfilePath +
                                                                 '?v=${Random().nextInt(1000)}',
-
-
                                                           )),
                                                 shape: BoxShape.circle,
                                               ),
@@ -857,11 +851,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                           fontWeight: FontManager.bold),
                                       children: <TextSpan>[
                                         TextSpan(
-                                            text:
-
-                                            defVisitorProv
-                                            .memberShipModel.memberName ??
-                                            'مشترك ',
+                                            text: defVisitorProv.memberShipModel
+                                                    .memberName ??
+                                                'مشترك ',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.green,
@@ -1232,24 +1224,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         cameras =
                                                             await availableCameras();
 
-                                                        Navigator.push(
+                                                        navigateTo(
                                                             context,
-                                                            MaterialPageRoute(
-                                                                builder: (BuildContext
-                                                                        context) =>
-                                                                    CameraPicker(
-                                                                      camera:
-                                                                          cameras[
-                                                                              0],
-                                                                      instruction:
-                                                                          'personId',
-                                                                      type:
-                                                                          'membership',
-                                                                      membershipId:
-                                                                          widget
-                                                                              .memberShipModel
-                                                                              .id,
-                                                                    )));
+                                                            CameraPicker(
+                                                              camera:
+                                                                  cameras[0],
+                                                              instruction:
+                                                                  'personId',
+                                                              type:
+                                                                  'membership',
+                                                              membershipId: widget
+                                                                  .memberShipModel
+                                                                  .id,
+                                                            ));
                                                       },
                                                       child: const Icon(
                                                         Icons
@@ -1365,9 +1352,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         return;
                                                       }
 
-                                                      showLoaderDialog(context, 'Loading...');
+                                                      showLoaderDialog(context,
+                                                          'Loading...');
 
-                                                      defVisitorProv.getBill(widget.memberShipModel.ownerTypeId.toString(),
+                                                      defVisitorProv
+                                                          .getBill(
+                                                              widget
+                                                                  .memberShipModel
+                                                                  .ownerTypeId
+                                                                  .toString(),
                                                               '0',
                                                               '0')
                                                           .then((value) {
@@ -1387,7 +1380,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                       0);
                                                             });
                                                       });
-
                                                     },
                                                     title: defVisitorProv
                                                                 .memberShipModel
@@ -1431,10 +1423,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-
-
   Future getImage() async {
-
     File pickedImage =
         (await ImagePicker.pickImage(source: ImageSource.gallery));
     if (pickedImage != null) {
@@ -1454,7 +1443,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               .asUint8List();
 
           debugPrint('=prof image is $image');
-        showToast('تم التعديل');
+          showToast('تم التعديل');
         }
       });
 
@@ -1465,15 +1454,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   void invitationCase() {
-    Navigator.push(
+    navigateTo(
         context,
-        MaterialPageRoute(
-            builder: (context) => const PrintScreen(
-                  civilCount: 0,
-                  militaryCount: 0,
-                  resendType: 'Normal',
-                  from: 'send',
-                )));
+        const PrintScreen(
+          civilCount: 0,
+          militaryCount: 0,
+          resendType: 'Normal',
+          from: 'send',
+        ));
   }
 
   void perHourCase() {

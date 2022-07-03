@@ -264,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         .then((value) async {
       debugPrint('value => $value');
       if (value == 'Success') {
-        showToast('phone mac = $_udid');
+       // showToast('phone mac = $_udid');
         debugPrint('caching data');
         await cachingData();
         debugPrint('role is ${authProv.userRole}');
@@ -314,6 +314,8 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         }
       } else if (value == 'Incorrect User') {
         showToast('بيانات غير صحيحة');
+      } else if (value == 'try local') {
+        showToast('حدث خطأ ما برجاء المحاولة مجدداً..');
       } else if (value == 'Incorrect Password') {
         showToast('كلمة المرور غير صحيحة ');
       } else if (value == 'This User Is Active In Another Device') {
