@@ -19,7 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 List<CameraDescription> cameras;
 
 class SplashScreen extends StatefulWidget {
-  static const routeName = '/splash';
+  static const String routeName = '/splash';
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -32,6 +32,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> checkSignInStatus() async {
     isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    if(prefs.getString('baseUrl')==null){
+      prefs.setString('baseUrl', 'https://tibarose.tibarosehotel.com');
+    }
+
     role = prefs.getString('role');
 
     if (isLoggedIn == true) {

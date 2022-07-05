@@ -1,4 +1,5 @@
 import '../../../Utilities/Constants/constants.dart';
+import '../../../main.dart';
 
 class ReportsItemModel {
   int id;
@@ -26,8 +27,8 @@ class ReportsItemModel {
 
   factory ReportsItemModel.fromJson(json) {
     return ReportsItemModel(
-      image1: "$BASE_URL${json["image1"].toString().replaceAll("\\", "/")}",
-      image2: "$BASE_URL${json["image2"].toString().replaceAll("\\", "/")}",
+      image1: "${prefs.getString("baseUrl")}${json["image1"].toString().replaceAll("\\", "/")}",
+      image2: "${prefs.getString("baseUrl")}${json["image2"].toString().replaceAll("\\", "/")}",
       id: json['id'],
       type: json['parkType'],
       inDate: json['inDate'],

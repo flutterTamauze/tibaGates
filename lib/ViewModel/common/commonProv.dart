@@ -23,7 +23,7 @@ class CommonProv with ChangeNotifier, BaseExceptionHandling {
     String message;
     try {
       var response = await BaseClient()
-          .get(BASE_URL, '/api/HotelCheckIn/ValidateCheckIn/$barcode')
+          .get(prefs.getString("baseUrl"), '/api/HotelCheckIn/ValidateCheckIn/$barcode')
           .catchError(handleError);
 
       var jsonObj = jsonDecode(response)['response'];
@@ -48,7 +48,7 @@ class CommonProv with ChangeNotifier, BaseExceptionHandling {
     String message;
     try {
       var response = await BaseClient()
-          .post(BASE_URL, '/api/HotelGuestLog/Add/$id')
+          .post(prefs.getString("baseUrl"), '/api/HotelGuestLog/Add/$id')
           .catchError(handleError);
 
       if (jsonDecode(response)['message'] == 'Success') {

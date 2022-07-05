@@ -69,7 +69,6 @@ Future<void> main() async {
   }
 
   prefs = await SharedPreferences.getInstance();
-  prefs.setString('baseUrl', 'https://tibarose.tibarosehotel.com');
   InitLocator locator = InitLocator();
 
   SystemChrome.setPreferredOrientations(

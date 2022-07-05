@@ -134,7 +134,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
         print('visitorObjects null');
 
         var response = await BaseClient()
-            .get(BASE_URL, '/api/guest/getOwners')
+            .get(prefs.getString("baseUrl"), '/api/guest/getOwners')
             .catchError(handleError);
 
         var jsonObj = jsonDecode(response)['response'] as List;
@@ -199,7 +199,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       var response =
-      await BaseClient().get(BASE_URL, endPoint).catchError(handleError);
+      await BaseClient().get(prefs.getString("baseUrl"), endPoint).catchError(handleError);
 
       var parkJsonObj = jsonDecode(response)['response']['parkedDTO'] as List;
       var reasonsJsonObj =
@@ -239,7 +239,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     ResponseData responseData = ResponseData();
     debugPrint('userID $userID   type id $typeID');
 
-    var uri = Uri.parse('$BASE_URL/api/gate/CheckIn');
+    var uri = Uri.parse('${prefs.getString("baseUrl")}/api/gate/CheckIn');
 
     var request = http.MultipartRequest('POST', uri);
 
@@ -293,7 +293,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
 
   Future<void> uploadImage( File pickedImage) async {
-    var uri = Uri.parse('$BASE_URL/FaceAuth');
+    var uri = Uri.parse('${prefs.getString("baseUrl")}/FaceAuth');
     var request = http.MultipartRequest('POST', uri);
     try {
 
@@ -328,7 +328,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     ResponseData responseData = ResponseData();
     debugPrint('userID $userID \n memberId $memberId');
 
-    var uri = Uri.parse('$BASE_URL/api/MemberShip/CheckInMember');
+    var uri = Uri.parse('${prefs.getString("baseUrl")}/api/MemberShip/CheckInMember');
 
     var request = http.MultipartRequest('POST', uri);
 
@@ -384,7 +384,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     debugPrint('invitation id $invitationID');
 
 
-    var uri = Uri.parse('$BASE_URL/api/invitation/CheckInInvitation');
+    var uri = Uri.parse('${prefs.getString("baseUrl")}/api/invitation/CheckInInvitation');
     var request = http.MultipartRequest('POST', uri);
 
     if (carImg != null && identityImg != null) {
@@ -438,7 +438,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     ResponseData responseData = ResponseData();
     debugPrint('userID in per hour $userID');
 
-    var uri = Uri.parse('$BASE_URL/api/Hours/CheckInHour');
+    var uri = Uri.parse('${prefs.getString("baseUrl")}/api/Hours/CheckInHour');
 
     var request = http.MultipartRequest('POST', uri);
 
@@ -484,7 +484,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     String data = '';
 
     try {
-      var response = await BaseClient().post(BASE_URL, '/api/gate/bill', {
+      var response = await BaseClient().post(prefs.getString("baseUrl"), '/api/gate/bill', {
         'TypeID': typeID,
         'militryCount': militaryCount,
         'civilCount': citizenCount
@@ -516,7 +516,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       var response = await BaseClient()
-          .post(BASE_URL, '/api/gate/GetLogByID/$logId')
+          .post(prefs.getString("baseUrl"), '/api/gate/GetLogByID/$logId')
           .catchError(handleError);
 
       var decodedRes = jsonDecode(response);
@@ -547,7 +547,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       var response = await BaseClient()
-          .post(BASE_URL,
+          .post(prefs.getString("baseUrl"),
           '/api/gate/print?UserID=$userId&LogID=$logId&ReasonID=$reasonId')
           .catchError(handleError);
 
@@ -572,7 +572,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       var response = await BaseClient()
-          .delete(BASE_URL, '/api/gate/Cancel/$logId')
+          .delete(prefs.getString("baseUrl"), '/api/gate/Cancel/$logId')
           .catchError(handleError);
 
       var decodedRes = jsonDecode(response);
@@ -593,7 +593,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       var response = await BaseClient()
-          .put(BASE_URL,
+          .put(prefs.getString("baseUrl"),
           '/api/Hours/ConfirmCheckOutHour?Id=$logId&UserId=$userId')
           .catchError(handleError);
       debugPrint('ConfirmCheckOutHour?I $response');
@@ -618,7 +618,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     debugPrint('qrCode $qrCode');
 
     try {
-      var uri = Uri.parse('$BASE_URL/api/gate/CheckOut');
+      var uri = Uri.parse('${prefs.getString("baseUrl")}/api/gate/CheckOut');
       var request = http.MultipartRequest('PUT', uri);
       request.fields['QrCode'] = qrCode;
       request.headers.addAll(mHeaders);
@@ -671,7 +671,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     debugPrint('qrCode is => $qrCode');
 
     try {
-      var uri = Uri.parse('$BASE_URL/api/Invitation/ScanInvitationQr');
+      var uri = Uri.parse('${prefs.getString("baseUrl")}/api/Invitation/ScanInvitationQr');
       var request = http.MultipartRequest('POST', uri);
 
       request.fields['QrCode'] = qrCode;
@@ -730,7 +730,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     debugPrint('barcode $barcode');
 
     try {
-      Uri uri = Uri.parse('$BASE_URL/api/Invitation/ScanInvitationQr');
+      Uri uri = Uri.parse('${prefs.getString("baseUrl")}/api/Invitation/ScanInvitationQr');
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
 
       request.fields['QrCode'] = qrCode;
@@ -787,7 +787,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
     debugPrint('qrCode $qrCode');
 
     try {
-      Uri uri = Uri.parse('$BASE_URL/api/MemberShip/ScanMemberQR');
+      Uri uri = Uri.parse('${prefs.getString("baseUrl")}/api/MemberShip/ScanMemberQR');
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
       request.fields['QrCode'] = qrCode;
       request.headers.addAll(mHeaders);
@@ -846,7 +846,7 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
         String imageType]) async {
     String data = '';
     try {
-      Uri uri = Uri.parse('$BASE_URL/api/MemberShip/UpdateImage');
+      Uri uri = Uri.parse('${prefs.getString("baseUrl")}/api/MemberShip/UpdateImage');
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
 
       if (imageType == 'carId') {
@@ -876,13 +876,13 @@ class VisitorProv with ChangeNotifier, BaseExceptionHandling {
               //   imageCache.clear();
               data = 'Success';
               if (imageType == 'carId') {
-                memberShipModel.carImagePath = BASE_URL +
+                memberShipModel.carImagePath = prefs.getString("baseUrl") +
                     responseDecoded['response']['image1'].replaceAll("\\", "/");
               } else if (imageType == 'personId') {
-                memberShipModel.identityImagePath = BASE_URL +
+                memberShipModel.identityImagePath = prefs.getString("baseUrl") +
                     responseDecoded['response']['image2'].replaceAll("\\", "/");
               } else if (imageType == 'profile') {
-                memberShipModel.memberProfilePath = BASE_URL +
+                memberShipModel.memberProfilePath = prefs.getString("baseUrl") +
                     responseDecoded['response']['profileImage']
                         .replaceAll("\\", "/");
               }

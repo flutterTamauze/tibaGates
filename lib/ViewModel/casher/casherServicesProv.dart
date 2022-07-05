@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../api/base_client.dart';
 import '../../api/base_exception_handling.dart';
+import '../../main.dart';
 
 class ServicesProv with ChangeNotifier, BaseExceptionHandling {
   List<ServicesModel> serviceObjects = [];
@@ -29,7 +30,7 @@ class ServicesProv with ChangeNotifier, BaseExceptionHandling {
     debugPrint('gate id $gateId');
     try {
       var response = await BaseClient()
-          .get(BASE_URL, '/api/Service/GetAllActive/$gateId')
+          .get(prefs.getString("baseUrl"), '/api/Service/GetAllActive/$gateId')
           .catchError(handleError);
 
       var jsonObj = jsonDecode(response)['response'] as List;
@@ -75,7 +76,7 @@ class ServicesProv with ChangeNotifier, BaseExceptionHandling {
       debugPrint('data is $postedData');
 
       var response = await BaseClient()
-          .post(BASE_URL, '/api/Service_Bill/Add', postedData)
+          .post(prefs.getString("baseUrl"), '/api/Service_Bill/Add', postedData)
           .catchError(handleError);
 
       String responseBody = response;

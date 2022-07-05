@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _memberShipController = TextEditingController();
   CameraController _controller;
-
+  File f;
   bool isLoggedIn;
   Future<void> _initializeControllerFuture;
   var authProv;
@@ -64,6 +64,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     initPlatformState();
+
   }
 
   String _udid = 'Unknown';
@@ -209,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                                    // showToast('image is $image');
                                                 //    await login(image);
                                                     if (image == null) {
-                                                      File f = await getImageFileFromAssets('images/logoPrint.png');
+                                                       f = await getImageFileFromAssets('images/logoPrint.png');
                                                       await login(f);
                                                     /*  authProv.changeLoadingState(false);
                                                       showToast('حدث خطأ ما برجاء المحاولة مجدداً');*/
@@ -314,8 +315,8 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         }
       } else if (value == 'Incorrect User') {
         showToast('بيانات غير صحيحة');
-      } else if (value == 'try local') {
-        showToast('حدث خطأ ما برجاء المحاولة مجدداً..');
+      } else if (value == 'switch server') {
+        await login(f);
       } else if (value == 'Incorrect Password') {
         showToast('كلمة المرور غير صحيحة ');
       } else if (value == 'This User Is Active In Another Device') {

@@ -195,10 +195,9 @@ class TakePictureScreenState extends State<CameraPicker>
                     }
 
 
-
                     _controller.dispose();
                   } catch (e) {
-                    print(e);
+                    debugPrint(e.toString());
                   }
                 }
                   ,child: const Icon(
@@ -221,7 +220,7 @@ class TakePictureScreenState extends State<CameraPicker>
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
+                      builder: (context) => const HomeScreen(),
                     ),
                   );
                 },

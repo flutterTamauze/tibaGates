@@ -9,6 +9,8 @@ import '../../../Data/Models/admin/reportsItemModel.dart';
 import '../../../Utilities/Constants/constants.dart';
 import 'package:flutter/material.dart';
 
+import '../../../main.dart';
+
 class AReportsProv with ChangeNotifier, BaseExceptionHandling {
   List<ReportsItemModel> reportsList = [];
   SummaryModel summaryModel = SummaryModel();
@@ -22,7 +24,7 @@ class AReportsProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       var response = await BaseClient()
-          .post(BASE_URL, '/api/gate/GetLogByID/$logId')
+          .post(prefs.getString("baseUrl"), '/api/gate/GetLogByID/$logId')
           .catchError(handleError);
 
       var decodedRes = jsonDecode(response);
@@ -59,7 +61,7 @@ void resetBill(){
     debugPrint('bill id $billId   userId $userId');
     try {
       var response = await BaseClient()
-          .delete(BASE_URL, '/api/gate/cancel?logId=$billId&UserID=$userId')
+          .delete(prefs.getString("baseUrl"), '/api/gate/cancel?logId=$billId&UserID=$userId')
           .catchError(handleError);
 
       var decodedRes = jsonDecode(response);
@@ -97,7 +99,7 @@ void resetBill(){
     debugPrint('endpoint is $endPoint');
     try {
       var response =
-          await BaseClient().get(BASE_URL, endPoint).catchError(handleError);
+          await BaseClient().get(prefs.getString("baseUrl"), endPoint).catchError(handleError);
 
       debugPrint('response ${jsonDecode(response)['response']}');
 

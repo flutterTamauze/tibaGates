@@ -38,7 +38,7 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     try {
       var response = await BaseClient()
           .post(
-            BASE_URL,
+            prefs.getString("baseUrl"),
             '/api/User/SignOut?UserId=$userId',
           )
           .catchError(handleError);
@@ -69,7 +69,7 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     try {
       var response = await BaseClient()
           .get(
-            BASE_URL,
+            prefs.getString("baseUrl"),
             '/api/Gate/GetUnPayedBills?UserID=$userId',
           )
           .catchError(handleError);
@@ -99,11 +99,38 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     }
   }
 
+  Future<dynamic> getBaseUrl() async {
+    String data = '';
+
+    try {
+      var response = await BaseClient()
+          .get(
+            prefs.getString("baseUrl"),
+            '/api/User/fdsafGetUsers',
+          )
+          .catchError(handleError);
+
+      String responseBody = response;
+
+      var decodedRes = jsonDecode(responseBody);
+
+      debugPrint('response ${decodedRes['response']}');
+
+      notifyListeners();
+      return data;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  int numOfTries = 0;
+
   Future<dynamic> login(String username, String password, File guardImage,
       String tabAddress) async {
     parkTypes = [];
     String data = '';
     Map<String, String> headers = {'Content-Type': 'application/json'};
+    debugPrint(prefs.getString("baseUrl"));
     Uri uri = Uri.parse('${prefs.getString("baseUrl")}/api/user/LogIn');
 
     http.MultipartRequest request = http.MultipartRequest('POST', uri);
@@ -139,6 +166,8 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
           debugPrint('message is ${responseDecoded['message']}');
 
           if (responseDecoded['message'] == 'Success') {
+            numOfTries=0;
+
             debugPrint('success case');
             data = 'Success';
             isLogged = true;
@@ -165,7 +194,6 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
                   .toString());
               gateName = responseDecoded['response']['gateName'] ?? '  -  ';
               gateId = responseDecoded['response']['user']['gateID'] ?? 0;
-              // balance = double.parse(userJson['balance'].toString());
             }
           } else if (responseDecoded['message'] == 'Incorrect User') {
             data = 'Incorrect User';
@@ -173,17 +201,21 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
               'failure during signning in') {
             data = 'Incorrect Password';
           } else if (responseDecoded['message'] == 'This user is not exist') {
-            if (firstLoginTry) {
-              firstLoginTry = false;
-              debugPrint('switch into local');
-              prefs.setString('baseUrl', 'https://10.0.0.51:447');
-     data='try local';
-              //logout();
-           //   login(username, password, guardImage, tabAddress).then((value) {});
+            print('counter $numOfTries');
+            numOfTries++;
+            if (numOfTries < 2) {
+              debugPrint('switch server');
+              data = 'switch server';
+              await switchServerUrl();
+
+
             } else {
+              numOfTries=0;
               data = responseDecoded['message'];
+
             }
           } else {
+            numOfTries=0;
             debugPrint('else case');
             data = responseDecoded['message'];
           }
@@ -196,6 +228,21 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     debugPrint('data is $data');
     return data;
   }
-}
 
-bool firstLoginTry = true;
+  Future<void> switchServerUrl() {
+    if (prefs.getString('baseUrl') == 'https://10.0.0.51:447') {
+      prefs.setString('baseUrl', 'https://tibarose.tibarosehotel.com');
+    } else {
+      prefs.setString('baseUrl', 'https://10.0.0.51:447');
+    }
+  }
+
+
+/*  Future<void> switchServerUrl() {
+    if (prefs.getString('baseUrl') == 'https://10.0.0.242/PARKING') {
+      prefs.setString('baseUrl', 'https://tibarose.tibarosehotel.com');
+    } else {
+      prefs.setString('baseUrl', 'https://10.0.0.242/PARKING');
+    }
+  }*/
+}

@@ -60,6 +60,7 @@ class _EntryScreenState extends State<EntryScreen> {
 
     token = prefs.getString('token');
     debugPrint(token);
+    debugPrint('base url = ${prefs.getString("baseUrl")}');
     Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {
       cachingData().whenComplete(() {
         balanceListener =

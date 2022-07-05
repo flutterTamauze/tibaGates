@@ -183,6 +183,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  edge_detection:
+    dependency: "direct main"
+    description:
+      name: edge_detection
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.9"
   esc_pos_bluetooth:
     dependency: "direct main"
     description:
@@ -230,6 +237,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_absolute_path:
+    dependency: "direct main"
+    description:
+      name: flutter_absolute_path
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   flutter_barcode_scanner:
     dependency: "direct main"
     description:

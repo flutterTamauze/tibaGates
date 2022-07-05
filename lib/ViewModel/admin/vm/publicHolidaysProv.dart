@@ -17,8 +17,8 @@ import '../Repos_Impl/publicHolidaysRepoImpl.dart';
 
 class PublicHolidaysProv with ChangeNotifier {
   List<PublicHolidaysModel> holidaysList = [];
-  var startDate;
-  var endDate;
+  String startDate;
+  String endDate;
 
   void changeDate(String start, String end) {
     startDate = start;
@@ -85,7 +85,7 @@ class PublicHolidaysProv with ChangeNotifier {
     ResponseData responseData;
     var resp = await PublicHolidaysRepoImpl().getPublicHolidays();
     resp.fold((l) {
-      print('aa $l');
+      print('error $l');
     }, (r) {
       responseData = r;
     });

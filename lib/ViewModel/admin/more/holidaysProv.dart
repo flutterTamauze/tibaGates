@@ -23,7 +23,7 @@ class HolidaysProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       var response =
-          await BaseClient().put(BASE_URL, '/api/Holiday/UpdateWeeklyHoliday', {
+          await BaseClient().put(prefs.getString("baseUrl"), '/api/Holiday/UpdateWeeklyHoliday', {
         'id': id,
         'day': day,
         'isHoliday': isHoliday.toString() == 'false' ? false : true
@@ -50,7 +50,7 @@ class HolidaysProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       var response = await BaseClient()
-          .get(BASE_URL, '/api/Holiday/GetWeeklyHoliday')
+          .get(prefs.getString("baseUrl"), '/api/Holiday/GetWeeklyHoliday')
           .catchError(handleError);
 
       debugPrint(' response is ${jsonDecode(response)['response']}');
