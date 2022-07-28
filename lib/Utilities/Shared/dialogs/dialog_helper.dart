@@ -1,3 +1,5 @@
+import 'package:Tiba_Gates/Presentation/admin/admin_bottomNav.dart';
+import 'package:Tiba_Gates/Utilities/Routes/navigation_services.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import '../../Constants/constants.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,7 @@ class DialogHelper {
               Text(
                 title,
                 style: TextStyle(
-                    fontSize: setResponsiveFontSize(28), color: Colors.red),
+                    fontSize: setResponsiveFontSize(32), color: Colors.red),
               ),
               SizedBox(
                 height: 12.h,
@@ -33,11 +35,15 @@ class DialogHelper {
               ElevatedButton(
                 onPressed: () {
                   if (Get.isDialogOpen) {
+
+                    // Navigator.pop(NavigationService.navigatorKey.currentContext);
                     Get.back();
-                    Get.back();
+
+                    //Get.back();
+
                   }
                 },
-                child: Text('Okay'),
+                child: const Text('Okay'),
               ),
             ],
           ),
@@ -57,8 +63,8 @@ class DialogHelper {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 8),
+              const CircularProgressIndicator(),
+              SizedBox(height: 8.h),
               Text(message ?? 'Loading...'),
             ],
           ),

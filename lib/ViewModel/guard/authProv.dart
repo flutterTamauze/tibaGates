@@ -38,9 +38,9 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     try {
       var response = await BaseClient()
           .post(
-            prefs.getString("baseUrl"),
-            '/api/User/SignOut?UserId=$userId',
-          )
+        prefs.getString('baseUrl'),
+        '/api/User/SignOut?UserId=$userId',
+      )
           .catchError(handleError);
 
       debugPrint('response is $response');
@@ -69,9 +69,9 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     try {
       var response = await BaseClient()
           .get(
-            prefs.getString("baseUrl"),
-            '/api/Gate/GetUnPayedBills?UserID=$userId',
-          )
+        prefs.getString('baseUrl'),
+        '/api/Gate/GetUnPayedBills?UserID=$userId',
+      )
           .catchError(handleError);
 
       String responseBody = response;
@@ -105,9 +105,9 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     try {
       var response = await BaseClient()
           .get(
-            prefs.getString("baseUrl"),
-            '/api/User/fdsafGetUsers',
-          )
+        prefs.getString('baseUrl'),
+        '/api/User/fdsafGetUsers',
+      )
           .catchError(handleError);
 
       String responseBody = response;
@@ -128,9 +128,9 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
   Future<dynamic> login(String username, String password, File guardImage,
       String tabAddress) async {
     parkTypes = [];
-    String data = '';
+    String data = '';    String msg = '';
     Map<String, String> headers = {'Content-Type': 'application/json'};
-    debugPrint(prefs.getString("baseUrl"));
+    debugPrint(prefs.getString('baseUrl'));
     Uri uri = Uri.parse('${prefs.getString("baseUrl")}/api/user/LogIn');
 
     http.MultipartRequest request = http.MultipartRequest('POST', uri);
@@ -164,7 +164,7 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
 
           debugPrint("response is ${responseDecoded['response']}");
           debugPrint('message is ${responseDecoded['message']}');
-
+          msg=responseDecoded['message'];
           if (responseDecoded['message'] == 'Success') {
             numOfTries=0;
 
@@ -176,7 +176,7 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
             userRole = responseDecoded['response']['roles'][0];
 
             var reasonsJsonObj =
-                responseDecoded['response']['parkTypes'] as List;
+            responseDecoded['response']['parkTypes'] as List;
 
             if (parkTypes.isEmpty) {
               parkTypes.add('الكل');
@@ -190,30 +190,17 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
               guardName = userJson['name'] ?? '  -  ';
               printerAddress = userJson['printerMac'] ?? '  -  ';
               lostTicketPrice = double.parse(responseDecoded['response']
-                      ['printReasons'][0]['price']
+              ['printReasons'][0]['price']
                   .toString());
               gateName = responseDecoded['response']['gateName'] ?? '  -  ';
               gateId = responseDecoded['response']['user']['gateID'] ?? 0;
             }
           } else if (responseDecoded['message'] == 'Incorrect User') {
             data = 'Incorrect User';
-          } else if (responseDecoded['message'] ==
-              'failure during signning in') {
+          } else if (responseDecoded['message'] == 'failure during signning in') {
             data = 'Incorrect Password';
-          } else if (responseDecoded['message'] == 'This user is not exist') {
-            print('counter $numOfTries');
-            numOfTries++;
-            if (numOfTries < 2) {
-              debugPrint('switch server');
-              data = 'switch server';
-              await switchServerUrl();
-
-
-            } else {
-              numOfTries=0;
-              data = responseDecoded['message'];
-
-            }
+          } else if (responseDecoded['message'] == 'This user is not exist'  ) {
+            data =await switchServerUrl(responseDecoded['message']);
           } else {
             numOfTries=0;
             debugPrint('else case');
@@ -222,27 +209,62 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
         });
       });
     } catch (e) {
-      debugPrint('error $e');
+      debugPrint('error is $e');
+      data =await switchServerUrl(msg);
     }
     notifyListeners();
     debugPrint('data is $data');
     return data;
   }
 
-  Future<void> switchServerUrl() {
-    if (prefs.getString('baseUrl') == 'https://10.0.0.51:447') {
-      prefs.setString('baseUrl', 'https://tibarose.tibarosehotel.com');
+
+
+
+  Future<String> switchServerUrl(String message) async{
+    String data='';
+    print('counter $numOfTries');
+    numOfTries++;
+    if (numOfTries < 2) {
+      debugPrint('switch server');
+      data = 'switch server';
+      if (prefs.getString('baseUrl') == 'https://10.0.0.51:447') {
+        prefs.setString('baseUrl', 'https://tibarose.tibarosehotel.com');
+      } else {
+        prefs.setString('baseUrl', 'https://10.0.0.51:447');
+      }
+
     } else {
-      prefs.setString('baseUrl', 'https://10.0.0.51:447');
+      numOfTries=0;
+      data = message;
+
     }
+    return data;
   }
 
 
-/*  Future<void> switchServerUrl() {
-    if (prefs.getString('baseUrl') == 'https://10.0.0.242/PARKING') {
-      prefs.setString('baseUrl', 'https://tibarose.tibarosehotel.com');
+
+/*
+  Future<String> switchServerUrl(String message) async{
+    String data='';
+    print('counter $numOfTries');
+    numOfTries++;
+    if (numOfTries < 2) {
+      debugPrint('switch server');
+      data = 'switch server';
+      if (prefs.getString('baseUrl') == 'https://10.0.0.242/PARKING') {
+        prefs.setString('baseUrl', 'https://tibarose.tibarosehotel.com');
+      } else {
+        prefs.setString('baseUrl', 'https://10.0.0.242/PARKING');
+      }
+
     } else {
-      prefs.setString('baseUrl', 'https://10.0.0.242/PARKING');
+      numOfTries=0;
+      data = message;
+
     }
-  }*/
+    return data;
+  }
+*/
+
+
 }

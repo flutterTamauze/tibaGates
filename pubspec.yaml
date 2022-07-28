@@ -51,7 +51,6 @@ dependencies:
 
   flutter_svg:
   fluttertoast: ^8.0.8
-  #esc_pos_bluetooth: ^0.1.0
   get_it:
   connectivity: ^3.0.6
   font_awesome_flutter: ^9.2.0
@@ -60,7 +59,6 @@ dependencies:
   intl: ^0.17.0
   bluetooth_print: ^2.0.0
   dotted_decoration: ^2.0.0
-  #esc_pos_printer: ^4.0.3
   esc_pos_bluetooth: ^0.2.8
   edge_detection: ^1.0.9
 
@@ -68,7 +66,7 @@ dependencies:
   logger: ^1.1.0
   flutter_slidable: ^0.6.0
   provider: ^6.0.1
-  qr_code_scanner: ^0.6.1
+  qr_code_scanner: ^0.7.0
   qr_flutter: ^4.0.0
   url_launcher:
   get: ^3.25.5

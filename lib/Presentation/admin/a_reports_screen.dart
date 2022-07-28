@@ -134,7 +134,9 @@ class AReportsScreen extends StatelessWidget {
                       ),
                       SizedBox(
                         height: 12.h,
-                      ), /*Stack(
+                      ),
+
+                      /*Stack(
                         clipBehavior: Clip.none,
                         children: <Widget>[
                           Padding(
@@ -184,8 +186,12 @@ class AReportsScreen extends StatelessWidget {
                                               "You're doing great!",
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
-                                             *//*   fontFamily:
-                                                FitnessAppTheme.fontName,*//*
+                                             */
+
+                      /*   fontFamily:
+                                                FitnessAppTheme.fontName,*/
+
+                      /*
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 14,
                                                 letterSpacing: 0.0,

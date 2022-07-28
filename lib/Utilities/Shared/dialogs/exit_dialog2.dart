@@ -60,10 +60,10 @@ class DialogFb1 extends StatelessWidget {
                     color: Colors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.bold)),
-             SizedBox(
+            SizedBox(
               height:isTab(context)? 16:3.5,
             ),
-             AutoSizeText('هل تريد بالفعل تسجيل الخروج من التطبيق ؟',
+            AutoSizeText('هل تريد بالفعل تسجيل الخروج من التطبيق ؟',
                 style: TextStyle(
                     color: Colors.grey,
                     fontSize:isTab(context)? setResponsiveFontSize(26):setResponsiveFontSize(16),
@@ -89,7 +89,7 @@ class DialogFb1 extends StatelessWidget {
                           'userId ${Provider.of<AuthProv>(context, listen: false).userId}');
                       Provider.of<AuthProv>(context, listen: false)
                           .logout(Provider.of<AuthProv>(context, listen: false)
-                              .userId)
+                          .userId)
                           .then((value) async {
                         if (value == 'Success' || value == 'incorrect user') {
                           Provider.of<AuthProv>(context, listen: false)
@@ -104,13 +104,11 @@ class DialogFb1 extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => LoginScreen(
-                                        camera: cameras[1],
-                                      )));
-                        } else if (value == 'Time Out') {
-                          Fluttertoast.showToast(
-                              msg: 'حدث خطأ ما , برجاء المحاولة مجدداً',
-                              backgroundColor: Colors.green,
-                              toastLength: Toast.LENGTH_LONG);
+                                    camera: cameras[1],
+                                  )));
+                        }
+                        else{
+                          showToast('حدث خطأ ما , برجاء المحاولة مجدداً');
                           Navigator.pop(context);
                           Navigator.pop(context);
                         }

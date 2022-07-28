@@ -8,6 +8,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
+//import 'package:permission_handler/permission_handler.dart';
 
 import '../../../main.dart';
 import '../../admin/a_invitations_screen.dart';
@@ -158,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                 child: Form(
                                   key: _forgetFormKey,
                                   autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
+                                  AutovalidateMode.onUserInteraction,
                                   child: Column(
                                     children: <Widget>[
                                       AutoSizeText(
@@ -167,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                             color: ColorManager.primary,
                                             fontWeight: FontWeight.bold,
                                             fontSize:
-                                                setResponsiveFontSize(24)),
+                                            setResponsiveFontSize(24)),
                                       ),
                                       SizedBox(
                                         height: 25.h,
@@ -175,58 +176,58 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                       MemberDisplay(
                                         isLogin: true,
                                         memberShipController:
-                                            _memberShipController,
+                                        _memberShipController,
                                         passwordController: _passwordController,
                                       ),
                                       SizedBox(
                                         height: 25.0.h,
                                       ),
                                       Provider.of<AuthProv>(context,
-                                                  listen: true)
-                                              .loadingState
+                                          listen: true)
+                                          .loadingState
                                           ? Center(
-                                              child: Platform.isIOS
-                                                  ? const CupertinoActivityIndicator()
-                                                  : const CircularProgressIndicator(
-                                                      backgroundColor:
-                                                          Colors.green,
-                                                      valueColor:
-                                                          AlwaysStoppedAnimation<
-                                                                  Color>(
-                                                              Colors.green),
-                                                    ),
-                                            )
+                                        child: Platform.isIOS
+                                            ? const CupertinoActivityIndicator()
+                                            : const CircularProgressIndicator(
+                                          backgroundColor:
+                                          Colors.green,
+                                          valueColor:
+                                          AlwaysStoppedAnimation<
+                                              Color>(
+                                              Colors.green),
+                                        ),
+                                      )
                                           : RoundedButton(
-                                              height: 55,
-                                              width: 220,
-                                              ontap: () {
-                                                if (!_forgetFormKey.currentState
-                                                    .validate()) {
-                                                  return;
-                                                } else {
-                                                  takeImage().then((image) async {
+                                        height: 55,
+                                        width: 220,
+                                        ontap: () {
+                                          if (!_forgetFormKey.currentState
+                                              .validate()) {
+                                            return;
+                                          } else {
+                                            takeImage().then((image) async {
 
-                                                    debugPrint('image during login is   $image');
-                                                   // showToast('image is $image');
-                                                //    await login(image);
-                                                    if (image == null) {
-                                                       f = await getImageFileFromAssets('images/logoPrint.png');
-                                                      await login(f);
-                                                    /*  authProv.changeLoadingState(false);
+                                              debugPrint('image during login is   $image');
+                                              // showToast('image is $image');
+                                              //    await login(image);
+                                              if (image == null) {
+                                                f = await getImageFileFromAssets('images/logoPrint.png');
+                                                await login(f);
+                                                /*  authProv.changeLoadingState(false);
                                                       showToast('حدث خطأ ما برجاء المحاولة مجدداً');*/
 
-                                                      return;
-                                                    } else {
-                                                      await login(image);
-                                                    }
-                                                  });
-                                                }
-                                              },
-                                              title: 'تسجيل',
-                                              buttonColor: ColorManager.primary,
-                                              titleColor:
-                                                  ColorManager.backGroundColor,
-                                            ),
+                                                return;
+                                              } else {
+                                                await login(image);
+                                              }
+                                            });
+                                          }
+                                        },
+                                        title: 'تسجيل',
+                                        buttonColor: ColorManager.primary,
+                                        titleColor:
+                                        ColorManager.backGroundColor,
+                                      ),
                                       SizedBox(
                                         height: 10.h,
                                       ),
@@ -260,12 +261,17 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
       return;
     }
 
+
     authProv
         .login(_memberShipController.text, _passwordController.text, img, _udid)
         .then((value) async {
+
       debugPrint('value => $value');
+      if (value==''){
+        showToast('توجد مشكلة فى الاتصال بالشبكة ، حاول مجددا');
+        authProv.changeLoadingState(false);
+      }
       if (value == 'Success') {
-       // showToast('phone mac = $_udid');
         debugPrint('caching data');
         await cachingData();
         debugPrint('role is ${authProv.userRole}');
@@ -286,7 +292,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         } else if (authProv.userRole == 'Cashier') {
 
           if (
-              await Permission.location.request().isGranted) {
+          await Permission.location.request().isGranted) {
             debugPrint('Cashier');
             navigateReplacementTo(context, const CasherEntryScreen());
             return;
@@ -313,15 +319,24 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
 
           return;
         }
-      } else if (value == 'Incorrect User') {
+      }
+      else if (value == 'Incorrect User') {
         showToast('بيانات غير صحيحة');
-      } else if (value == 'switch server') {
+        authProv.changeLoadingState(false);
+      }
+      else if (value == 'switch server') {
+        debugPrint('try to switch');
         await login(f);
-      } else if (value == 'Incorrect Password') {
+      }
+      else if (value == 'Incorrect Password') {
         showToast('كلمة المرور غير صحيحة ');
-      } else if (value == 'This User Is Active In Another Device') {
+        authProv.changeLoadingState(false);
+      }
+      else if (value == 'This User Is Active In Another Device') {
         showToast('This User Is Active In Another Device');
-      } else if (value.toString().toLowerCase().contains('realated')) {
+        authProv.changeLoadingState(false);
+      }
+      else if (value.toString().toLowerCase().contains('realated')) {
         if (_udid.toString().length > 16) {
           // Iphone Case
           showToast('غير مصرح لهذا المستخدم بالدخول');
@@ -329,8 +344,10 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         } else {
           showToast(value);
         }
-      } else {
+      }
+      else {
         showToast(value);
+        authProv.changeLoadingState(false);
       }
     });
   }
@@ -341,7 +358,6 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     await prefs.setString('role', authProv.userRole ?? '');
     await prefs.setString('token', authProv.token);
     await prefs.setString('guardName', authProv.guardName ?? '');
-   // await prefs.setDouble('balance', authProv.balance ?? 0.0);
     await prefs.setDouble('ticketLostPrice', authProv.lostTicketPrice ?? 0.0);
     await prefs.setString('printerAddress', authProv.printerAddress ?? '');
     await prefs.setString('gateName', authProv.gateName ?? '');
@@ -363,7 +379,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   Future<File> takeImage() async {
     _controller = CameraController(
       widget.camera,
-      ResolutionPreset.medium,
+      ResolutionPreset.medium,enableAudio: false,
     );
 
     _initializeControllerFuture = _controller.initialize();
@@ -391,7 +407,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
       );
 
       compressedFile =
-          await testCompressAndGetFile(file: img, targetPath: newPath);
+      await testCompressAndGetFile(file: img, targetPath: newPath);
 
       // here we will crop
 
