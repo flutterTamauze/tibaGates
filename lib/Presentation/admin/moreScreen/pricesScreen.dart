@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Tiba_Gates/Utilities/media_query.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../../Utilities/responsive.dart';
 import '../../../Data/Models/admin/prices.dart';
@@ -159,37 +160,48 @@ class _PricesScreenState extends State<PricesScreen> {
                                                   .validate()) {
                                                 return;
                                               } else {
+
                                                 debugPrint(
                                                     'new type is ${_typeController.text}  new price is ${_priceController.text}   new price holiday is ${_priceNholidayController.text}');
                                                 showLoaderDialog(
                                                     context, 'جارى التعديل');
-                                                Provider.of<PricesProv>(context,
-                                                        listen: false)
-                                                    .updatePrices(
-                                                        e.id,
-                                                        _typeController.text,
-                                                        double.parse(
-                                                            _priceController
-                                                                .text),
-                                                        double.parse(
-                                                            _priceNholidayController
-                                                                .text))
-                                                    .then((value) {
-                                                  if (value == 'Success') {
-                                                    Navigator.pop(context);
-                                                    Navigator.pop(context);
-                                                    e.type =
-                                                        _typeController.text;
-                                                    e.price = double.parse(
-                                                        _priceController.text);
-                                                    e.priceInHoliday = double.parse(
-                                                        _priceNholidayController
-                                                            .text);
-                                                  }
-                                                });
+                                                try{
+
+                                                  Provider.of<PricesProv>(context,
+                                                      listen: false)
+                                                      .updatePrices(
+                                                      e.id,
+                                                      _typeController.text,
+
+                                                      double.parse(_priceController.text),
+                                                      double.parse(_priceNholidayController.text))
+                                                      .then((value) {
+                                                    if (value == 'Success') {
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      e.type =
+                                                          _typeController.text;
+                                                      e.price = double.parse(
+                                                          _priceController.text);
+                                                      e.priceInHoliday = double.parse(
+                                                          _priceNholidayController
+                                                              .text);
+                                                    }
+                                                  });
+
+
+                                                }on FormatException catch(f){
+                                                  debugPrint('format is $f');
+                                                  Navigator.pop(context);
+                                                  showToast('برجاء ادخال سعر صحيح');
+                                                }
+
+
+
+
                                               }
                                             });
-                                      });
+                        });
                                 },
                                 child: const Icon(
                                   Icons.edit,
@@ -428,8 +440,8 @@ class _PricesScreenState extends State<PricesScreen> {
     ConnectivityStatus connectionStatus =
         Provider.of<ConnectivityStatus>(context);
 
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height =context.height;
+    double width = context.width;
     return SafeArea(
       child: Scaffold(
         floatingActionButton: ZoomIn(
@@ -451,26 +463,56 @@ class _PricesScreenState extends State<PricesScreen> {
                             debugPrint(
                                 'new type is ${_typeController.text}  new price is ${_priceController.text}   new price holiday is ${_priceNholidayController.text}');
                             showLoaderDialog(context, 'جارى الحفظ');
-                            Provider.of<PricesProv>(context, listen: false)
-                                .addPrices(
-                                    _typeController.text,
-                                    double.parse(_priceController.text),
-                                    double.parse(_priceNholidayController.text))
-                                .then((value) {
-                              if (value == 'Success') {
-                                _typeController.text = '';
-                                _priceController.text = '';
-                                _priceNholidayController.text = '';
-                                Fluttertoast.showToast(
-                                    msg: 'تم الحفظ بنجاح',
-                                    backgroundColor: Colors.green,
-                                    toastLength: Toast.LENGTH_LONG);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Provider.of<PricesProv>(context, listen: false)
-                                    .getPrices();
-                              }
-                            });
+
+                            try{
+
+                              Provider.of<PricesProv>(context, listen: false)
+                                  .addPrices(
+                                  _typeController.text,
+                                  double.parse(_priceController.text),
+                                  double.parse(_priceNholidayController.text))
+                                  .then((value) {
+                                if (value == 'Success') {
+                                  _typeController.text = '';
+                                  _priceController.text = '';
+                                  _priceNholidayController.text = '';
+                                  Fluttertoast.showToast(
+                                      msg: 'تم الحفظ بنجاح',
+                                      backgroundColor: Colors.green,
+                                      toastLength: Toast.LENGTH_LONG);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Provider.of<PricesProv>(context, listen: false)
+                                      .getPrices();
+                                }
+                              });
+
+                            }on FormatException catch(f){
+                              debugPrint('format is $f');
+                              Navigator.pop(context);
+                              showToast('برجاء ادخال سعر صحيح');
+                            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                           }
                         });
                   });

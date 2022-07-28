@@ -462,7 +462,7 @@ class _NotPrintedListScreenState extends State<NotPrintedListScreen> {
                                                                                           Navigator.pushReplacement(
                                                                                               context,
                                                                                               MaterialPageRoute(
-                                                                                                  builder: (context) => PrintScreen2(
+                                                                                                  builder: (context) => PrintScreen(
                                                                                                         from: 'resend',
                                                                                                         resendType: type,
                                                                                                         reasonPrice: Provider.of<VisitorProv>(context, listen: false).reasonsObjects[Provider.of<VisitorProv>(context, listen: false).reasons.indexOf(selectedReason ?? Provider.of<VisitorProv>(context, listen: false).reasons[0])].price,

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import '../../../Utilities/Constants/constants.dart';
+import '../../../main.dart';
 
 class MemberShipModel {
   int id;
@@ -31,13 +32,13 @@ class MemberShipModel {
     return MemberShipModel(
         carImagePath: json['image1'] == null
             ? 'empty'
-            : "$BASE_URL${json["image1"].toString().replaceAll("\\", "/")}",
+            : "${prefs.getString("baseUrl")}${json["image1"].toString().replaceAll("\\", "/")}",
         memberProfilePath: json['profileImage'] == null
             ? 'empty'
-            : "$BASE_URL${json["profileImage"].toString().replaceAll("\\", "/")}",
+            : "${prefs.getString("baseUrl")}${json["profileImage"].toString().replaceAll("\\", "/")}",
         identityImagePath: json['image2'] == null
             ? 'empty'
-            : "$BASE_URL${json["image2"].toString().replaceAll("\\", "/")}",
+            : "${prefs.getString("baseUrl")}${json["image2"].toString().replaceAll("\\", "/")}",
         id: json['id'],
 
         memberName: json['name'] ?? 'مشترك ',

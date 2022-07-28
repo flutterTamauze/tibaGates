@@ -1,11 +1,17 @@
 // ignore_for_file: missing_return
 import 'dart:io';
 
+import 'package:Tiba_Gates/Presentation/area_manager/areaManager_Entry_screen.dart';
+import 'package:Tiba_Gates/Utilities/Shared/dialogs/hotel_guest_dialog.dart';
+import 'package:Tiba_Gates/ViewModel/common/commonProv.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:intl/intl.dart';
+
 import 'casherHome_screen.dart';
 import '../guard/scanner.dart';
 import '../login_screen/Widgets/outlined_button.dart';
 import '../../Utilities/Shared/noInternet.dart';
-import '../../ViewModel/casher/servicesProv.dart';
+import '../../ViewModel/casher/casherServicesProv.dart';
 import '../../Utilities/Shared/dialogs/exit_dialog2.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -34,28 +40,40 @@ class CasherEntryScreen extends StatefulWidget {
 
 class _CasherEntryScreenState extends State<CasherEntryScreen> {
   String token;
-Future balanceListener;
+  Future balanceListener;
+
   @override
   void initState() {
     super.initState();
-    balanceListener=Provider.of<AuthProv>(context,listen: false).getBalanceById(prefs.getString('guardId'),'Casher',);
 
+    Provider.of<ServicesProv>(context, listen: false).serviceObjects = [];
+    Provider.of<ServicesProv>(context, listen: false).serviceTypes = [];
+
+/*
     if (Provider.of<ServicesProv>(context, listen: false)
         .serviceObjects
         .isNotEmpty) {
 
+*/
 /*      Provider.of<ServicesProv>(context, listen: false).servicePrice =
           Provider.of<ServicesProv>(context, listen: false)
               .serviceObjects[0]
-              .servicePrice;*/
+              .servicePrice;*/ /*
+
 
       Provider.of<ServicesProv>(context, listen: false).resetPrice();
     }
+*/
 
     token = prefs.getString('token');
     print(token);
     Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {
       cachingData();
+      balanceListener =
+          Provider.of<AuthProv>(context, listen: false).getBalanceById(
+        prefs.getString('guardId'),
+        'Casher',
+      );
     });
   }
 
@@ -79,11 +97,9 @@ Future balanceListener;
 
   @override
   Widget build(BuildContext context) {
-/*    if(mounted){
-      if(Provider.of<ServicesProv>(context,listen: false).serviceObjects.isNotEmpty){
-        Provider.of<ServicesProv>(context, listen: false).resetPrice();
-      }
-    }*/
+
+    CommonProv commonProv=Provider.of<CommonProv>(context,listen: false);
+
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     ConnectivityStatus connectionStatus =
@@ -118,7 +134,10 @@ Future balanceListener;
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             OutlinedButton(
-                              onPressed: () {    navigateReplacementTo(context, const PeriodBillsScreen());},
+                              onPressed: () {
+                                navigateReplacementTo(
+                                    context, const PeriodBillsScreen());
+                              },
                               child: SizedBox(
                                 height: 45.h,
                                 width: 50.w,
@@ -145,9 +164,7 @@ Future balanceListener;
                                               Radius.circular(20))))),
                             ),
                             OutlinedButton(
-                              onPressed: () {
-
-                              },
+                              onPressed: () {},
                               child: SizedBox(
                                 height: 45.h,
                                 child: Row(
@@ -162,18 +179,20 @@ Future balanceListener;
                                               child: Platform.isIOS
                                                   ? const CupertinoActivityIndicator()
                                                   : const Center(
-                                                child: CircularProgressIndicator(
-                                                  backgroundColor: Colors.green,
-                                                ),
-                                              ),
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        backgroundColor:
+                                                            Colors.green,
+                                                      ),
+                                                    ),
                                             );
                                           } else if (snapshot.connectionState ==
                                               ConnectionState.done) {
-
-                                            return     AutoSizeText(
+                                            return AutoSizeText(
                                                 '${Provider.of<AuthProv>(context, listen: true).balance ?? '--'} ',
                                                 style: TextStyle(
-                                                  fontSize: setResponsiveFontSize(28),
+                                                  fontSize:
+                                                      setResponsiveFontSize(28),
                                                   fontWeight: FontManager.bold,
                                                   color: Colors.red,
                                                 ));
@@ -181,7 +200,7 @@ Future balanceListener;
                                           return Container();
                                         }),
                                     Padding(
-                                      padding:  EdgeInsets.only(left: 8.w),
+                                      padding: EdgeInsets.only(left: 8.w),
                                       child: AutoSizeText(
                                         Provider.of<AuthProv>(context,
                                                     listen: true)
@@ -257,7 +276,21 @@ Future balanceListener;
                               children: [
                                 RoundedButton(
                                   ontap: () async {
-                                    navigateTo(context, CasherHomeScreen());
+                                    Provider.of<ServicesProv>(context,
+                                            listen: false)
+                                        .getServices(prefs.getInt('gateId'))
+                                        .then((value) {
+                                      if (Provider.of<ServicesProv>(context,
+                                                  listen: false)
+                                              .serviceTypes.isNotEmpty) {
+                                        navigateTo(
+                                            context, const CasherHomeScreen());
+                                      } else {
+                                        showToast(
+                                            ' لا توجد أصناف حالية على نقطة البيع');
+                                      }
+                                    });
+
                                   },
                                   title: 'فواتير',
                                   width: 250,
@@ -283,13 +316,76 @@ Future balanceListener;
                                   height: 55,
                                   buttonColor: Colors.orange,
                                   titleColor: ColorManager.backGroundColor,
+                                ),      SizedBox(
+                                  height: 26.h,
+                                ), RoundedButton(
+                                  ontap: () async {
+                                    String barCode;
+                                    try{
+                                      barCode=await FlutterBarcodeScanner.scanBarcode('#FF039212', 'Cancel', true, ScanMode.BARCODE);
+                                      // showToast(barCode);
+                                      commonProv.checkBarcodeValidation(barCode).then((value) {
+                                        if(value=='Success'){
+
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return  HotelGuestDialog(name:commonProv.hotelGuestModel.guestName ,
+                                                  fromDate: DateFormat('yyyy-MM-dd / hh:mm').format(DateTime.parse(commonProv.hotelGuestModel.startDate)).toString() ,
+                                                  hotelName: commonProv.hotelGuestModel.hotelName,
+                                                  toDate:DateFormat('yyyy-MM-dd / hh:mm').format(DateTime.parse(commonProv.hotelGuestModel.endDate)).toString() ,
+                                                  onPressed: (){
+
+                                                    debugPrint('log id is ${commonProv.hotelGuestModel.id}');
+                                                    commonProv.confirmBarcodeLog(commonProv.hotelGuestModel.id)
+                                                        .then((value) {
+                                                      if (value == 'Success') {
+                                                        showToast(
+                                                            'تم التأكيد بنجاح');
+                                                        Navigator.pop(context);
+                                                      } else {
+                                                        showToast('حدث خطأ ما');
+                                                        Navigator.pop(context);
+                                                      }
+                                                    });
+                                                  },);
+                                              });
+
+                                        }
+                                        else if(value=='invalid'){
+                                          debugPrint('value is $value');
+                                          showToast('كود غير صحيح');
+                                        }
+                                        else{
+                                          debugPrint('value is $value');
+                                        }
+
+
+                                      });
+
+
+
+
+                                    }on PlatformException{
+                                      barCode='Failed to get barcode';
+                                    }
+                                    if(!mounted) {
+                                      return;
+                                    }
+
+                                  },
+                                  title: 'باركود',
+                                  width: 250,
+                                  height: 55,
+                                  buttonColor: Colors.black,
+                                  titleColor: ColorManager.backGroundColor,
                                 )
                               ],
                             ),
                           ),
                         ),
                         SizedBox(
-                          height: 280.h,
+                          height: 160.h,
                         ),
                         FadeInUp(
                             child: OutlineButtonFb1(

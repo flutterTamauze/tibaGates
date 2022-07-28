@@ -86,7 +86,7 @@ class _AInvitationScreenState extends State<AInvitationScreen> {
             FocusScope.of(context).unfocus();
           },
           child: Scaffold(
-            floatingActionButton: managerProv.invitationObjects != null
+            floatingActionButton: managerProv.invitationObjects.isNotEmpty
                 ? Padding(
                     padding: const EdgeInsets.only(left: 22, bottom: 16),
                     child: Align(
@@ -359,81 +359,91 @@ class _AInvitationScreenState extends State<AInvitationScreen> {
                               );
                             } else if (snapshot.connectionState ==
                                 ConnectionState.done) {
-                              invitationTypeId ??=
-                                  managerProv.invitationObjects[0].id;
 
-                              selectedInvitationType ??= managerProv
-                                  .invitationObjects[0].invitationType;
-                              invitationList = Provider.of<ManagerProv>(context,
-                                      listen: true)
-                                  .invitationsList;
-                              print('type id $invitationTypeId');
 
-                              return managerProv.invitationsList.isNotEmpty
-                                  ? Expanded(
-                                      child: SmartRefresher(
-                                        onRefresh: _onRefresh,
-                                        controller: _refreshController,
-                                        enablePullDown: true,
-                                        header: const WaterDropMaterialHeader(
-                                          color: Colors.white,
-                                          backgroundColor: Colors.green,
-                                        ),
-                                        child: ListView.builder(
-                                          itemCount:
-                                              //tmpList.isEmpty ?
-                                              invitationList.length
-                                          //  : tmpList.length
+                              if(managerProv.invitationObjects.isNotEmpty){
+
+
+                                invitationTypeId ??=
+                                    managerProv.invitationObjects[0].id;
+
+                                selectedInvitationType ??= managerProv
+                                    .invitationObjects[0].invitationType;
+                                invitationList = Provider.of<ManagerProv>(context,
+                                    listen: true)
+                                    .invitationsList;
+                                print('type id $invitationTypeId');
+
+                                return managerProv.invitationsList.isNotEmpty
+                                    ? Expanded(
+                                  child: SmartRefresher(
+                                    onRefresh: _onRefresh,
+                                    controller: _refreshController,
+                                    enablePullDown: true,
+                                    header: const WaterDropMaterialHeader(
+                                      color: Colors.white,
+                                      backgroundColor: Colors.green,
+                                    ),
+                                    child: ListView.builder(
+                                      itemCount:
+                                      //tmpList.isEmpty ?
+                                      invitationList.length
+                                      //  : tmpList.length
+                                      ,
+                                      scrollDirection: Axis.vertical,
+                                      //  shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        return InvitationItem(
+                                          invitation:
+                                          //  tmpList.isEmpty ?
+                                          invitationList[index]
+                                          // : tmpList[index]
                                           ,
-                                          scrollDirection: Axis.vertical,
-                                          //  shrinkWrap: true,
-                                          itemBuilder: (context, index) {
-                                            return InvitationItem(
-                                              invitation:
-                                                  //  tmpList.isEmpty ?
-                                                  invitationList[index]
-                                              // : tmpList[index]
-                                              ,
-                                              callback: () {
-                                                showLoaderDialog(
-                                                    context, 'جارى الحذف');
-                                                Provider.of<ManagerProv>(
-                                                        context,
-                                                        listen: false)
-                                                    .deleteInvitation(
-                                                        invitationList[index]
-                                                            .id,
-                                                        Provider.of<AuthProv>(
-                                                                context,
-                                                                listen: false)
-                                                            .userId)
-                                                    .then((value) {
-                                                  if (value == 'success') {
-                                                    Navigator.pop(context);
-                                                  }
-                                                });
-                                              },
-                                            );
+                                          callback: () {
+                                            showLoaderDialog(
+                                                context, 'جارى الحذف');
+                                            Provider.of<ManagerProv>(
+                                                context,
+                                                listen: false)
+                                                .deleteInvitation(
+                                                invitationList[index]
+                                                    .id,
+                                                Provider.of<AuthProv>(
+                                                    context,
+                                                    listen: false)
+                                                    .userId)
+                                                .then((value) {
+                                              if (value == 'success') {
+                                                Navigator.pop(context);
+                                              }
+                                            });
                                           },
-                                        ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                )
+                                    : ZoomIn(
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 400.h,
                                       ),
-                                    )
-                                  : ZoomIn(
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 400.h,
-                                          ),
-                                          Center(
-                                              child: AutoSizeText(
+                                      Center(
+                                          child: AutoSizeText(
                                             'لا توجد دعوات',
                                             style: TextStyle(
                                                 fontSize:
-                                                    setResponsiveFontSize(46)),
+                                                setResponsiveFontSize(46)),
                                           )),
-                                        ],
-                                      ),
-                                    );
+                                    ],
+                                  ),
+                                );
+                              }
+
+
+
+
                             }
                             return Container();
                           }),

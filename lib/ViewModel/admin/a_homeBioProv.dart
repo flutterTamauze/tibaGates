@@ -22,7 +22,7 @@ class AdminHomeProv with ChangeNotifier, BaseExceptionHandling {
   Future<void> getBioData() async {
     try {
       var response = await BaseClient()
-          .get(BASE_URL, '/api/gate/summaryfortoday')
+          .get(prefs.getString("baseUrl"), '/api/gate/summaryfortoday')
           .catchError(handleError);
 
       debugPrint('response ${jsonDecode(response)['response']}');

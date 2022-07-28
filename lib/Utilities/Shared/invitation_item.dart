@@ -99,19 +99,19 @@ class _InvitationItemState extends State<InvitationItem> {
                       ),
                       RichText(
                         text: TextSpan(
-                          text: widget.invitation.visitorName,
+                          text: 'اسم المدعو : ',
                           style: TextStyle(
-                              color: Colors.green,
-                              fontSize: setResponsiveFontSize(30),
-                              fontWeight: FontManager.bold),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: setResponsiveFontSize(32),
+                          ),
                           children: <TextSpan>[
                             TextSpan(
-                                text: ' : اسم المدعو ',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: setResponsiveFontSize(32),
-                                )),
+                                text: widget.invitation.visitorName,
+                                style:TextStyle(
+                                    color: Colors.green,
+                                    fontSize: setResponsiveFontSize(30),
+                                    fontWeight: FontManager.bold) ),
                           ],
                         ),
                       )

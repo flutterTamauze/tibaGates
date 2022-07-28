@@ -36,6 +36,8 @@
 		<string>_dartobservatory._tcp</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
+    <string>Camera permission is required for barcode scanning.</string>
+	<key>NSCameraUsageDescription</key>
 	<string>we want this permission to let users change their profile images</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>your usage description here</string>

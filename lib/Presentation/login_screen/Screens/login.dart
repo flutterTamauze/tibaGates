@@ -7,6 +7,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:camera/camera.dart';
+import 'package:permission_handler/permission_handler.dart';
+//import 'package:permission_handler/permission_handler.dart';
 
 import '../../../main.dart';
 import '../../admin/a_invitations_screen.dart';
@@ -53,19 +55,20 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _memberShipController = TextEditingController();
   CameraController _controller;
-
+  File f;
   bool isLoggedIn;
   Future<void> _initializeControllerFuture;
   var authProv;
-
-  String _udid = 'Unknown';
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     initPlatformState();
+
   }
+
+  String _udid = 'Unknown';
 
   Future<void> initPlatformState() async {
     String udid;
@@ -108,7 +111,10 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-            TibaLogo(height: height,width: width,),
+                    TibaLogo(
+                      height: height,
+                      width: width,
+                    ),
                     SizedBox(
                       height: 20.h,
                     ),
@@ -191,9 +197,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                                               Colors.green),
                                                     ),
                                             )
-                                          :
-
-                                      RoundedButton(
+                                          : RoundedButton(
                                               height: 55,
                                               width: 220,
                                               ontap: () {
@@ -201,21 +205,17 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                                     .validate()) {
                                                   return;
                                                 } else {
-                                                  takeImage()
-                                                      .then((image) async {
-                                                    print(
-                                                        'image during login is   $image');
+                                                  takeImage().then((image) async {
+
+                                                    debugPrint('image during login is   $image');
+                                                   // showToast('image is $image');
+                                                //    await login(image);
                                                     if (image == null) {
-                                                      authProv
-                                                          .changeLoadingState(
-                                                              false);
-                                                      Fluttertoast.showToast(
-                                                          msg:
-                                                              'حدث خطأ ما برجاء المحاولة مجدداً',
-                                                          backgroundColor:
-                                                              Colors.green,
-                                                          toastLength: Toast
-                                                              .LENGTH_LONG);
+                                                       f = await getImageFileFromAssets('images/logoPrint.png');
+                                                      await login(f);
+                                                    /*  authProv.changeLoadingState(false);
+                                                      showToast('حدث خطأ ما برجاء المحاولة مجدداً');*/
+
                                                       return;
                                                     } else {
                                                       await login(image);
@@ -250,57 +250,93 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     );
   }
 
-  login(File img) async {
+  Future<void> login(File img) async {
     AuthProv authProv = Provider.of<AuthProv>(context, listen: false);
     authProv.changeLoadingState(true);
-    print('_platformVersion  =   $_udid');
+    debugPrint('_platformVersion  =   $_udid');
+
     if (_udid == 'Unknown' || _udid == null) {
       showToast('حدث خطأ ما برجاء المحاولة لاحقاً');
       authProv.changeLoadingState(false);
       return;
     }
 
+
     authProv
         .login(_memberShipController.text, _passwordController.text, img, _udid)
         .then((value) async {
+
       debugPrint('value => $value');
+      if (value==''){
+        showToast('توجد مشكلة فى الاتصال بالشبكة ، حاول مجددا');
+        authProv.changeLoadingState(false);
+      }
       if (value == 'Success') {
         debugPrint('caching data');
         await cachingData();
         debugPrint('role is ${authProv.userRole}');
         if (authProv.userRole == 'Manager') {
           debugPrint('manager');
-          navigateReplacementTo(context,const MHomeScreen() );
+          navigateReplacementTo(context, const MHomeScreen());
 
           return;
         } else if (authProv.userRole == 'Admin') {
           debugPrint('admin');
-          navigateReplacementTo(context,BottomNav(
-            comingIndex: 3,
-          ) );
+          navigateReplacementTo(
+              context,
+              BottomNav(
+                comingIndex: 3,
+              ));
 
           return;
         } else if (authProv.userRole == 'Cashier') {
-          debugPrint('Cashier');
 
-          navigateReplacementTo(context,const CasherEntryScreen() );
+          if (
+              await Permission.location.request().isGranted) {
+            debugPrint('Cashier');
+            navigateReplacementTo(context, const CasherEntryScreen());
+            return;
+          } else {
+            await Permission.location.request();
 
-          return;
+            showToast('you have to accept permissions');
+            return;
+          }
         } else if (authProv.userRole == 'GameGuard') {
           debugPrint('GameGuard');
-          navigateReplacementTo(context,const GameHome() );
+          navigateReplacementTo(context, const GameHome());
 
           return;
         }
-        navigateReplacementTo(context,const EntryScreen() );
+        if (await Permission.location.request().isGranted) {
+          debugPrint('Guard');
 
-      } else if (value == 'Incorrect User') {
+          navigateReplacementTo(context, const EntryScreen());
+          return;
+        } else {
+          showToast('you have to accept permissions');
+          await Permission.location.request();
+
+          return;
+        }
+      }
+      else if (value == 'Incorrect User') {
         showToast('بيانات غير صحيحة');
-      } else if (value == 'Incorrect Password') {
+        authProv.changeLoadingState(false);
+      }
+      else if (value == 'switch server') {
+        debugPrint('try to switch');
+        await login(f);
+      }
+      else if (value == 'Incorrect Password') {
         showToast('كلمة المرور غير صحيحة ');
-      } else if (value == 'This User Is Active In Another Device') {
+        authProv.changeLoadingState(false);
+      }
+      else if (value == 'This User Is Active In Another Device') {
         showToast('This User Is Active In Another Device');
-      } else if (value.toString().toLowerCase().contains('realated')) {
+        authProv.changeLoadingState(false);
+      }
+      else if (value.toString().toLowerCase().contains('realated')) {
         if (_udid.toString().length > 16) {
           // Iphone Case
           showToast('غير مصرح لهذا المستخدم بالدخول');
@@ -309,20 +345,19 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
           showToast(value);
         }
       }
-
       else {
         showToast(value);
+        authProv.changeLoadingState(false);
       }
     });
   }
 
   Future<void> cachingData() async {
     await prefs.setString('guardId', authProv.userId);
-    await prefs.setInt('gateId', authProv.gateId);
+    await prefs.setInt('gateId', authProv.gateId ?? 0);
     await prefs.setString('role', authProv.userRole ?? '');
     await prefs.setString('token', authProv.token);
     await prefs.setString('guardName', authProv.guardName ?? '');
-    await prefs.setDouble('balance', authProv.balance ?? 0.0);
     await prefs.setDouble('ticketLostPrice', authProv.lostTicketPrice ?? 0.0);
     await prefs.setString('printerAddress', authProv.printerAddress ?? '');
     await prefs.setString('gateName', authProv.gateName ?? '');
@@ -330,10 +365,21 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     await prefs.setStringList('parkingTypes', authProv.parkTypes);
   }
 
+
+  Future<File> getImageFileFromAssets(String path) async {
+    ByteData byteData = await rootBundle.load('assets/$path');
+
+    File file = File('${(await getTemporaryDirectory()).path}/$path');
+    await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+    return file;
+  }
+
+
   Future<File> takeImage() async {
     _controller = CameraController(
       widget.camera,
-      ResolutionPreset.medium,
+      ResolutionPreset.medium,enableAudio: false,
     );
 
     _initializeControllerFuture = _controller.initialize();

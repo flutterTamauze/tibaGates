@@ -1,7 +1,13 @@
 import 'dart:io';
 
+import 'package:Tiba_Gates/Utilities/Shared/dialogs/hotel_guest_dialog.dart';
+import 'package:Tiba_Gates/Utilities/Shared/noInternet.dart';
+import 'package:Tiba_Gates/ViewModel/common/commonProv.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../Utilities/responsive.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Data/Models/admin/a_homeBio_model.dart';
@@ -78,13 +84,9 @@ class ABioHomeState extends State {
         Provider.of<ConnectivityStatus>(context);
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+   CommonProv commonProv=Provider.of<CommonProv>(context,listen: false);
     return connectionStatus == ConnectivityStatus.Offline
-        ? Center(
-            child: SizedBox(
-            height: 400.h,
-            width: 400.w,
-            child: Lottie.asset('assets/lotties/noInternet.json'),
-          ))
+        ? NoInternet()
         : FutureBuilder(
             future: listener,
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -127,7 +129,8 @@ class ABioHomeState extends State {
                             Row(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(top: 12.h, left: 8.w),
+                                  padding:
+                                      EdgeInsets.only(top: 12.h, left: 8.w),
                                   child: Align(
                                     alignment: Alignment.topLeft,
                                     child: OutlinedButton(
@@ -177,27 +180,31 @@ class ABioHomeState extends State {
                                   height: 8.h,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 12.h, left: 8.w),
+                                  padding:
+                                      EdgeInsets.only(top: 12.h, left: 8.w),
                                   child: Align(
                                     alignment: Alignment.topLeft,
                                     child: OutlinedButton(
                                       onPressed: () {
-                                        Navigator.of(context).pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const QrCodeScreen(
-                                                      screen: 'invitation_admin',
-                                                    )),
-                                            (Route<dynamic> route) => false);
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const QrCodeScreen(
+                                                          screen:
+                                                              'invitation_admin',
+                                                        )),
+                                                (Route<dynamic> route) =>
+                                                    false);
                                       },
                                       child: SizedBox(
-                                        height: 45.h,
+                                        height: 50.h,
                                         width: 50.w,
-                                        child: const Center(
+                                        child:  Center(
                                           child: Icon(
                                             Icons.qr_code,
                                             color: Colors.orange,
-                                            size: 36,
+                                            size: isTab(context) ? 36 : 28,
                                           ),
                                         ),
                                       ),
@@ -205,6 +212,91 @@ class ABioHomeState extends State {
                                           side: MaterialStateProperty.all(
                                               BorderSide(
                                                   color: Colors.orange,
+                                                  width: 1.4.w)),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.white),
+                                          padding: MaterialStateProperty.all(
+                                              EdgeInsets.symmetric(
+                                                  vertical: 20.h,
+                                                  horizontal: 20.w)),
+                                          shape: MaterialStateProperty.all(
+                                              const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.all(
+                                                      Radius.circular(20))))),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 12.h, left: 8.w),
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: OutlinedButton(
+                                      onPressed: () async {
+                                        String barCode;
+                                        try{
+                                          barCode=await FlutterBarcodeScanner.scanBarcode('#FF039212', 'Cancel', true, ScanMode.BARCODE);
+                                          commonProv.checkBarcodeValidation(barCode).then((value) {
+                                            debugPrint('value is $value');
+
+                                            if(value=='Success'){
+
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return  HotelGuestDialog(name:commonProv.hotelGuestModel.guestName ,
+                                                      fromDate: DateFormat('yyyy-MM-dd / hh:mm').format(DateTime.parse(commonProv.hotelGuestModel.startDate)).toString() ,
+                                                      hotelName: commonProv.hotelGuestModel.hotelName,
+                                                      toDate:DateFormat('yyyy-MM-dd / hh:mm').format(DateTime.parse(commonProv.hotelGuestModel.endDate)).toString() ,
+                                                      onPressed: (){
+                                                        debugPrint('log id is ${commonProv.hotelGuestModel.id}');
+                                                        commonProv.confirmBarcodeLog(commonProv.hotelGuestModel.id)
+                                                            .then((value) {
+                                                          if (value == 'Success') {
+                                                            showToast(
+                                                                'تم التأكيد بنجاح');
+                                                            Navigator.pop(context);
+                                                          } else {
+                                                            showToast('حدث خطأ ما');
+                                                            Navigator.pop(context);
+                                                          }
+                                                        });
+                                                      },);
+                                                  });
+
+                                            }
+                                            else if(value=='invalid'){
+                                              showToast('كود غير صحيح');
+                                            }
+                                            else{
+                                              debugPrint('value = $value');
+                                            }
+                                          });
+
+
+                                        }on PlatformException{
+                                          barCode='Failed to get barcode';
+                                        }
+                                        if(!mounted) {
+                                          return;
+                                        }
+
+                                      },
+                                      child: SizedBox(
+                                        height: 50.h,
+                                        width: 50.w,
+                                        child:  Center(
+                                          child: Icon(
+                                            FontAwesomeIcons.barcode,
+                                            color: Colors.black,
+                                            size: isTab(context) ? 36 : 28,                                          ),
+                                        ),
+                                      ),
+                                      style: ButtonStyle(
+                                          side: MaterialStateProperty.all(
+                                              BorderSide(
+                                                  color: Colors.black,
                                                   width: 1.4.w)),
                                           backgroundColor:
                                               MaterialStateProperty.all<Color>(
@@ -341,7 +433,7 @@ class ABioHomeState extends State {
                             SizedBox(
                               height: isTab(context) ? 30.h : 5.h,
                             ),
-                            Padding(
+                            Provider.of<AdminHomeProv>(context, listen: false).carsCount!=null?         Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
                               child: Card(
@@ -368,10 +460,7 @@ class ABioHomeState extends State {
                                             height: 12.h,
                                           ),
                                           AutoSizeText(
-                                              Provider.of<AdminHomeProv>(
-                                                      context,
-                                                      listen: false)
-                                                  .carsCount
+                                              Provider.of<AdminHomeProv>(context, listen: false).carsCount
                                                   .toString(),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
@@ -408,7 +497,7 @@ class ABioHomeState extends State {
                                   ),
                                 ),
                               ),
-                            ),
+                            ):Container(),
                             SizedBox(
                               height: 10.h,
                             ),
@@ -433,7 +522,7 @@ class ABioHomeState extends State {
 
                                             child: Lottie.asset(
                                                 'assets/lotties/arrow.json'))),
-                                    Text('الإنتقال إلى التقارير ',
+                                    AutoSizeText('الإنتقال إلى التقارير ',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize:
@@ -453,63 +542,5 @@ class ABioHomeState extends State {
             });
   }
 
-/*  List<PieChartSectionData> showingSections(BuildContext context) {
-    // final ratio = Provider.of<UserData>(context, listen: false).superCompaniesChartModel;
 
-    return List.generate(4, (i) {
-      var isTouched = i == touchedIndex;
-      var fontSize = isTouched ? 25.0 : 16.0;
-      var radius = isTouched ? 60.0 : 50.0;
-      switch (i) {
-        case 0:
-          return PieChartSectionData(
-            color: Colors.orange,
-            value: 30,
-            title: 30.toStringAsFixed(0) + ' %',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-          );
-        case 1:
-          return PieChartSectionData(
-            color: Colors.red[600],
-            value: 40,
-            title: 40.toStringAsFixed(0) + ' %',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-          );
-
-        case 2:
-          return PieChartSectionData(
-            color: Colors.green,
-            value: 26,
-            title: 26.toStringAsFixed(0) + ' %',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-          );
-        case 3:
-          return PieChartSectionData(
-            color: Colors.purple[600],
-            value:
-                12 */ /*double.parse(ratio.totalExternalMissionRatio.toString())*/ /*,
-            title: 12.toStringAsFixed(0) + ' %',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-          );
-        default:
-          throw Error();
-      }
-    });
-  }*/
 }

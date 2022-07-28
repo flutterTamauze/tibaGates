@@ -25,7 +25,7 @@ class ManagerProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       var response =
-          await BaseClient().post(BASE_URL, '/api/invitation/AddInvitation', {
+          await BaseClient().post(prefs.getString("baseUrl"), '/api/invitation/AddInvitation', {
         'Name': visitorName,
         'Description': visitorDescription,
         'GardUserId': managerId,
@@ -55,7 +55,7 @@ class ManagerProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       var response = await BaseClient()
-          .delete(BASE_URL,
+          .delete(prefs.getString("baseUrl"),
               '/api/invitation/DeleteInvitation?id=$invitationId&UserId=$userId')
           .catchError(handleError);
 
@@ -88,7 +88,7 @@ class ManagerProv with ChangeNotifier, BaseExceptionHandling {
     print('endpoint $endPoint');
     try {
       var response =
-          await BaseClient().get(BASE_URL, endPoint).catchError(handleError);
+          await BaseClient().get(prefs.getString("baseUrl"), endPoint).catchError(handleError);
 
       if (jsonDecode(response)['message'] == 'Success') {
         data = 'Success';

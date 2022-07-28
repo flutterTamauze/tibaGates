@@ -1,4 +1,5 @@
 import '../../../Utilities/Constants/constants.dart';
+import '../../../main.dart';
 
 class ParkingModel {
   int logId;
@@ -24,9 +25,9 @@ class ParkingModel {
 
   factory ParkingModel.fromJson(json) {
     return ParkingModel(
-        carImage: "$BASE_URL${json["image1"].toString().replaceAll("\\", "/")}",
+        carImage: "${prefs.getString("baseUrl")}${json["image1"].toString().replaceAll("\\", "/")}",
         identityImage:
-            "$BASE_URL${json["image2"].toString().replaceAll("\\", "/")}",
+            "${prefs.getString("baseUrl")}${json["image2"].toString().replaceAll("\\", "/")}",
         logId: json['id'],
         civilCount: json['civilCount'],
         inDateTime: '${json['inDate'] ?? ''}  ${json['inTime'] ?? ''}',

@@ -106,11 +106,9 @@ class DialogFb1 extends StatelessWidget {
                                   builder: (context) => LoginScreen(
                                         camera: cameras[1],
                                       )));
-                        } else if (value == 'Time Out') {
-                          Fluttertoast.showToast(
-                              msg: 'حدث خطأ ما , برجاء المحاولة مجدداً',
-                              backgroundColor: Colors.green,
-                              toastLength: Toast.LENGTH_LONG);
+                        }
+                        else{
+                          showToast('حدث خطأ ما , برجاء المحاولة مجدداً');
                           Navigator.pop(context);
                           Navigator.pop(context);
                         }

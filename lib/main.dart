@@ -4,7 +4,9 @@ import 'dart:io';
 
 import 'Presentation/casher/casherEntry_screen.dart';
 import 'Presentation/splash_screen/splash_screen.dart';
-import 'ViewModel/casher/servicesProv.dart';
+import 'Utilities/Routes/navigation_services.dart';
+import 'ViewModel/casher/casherServicesProv.dart';
+import 'ViewModel/common/commonProv.dart';
 import 'ViewModel/game/gameProv.dart';
 import 'ViewModel/guard/authProv.dart';
 import 'ViewModel/guard/visitorProv.dart';
@@ -26,6 +28,7 @@ import 'ViewModel/admin/reports/admin_reportsProv.dart';
 import 'ViewModel/admin/more/holidaysProv.dart';
 import 'ViewModel/manager/managerProv.dart';
 import 'ViewModel/admin/more/pricesProv.dart';
+import 'ocr_test.dart';
 
 SharedPreferences prefs;
 GetIt getIt = GetIt.instance;
@@ -35,6 +38,7 @@ Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return Material(
+
       child: Container(
         color: Colors.green,
         child: Column(
@@ -118,6 +122,8 @@ class MyApp extends StatelessWidget {
               create: (context) => getIt<GameProv>(),
             ),       ChangeNotifierProvider(
               create: (context) => getIt<ServicesProv>(),
+            ),     ChangeNotifierProvider(
+              create: (context) => getIt<CommonProv>(),
             ),
           ],
           child: FutureBuilder(
@@ -130,8 +136,12 @@ class MyApp extends StatelessWidget {
                     builder: (context, snapshot) {
                       return GetMaterialApp(
                         title: 'Tiba Rose',
+                        navigatorKey: NavigationService.navigatorKey, // set property
+
                         debugShowCheckedModeBanner: false,
-                        home:  SplashScreen()
+                        home:
+                        //OcrTest()
+                        SplashScreen()
                         //SplashScreen()
 
                         //MyBluetooth()
@@ -157,3 +167,4 @@ class MyHttpOverrides extends HttpOverrides {
           (X509Certificate cert, String host, int port) => true;
   }
 }
+// hi

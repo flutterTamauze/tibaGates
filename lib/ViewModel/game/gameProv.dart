@@ -22,7 +22,7 @@ class GameProv with ChangeNotifier, BaseExceptionHandling{
     debugPrint('gameId $gameId   id $id');
 
     try {
-      var response = await BaseClient().post(BASE_URL, '/api/GameLog/AddGameLog?id=$id&gameId=$gameId').catchError(handleError);
+      var response = await BaseClient().post(prefs.getString("baseUrl"), '/api/GameLog/AddGameLog?id=$id&gameId=$gameId').catchError(handleError);
       debugPrint('1');
       String responseBody = response;
       debugPrint('2 $responseBody');

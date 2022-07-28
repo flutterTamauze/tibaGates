@@ -11,9 +11,10 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthProv with ChangeNotifier, BaseExceptionHandling {
-  var userId;
+import '../../main.dart';
 
+class AuthProv with ChangeNotifier, BaseExceptionHandling {
+  String userId;
   String guardName;
   String userRole;
   String token;
@@ -37,7 +38,7 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     try {
       var response = await BaseClient()
           .post(
-            BASE_URL,
+            prefs.getString('baseUrl'),
             '/api/User/SignOut?UserId=$userId',
           )
           .catchError(handleError);
@@ -68,7 +69,7 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
     try {
       var response = await BaseClient()
           .get(
-            BASE_URL,
+            prefs.getString('baseUrl'),
             '/api/Gate/GetUnPayedBills?UserID=$userId',
           )
           .catchError(handleError);
@@ -76,9 +77,10 @@ class AuthProv with ChangeNotifier, BaseExceptionHandling {
       String responseBody = response;
 
       var decodedRes = jsonDecode(responseBody);
-print(decodedRes['status']);
-      if (decodedRes['status'] == true) {
 
+      print('status ${decodedRes['status']}');
+
+      if (decodedRes['status'] == true) {
         if (role == 'Casher') {
           print('solidawy');
           balance = double.parse(decodedRes['response']['balance'].toString());
@@ -90,6 +92,29 @@ print(decodedRes['status']);
 
         data = 'Success';
       }
+      notifyListeners();
+      return data;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<dynamic> getBaseUrl() async {
+    String data = '';
+
+    try {
+      var response = await BaseClient()
+          .get(
+            prefs.getString('baseUrl'),
+            '/api/User/fdsafGetUsers',
+          )
+          .catchError(handleError);
+
+      String responseBody = response;
+
+      var decodedRes = jsonDecode(responseBody);
+
+      debugPrint('response ${decodedRes['response']}');
 
       notifyListeners();
       return data;
@@ -98,17 +123,31 @@ print(decodedRes['status']);
     }
   }
 
+  int numOfTries = 0;
+
   Future<dynamic> login(String username, String password, File guardImage,
       String tabAddress) async {
     parkTypes = [];
-    String data = '';
+    String data = '';    String msg = '';
     Map<String, String> headers = {'Content-Type': 'application/json'};
-    Uri uri = Uri.parse('$BASE_URL/api/user/LogIn');
+    debugPrint(prefs.getString('baseUrl'));
+    Uri uri = Uri.parse('${prefs.getString("baseUrl")}/api/user/LogIn');
 
     http.MultipartRequest request = http.MultipartRequest('POST', uri);
-    request.files.add(
-      await http.MultipartFile.fromPath('file', guardImage.path),
-    );
+
+    if (guardImage != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath('file', guardImage.path),
+      );
+    }
+/*
+    else if(guardImage==null){
+      request.files.add(
+        await http.MultipartFile.fromPath('file', 'null'),
+      );
+    }
+*/
+
     request.fields['Password'] = password;
     request.fields['UserName'] = username;
     request.fields['PhoneMac'] = tabAddress;
@@ -125,10 +164,13 @@ print(decodedRes['status']);
 
           debugPrint("response is ${responseDecoded['response']}");
           debugPrint('message is ${responseDecoded['message']}');
-
+          msg=responseDecoded['message'];
           if (responseDecoded['message'] == 'Success') {
+            numOfTries=0;
+
             debugPrint('success case');
             data = 'Success';
+            isLogged = true;
             var userJson = responseDecoded['response']['user'];
 
             userRole = responseDecoded['response']['roles'][0];
@@ -139,17 +181,14 @@ print(decodedRes['status']);
             if (parkTypes.isEmpty) {
               parkTypes.add('الكل');
               reasonsJsonObj.map((e) => parkTypes.add(e)).toList();
-              debugPrint(parkTypes.length.toString());
             }
 
-            isLogged = true;
             userId = userJson['id'];
             token = userJson['token'];
 
             if (userRole != 'Manager' && userRole != 'Admin') {
               guardName = userJson['name'] ?? '  -  ';
-              // balance = double.parse(userJson['balance'].toString());
-              printerAddress = userJson['printerMac'];
+              printerAddress = userJson['printerMac'] ?? '  -  ';
               lostTicketPrice = double.parse(responseDecoded['response']
                       ['printReasons'][0]['price']
                   .toString());
@@ -158,20 +197,74 @@ print(decodedRes['status']);
             }
           } else if (responseDecoded['message'] == 'Incorrect User') {
             data = 'Incorrect User';
-          } else if (responseDecoded['message'] ==
-              'failure during signning in') {
+          } else if (responseDecoded['message'] == 'failure during signning in') {
             data = 'Incorrect Password';
+          } else if (responseDecoded['message'] == 'This user is not exist'  ) {
+            data =await switchServerUrl(responseDecoded['message']);
           } else {
+            numOfTries=0;
             debugPrint('else case');
             data = responseDecoded['message'];
           }
         });
       });
     } catch (e) {
-      debugPrint('error $e');
+      debugPrint('error is $e');
+      data =await switchServerUrl(msg);
     }
     notifyListeners();
     debugPrint('data is $data');
     return data;
   }
+
+
+
+
+  Future<String> switchServerUrl(String message) async{
+    String data='';
+    print('counter $numOfTries');
+    numOfTries++;
+    if (numOfTries < 2) {
+      debugPrint('switch server');
+      data = 'switch server';
+      if (prefs.getString('baseUrl') == 'https://10.0.0.51:447') {
+        prefs.setString('baseUrl', 'https://tibarose.tibarosehotel.com');
+      } else {
+        prefs.setString('baseUrl', 'https://10.0.0.51:447');
+      }
+
+    } else {
+      numOfTries=0;
+      data = message;
+
+    }
+    return data;
+  }
+
+
+
+/*
+  Future<String> switchServerUrl(String message) async{
+    String data='';
+    print('counter $numOfTries');
+    numOfTries++;
+    if (numOfTries < 2) {
+      debugPrint('switch server');
+      data = 'switch server';
+      if (prefs.getString('baseUrl') == 'https://10.0.0.242/PARKING') {
+        prefs.setString('baseUrl', 'https://tibarose.tibarosehotel.com');
+      } else {
+        prefs.setString('baseUrl', 'https://10.0.0.242/PARKING');
+      }
+
+    } else {
+      numOfTries=0;
+      data = message;
+
+    }
+    return data;
+  }
+*/
+
+
 }

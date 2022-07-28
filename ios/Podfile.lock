@@ -3,10 +3,19 @@ PODS:
     - Flutter
   - camera (0.0.1):
     - Flutter
+  - charset_converter (0.0.1):
+    - Flutter
   - connectivity (0.0.1):
     - Flutter
     - Reachability
+  - edge_detection (1.0.9):
+    - Flutter
+    - WeScan
   - Flutter (1.0.0)
+  - flutter_absolute_path (0.0.1):
+    - Flutter
+  - flutter_barcode_scanner (2.0.0):
+    - Flutter
   - flutter_image_compress (0.0.1):
     - Flutter
     - Mantle
@@ -35,6 +44,8 @@ PODS:
   - MTBBarcodeScanner (5.0.11)
   - path_provider (0.0.1):
     - Flutter
+  - "permission_handler (5.1.0+2)":
+    - Flutter
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
@@ -55,17 +66,23 @@ PODS:
   - Toast (4.0.0)
   - url_launcher (0.0.1):
     - Flutter
+  - WeScan (1.7.0)
 
 DEPENDENCIES:
   - bluetooth_print (from `.symlinks/plugins/bluetooth_print/ios`)
   - camera (from `.symlinks/plugins/camera/ios`)
+  - charset_converter (from `.symlinks/plugins/charset_converter/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
+  - edge_detection (from `.symlinks/plugins/edge_detection/ios`)
   - Flutter (from `Flutter`)
+  - flutter_absolute_path (from `.symlinks/plugins/flutter_absolute_path/ios`)
+  - flutter_barcode_scanner (from `.symlinks/plugins/flutter_barcode_scanner/ios`)
   - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
   - flutter_udid (from `.symlinks/plugins/flutter_udid/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - share (from `.symlinks/plugins/share/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
@@ -82,16 +99,25 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageWebPCoder
     - Toast
+    - WeScan
 
 EXTERNAL SOURCES:
   bluetooth_print:
     :path: ".symlinks/plugins/bluetooth_print/ios"
   camera:
     :path: ".symlinks/plugins/camera/ios"
+  charset_converter:
+    :path: ".symlinks/plugins/charset_converter/ios"
   connectivity:
     :path: ".symlinks/plugins/connectivity/ios"
+  edge_detection:
+    :path: ".symlinks/plugins/edge_detection/ios"
   Flutter:
     :path: Flutter
+  flutter_absolute_path:
+    :path: ".symlinks/plugins/flutter_absolute_path/ios"
+  flutter_barcode_scanner:
+    :path: ".symlinks/plugins/flutter_barcode_scanner/ios"
   flutter_image_compress:
     :path: ".symlinks/plugins/flutter_image_compress/ios"
   flutter_udid:
@@ -102,6 +128,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
   qr_code_scanner:
     :path: ".symlinks/plugins/qr_code_scanner/ios"
   share:
@@ -114,18 +142,23 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher/ios"
 
 SPEC CHECKSUMS:
-  bluetooth_print: da8f47e8881a0b1f0fd8d73cd6fa84c9bd41ac28
+  bluetooth_print: 211fbcc327dbeabe8256fd92cf2515844005ad75
   camera: 3164201dc344383e62282964016528c4f5a9ad50
+  charset_converter: 215c7b04932ec2b9ba43be96a9bc34afed3e5322
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
+  edge_detection: 9bc5ee35073b5a17c0b3b679908f01017ce3062a
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_absolute_path: 5adb13678c88f0bdfba527f3851f9543d01dde66
+  flutter_barcode_scanner: 7a1144744c28dc0c57a8de7218ffe5ec59a9e4bf
   flutter_image_compress: fd2b476345226e1a10ea352fa306af95704642c1
-  flutter_udid: 0848809dbed4c055175747ae6a45a8b4f6771e1c
+  flutter_udid: c9d59b0a440e137882faa5cf53a3501e906fb8c2
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   image_picker: e3eacd46b94694dde7cf2705955cece853aa1a8f
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
@@ -136,7 +169,8 @@ SPEC CHECKSUMS:
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
+  WeScan: fed582f6c38014d529afb5aa9ffd1bad38fc72b7
 
-PODFILE CHECKSUM: c5db0053e9d679dcd33430ab1bc46451c4e7dc73
+PODFILE CHECKSUM: 7d714a5ac7fda1315bc261738086cf00fa98c7e3
 
-COCOAPODS: 1.11.0.rc.1
+COCOAPODS: 1.11.3

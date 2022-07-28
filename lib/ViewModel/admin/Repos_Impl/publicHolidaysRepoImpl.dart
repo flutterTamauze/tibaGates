@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../../../main.dart';
 import '../../manager/managerProv.dart';
 import '../../../api/base_exception_handling.dart';
 import 'package:dartz/dartz.dart';
@@ -17,7 +18,7 @@ class PublicHolidaysRepoImpl
     ResponseData responseData;
 
     var jsonResponse = await BaseClient()
-        .get(BASE_URL, '/api/Holiday/GetOfficialHoliday')
+        .get(prefs.getString("baseUrl"), '/api/Holiday/GetOfficialHoliday')
         .catchError(handleError);
 
     debugPrint(' message is ${jsonDecode(jsonResponse)['message']}');
@@ -41,7 +42,7 @@ class PublicHolidaysRepoImpl
   @override
   Future updatePublicHolidays(
       int id, String startDate, String endDate, String description) {
-    return BaseClient().put(BASE_URL, '/api/Holiday/UpdateOfficialHoliday', {
+    return BaseClient().put(prefs.getString("baseUrl"), '/api/Holiday/UpdateOfficialHoliday', {
       'id': id,
       'startDate': startDate,
       'endDate': endDate,
@@ -52,7 +53,7 @@ class PublicHolidaysRepoImpl
   @override
   Future addPublicHolidays(
       String startDate, String endDate, String description) {
-    return BaseClient().post(BASE_URL, '/api/Holiday/AddOfficialHoliday', {
+    return BaseClient().post(prefs.getString("baseUrl"), '/api/Holiday/AddOfficialHoliday', {
       'startDate': startDate,
       'endDate': endDate,
       'description': description
@@ -62,7 +63,7 @@ class PublicHolidaysRepoImpl
   @override
   Future deleteHoliday(int holidayId) {
     return BaseClient()
-        .delete(BASE_URL, '/api/Holiday/DeleteOfficialHoliday?ID=$holidayId')
+        .delete(prefs.getString("baseUrl"), '/api/Holiday/DeleteOfficialHoliday?ID=$holidayId')
         .catchError(handleError);
   }
 }

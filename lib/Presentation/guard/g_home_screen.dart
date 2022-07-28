@@ -2,10 +2,12 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:Tiba_Gates/Utilities/Shared/tiba_logo.dart';
+import 'package:edge_detection/edge_detection.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../Data/Models/guard/memberChip_model.dart';
 import '../../Utilities/responsive.dart';
@@ -60,6 +62,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Future typesListener;
   CameraController _controller;
   String image;
+  String imagePath;
+
   @override
   void initState() {
     super.initState();
@@ -144,7 +148,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   SizedBox(
                                     height: 20.h,
                                   ),
-                              TibaLogo(height: height,width: width,),
+                                  TibaLogo(
+                                    height: height,
+                                    width: width,
+                                  ),
                                   SizedBox(
                                     height: 40.h,
                                   ),
@@ -170,131 +177,117 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  FutureBuilder(
-                                                      future: typesListener,
-                                                      builder: (BuildContext
-                                                              context,
-                                                          AsyncSnapshot<dynamic>
-                                                              snapshot) {
-                                                        if (snapshot
-                                                                .connectionState ==
-                                                            ConnectionState
-                                                                .waiting) {
-                                                          return Center(
-                                                            child: Platform
-                                                                    .isIOS
-                                                                ? const CupertinoActivityIndicator()
-                                                                : const Center(
-                                                                    child:
-                                                                        CircularProgressIndicator(
-                                                                      backgroundColor:
-                                                                          Colors
-                                                                              .green,
-                                                                    ),
-                                                                  ),
-                                                          );
-                                                        } else if (snapshot
-                                                                .connectionState ==
-                                                            ConnectionState
-                                                                .done) {
-                                                          visitorTypeId ??=
-                                                              defVisitorProv
-                                                                  .visitorObjects[
-                                                                      0]
-                                                                  .id;
+                                                  defVisitorProv.visitorObjects
+                                                          .isNotEmpty
+                                                      ? FutureBuilder(
+                                                          future: typesListener,
+                                                          builder: (BuildContext
+                                                                  context,
+                                                              AsyncSnapshot<
+                                                                      dynamic>
+                                                                  snapshot) {
+                                                            if (snapshot
+                                                                    .connectionState ==
+                                                                ConnectionState
+                                                                    .waiting) {
+                                                              return Center(
+                                                                child: Platform
+                                                                        .isIOS
+                                                                    ? const CupertinoActivityIndicator()
+                                                                    : const Center(
+                                                                        child:
+                                                                            CircularProgressIndicator(
+                                                                          backgroundColor:
+                                                                              Colors.green,
+                                                                        ),
+                                                                      ),
+                                                              );
+                                                            } else if (snapshot
+                                                                    .connectionState ==
+                                                                ConnectionState
+                                                                    .done) {
+                                                              //  if(defVisitorProv.visitorObjects!=null){}
+                                                              visitorTypeId ??=
+                                                                  defVisitorProv
+                                                                      .visitorObjects[
+                                                                          0]
+                                                                      .id;
 
-                                                          debugPrint(
-                                                              'type id $visitorTypeId');
-                                                          return widget
-                                                                      .screen !=
-                                                                  'invitation'
-                                                              ? Container(
-                                                                  decoration: BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
+                                                              debugPrint(
+                                                                  'type id $visitorTypeId');
+                                                              return widget
+                                                                          .screen !=
+                                                                      'invitation'
+                                                                  ? Container(
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
                                                                               10),
-                                                                      border: Border.all(
+                                                                          border: Border.all(
+                                                                              color: Colors.green,
+                                                                              width: 1.w)),
+                                                                      width:
+                                                                          250.w,
+                                                                      height:
+                                                                          70.h,
+                                                                      child: DropdownButtonHideUnderline(
+                                                                          child: ButtonTheme(
+                                                                        alignedDropdown:
+                                                                            true,
+                                                                        child:
+                                                                            DropdownButton(
+                                                                          elevation:
+                                                                              2,
+                                                                          isExpanded:
+                                                                              true,
+                                                                          items: defVisitorProv
+                                                                              .visitorTypes
+                                                                              .map((String x) {
+                                                                            return DropdownMenuItem<String>(
+                                                                                value: x,
+                                                                                child: Center(
+                                                                                  child: Text(
+                                                                                    x,
+                                                                                    textAlign: TextAlign.center,
+                                                                                    style: TextStyle(fontSize: setResponsiveFontSize(25), color: Colors.green, fontFamily: 'Almarai'),
+                                                                                  ),
+                                                                                ));
+                                                                          }).toList(),
+                                                                          onChanged:
+                                                                              (value) {
+                                                                            setState(() {
+                                                                              visitorTypeId = defVisitorProv.visitorObjects[defVisitorProv.visitorTypes.indexOf(value)].id;
+
+                                                                              selectedVisitorType = value;
+
+                                                                              if (selectedVisitorType == 'المحاسبه بالساعه') {
+                                                                                isPerHour = true;
+                                                                              } else {
+                                                                                isPerHour = false;
+                                                                              }
+
+                                                                              debugPrint('selected visitor type is $selectedVisitorType');
+                                                                              debugPrint('selected visitor type id is $visitorTypeId');
+                                                                            });
+                                                                          },
+                                                                          value:
+                                                                              selectedVisitorType ?? defVisitorProv.visitorTypes[0],
+                                                                        ),
+                                                                      )),
+                                                                    )
+                                                                  : AutoSizeText(
+                                                                      'دعوة',
+                                                                      style: TextStyle(
+                                                                          fontSize: setResponsiveFontSize(
+                                                                              28),
                                                                           color: Colors
                                                                               .green,
-                                                                          width:
-                                                                              1.w)),
-                                                                  width: 250.w,
-                                                                  height: 70.h,
-                                                                  child:
-                                                                      DropdownButtonHideUnderline(
-                                                                          child:
-                                                                              ButtonTheme(
-                                                                    alignedDropdown:
-                                                                        true,
-                                                                    child:
-                                                                        DropdownButton(
-                                                                      elevation:
-                                                                          2,
-                                                                      isExpanded:
-                                                                          true,
-                                                                      items: defVisitorProv
-                                                                          .visitorTypes
-                                                                          .map((String
-                                                                              x) {
-                                                                        return DropdownMenuItem<
-                                                                                String>(
-                                                                            value:
-                                                                                x,
-                                                                            child:
-                                                                                Center(
-                                                                              child: Text(
-                                                                                x,
-                                                                                textAlign: TextAlign.center,
-                                                                                style: TextStyle(fontSize: setResponsiveFontSize(25), color: Colors.green, fontFamily: 'Almarai'),
-                                                                              ),
-                                                                            ));
-                                                                      }).toList(),
-                                                                      onChanged:
-                                                                          (value) {
-                                                                        setState(
-                                                                            () {
-                                                                          visitorTypeId = defVisitorProv
-                                                                              .visitorObjects[defVisitorProv.visitorTypes.indexOf(value)]
-                                                                              .id;
-
-                                                                          selectedVisitorType =
-                                                                              value;
-
-                                                                          if (selectedVisitorType ==
-                                                                              'المحاسبه بالساعه') {
-                                                                            isPerHour =
-                                                                                true;
-                                                                          } else {
-                                                                            isPerHour =
-                                                                                false;
-                                                                          }
-
-                                                                          debugPrint(
-                                                                              'selected visitor type is $selectedVisitorType');
-                                                                          debugPrint(
-                                                                              'selected visitor type id is $visitorTypeId');
-                                                                        });
-                                                                      },
-                                                                      value: selectedVisitorType ??
-                                                                          defVisitorProv
-                                                                              .visitorTypes[0],
-                                                                    ),
-                                                                  )),
-                                                                )
-                                                              : AutoSizeText(
-                                                                  'دعوة',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          setResponsiveFontSize(
-                                                                              28),
-                                                                      color: Colors
-                                                                          .green,
-                                                                      fontWeight:
-                                                                          FontManager
-                                                                              .bold));
-                                                        }
-                                                        return Container();
-                                                      }),
+                                                                          fontWeight:
+                                                                              FontManager.bold));
+                                                            }
+                                                            return Container();
+                                                          })
+                                                      : const Text(
+                                                          'لا توجد عناصر حالية'),
                                                   AutoSizeText(
                                                     ' : نوع الزائر',
                                                     textAlign: TextAlign.end,
@@ -450,7 +443,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                     ),
                                                     InkWell(
                                                       onTap: () async {
-                                                        cameras =
+                                                        detectObject(
+                                                            type: 'carId');
+
+                                                        /*      cameras =
                                                             await availableCameras();
 
                                                         Navigator.push(
@@ -466,7 +462,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                           'carId',
                                                                       dropdownValue:
                                                                           selectedVisitorType,
-                                                                    )));
+                                                                    )));*/
                                                       },
                                                       child: const Icon(
                                                         Icons
@@ -478,12 +474,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                     SizedBox(
                                                       width: 16.w,
                                                     ),
-                                                    Provider.of<VisitorProv>(
-                                                                    context,
-                                                                    listen:
-                                                                        true)
-                                                                .rokhsa !=
-                                                            null
+                                                       Provider.of<VisitorProv>(context, listen: true).rokhsa != null
+                                                 //   imagePath != null
                                                         ? Padding(
                                                             padding:
                                                                 const EdgeInsets
@@ -503,11 +495,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                               16,
                                                                           child:
                                                                               Image.file(
-                                                                            Provider.of<VisitorProv>(context, listen: true).rokhsa,
-                                                                            width:
+                                                                            Provider.of<VisitorProv>(context, listen: true).rokhsa
+                                                                           /* File(imagePath)*/,
+                                                                            /*     width:
                                                                                 600.w,
                                                                             height:
-                                                                                600.h,
+                                                                                600.h,*/
                                                                             fit:
                                                                                 BoxFit.fill,
                                                                           ),
@@ -517,10 +510,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                 child: Stack(
                                                                   children: [
                                                                     Image.file(
-                                                                      Provider.of<VisitorProv>(
-                                                                              context,
-                                                                              listen: true)
-                                                                          .rokhsa,
+                                                                      Provider.of<VisitorProv>(context, listen: true).rokhsa
+                                                                     // File(imagePath)
+                                                         ,
                                                                       width:
                                                                           300.w,
                                                                       height:
@@ -554,7 +546,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                   ],
                                                                 )),
                                                           )
-
                                                         : Container(),
                                                   ],
                                                 ),
@@ -598,7 +589,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                     ),
                                                     InkWell(
                                                       onTap: () async {
-                                                        cameras =
+                                                        detectObject(
+                                                            type: 'personId');
+
+                                                        /*          cameras =
                                                             await availableCameras();
 
                                                         Navigator.push(
@@ -614,7 +608,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                           'personId',
                                                                       dropdownValue:
                                                                           selectedVisitorType,
-                                                                    )));
+                                                                    )));*/
                                                       },
                                                       child: const Icon(
                                                         Icons
@@ -652,10 +646,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                           child:
                                                                               Image.file(
                                                                             Provider.of<VisitorProv>(context, listen: true).idCard,
-                                                                            width:
+                                                                            /*width:
                                                                                 600.w,
                                                                             height:
-                                                                                600.h,
+                                                                                600.h,*/
                                                                             fit:
                                                                                 BoxFit.fill,
                                                                           ),
@@ -702,7 +696,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                   ],
                                                                 )),
                                                           )
-
                                                         : Container(),
                                                   ],
                                                 ),
@@ -711,56 +704,74 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                             SizedBox(
                                               height: 20.h,
                                             ),
-                                            RoundedButton(
-                                              width: 220,
-                                              height: 60,
-                                              ontap: () async {
-                                                showLoaderDialog(
-                                                    context, 'Loading...');
+                                            defVisitorProv
+                                                    .visitorObjects.isNotEmpty
+                                                ? RoundedButton(
+                                                    width: 220,
+                                                    height: 60,
+                                                    ontap: () async {
+                                                      showLoaderDialog(context,
+                                                          'Loading...');
 
-                                                if (widget.screen ==
-                                                    'invitation') {
-                                                  debugPrint('INVITATION CASE');
-                                                  invitationCase();
-                                                } else if (isPerHour == true) {
-                                                  debugPrint('PER HOUR CASE');
-                                                  perHourCase();
-                                                }
-
-                                                else {
-
-                                                  defVisitorProv
-                                                      .getBill(
-                                                          visitorTypeId
-                                                              .toString(),
-                                                          _citizensValue
-                                                              .toString(),
-                                                          _militaryValue
-                                                              .toString())
-                                                      .then((value) {
-                                                    print('value is $value');
-                                                    Navigator.pop(context);
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return BillDialog(
-                                                              typeValue:
-                                                                  visitorTypeId,
-                                                              citizenValue:
-                                                                  _citizensValue,
-                                                              militaryValue:
-                                                                  _militaryValue);
+                                                      if (widget.screen ==
+                                                          'invitation') {
+                                                        debugPrint(
+                                                            'INVITATION CASE');
+                                                        invitationCase();
+                                                      } else if (isPerHour ==
+                                                          true) {
+                                                        debugPrint(
+                                                            'PER HOUR CASE');
+                                                        perHourCase();
+                                                      } else {
+                                                        defVisitorProv
+                                                            .getBill(
+                                                                visitorTypeId
+                                                                    .toString(),
+                                                                _citizensValue
+                                                                    .toString(),
+                                                                _militaryValue
+                                                                    .toString())
+                                                            .then((value) {
+                                                          print(
+                                                              'value is $value');
+                                                          Navigator.pop(
+                                                              context);
+                                                          showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (context) {
+                                                                return BillDialog(
+                                                                    typeValue:
+                                                                        visitorTypeId
+                                                                            .toString(),
+                                                                    citizenValue:
+                                                                        _citizensValue,
+                                                                    militaryValue:
+                                                                        _militaryValue);
+                                                              });
                                                         });
-                                                  });
-                                                }
-
-
-                                              },
-                                              title: 'إستمرار',
-                                              buttonColor: ColorManager.primary,
-                                              titleColor:
-                                                  ColorManager.backGroundColor,
-                                            )
+                                                      }
+                                                    },
+                                                    title: 'إستمرار',
+                                                    buttonColor:
+                                                        ColorManager.primary,
+                                                    titleColor: ColorManager
+                                                        .backGroundColor,
+                                                  )
+                                                : RoundedButton(
+                                                    width: 220,
+                                                    height: 60,
+                                                    ontap: () async {
+                                                      navigateTo(context,
+                                                          const EntryScreen());
+                                                    },
+                                                    title: 'عودة',
+                                                    buttonColor:
+                                                        ColorManager.primary,
+                                                    titleColor: ColorManager
+                                                        .backGroundColor,
+                                                  )
                                             // : Container(),
                                           ],
                                         ),
@@ -792,8 +803,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   SizedBox(
                                     height: 20.h,
                                   ),
-
-
                                   Consumer<VisitorProv>(
                                       builder: (context, message, child) {
                                     return ZoomIn(
@@ -819,8 +828,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                             message.memberShipModel
                                                                     .memberProfilePath +
                                                                 '?v=${Random().nextInt(1000)}',
-
-
                                                           )),
                                                 shape: BoxShape.circle,
                                               ),
@@ -850,19 +857,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   ),
                                   RichText(
                                     text: TextSpan(
-                                      text: defVisitorProv
-                                              .memberShipModel.memberName ??
-                                          'مشترك ',
+                                      text: 'اسم المشترك : ',
                                       style: TextStyle(
-                                          color: Colors.green,
+                                          color: Colors.black,
                                           fontSize: setResponsiveFontSize(30),
                                           fontWeight: FontManager.bold),
                                       children: <TextSpan>[
                                         TextSpan(
-                                            text: ' : اسم المشترك ',
+                                            text: defVisitorProv.memberShipModel
+                                                    .memberName ??
+                                                'مشترك ',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.black,
+                                              color: Colors.green,
                                               fontSize:
                                                   setResponsiveFontSize(32),
                                             )),
@@ -1230,24 +1237,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         cameras =
                                                             await availableCameras();
 
-                                                        Navigator.push(
+                                                        navigateTo(
                                                             context,
-                                                            MaterialPageRoute(
-                                                                builder: (BuildContext
-                                                                        context) =>
-                                                                    CameraPicker(
-                                                                      camera:
-                                                                          cameras[
-                                                                              0],
-                                                                      instruction:
-                                                                          'personId',
-                                                                      type:
-                                                                          'membership',
-                                                                      membershipId:
-                                                                          widget
-                                                                              .memberShipModel
-                                                                              .id,
-                                                                    )));
+                                                            CameraPicker(
+                                                              camera:
+                                                                  cameras[0],
+                                                              instruction:
+                                                                  'personId',
+                                                              type:
+                                                                  'membership',
+                                                              membershipId: widget
+                                                                  .memberShipModel
+                                                                  .id,
+                                                            ));
                                                       },
                                                       child: const Icon(
                                                         Icons
@@ -1359,16 +1361,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                               .memberShipSports ==
                                                           null) {
                                                         navigateTo(context,
-                                                            EntryScreen());
+                                                            const EntryScreen());
                                                         return;
                                                       }
 
                                                       showLoaderDialog(context,
                                                           'Loading...');
 
-                                                      Provider.of<VisitorProv>(
-                                                              context,
-                                                              listen: false)
+                                                      defVisitorProv
                                                           .getBill(
                                                               widget
                                                                   .memberShipModel
@@ -1393,7 +1393,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                       0);
                                                             });
                                                       });
-
                                                     },
                                                     title: defVisitorProv
                                                                 .memberShipModel
@@ -1437,10 +1436,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-
-
   Future getImage() async {
-
     File pickedImage =
         (await ImagePicker.pickImage(source: ImageSource.gallery));
     if (pickedImage != null) {
@@ -1460,7 +1456,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               .asUint8List();
 
           debugPrint('=prof image is $image');
-        showToast('تم التعديل');
+          showToast('تم التعديل');
         }
       });
 
@@ -1471,15 +1467,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   void invitationCase() {
-    Navigator.push(
+    navigateTo(
         context,
-        MaterialPageRoute(
-            builder: (context) => const PrintScreen2(
-                  civilCount: 0,
-                  militaryCount: 0,
-                  resendType: 'Normal',
-                  from: 'send',
-                )));
+        const PrintScreen(
+          civilCount: 0,
+          militaryCount: 0,
+          resendType: 'Normal',
+          from: 'send',
+        ));
   }
 
   void perHourCase() {
@@ -1494,7 +1489,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const PrintScreen2(
+                builder: (context) => const PrintScreen(
                       civilCount: 0,
                       militaryCount: 0,
                       resendType: 'perHour',
@@ -1502,5 +1497,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     )));
       }
     });
+  }
+
+  void detectObject({String type}) async {
+    imagePath = await EdgeDetection.detectEdge;
+    String document = await FlutterAbsolutePath.getAbsolutePath(imagePath);
+
+    if (type == 'carId') {
+      Provider.of<VisitorProv>(context, listen: false)
+          .addRokhsa(File(document));
+    } else {
+      Provider.of<VisitorProv>(context, listen: false)
+          .addIdCard(File(document));
+    }
   }
 }

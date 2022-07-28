@@ -32,7 +32,7 @@ class PricesProv with ChangeNotifier, BaseExceptionHandling {
     debugPrint('price id $priceId');
     try {
       var response = await BaseClient()
-          .delete(BASE_URL, '/api/Guest/DeleteOwner?ID=$priceId&UserID=$userId')
+          .delete(prefs.getString('baseUrl'), '/api/Guest/DeleteOwner?ID=$priceId&UserID=$userId')
           .catchError(handleError);
 
       var decodedRes = jsonDecode(response);
@@ -58,7 +58,7 @@ class PricesProv with ChangeNotifier, BaseExceptionHandling {
     String data = '';
 
     try {
-      var response = await BaseClient().post(BASE_URL, '/api/Guest/AddOwner', {
+      var response = await BaseClient().post(prefs.getString('baseUrl'), '/api/Guest/AddOwner', {
         'type': type,
         'price': price,
         'priceInHoliday': priceInHoliday
@@ -87,7 +87,7 @@ class PricesProv with ChangeNotifier, BaseExceptionHandling {
 
     try {
       var response = await BaseClient().put(
-          BASE_URL, '/api/Guest/UpdateOwner', {
+          prefs.getString('baseUrl'), '/api/Guest/UpdateOwner', {
         'id': id,
         'type': type,
         'price': price,
@@ -113,11 +113,11 @@ class PricesProv with ChangeNotifier, BaseExceptionHandling {
 
   Future<dynamic> getPrices() async {
     String data = '';
-    debugPrint('a');
+
 
     try {
       var response = await BaseClient()
-          .get(BASE_URL, '/api/Guest/GetOwners')
+          .get(prefs.getString('baseUrl'), '/api/Guest/GetOwners')
           .catchError(handleError);
 
       debugPrint(' response is ${jsonDecode(response)['response']}');

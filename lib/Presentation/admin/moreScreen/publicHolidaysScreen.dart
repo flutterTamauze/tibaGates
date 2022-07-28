@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Tiba_Gates/Utilities/Shared/calendar_popup_view.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../../Utilities/responsive.dart';
 import 'package:intl/intl.dart';
@@ -31,7 +32,7 @@ class PublicHolidaysScreen extends StatefulWidget {
 }
 
 class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _descriptionController = TextEditingController();
   List<PublicHolidaysModel> publicHolidaysList = [];
   Future publicHolidaysListener;
@@ -142,7 +143,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  var holidaysProv =
+                                  PublicHolidaysProv holidaysProv =
                                       Provider.of<PublicHolidaysProv>(context,
                                           listen: false);
                                   showDialog(
@@ -155,7 +156,8 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                                             descriptionHint: e.description,
                                             onSubmit: () {
                                               debugPrint(
-                                                  'desc is ${_descriptionController.text}  start date is ${Provider.of<PublicHolidaysProv>(context, listen: false).startDate}   end date is ${Provider.of<PublicHolidaysProv>(context, listen: false).endDate}');
+                                                  'desc is ${_descriptionController.text}  start date is ${Provider.of<PublicHolidaysProv>(context, listen: false).startDate}'
+                                                      '   end date is ${Provider.of<PublicHolidaysProv>(context, listen: false).endDate}');
 
                                               showLoaderDialog(
                                                   context, 'جارى التعديل');
@@ -617,7 +619,8 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                     keyboardType: TextInputType.datetime,
                     readOnly: true,
                     onTap: () {
-                      showDialog(
+                      showDemoDialog(context: context);
+                  /*    showDialog(
                         context: context,
                         builder: (dialogContext) {
                           return StatefulBuilder(
@@ -678,7 +681,7 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
                             },
                           );
                         },
-                      );
+                      );*/
                     },
                     decoration: InputDecoration(
                       suffixIcon: Padding(
@@ -781,4 +784,33 @@ class _PublicHolidaysScreenState extends State<PublicHolidaysScreen> {
           )),
     );
   }
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
+  void showDemoDialog({BuildContext context}) {
+    showDialog<dynamic>(
+      context: context,
+      builder: (BuildContext context) => CalendarPopupView(
+        barrierDismissible: true,
+        minimumDate: DateTime.now(),
+        //  maximumDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 10),
+        initialEndDate: endDate,
+        initialStartDate: startDate,
+        onApplyClick: (DateTime startData, DateTime endData) {
+          debugPrint('start $startData');
+          debugPrint('end $endData');
+
+          Provider.of<PublicHolidaysProv>(context, listen: false).changeDate(startData.toString().split(' ')[0], endData.toString().split(' ')[0]);
+
+
+
+   /*       setState(() {
+            startDate = startData;
+            endDate = endData;
+          });*/
+        },
+        onCancelClick: () {},
+      ),
+    );
+  }
+
 }

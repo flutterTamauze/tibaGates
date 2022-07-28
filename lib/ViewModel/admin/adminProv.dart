@@ -24,7 +24,7 @@ List<ParkingModel> parkingList = [];
     };
     try {
       http.Response response = await http.get(
-          Uri.parse('$BASE_URL/api/gate/parkedforadmin'),
+          Uri.parse('${prefs.getString("baseUrl")}/api/gate/parkedforadmin'),
           headers: mHeaders);
 
       debugPrint('statusCode ${response.statusCode}');

@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:Tiba_Gates/Utilities/Shared/dialogs/hotel_guest_dialog.dart';
+import 'package:Tiba_Gates/ViewModel/common/commonProv.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import 'package:Tiba_Gates/Utilities/Shared/dialogs/exit_dialog2.dart';
 import 'package:Tiba_Gates/Utilities/Shared/noInternet.dart';
@@ -6,6 +9,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import '../../Utilities/connectivityStatus.dart';
 import 'package:lottie/lottie.dart';
 import '../login_screen/Widgets/outlined_button.dart';
@@ -44,22 +48,27 @@ class EntryScreen extends StatefulWidget {
 
 class _EntryScreenState extends State<EntryScreen> {
   String token;
-Future balanceListener;
+  Future balanceListener;
+
   @override
   void initState() {
     super.initState();
-    balanceListener=Provider.of<AuthProv>(context,listen: false).getBalanceById(prefs.getString('guardId'),'Guard',);
     if (Provider.of<VisitorProv>(context, listen: false).memberShipModel !=
         null) {
-
-      Provider.of<VisitorProv>(context, listen: false)
-          .memberShipModel
-           = null;
+      Provider.of<VisitorProv>(context, listen: false).memberShipModel = null;
     }
+
     token = prefs.getString('token');
     debugPrint(token);
+    debugPrint('base url = ${prefs.getString("baseUrl")}');
     Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {
-      cachingData();
+      cachingData().whenComplete(() {
+        balanceListener =
+            Provider.of<AuthProv>(context, listen: false).getBalanceById(
+          prefs.getString('guardId'),
+          'Guard',
+        );
+      });
     });
   }
 
@@ -90,7 +99,7 @@ Future balanceListener;
     double width = MediaQuery.of(context).size.width;
     ConnectivityStatus connectionStatus =
         Provider.of<ConnectivityStatus>(context);
-
+    CommonProv commonProv = Provider.of<CommonProv>(context, listen: false);
     return WillPopScope(
       onWillPop: () {
         SystemNavigator.pop();
@@ -121,8 +130,8 @@ Future balanceListener;
                           children: [
                             OutlinedButton(
                               onPressed: () {
-                                navigateReplacementTo(context, const NotPrintedListScreen());
-
+                                navigateReplacementTo(
+                                    context, const NotPrintedListScreen());
                               },
                               child: SizedBox(
                                 height: 45.h,
@@ -165,18 +174,20 @@ Future balanceListener;
                                               child: Platform.isIOS
                                                   ? const CupertinoActivityIndicator()
                                                   : const Center(
-                                                child: CircularProgressIndicator(
-                                                  backgroundColor: Colors.green,
-                                                ),
-                                              ),
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        backgroundColor:
+                                                            Colors.green,
+                                                      ),
+                                                    ),
                                             );
                                           } else if (snapshot.connectionState ==
                                               ConnectionState.done) {
-
-                                            return     AutoSizeText(
+                                            return AutoSizeText(
                                                 '${Provider.of<AuthProv>(context, listen: true).balance ?? '--'} ',
                                                 style: TextStyle(
-                                                  fontSize: setResponsiveFontSize(28),
+                                                  fontSize:
+                                                      setResponsiveFontSize(28),
                                                   fontWeight: FontManager.bold,
                                                   color: Colors.red,
                                                 ));
@@ -184,7 +195,7 @@ Future balanceListener;
                                           return Container();
                                         }),
                                     Padding(
-                                      padding:  EdgeInsets.only(left: 8.w),
+                                      padding: EdgeInsets.only(left: 8.w),
                                       child: AutoSizeText(
                                         Provider.of<AuthProv>(context,
                                                     listen: true)
@@ -222,7 +233,6 @@ Future balanceListener;
                             ),
                           ],
                         ),
-
                         SizedBox(
                           height: 15.h,
                         ),
@@ -291,39 +301,115 @@ Future balanceListener;
                                   height: 55,
                                   buttonColor: Colors.red,
                                   titleColor: ColorManager.backGroundColor,
-                                ) ,   SizedBox(
+                                ),
+                                SizedBox(
                                   height: 26.h,
                                 ),
                                 RoundedButton(
                                   ontap: () {
                                     Navigator.of(context).pushAndRemoveUntil(
                                         MaterialPageRoute(
-                                            builder: (context) => const QrCodeScreen(
-                                              screen: 'invitation',
-                                            )),
-                                            (Route<dynamic> route) => false);
+                                            builder: (context) =>
+                                                const QrCodeScreen(
+                                                  screen: 'invitation',
+                                                )),
+                                        (Route<dynamic> route) => false);
                                   },
                                   title: 'دعوة/حجز إلكترونى',
                                   width: 250,
                                   height: 55,
                                   buttonColor: Colors.blue,
                                   titleColor: ColorManager.backGroundColor,
-                                )    ,SizedBox(
+                                ),
+                                SizedBox(
                                   height: 26.h,
                                 ),
                                 RoundedButton(
                                   ontap: () {
                                     Navigator.of(context).pushAndRemoveUntil(
                                         MaterialPageRoute(
-                                            builder: (context) => const QrCodeScreen(
-                                              screen: 'memberShip',
-                                            )),
-                                            (Route<dynamic> route) => false);
+                                            builder: (context) =>
+                                                const QrCodeScreen(
+                                                  screen: 'memberShip',
+                                                )),
+                                        (Route<dynamic> route) => false);
                                   },
                                   title: 'أنشطة',
                                   width: 250,
                                   height: 55,
                                   buttonColor: Colors.orange,
+                                  titleColor: ColorManager.backGroundColor,
+                                ),
+                                SizedBox(
+                                  height: 26.h,
+                                ),
+                                RoundedButton(
+                                  ontap: () async {
+                                    String barCode;
+                                    try {
+                                      barCode = await FlutterBarcodeScanner
+                                          .scanBarcode('#FF039212', 'Cancel',
+                                              true, ScanMode.BARCODE);
+                                      commonProv
+                                          .checkBarcodeValidation(barCode)
+                                          .then((value) {
+                                        if (value == 'Success') {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return HotelGuestDialog(
+                                                  name: commonProv
+                                                      .hotelGuestModel
+                                                      .guestName,
+                                                  fromDate: DateFormat(
+                                                          'yyyy-MM-dd / hh:mm')
+                                                      .format(DateTime.parse(
+                                                          commonProv
+                                                              .hotelGuestModel
+                                                              .startDate))
+                                                      .toString(),
+                                                  hotelName: commonProv
+                                                      .hotelGuestModel
+                                                      .hotelName,
+                                                  toDate: DateFormat(
+                                                          'yyyy-MM-dd / hh:mm')
+                                                      .format(DateTime.parse(
+                                                          commonProv
+                                                              .hotelGuestModel
+                                                              .endDate))
+                                                      .toString(),
+                                                  onPressed: () {
+                                                    debugPrint('log id is ${commonProv.hotelGuestModel.id}');
+                                                    commonProv.confirmBarcodeLog(commonProv.hotelGuestModel.id)
+                                                        .then((value) {
+                                                      if (value == 'Success') {
+                                                        showToast(
+                                                            'تم التأكيد بنجاح');
+                                                        Navigator.pop(context);
+                                                      } else {
+                                                        showToast('حدث خطأ ما');
+                                                        Navigator.pop(context);
+                                                      }
+                                                    });
+                                                  },
+                                                );
+                                              });
+                                        } else {
+                                          showToast('كود غير صحيح');
+                                          debugPrint('value is $value');
+                                        }
+                                      });
+                                    } on PlatformException {
+                                      barCode = 'Failed to get barcode';
+                                    }
+                                    if (!mounted) {
+                                      return;
+                                    }
+                                  },
+                                  title: 'باركود',
+                                  width: 250,
+                                  height: 55,
+                                  buttonColor: Colors.black,
                                   titleColor: ColorManager.backGroundColor,
                                 )
                               ],
@@ -331,13 +417,15 @@ Future balanceListener;
                           ),
                         ),
                         SizedBox(
-                          height: 150.h,
+                          height: 80.h,
                         ),
                         FadeInUp(
                             child: OutlineButtonFb1(
                           text: 'Logout',
-                          onPressed:  ()=> showDialog<Dialog>(context: context, builder: (BuildContext context) => ZoomIn(child: const DialogFb1()))
-                          ,
+                          onPressed: () => showDialog<Dialog>(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  ZoomIn(child: const DialogFb1())),
                         ))
                       ],
                     ),
@@ -346,5 +434,18 @@ Future balanceListener;
               )),
       ),
     );
+  }
+
+  Future<void> scanBarcode() async {
+    String barCode;
+    try {
+      barCode = await FlutterBarcodeScanner.scanBarcode(
+          '', 'Cancel', true, ScanMode.BARCODE);
+    } on PlatformException {
+      barCode = 'Failed to get barcode';
+    }
+    if (!mounted) {
+      return;
+    }
   }
 }
